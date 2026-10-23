@@ -1334,10 +1334,10 @@ def build_chapter_review_and_assessment(
         for pkt in section_packets[:6]:
             ce = pkt["clipboard_entry"]
             if is_scaf:
-                cell_p = f"*Central Idea: {ce['exemplar_central_idea'][:45]}* __________________________________________________<br>______________________________________________________________________."
+                cell_p = f"<b>Central Idea:</b> <i>{ce['exemplar_central_idea'][:42]}...</i><br><b>Supporting Historical Detail:</b> ____________________________________"
             else:
-                cell_p = "______________________________________________________________________<br>______________________________________________________________________"
-            t_lines.append(f"| **Sec. {ce['section_code']}:** {ce['section_title']}<br>*(pp. {ce['printed_pages']})* | {cell_p} |")
+                cell_p = "<b>1. Central Idea:</b> ____________________________________<br><b>2. Supporting Historical Detail:</b> ____________________________________"
+            t_lines.append(f"| **Sec. {ce['section_code']}:** {ce['section_title']} *(pp. {ce['printed_pages']})* | {cell_p} |")
 
         t_lines.extend([
             "",

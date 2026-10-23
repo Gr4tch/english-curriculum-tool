@@ -276,6 +276,20 @@ def load_chapter_reviews() -> Dict[str, Any]:
     return json.loads(rp.read_text(encoding="utf-8"))
 
 
+def resolve_file_path(path_str: Optional[str]) -> Path:
+    """Safely resolves file paths across Windows and Linux (Streamlit Cloud)."""
+    if not path_str:
+        return Path("")
+    clean = str(path_str).replace("\\", "/")
+    p = Path(clean)
+    if p.exists():
+        return p
+    root_p = Path(__file__).resolve().parent / clean
+    if root_p.exists():
+        return root_p
+    return p
+
+
 def get_docx_bytes(
     markdown_text: str,
     filename_stem: str,
@@ -1344,20 +1358,46 @@ elif st.session_state["nav_view"] == "studio":
 
     st.divider()
 
-    selected_studio_sec = st.selectbox(
-        "Select Section Spread to Inspect or Revise:",
-        options=ch_sections,
-        format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']}) — [{s.get('section_type', 'Core Narrative')}]",
-        key=f"studio_sec_{selected_ch_num}",
+    st.markdown(
+        """
+        <div style="background: #ffffff; border: 1.5px solid #bfdbfe; border-left: 5px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1.15rem 0.65rem 1.15rem; margin-bottom: 0.85rem; box-shadow: 0 2px 6px rgba(30, 58, 138, 0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;">
+                <div style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #1e3a8a;">
+                    Select Section Spread to Inspect or Revise
+                </div>
+                <div style="font-size: 0.80rem; color: #64748b;">
+                    Choose an 8th-grade textbook spread to view student worksheets, scaffolds, textbook passages, and customize:
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
+
+    studio_sel_c1, studio_sel_c2 = st.columns([4, 1.2])
+    with studio_sel_c1:
+        selected_studio_sec = st.selectbox(
+            "Select Section Spread to Inspect or Revise:",
+            options=ch_sections,
+            format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']}) — [{s.get('section_type', 'Core Narrative')}]",
+            key=f"studio_sec_{selected_ch_num}",
+            label_visibility="collapsed",
+        )
 
     s_code = str(selected_studio_sec["section_code"])
     studio_pkt_key = f"studio_pkt_ch{selected_ch_num}_sec_{s_code}"
 
-    md_path = Path(selected_studio_sec.get("md_file", ""))
+    md_path = resolve_file_path(selected_studio_sec.get("md_file"))
     raw_passage_md = md_path.read_text(encoding="utf-8") if md_path.exists() else ""
 
-    if studio_pkt_key not in st.session_state or st.button("Reset Section to Defaults", key=f"rst_{studio_pkt_key}"):
+    with studio_sel_c2:
+        if st.button("Reset to Defaults", key=f"rst_{studio_pkt_key}", use_container_width=True):
+            st.session_state[studio_pkt_key] = generate_section_packet(
+                selected_studio_sec, ch_blueprint, raw_passage_md
+            )
+            st.rerun()
+
+    if studio_pkt_key not in st.session_state:
         st.session_state[studio_pkt_key] = generate_section_packet(
             selected_studio_sec, ch_blueprint, raw_passage_md
         )
@@ -1374,7 +1414,6 @@ elif st.session_state["nav_view"] == "studio":
     st_left, st_right = st.columns([1.35, 1.0])
 
     with st_left:
-        # CLEAN TAB TITLES (No raw brackets or backticks that cause entity artifacts!)
         sub_std, sub_scaf, sub_tkey, sub_text = st.tabs(
             [
                 "Standard Worksheet",
@@ -1391,8 +1430,12 @@ elif st.session_state["nav_view"] == "studio":
             st.markdown(sec_pkt["teacher_key_md"])
         with sub_text:
             if selected_studio_sec.get("printed_main_idea"):
-                st.info(f"**Printed Textbook MAIN IDEA (p. {selected_studio_sec['start_page']}):** *{selected_studio_sec['printed_main_idea']}*")
-            st.markdown(raw_passage_md)
+                st.info(f"**Printed Textbook MAIN IDEA (p. {selected_studio_sec.get('start_page', '')}):** *{selected_studio_sec['printed_main_idea']}*")
+            if raw_passage_md:
+                with st.container(height=520):
+                    st.markdown(raw_passage_md)
+            else:
+                st.warning("Textbook passage markdown file could not be loaded.")
 
     with st_right:
         st.markdown("#### Live AI Revision Chat")
@@ -1537,11 +1580,11 @@ elif st.session_state["nav_view"] == "assessment":
         ]
     )
     with rev_t1:
-        st.markdown(test_bundle["standard_test_md"])
+        st.markdown(format_booklet_for_web(test_bundle["standard_test_md"]), unsafe_allow_html=True)
     with rev_t2:
-        st.markdown(test_bundle["scaffolded_test_md"])
+        st.markdown(format_booklet_for_web(test_bundle["scaffolded_test_md"]), unsafe_allow_html=True)
     with rev_t3:
-        st.markdown(test_bundle["teacher_key_md"])
+        st.markdown(format_booklet_for_web(test_bundle["teacher_key_md"]), unsafe_allow_html=True)
     with rev_t4:
         if ch_rev_obj and ch_rev_obj.get("questions"):
             st.markdown(f"#### Official American Stories Chapter {selected_ch_num} Review Questions (pp. {ch_rev_obj.get('printed_pages', '')})")
@@ -1577,7 +1620,7 @@ elif st.session_state["nav_view"] == "browser":
             key=f"pdf_browser_sec_{selected_ch_num}",
         )
 
-        pdf_file_path = Path(selected_pdf_sec.get("pdf_file", ""))
+        pdf_file_path = resolve_file_path(selected_pdf_sec.get("pdf_file"))
         hier_pdf_path = selected_pdf_sec.get("hierarchy_pdf_file", "")
 
         if pdf_file_path.exists():
@@ -1592,19 +1635,48 @@ elif st.session_state["nav_view"] == "browser":
             if hier_pdf_path:
                 st.caption(f"Local Path: `{hier_pdf_path}`")
 
-        st.markdown("##### Extracted Pedagogical Metadata")
-        st.write(
-            {
-                "section_id": selected_pdf_sec["id"],
-                "printed_pages": selected_pdf_sec["printed_pages"],
-                "section_type": selected_pdf_sec.get("section_type"),
-                "printed_main_idea": selected_pdf_sec.get("printed_main_idea"),
-                "subheadings": selected_pdf_sec.get("subheadings"),
-                "official_vocab": selected_pdf_sec.get("official_vocab"),
-                "historical_thinking": selected_pdf_sec.get("historical_thinking"),
-                "critical_viewing": selected_pdf_sec.get("critical_viewing"),
-            }
+        st.markdown("##### Pedagogical Structure & Architecture")
+        sec_type_badge = selected_pdf_sec.get("section_type", "Core Narrative")
+        pages_disp = f"pp. {selected_pdf_sec.get('printed_pages', '')}"
+        pmi_val = selected_pdf_sec.get("printed_main_idea", "None (Special Feature Spread)")
+
+        st.markdown(
+            f"""
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 0.85rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                <div style="margin-bottom: 0.45rem;">
+                    <span style="background: #dbeafe; color: #1e40af; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px; text-transform: uppercase;">{sec_type_badge}</span>
+                    <span style="background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 4px; margin-left: 0.35rem;">{pages_disp}</span>
+                </div>
+                <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 0.2rem;">Printed Textbook Main Idea:</div>
+                <div style="font-size: 0.85rem; font-style: italic; color: #0f172a; line-height: 1.4;">"{pmi_val}"</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
+
+        subhs = selected_pdf_sec.get("subheadings", [])
+        if subhs:
+            st.markdown("**Subheadings in this 2-page spread:**")
+            for sh in subhs:
+                st.markdown(f"- **{sh['title']}** *(p. {sh.get('page', '')}, ~{sh.get('paragraph_count', 1)} paragraphs)*")
+
+        sec_voc = selected_pdf_sec.get("official_vocab", [])
+        if sec_voc:
+            st.markdown("**Section Vocabulary:**")
+            for v in sec_voc:
+                st.markdown(f"- **{v['word']}**: *{v.get('definition', '')}*")
+
+        with st.expander("Inspect Raw JSON Metadata (Technical)", expanded=False):
+            st.json(
+                {
+                    "section_id": selected_pdf_sec["id"],
+                    "printed_pages": selected_pdf_sec["printed_pages"],
+                    "section_type": selected_pdf_sec.get("section_type"),
+                    "printed_main_idea": selected_pdf_sec.get("printed_main_idea"),
+                    "subheadings": selected_pdf_sec.get("subheadings"),
+                    "official_vocab": selected_pdf_sec.get("official_vocab"),
+                }
+            )
 
     with br_col2:
         st.markdown("#### Official Content & Academic Vocabulary (pp. R44–R58)")
@@ -1617,10 +1689,12 @@ elif st.session_state["nav_view"] == "browser":
                 st.markdown(f"- **Academic Vocabulary ({len(a_v_list)} terms):**\n  {', '.join(a_v_list)}")
 
         st.markdown("##### Paragraph-Tagged Section Markdown ([¶1]..[¶N])")
-        md_p4 = Path(selected_pdf_sec.get("md_file", ""))
+        md_p4 = resolve_file_path(selected_pdf_sec.get("md_file"))
         if md_p4.exists():
-            with st.container(height=380):
+            with st.container(height=480):
                 st.markdown(md_p4.read_text(encoding="utf-8"))
+        else:
+            st.warning("Section markdown passage file could not be found.")
 
 
 # ─────────────────────────────────────────────────────────────────────────────

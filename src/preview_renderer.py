@@ -6,6 +6,17 @@ authentic 8th-grade exemplars, and scaffolded support boxes.
 
 from typing import Dict, Any
 import re
+import textwrap
+
+
+def _dedent_html(fn):
+    """Ensures HTML preview strings have zero leading indentation to prevent Markdown code-block interpretation."""
+    def wrapper(*args, **kwargs):
+        res = fn(*args, **kwargs)
+        if isinstance(res, str):
+            return textwrap.dedent(res).strip()
+        return res
+    return wrapper
 
 
 COMMON_CSS = """
@@ -107,6 +118,7 @@ COMMON_CSS = """
 """
 
 
+@_dedent_html
 def render_preview_handout(strategy_code: str) -> str:
     """Renders a realistic, clean printed student worksheet format."""
     # ── CENTRAL IDEA STRATEGIES ──
@@ -618,6 +630,7 @@ def render_preview_handout(strategy_code: str) -> str:
     """
 
 
+@_dedent_html
 def render_preview_exemplar(strategy_code: str) -> str:
     """Renders a realistic, clean completed 8th-grade student exemplar response."""
     if strategy_code == "ci_01_subheading_gist":
@@ -1009,6 +1022,7 @@ def render_preview_exemplar(strategy_code: str) -> str:
     """
 
 
+@_dedent_html
 def render_preview_cover(cover_code: str) -> str:
     """Renders a clean mockup of the student booklet cover page layout."""
     if cover_code == "central_idea_tracker":
@@ -1086,6 +1100,7 @@ def render_preview_cover(cover_code: str) -> str:
         """
 
 
+@_dedent_html
 def render_preview_footer(footer_code: str) -> str:
     """Renders a clean mockup of the page footer check box layout."""
     if footer_code == "stamp_box":
@@ -1140,6 +1155,7 @@ def render_preview_footer(footer_code: str) -> str:
         """
 
 
+@_dedent_html
 def render_preview_scaffold(scaffold_text: str) -> str:
     """Renders the blue callout box for scaffolded support elements."""
     if not scaffold_text:
