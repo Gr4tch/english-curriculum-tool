@@ -124,29 +124,33 @@ st.markdown(
         border: 1px solid #e2e8f0;
         border-top: 4px solid #1e3a8a;
         border-radius: 12px;
-        padding: 1.35rem 1.25rem;
-        height: 100%;
+        padding: 1.25rem 1.25rem 0.85rem 1.25rem;
+        min-height: 165px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         transition: transform 0.15s ease, box-shadow 0.15s ease;
+        margin-bottom: 0.5rem;
     }
     .tile-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 16px -2px rgba(15, 23, 42, 0.1);
     }
     .tile-title {
-        font-size: 1.15rem;
+        font-size: 1.10rem;
         font-weight: 700;
         color: #0f172a;
         margin-bottom: 0.45rem;
+        min-height: 2.75rem;
+        line-height: 1.35;
     }
     .tile-desc {
-        font-size: 0.90rem;
+        font-size: 0.88rem;
         color: #475569;
         line-height: 1.45;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
+        min-height: 4.75rem;
     }
     .step-pill-active {
         display: inline-block;
