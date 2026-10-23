@@ -1,0 +1,13 @@
+# Chapter 1: Three Worlds Before 1500
+## Section 1.5: Curating History: National Museum of the American Indian
+**Unit 1** | **Textbook Pages:** 32–33 | **Section Type:** Museum / Artifact Feature
+
+---
+
+### Section Reading Passage (By Subheading)
+
+#### 1. CURATING HISTORY: NATIONAL MUSEUM OF THE AMERICAN INDIAN (PART 1) (p. 32)
+**[¶1]** CURATING HISTORY What do you observe about the craftsmanship of these Odawa moccasins? The National Museum of the American Indian (NMAI) is located in Washington, D.C., on the National Mall. The museum and its grounds were designed with the help of tribes and communities from across the hemisphere to share the sense and spirit of Native Americans with its many visitors. NMAI has a tremendous collection of Native American arts and artifacts—over 800,000 items representing more than 1,200 cultures throughout the Americas and over 12,000 years of history. Visitors experience everything from ancient tools and weapons to modern Native American art, cultural and religious artifacts, and everyday items. Which of the items below were used for everyday activities and which ones served a different purpose? Tlingit Canoe Paddles These Tlingit paddles date to the early 1900s. The Tlingit are indigenous people of the Pacific Northwest in North America, where fish are abundant. For the Tlingit, canoes and paddles are tools necessary for survival. Odawa Moccasins This pair of beaded Odawa (Ottawa) moccasins was purchased by a trader at Crown Point, Indiana, a fur trade depot. The moccasins feature folded-down silk cuffs decorated with small beads arranged in dashed lines, a pattern often found on this type of Odawa moccasins. Silk teardrops and diamond shapes also decorate the moccasins and are outlined with even smaller white glass beads.
+
+#### 2. CURATING HISTORY: NATIONAL MUSEUM OF THE AMERICAN INDIAN (PART 2) (p. 33)
+**[¶1]** The paddles are made of yellow cedar and ornately painted with a wolf design. The U-shaped designs that surround the face represent the scales of a fish or a sea creature. They may have been added to the mask later by a second artist. Chief of the Undersea Mask This colorful carved wood mask is made of western red cedar. It represents the chief of the undersea kingdom. He is believed to live in a copper home under the ocean, guarded by sea monsters. Ceremonial masks like this one usually depict characters from family histories or from the supernatural. This mask was carved by a master carver from the New Vancouver Tribe in western Canada in the late 1800s or early 1900s. — Kevin  Gover ( Pawnee ) Director, National Museum of the American Indian Three Worlds Before 1500

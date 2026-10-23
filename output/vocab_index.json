@@ -1,0 +1,1884 @@
+{
+  "by_chapter": {
+    "1": [
+      {
+        "word": "caravan",
+        "type": "Content Vocabulary",
+        "definition": "a group of people and animals traveling together, usually for trade",
+        "page": 42
+      },
+      {
+        "word": "caravel",
+        "type": "Content Vocabulary",
+        "definition": "a small, fast ship used by Spanish and Portuguese explorers",
+        "page": 40
+      },
+      {
+        "word": "civilization",
+        "type": "Content Vocabulary",
+        "definition": "a society with a highly developed culture and technology",
+        "page": 24
+      },
+      {
+        "word": "convert",
+        "type": "Content Vocabulary",
+        "definition": "to persuade to change one's beliefs; often refers to a change in religion",
+        "page": 42
+      },
+      {
+        "word": "domesticate",
+        "type": "Content Vocabulary",
+        "definition": "to raise plants and animals for human benefit and consumption",
+        "page": 27
+      },
+      {
+        "word": "feudalism",
+        "type": "Content Vocabulary",
+        "definition": "a political and social system in which a vassal receives protection from a lord in exchange for obedience and service",
+        "page": 36
+      },
+      {
+        "word": "geographic perspective",
+        "type": "Content Vocabulary",
+        "definition": "the examination of how geography affects people and culture",
+        "page": 34
+      },
+      {
+        "word": "hierarchy",
+        "type": "Content Vocabulary",
+        "definition": "the classification of a group of people according to ability or to economic, social, or professional standing",
+        "page": 36
+      },
+      {
+        "word": "human geography",
+        "type": "Content Vocabulary",
+        "definition": "the study of how people and their cultures are affected by physical geography and how human activities affect the environment",
+        "page": 34
+      },
+      {
+        "word": "humanism",
+        "type": "Content Vocabulary",
+        "definition": "a movement that focuses on the importance of the individual",
+        "page": 39
+      },
+      {
+        "word": "Iroquois League",
+        "type": "Content Vocabulary",
+        "definition": "the confederation of five Iroquois- speaking nations: the Mohawk, Oneida, Onondaga, Cayuga, and Seneca; later joined by the Tuscarora",
+        "page": 29
+      },
+      {
+        "word": "irrigation",
+        "type": "Content Vocabulary",
+        "definition": "the supply of water to fields using human-made systems",
+        "page": 24
+      },
+      {
+        "word": "kayak",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 26
+      },
+      {
+        "word": "manor system",
+        "type": "Content Vocabulary",
+        "definition": "an economic system in which peasants are bound to a lord and work his land, or manor, in exchange for food and shelter",
+        "page": 37
+      },
+      {
+        "word": "matrilineal",
+        "type": "Content Vocabulary",
+        "definition": "relating to descendants traced through the mother",
+        "page": 29
+      },
+      {
+        "word": "migrate",
+        "type": "Content Vocabulary",
+        "definition": "to move from one place to another",
+        "page": 27
+      },
+      {
+        "word": "navigation",
+        "type": "Content Vocabulary",
+        "definition": "the science of finding position and planning routes, often used in relation to seafaring",
+        "page": 40
+      },
+      {
+        "word": "oasis",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 42
+      },
+      {
+        "word": "physical geography",
+        "type": "Content Vocabulary",
+        "definition": "the study of Earth's exterior physical features",
+        "page": 34
+      },
+      {
+        "word": "pilgrimage",
+        "type": "Content Vocabulary",
+        "definition": "a religious journey",
+        "page": 45
+      },
+      {
+        "word": "potlatch",
+        "type": "Content Vocabulary",
+        "definition": "a gift-giving ceremony practiced by the Kwakiutl and Haida Native American tribes",
+        "page": 26
+      },
+      {
+        "word": "printing press",
+        "type": "Content Vocabulary",
+        "definition": "an invention that used movable metal type to print pages",
+        "page": 39
+      },
+      {
+        "word": "profit",
+        "type": "Content Vocabulary",
+        "definition": "the amount of money left for a business after expenses are deducted",
+        "page": 40
+      },
+      {
+        "word": "Protestant",
+        "type": "Content Vocabulary",
+        "definition": "a follower of the Reformation in Christianity",
+        "page": 39
+      },
+      {
+        "word": "serf",
+        "type": "Content Vocabulary",
+        "definition": "a person who lived and worked on the private land of a landowner such as a noble or medieval lord",
+        "page": 37
+      },
+      {
+        "word": "slash-and-burn agriculture",
+        "type": "Content Vocabulary",
+        "definition": "a method of clearing fields for planting that involves cutting and setting fire to existing trees and plants",
+        "page": 29
+      },
+      {
+        "word": "steppe",
+        "type": "Content Vocabulary",
+        "definition": "a vast, grassy plain",
+        "page": 42
+      },
+      {
+        "word": "tepee",
+        "type": "Content Vocabulary",
+        "definition": "a cone-shaped tent made of bison hides",
+        "page": 27
+      },
+      {
+        "word": "trans-Siberian",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 42
+      },
+      {
+        "word": "tundra",
+        "type": "Content Vocabulary",
+        "definition": "the flat treeless land found in arctic and subarctic regions",
+        "page": 26
+      },
+      {
+        "word": "vassal",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 36
+      }
+    ],
+    "2": [
+      {
+        "word": "African diaspora",
+        "type": "Content Vocabulary",
+        "definition": "the removal of Africans from their homelands to the Americas",
+        "page": 74
+      },
+      {
+        "word": "chattel slavery",
+        "type": "Content Vocabulary",
+        "definition": "a system in which enslaved people have no human rights and are classified as goods",
+        "page": 72
+      },
+      {
+        "word": "circumnavigate",
+        "type": "Content Vocabulary",
+        "definition": "to travel completely around Earth",
+        "page": 62
+      },
+      {
+        "word": "Columbian Exchange",
+        "type": "Content Vocabulary",
+        "definition": "the exchange of plants, animals, microbes, people, and ideas between Europe and the Americas following Columbus's first voyage to the Western Hemisphere",
+        "page": 70
+      },
+      {
+        "word": "conquistador",
+        "type": "Content Vocabulary",
+        "definition": "a Spanish conqueror who sought gold and other riches in the Americas",
+        "page": 56
+      },
+      {
+        "word": "encomienda",
+        "type": "Content Vocabulary",
+        "definition": "a system in Spain's American colonies in which wealthy settlers were given plots of land and allowed to enslave the people who lived there",
+        "page": 66
+      },
+      {
+        "word": "galleon",
+        "type": "Content Vocabulary",
+        "definition": "a large sailing ship used especially by the Spanish in the 16th and 17th centuries",
+        "page": 62
+      },
+      {
+        "word": "hacienda",
+        "type": "Content Vocabulary",
+        "definition": "a large plantation in a Spanish-speaking colony",
+        "page": 66
+      },
+      {
+        "word": "heretic",
+        "type": "Content Vocabulary",
+        "definition": "a person who holds beliefs different from the teachings of the Catholic Church",
+        "page": 61
+      },
+      {
+        "word": "immunity",
+        "type": "Content Vocabulary",
+        "definition": "a protection against disease, either natural or induced by vaccination",
+        "page": 70
+      },
+      {
+        "word": "institution",
+        "type": "Content Vocabulary",
+        "definition": "an established and accepted practice in a society or culture",
+        "page": 74
+      },
+      {
+        "word": "mercantilism",
+        "type": "Content Vocabulary",
+        "definition": "an economic policy that gives a country sole ownership of the trade occurring in its colonies",
+        "page": 52
+      },
+      {
+        "word": "mestizo",
+        "type": "Content Vocabulary",
+        "definition": "a person who has mixed Spanish and Native American ancestry",
+        "page": 66
+      },
+      {
+        "word": "Middle Passage",
+        "type": "Content Vocabulary",
+        "definition": "the long trip across the Atlantic Ocean by which enslaved Africans were brought to the Americas; the second leg of the triangular trade route",
+        "page": 73
+      },
+      {
+        "word": "mission",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 66
+      },
+      {
+        "word": "missionary",
+        "type": "Content Vocabulary",
+        "definition": "a person who tries to spread Christianity to others",
+        "page": 53
+      },
+      {
+        "word": "Northwest Passage",
+        "type": "Content Vocabulary",
+        "definition": "a passage by water between the Atlantic and Pacific oceans along the northern coast of North America",
+        "page": 60
+      },
+      {
+        "word": "persecute",
+        "type": "Content Vocabulary",
+        "definition": "to punish, particularly because of beliefs or background",
+        "page": 61
+      },
+      {
+        "word": "plantation",
+        "type": "Content Vocabulary",
+        "definition": "a large farm; on southern plantations, slaves worked to grow and harvest crops",
+        "page": 66
+      },
+      {
+        "word": "privateer",
+        "type": "Content Vocabulary",
+        "definition": "an armed but privately owned ship that acts under the authority of a government to participate in warfare; or a sailor on such a ship",
+        "page": 62
+      },
+      {
+        "word": "quinine",
+        "type": "Content Vocabulary",
+        "definition": "a substance made from the bark of a tree that is an effective remedy for malaria",
+        "page": 71
+      },
+      {
+        "word": "slavery",
+        "type": "Content Vocabulary",
+        "definition": "a social system in which human beings take complete control of others",
+        "page": 72
+      },
+      {
+        "word": "smallpox",
+        "type": "Content Vocabulary",
+        "definition": "a deadly virus that causes a high fever and small blisters on the skin",
+        "page": 56
+      },
+      {
+        "word": "triangular trade",
+        "type": "Content Vocabulary",
+        "definition": "a transatlantic trade network formed by Europe, West Africa, and the Americas",
+        "page": 73
+      },
+      {
+        "word": "viceroy",
+        "type": "Content Vocabulary",
+        "definition": "a governor of Spain's colonies in the Americas who represented the Spanish king and queen",
+        "page": 58
+      },
+      {
+        "word": "viceroyalty",
+        "type": "Content Vocabulary",
+        "definition": "a territory governed by a viceroy",
+        "page": 58
+      },
+      {
+        "word": "watershed",
+        "type": "Content Vocabulary",
+        "definition": "an area of land that includes a particular river or lake and all the bodies of water that flow into it",
+        "page": 64
+      }
+    ],
+    "3": [
+      {
+        "word": "alliance",
+        "type": "Content Vocabulary",
+        "definition": "an agreement between nations to fight each other's enemies or otherwise collaborate; a partnership",
+        "page": 111
+      },
+      {
+        "word": "banish",
+        "type": "Content Vocabulary",
+        "definition": "to send away as punishment, usually without hope of return",
+        "page": 101
+      },
+      {
+        "word": "charter",
+        "type": "Content Vocabulary",
+        "definition": "a written grant establishing an institution and detailing members' rights and privileges",
+        "page": 92
+      },
+      {
+        "word": "confederacy",
+        "type": "Content Vocabulary",
+        "definition": "the 11 southern states that seceded from the Union to form their own nation, the Confederate States of America",
+        "page": 111
+      },
+      {
+        "word": "dissenter",
+        "type": "Content Vocabulary",
+        "definition": "a person who disagrees with a majority belief or position",
+        "page": 100
+      },
+      {
+        "word": "doctrine",
+        "type": "Content Vocabulary",
+        "definition": "a principle or set of beliefs accepted by a group",
+        "page": 109
+      },
+      {
+        "word": "economic activity",
+        "type": "Content Vocabulary",
+        "definition": "actions that involve the production, distribution, and consumption of goods and services",
+        "page": 114
+      },
+      {
+        "word": "Fundamental Orders of Connecticut",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 101
+      },
+      {
+        "word": "indentured servant",
+        "type": "Content Vocabulary",
+        "definition": "a person under contract to work, usually without pay, in exchange for free passage to the colonies",
+        "page": 93
+      },
+      {
+        "word": "joint-stock company",
+        "type": "Content Vocabulary",
+        "definition": "a company whose shareholders own stock in the company",
+        "page": 92
+      },
+      {
+        "word": "King Philip's War",
+        "type": "Content Vocabulary",
+        "definition": "a violent conflict between Native Americans and English colonists from New England, who were aided by Native American allies",
+        "page": 106
+      },
+      {
+        "word": "levy",
+        "type": "Content Vocabulary",
+        "definition": "to require the payment of a tax",
+        "page": 105
+      },
+      {
+        "word": "Mayflower Compact",
+        "type": "Content Vocabulary",
+        "definition": "a shipboard contract signed by the Pilgrims on the Mayflower before they landed in North America, binding them to abide by their own laws and establish a civil society",
+        "page": 100
+      },
+      {
+        "word": "natural resource",
+        "type": "Content Vocabulary",
+        "definition": "a material or substance found in nature that can be used to sustain a society or exploited for economic gain, such as minerals, water, or living things",
+        "page": 114
+      },
+      {
+        "word": "neutrality",
+        "type": "Content Vocabulary",
+        "definition": "the refusal to take sides or become involved",
+        "page": 111
+      },
+      {
+        "word": "proprietor",
+        "type": "Content Vocabulary",
+        "definition": "a person with ownership of a colony, including the right to manage and distribute land and to establish government",
+        "page": 112
+      },
+      {
+        "word": "raw material",
+        "type": "Content Vocabulary",
+        "definition": "the basic substances and elements used to make products",
+        "page": 114
+      },
+      {
+        "word": "royal colony",
+        "type": "Content Vocabulary",
+        "definition": "a colony ruled by a monarch through an appointed governor",
+        "page": 112
+      },
+      {
+        "word": "self-governance",
+        "type": "Content Vocabulary",
+        "definition": "the control of one's own affairs; the control of community affairs and laws by those who live there rather than by an outside ruler or monarch",
+        "page": 105
+      },
+      {
+        "word": "separatist",
+        "type": "Content Vocabulary",
+        "definition": "a person in the 16th and 17th centuries who wished to leave the Church of England",
+        "page": 100
+      },
+      {
+        "word": "traitor",
+        "type": "Content Vocabulary",
+        "definition": "a person who betrays his or her own people, nation, or cause",
+        "page": 99
+      },
+      {
+        "word": "tributary",
+        "type": "Content Vocabulary",
+        "definition": "a creek, stream, or river that flows into a larger river or other body of water",
+        "page": 112
+      }
+    ],
+    "4": [
+      {
+        "word": "apprentice",
+        "type": "Content Vocabulary",
+        "definition": "a person who learns a craft or trade by working with a skilled member of that craft or trade",
+        "page": 129
+      },
+      {
+        "word": "arable",
+        "type": "Content Vocabulary",
+        "definition": "able to grow crops; fertile",
+        "page": 140
+      },
+      {
+        "word": "artisan",
+        "type": "Content Vocabulary",
+        "definition": "a person skilled at making things by hand",
+        "page": 136
+      },
+      {
+        "word": "backcountry",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 134
+      },
+      {
+        "word": "burgeon",
+        "type": "Content Vocabulary",
+        "definition": "to grow quickly",
+        "page": 146
+      },
+      {
+        "word": "cash crop",
+        "type": "Content Vocabulary",
+        "definition": "a crop grown for sale rather than for use by farmers",
+        "page": 132
+      },
+      {
+        "word": "commodity",
+        "type": "Content Vocabulary",
+        "definition": "a trade good",
+        "page": 142
+      },
+      {
+        "word": "common school",
+        "type": "Content Vocabulary",
+        "definition": "a colonial elementary school",
+        "page": 129
+      },
+      {
+        "word": "Conestoga wagon",
+        "type": "Content Vocabulary",
+        "definition": "a kind of wagon, made by German settlers in North America, that could carry heavy loads",
+        "page": 143
+      },
+      {
+        "word": "conformity",
+        "type": "Content Vocabulary",
+        "definition": "an obedience to a set of beliefs",
+        "page": 144
+      },
+      {
+        "word": "diversity",
+        "type": "Content Vocabulary",
+        "definition": "a wide variety",
+        "page": 143
+      },
+      {
+        "word": "Enlightenment",
+        "type": "Content Vocabulary",
+        "definition": "an intellectual movement that emphasized the use of reason to examine previously accepted beliefs",
+        "page": 149
+      },
+      {
+        "word": "Great Awakening",
+        "type": "Content Vocabulary",
+        "definition": "a series of Protestant religious revivals that swept across the American colonies",
+        "page": 148
+      },
+      {
+        "word": "gristmill",
+        "type": "Content Vocabulary",
+        "definition": "a building that houses machinery for grinding grain",
+        "page": 140
+      },
+      {
+        "word": "indigo",
+        "type": "Content Vocabulary",
+        "definition": "a plant that produces a blue dye for cloth",
+        "page": 132
+      },
+      {
+        "word": "libel",
+        "type": "Content Vocabulary",
+        "definition": "the publishing of lies",
+        "page": 152
+      },
+      {
+        "word": "midwife",
+        "type": "Content Vocabulary",
+        "definition": "a person who is trained to help deliver babies",
+        "page": 146
+      },
+      {
+        "word": "natural rights",
+        "type": "Content Vocabulary",
+        "definition": "rights such as life or liberty that a person is born with",
+        "page": 149
+      },
+      {
+        "word": "Navigation Acts",
+        "type": "Content Vocabulary",
+        "definition": "a series of laws passed by the English Parliament to protect English shipping by restricting the transport of goods to and from the English colonies",
+        "page": 125
+      },
+      {
+        "word": "overseer",
+        "type": "Content Vocabulary",
+        "definition": "a supervisor",
+        "page": 134
+      },
+      {
+        "word": "Parliament",
+        "type": "Content Vocabulary",
+        "definition": "the legislative body of England, and, later, Great Britain",
+        "page": 150
+      },
+      {
+        "word": "Piedmont",
+        "type": "Content Vocabulary",
+        "definition": "a relatively flat area between the Appalachian Mountains and the coastal plain",
+        "page": 134
+      },
+      {
+        "word": "provisions",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 124
+      },
+      {
+        "word": "religious freedom",
+        "type": "Content Vocabulary",
+        "definition": "the right to practice the religion of one's choosing without government interference",
+        "page": 126
+      },
+      {
+        "word": "salutary neglect",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 151
+      },
+      {
+        "word": "salvation",
+        "type": "Content Vocabulary",
+        "definition": "the act of being forgiven for wrongdoings or sins",
+        "page": 148
+      },
+      {
+        "word": "smuggle",
+        "type": "Content Vocabulary",
+        "definition": "to import or export goods illegally",
+        "page": 125
+      },
+      {
+        "word": "Stono Rebellion",
+        "type": "Content Vocabulary",
+        "definition": "a 1739 revolt by enslaved Africans against their owners",
+        "page": 137
+      },
+      {
+        "word": "subsistence farming",
+        "type": "Content Vocabulary",
+        "definition": "the practice of producing enough food for a farmer and his family but not enough to sell for profit",
+        "page": 123
+      },
+      {
+        "word": "tolerance",
+        "type": "Content Vocabulary",
+        "definition": "the acceptance of others",
+        "page": 144
+      },
+      {
+        "word": "trading post",
+        "type": "Content Vocabulary",
+        "definition": "a small settlement established for the purpose of exchanging goods",
+        "page": 155
+      },
+      {
+        "word": "treaty",
+        "type": "Content Vocabulary",
+        "definition": "a peace agreement",
+        "page": 158
+      }
+    ],
+    "5": [
+      {
+        "word": "artillery",
+        "type": "Content Vocabulary",
+        "definition": "large guns that can fire over a long distance",
+        "page": 203
+      },
+      {
+        "word": "Boston Massacre",
+        "type": "Content Vocabulary",
+        "definition": "the 1779 incident in which British soldiers fired on locals who had been taunting them",
+        "page": 188
+      },
+      {
+        "word": "Boston Tea Party",
+        "type": "Content Vocabulary",
+        "definition": "the 1773 incident in which the Sons of Liberty boarded British ships and dumped their cargo in protest of British taxes on the colonists",
+        "page": 191
+      },
+      {
+        "word": "boycott",
+        "type": "Content Vocabulary",
+        "definition": "a form of protest that involves refusing to purchase goods or services",
+        "page": 183
+      },
+      {
+        "word": "committee of correspondence",
+        "type": "Content Vocabulary",
+        "definition": "in the Revolutionary era, a group of colonists whose duty it was to spread news about protests against the British",
+        "page": 191
+      },
+      {
+        "word": "Continental Army",
+        "type": "Content Vocabulary",
+        "definition": "the American army formed in 1775 by the Second Continental Congress and led by General George Washington",
+        "page": 203
+      },
+      {
+        "word": "Currency Act",
+        "type": "Content Vocabulary",
+        "definition": "the British law that regulated paper money in the American colonies",
+        "page": 181
+      },
+      {
+        "word": "Declaration of Independence",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 208
+      },
+      {
+        "word": "drumlin",
+        "type": "Content Vocabulary",
+        "definition": "a smooth- sloped hill made of glacial sediments",
+        "page": 204
+      },
+      {
+        "word": "duty",
+        "type": "Content Vocabulary",
+        "definition": "a tax on imports",
+        "page": 181
+      },
+      {
+        "word": "earthwork",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 204
+      },
+      {
+        "word": "First Continental Congress",
+        "type": "Content Vocabulary",
+        "definition": "the 1774 meeting of representatives from all American colonies to decide on a response to the Intolerable Acts",
+        "page": 195
+      },
+      {
+        "word": "geology",
+        "type": "Content Vocabulary",
+        "definition": "the study of the processes that shape Earth's rocks and landforms",
+        "page": 204
+      },
+      {
+        "word": "grievance",
+        "type": "Content Vocabulary",
+        "definition": "an objection or reason to complain",
+        "page": 181
+      },
+      {
+        "word": "Hessian",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 206
+      },
+      {
+        "word": "Intolerable Acts",
+        "type": "Content Vocabulary",
+        "definition": "the British laws passed to punish the people of Boston after the Boston Tea Party; also called the Coercive Acts",
+        "page": 194
+      },
+      {
+        "word": "Loyalist",
+        "type": "Content Vocabulary",
+        "definition": "an American colonist who supported Britain during the American Revolution",
+        "page": 198
+      },
+      {
+        "word": "militia",
+        "type": "Content Vocabulary",
+        "definition": "military force made up of local citizens to help protect their town, land, or nation",
+        "page": 178
+      },
+      {
+        "word": "minutemen",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 196
+      },
+      {
+        "word": "Patriot",
+        "type": "Content Vocabulary",
+        "definition": "an American colonist who supported the right of the American colonies to govern themselves",
+        "page": 198
+      },
+      {
+        "word": "Proclamation of 1763",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 178
+      },
+      {
+        "word": "Quartering Act",
+        "type": "Content Vocabulary",
+        "definition": "one of several British laws that required American colonists to provide housing and food for British soldiers stationed in North America",
+        "page": 178
+      },
+      {
+        "word": "repeal",
+        "type": "Content Vocabulary",
+        "definition": "to cancel or nullify, especially a law",
+        "page": 183
+      },
+      {
+        "word": "revenue",
+        "type": "Content Vocabulary",
+        "definition": "income; money that is received",
+        "page": 180
+      },
+      {
+        "word": "Second Continental Congress",
+        "type": "Content Vocabulary",
+        "definition": "a group of leaders of the American colonies who met to address the problem of British tyranny, declared independence in 1776, and led the United States through the American Revolution",
+        "page": 203
+      },
+      {
+        "word": "Sons of Liberty",
+        "type": "Content Vocabulary",
+        "definition": "the groups of merchants, shopkeepers, and craftsmen who successfully opposed the Stamp Act by establishing networks to boycott British goods",
+        "page": 183
+      },
+      {
+        "word": "Stamp Act",
+        "type": "Content Vocabulary",
+        "definition": "the British law requiring colonists to purchase a stamp for official documents and published papers",
+        "page": 182
+      },
+      {
+        "word": "Sugar Act",
+        "type": "Content Vocabulary",
+        "definition": "the British law that lowered the duty on molasses to cut out smuggling so that the British would get the revenue",
+        "page": 181
+      },
+      {
+        "word": "Tea Act",
+        "type": "Content Vocabulary",
+        "definition": "the British law stating that only the East India Company was allowed to sell tea to the American colonists",
+        "page": 191
+      },
+      {
+        "word": "terrain",
+        "type": "Content Vocabulary",
+        "definition": "the physical features of the land",
+        "page": 204
+      },
+      {
+        "word": "Townshend Acts",
+        "type": "Content Vocabulary",
+        "definition": "a set of British laws that placed duties on tea, glass, paper, lead, and paint; required colonists to purchase from Britain",
+        "page": 186
+      },
+      {
+        "word": "tyranny",
+        "type": "Content Vocabulary",
+        "definition": "unjust rule by an absolute ruler",
+        "page": 181
+      },
+      {
+        "word": "unalienable right",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 208
+      },
+      {
+        "word": "writ of assistance",
+        "type": "Content Vocabulary",
+        "definition": "a legal document giving authorities the right to enter and search a home or business",
+        "page": 186
+      }
+    ],
+    "6": [
+      {
+        "word": "Articles of Confederation",
+        "type": "Content Vocabulary",
+        "definition": "a set of laws adopted by the United States in 1777 that established each state in the union as a republic, replaced by the Constitution in 1789",
+        "page": 222
+      },
+      {
+        "word": "bayonet",
+        "type": "Content Vocabulary",
+        "definition": "a sharp blade attached to the end of a rifle",
+        "page": 228
+      },
+      {
+        "word": "blockade",
+        "type": "Content Vocabulary",
+        "definition": "to block ships from entering or leaving a harbor",
+        "page": 228
+      },
+      {
+        "word": "counterattack",
+        "type": "Content Vocabulary",
+        "definition": "an attack made in response to a previous attack",
+        "page": 227
+      },
+      {
+        "word": "defensive war",
+        "type": "Content Vocabulary",
+        "definition": "a war to protect one's own land, on familiar ground, from outside attackers",
+        "page": 222
+      },
+      {
+        "word": "desert",
+        "type": "Content Vocabulary",
+        "definition": "to run away from the army or another branch of the military to avoid military service",
+        "page": 231
+      },
+      {
+        "word": "espionage",
+        "type": "Content Vocabulary",
+        "definition": "the practice of spying to obtain information",
+        "page": 232
+      },
+      {
+        "word": "expertise",
+        "type": "Content Vocabulary",
+        "definition": "an expert knowledge or skill",
+        "page": 241
+      },
+      {
+        "word": "financier",
+        "type": "Content Vocabulary",
+        "definition": "a person who lends or manages money for a business or undertaking",
+        "page": 229
+      },
+      {
+        "word": "fortification",
+        "type": "Content Vocabulary",
+        "definition": "a structure built to protect a place from attack",
+        "page": 227
+      },
+      {
+        "word": "guerrilla",
+        "type": "Content Vocabulary",
+        "definition": "relating to an independent military group that uses methods such as sneak attacks and sabotage",
+        "page": 237
+      },
+      {
+        "word": "mercenary",
+        "type": "Content Vocabulary",
+        "definition": "a soldier who is paid to fight for a country other than his or her own",
+        "page": 222
+      },
+      {
+        "word": "pacifist",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 239
+      },
+      {
+        "word": "provisions",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 244
+      },
+      {
+        "word": "reinforcements",
+        "type": "Content Vocabulary",
+        "definition": "more soldiers and supplies sent to help military troops engage in warfare",
+        "page": 224
+      },
+      {
+        "word": "republic",
+        "type": "Content Vocabulary",
+        "definition": "a form of government in which the people elect representatives to speak for them and enact laws based on their needs",
+        "page": 222
+      },
+      {
+        "word": "republicanism",
+        "type": "Content Vocabulary",
+        "definition": "a government in which people choose representatives to make their laws",
+        "page": 244
+      },
+      {
+        "word": "skirmish",
+        "type": "Content Vocabulary",
+        "definition": "a small, short- lasting battle",
+        "page": 231
+      },
+      {
+        "word": "Treaty of Paris of 1783",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 244
+      }
+    ],
+    "7": [
+      {
+        "word": "amendment",
+        "type": "Content Vocabulary",
+        "definition": "a formal change to a law, usually referring to a formal change to the U.S. Constitution",
+        "page": 263
+      },
+      {
+        "word": "antifederalist",
+        "type": "Content Vocabulary",
+        "definition": "a person who opposed the U.S. Constitution of 1787 because of its emphasis on a strong national government",
+        "page": 262
+      },
+      {
+        "word": "Bill of Rights",
+        "type": "Content Vocabulary",
+        "definition": "the first 10 amendments to the U.S. Constitution; a list of guarantees to which every person in a country is entitled",
+        "page": 263
+      },
+      {
+        "word": "checks and balances",
+        "type": "Content Vocabulary",
+        "definition": "the system established by the U.S. Constitution that gives each of the branches of government the power to limit the power of the other two",
+        "page": 258
+      },
+      {
+        "word": "commerce clause",
+        "type": "Content Vocabulary",
+        "definition": "a provision in Article 1 of the U.S. Constitution granting Congress the power to make laws concerning foreign trade as well as trade among the states and with Native American nations",
+        "page": 260
+      },
+      {
+        "word": "common market",
+        "type": "Content Vocabulary",
+        "definition": "a group of countries or states that allows the members to trade freely among themselves",
+        "page": 261
+      },
+      {
+        "word": "constitution",
+        "type": "Content Vocabulary",
+        "definition": "a document that organizes a government and states its powers",
+        "page": 250
+      },
+      {
+        "word": "constitutionalism",
+        "type": "Content Vocabulary",
+        "definition": "the concept of governing based on a constitution",
+        "page": 251
+      },
+      {
+        "word": "credit",
+        "type": "Content Vocabulary",
+        "definition": "the privilege of purchasing something or borrowing money and paying the money back over time",
+        "page": 254
+      },
+      {
+        "word": "delegate",
+        "type": "Content Vocabulary",
+        "definition": "a person chosen or elected to represent a group of people",
+        "page": 256
+      },
+      {
+        "word": "dual sovereignty",
+        "type": "Content Vocabulary",
+        "definition": "the concept that state governments have certain powers the federal government cannot overrule",
+        "page": 257
+      },
+      {
+        "word": "electoral college",
+        "type": "Content Vocabulary",
+        "definition": "the group that elects the U.S. president; each state receives as many electors as it has congressional representatives and senators combined",
+        "page": 258
+      },
+      {
+        "word": "executive branch",
+        "type": "Content Vocabulary",
+        "definition": "the section of the U.S. government headed by the president; responsible for enforcing the law",
+        "page": 258
+      },
+      {
+        "word": "federal",
+        "type": "Content Vocabulary",
+        "definition": "relating to a government where power is shared between the central, national government and that of states or provinces",
+        "page": 250
+      },
+      {
+        "word": "federalism",
+        "type": "Content Vocabulary",
+        "definition": "the support of a government where power is shared between the central, national government and that of states or provinces",
+        "page": 257
+      },
+      {
+        "word": "federalist",
+        "type": "Content Vocabulary",
+        "definition": "a person who supported the U.S. Constitution of 1787 as it was written during the process of ratification",
+        "page": 262
+      },
+      {
+        "word": "Framers",
+        "type": "Content Vocabulary",
+        "definition": "delegates to the 1787 Constitutional Convention who helped shape the content and structure of the U.S. Constitution",
+        "page": 257
+      },
+      {
+        "word": "fugitive slave clause",
+        "type": "Content Vocabulary",
+        "definition": "a provision in Article 4 of the U.S. Constitution that prevented free states from emancipating enslaved workers who had escaped from their masters in other states",
+        "page": 260
+      },
+      {
+        "word": "judicial branch",
+        "type": "Content Vocabulary",
+        "definition": "the section of the U.S. government that includes the courts and legal system, led by the Supreme Court; responsible for interpreting the law",
+        "page": 258
+      },
+      {
+        "word": "legislative branch",
+        "type": "Content Vocabulary",
+        "definition": "the section of the U.S. government led by Congress; responsible for making the law",
+        "page": 258
+      },
+      {
+        "word": "Northwest Ordinance of 1787",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 252
+      },
+      {
+        "word": "ordinance",
+        "type": "Content Vocabulary",
+        "definition": "an official law, decree, or directive",
+        "page": 252
+      },
+      {
+        "word": "Ordinance of 1785",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 252
+      },
+      {
+        "word": "ratify",
+        "type": "Content Vocabulary",
+        "definition": "to approve formally, by vote",
+        "page": 250
+      },
+      {
+        "word": "separation of powers",
+        "type": "Content Vocabulary",
+        "definition": "the division of governmental power among the three branches of U.S. government: the executive branch, the judicial branch, and the legislative branch",
+        "page": 258
+      },
+      {
+        "word": "Shays's Rebellion",
+        "type": "Content Vocabulary",
+        "definition": "the 1786–1787 uprising of Massachusetts farmers in protest of high taxes",
+        "page": 255
+      },
+      {
+        "word": "slave importation clause",
+        "type": "Content Vocabulary",
+        "definition": "a provision in Article 1 of the U.S. Constitution that established that the United States would not consider prohibiting the international slave trade in the United States until 1808",
+        "page": 260
+      },
+      {
+        "word": "sovereign",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 250
+      },
+      {
+        "word": "statute",
+        "type": "Content Vocabulary",
+        "definition": "a formal, written law",
+        "page": 267
+      },
+      {
+        "word": "Supreme Court",
+        "type": "Content Vocabulary",
+        "definition": "the highest court in the United States",
+        "page": 258
+      },
+      {
+        "word": "Three-Fifths Compromise",
+        "type": "Content Vocabulary",
+        "definition": "the agreement that determined that only three-fifths of the total population of enslaved persons in a state would be counted for purposes of taxation and representation",
+        "page": 260
+      }
+    ],
+    "8": [
+      {
+        "word": "Alien and Sedition Acts",
+        "type": "Content Vocabulary",
+        "definition": "a series of four laws passed to keep certain groups from immigrating to the United States; the laws gave the government power to expel aliens living in the United States and targeted U.S. citizens who criticized the U.S. government",
+        "page": 301
+      },
+      {
+        "word": "attorney general",
+        "type": "Content Vocabulary",
+        "definition": "a member of the president's Cabinet, whose primary role is to represent the United States before the Supreme Court",
+        "page": 289
+      },
+      {
+        "word": "Cabinet",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 287
+      },
+      {
+        "word": "cede",
+        "type": "Content Vocabulary",
+        "definition": "to give up",
+        "page": 296
+      },
+      {
+        "word": "Chief Justice",
+        "type": "Content Vocabulary",
+        "definition": "the head of the judicial branch of the government; presides over the Supreme Court",
+        "page": 289
+      },
+      {
+        "word": "envoy",
+        "type": "Content Vocabulary",
+        "definition": "an ambassador",
+        "page": 300
+      },
+      {
+        "word": "French Revolution",
+        "type": "Content Vocabulary",
+        "definition": "the 1789 rebellion against the French monarchy that sought to put an end to upper-class privilege and demanded equality for the lower classes",
+        "page": 297
+      },
+      {
+        "word": "inauguration",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 287
+      },
+      {
+        "word": "loose interpretation",
+        "type": "Content Vocabulary",
+        "definition": "an understanding of the Constitution as one that gives Congress and the president broad powers",
+        "page": 294
+      },
+      {
+        "word": "national debt",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 290
+      },
+      {
+        "word": "power base",
+        "type": "Content Vocabulary",
+        "definition": "an area or group of people providing the biggest influence over a political candidate",
+        "page": 294
+      },
+      {
+        "word": "precedent",
+        "type": "Content Vocabulary",
+        "definition": "a prior event or decision that serves as an example for events or decisions that follow",
+        "page": 286
+      },
+      {
+        "word": "radical",
+        "type": "Content Vocabulary",
+        "definition": "a person who supports complete social or political change",
+        "page": 297
+      },
+      {
+        "word": "sedition",
+        "type": "Content Vocabulary",
+        "definition": "the act of provoking rebellion",
+        "page": 301
+      },
+      {
+        "word": "states' rights",
+        "type": "Content Vocabulary",
+        "definition": "the concept that individual states have rights that the federal government cannot violate",
+        "page": 301
+      },
+      {
+        "word": "strict interpretation",
+        "type": "Content Vocabulary",
+        "definition": "an understanding of the Constitution as one in which the Constitution is strictly followed as it was written",
+        "page": 294
+      },
+      {
+        "word": "tariff",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 290
+      },
+      {
+        "word": "Treaty of Greenville",
+        "type": "Content Vocabulary",
+        "definition": "a treaty between the United States and a number of Native American nations in which the Native American nations gave up their lands in present- day Ohio and Indiana to the United Sates",
+        "page": 296
+      },
+      {
+        "word": "Whiskey Rebellion",
+        "type": "Content Vocabulary",
+        "definition": "a series of violent protests among farmers in western Pennsylvania against a tax on whiskey",
+        "page": 297
+      },
+      {
+        "word": "XYZ Affair",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 301
+      }
+    ],
+    "9": [
+      {
+        "word": "customs",
+        "type": "Content Vocabulary",
+        "definition": "the taxes placed on imported and exported goods",
+        "page": 327
+      },
+      {
+        "word": "embargo",
+        "type": "Content Vocabulary",
+        "definition": "a law that restricts commerce with one or more nations",
+        "page": 327
+      },
+      {
+        "word": "Embargo Act of 1807",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 327
+      },
+      {
+        "word": "impressment",
+        "type": "Content Vocabulary",
+        "definition": "the act of forcing men into military or naval service",
+        "page": 327
+      },
+      {
+        "word": "incumbent",
+        "type": "Content Vocabulary",
+        "definition": "the person currently in office; the incumbent president is the current president",
+        "page": 314
+      },
+      {
+        "word": "judicial review",
+        "type": "Content Vocabulary",
+        "definition": "the power to invalidate any law the Supreme Court deems unconstitutional, even if it has been passed by Congress and signed into law by the president",
+        "page": 318
+      },
+      {
+        "word": "Judiciary Act of 1801",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 318
+      },
+      {
+        "word": "Louisiana Purchase",
+        "type": "Content Vocabulary",
+        "definition": "a treaty between France and the United States in which a large area of land between the Mississippi River and the Rocky Mountains was purchased",
+        "page": 321
+      },
+      {
+        "word": "prophet",
+        "type": "Content Vocabulary",
+        "definition": "someone who is believed to deliver messages from God or some other divine source",
+        "page": 329
+      },
+      {
+        "word": "unconstitutional",
+        "type": "Content Vocabulary",
+        "definition": "an idea or law that goes against the principles of the U.S. Constitution",
+        "page": 318
+      },
+      {
+        "word": "War Hawks",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 329
+      },
+      {
+        "word": "War of 1812",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 330
+      },
+      {
+        "word": "writ",
+        "type": "Content Vocabulary",
+        "definition": "a legal document",
+        "page": 318
+      },
+      {
+        "word": "yellow fever",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 320
+      }
+    ],
+    "10": [
+      {
+        "word": "Expansion and Growth abolition",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 357
+      },
+      {
+        "word": "American System",
+        "type": "Content Vocabulary",
+        "definition": "a policy of promoting the U.S. industrial system through the use of tariffs, federal subsidies to build roads and other public works, and a national bank to control currency",
+        "page": 350
+      },
+      {
+        "word": "antebellum",
+        "type": "Content Vocabulary",
+        "definition": "before the American Civil War",
+        "page": 348
+      },
+      {
+        "word": "cotton gin",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 346
+      },
+      {
+        "word": "factory system",
+        "type": "Content Vocabulary",
+        "definition": "",
+        "page": 336
+      },
+      {
+        "word": "implied power",
+        "type": "Content Vocabulary",
+        "definition": "a power not explicitly stated in the Constitution",
+        "page": 351
+      },
+      {
+        "word": "Industrial Revolution",
+        "type": "Content Vocabulary",
+        "definition": "an era in which widespread production by machinery replaced goods made by hand",
+        "page": 336
+      },
+      {
+        "word": "interchangeable part",
+        "type": "Content Vocabulary",
+        "definition": "part of a mechanism that can be substituted one for another",
+        "page": 338
+      },
+      {
+        "word": "interstate slave trade",
+        "type": "Content Vocabulary",
+        "definition": "the buying and selling of slaves within the United States",
+        "page": 347
+      },
+      {
+        "word": "market revolution",
+        "type": "Content Vocabulary",
+        "definition": "the transition from a pre- industrial economy to a market-oriented, capitalist economy",
+        "page": 336
+      },
+      {
+        "word": "Missouri Compromise",
+        "type": "Content Vocabulary",
+        "definition": "an agreement that stated the people of Missouri could own slaves and be admitted to the Union along with Maine, a free state",
+        "page": 352
+      },
+      {
+        "word": "monopoly",
+        "type": "Content Vocabulary",
+        "definition": "the complete and exclusive control of an industry by one company",
+        "page": 351
+      },
+      {
+        "word": "Monroe Doctrine",
+        "type": "Content Vocabulary",
+        "definition": "an approach to foreign policy that stated the American continents were no longer under European influence",
+        "page": 353
+      },
+      {
+        "word": "nationalism",
+        "type": "Content Vocabulary",
+        "definition": "the concept of loyalty and devotion to one's nation",
+        "page": 350
+      }
+    ]
+  },
+  "academic_by_page": {},
+  "glossary_definitions": {
+    "glossary a abolition": "the act of putting an end to something, such as slavery",
+    "abolitionist": "a person who wants to end slavery",
+    "african diaspora": "the removal of Africans from their homelands to the Americas",
+    "agrarian": "related to agriculture or farming",
+    "agricultural revolution": "the transition in human history from hunting and gathering food to planting crops and raising animals",
+    "alien and sedition acts": "a series of four laws passed to keep certain groups from immigrating to the United States; the laws gave the government power to expel aliens living in the United States and targeted U.S. citizens who criticized the U.S. government",
+    "alliance": "an agreement between nations to fight each other's enemies or otherwise collaborate; a partnership",
+    "amendment": "a formal change to a law, usually referring to a formal change to the U.S. Constitution",
+    "american system": "a policy of promoting the U.S. industrial system through the use of tariffs, federal subsidies to build roads and other public works, and a national bank to control currency",
+    "anaconda plan": "a military strategy during the Civil War in which the North planned to set up a blockade around the southern coast to ruin the South's economy and secure ports on the Mississippi River; much as a huge snake, like an anaconda, crushes its prey",
+    "antebellum": "before the American Civil War",
+    "antifederalist": "a person who opposed the U.S. Constitution of 1787 because of its emphasis on a strong national government",
+    "apprentice": "a person who learns a craft or trade by working with a skilled member of that craft or trade",
+    "arable": "able to grow crops; fertile",
+    "arson": "the purposeful burning of buildings illegally",
+    "articles of confederation": "a set of laws adopted by the United States in 1777 that established each state in the union as a republic, replaced by the Constitution in 1789",
+    "artillery": "large guns that can fire over a long distance",
+    "artisan": "a person skilled at making things by hand",
+    "assassinate": "to murder for political reasons",
+    "asylum": "a hospital dedicated to treating the mentally ill",
+    "attorney general": "a member of the president's Cabinet, whose primary role is to represent the United States before the Supreme Court",
+    "b backcountry": "the western part of the Southern Colonies just east of the Appalachian Mountains",
+    "banish": "to send away as punishment, usually without hope of return",
+    "bayonet": "a sharp blade attached to the end of a rifle",
+    "bering land bridge": "a piece of land between Alaska and Siberia that was above sea level 13,000 years ago and allowed early humans to cross into North America",
+    "bill of rights": "the first 10 amendments to the U.S. Constitution; a list of guarantees to which every person in a country is entitled",
+    "black codes": "laws passed by southern states immediately after the Civil War for controlling African Americans and limiting their rights; repealed by Reconstruction in 1866",
+    "black peonage": "economic slavery that tied African Americans to sharecropping landlords' lands",
+    "blight": "a fungus or an insect that causes plants to dry up and die",
+    "blockade": "to block ships from entering or leaving a harbor",
+    "bond": "a certificate offered for sale to the public with the promise that the government will pay the money back at a later date",
+    "boomtown": "a town that experiences a great population increase in only a short time period",
+    "border state": "at the time of the Civil War, a state that bordered both Union and Confederate states, namely Maryland, Kentucky, Delaware, Missouri, and West Virginia",
+    "boston massacre": "the 1779 incident in which British soldiers fired on locals who had been taunting them",
+    "boston tea party": "the 1773 incident in which the Sons of Liberty boarded British ships and dumped their cargo in protest of British taxes on the colonists",
+    "boycott": "a form of protest that involves refusing to purchase goods or services",
+    "bribery": "offers of money or privileges to those in power in exchange for political favors",
+    "burgeon": "to grow quickly",
+    "c cabinet": "the heads of the departments that assist the U.S. president",
+    "californio": "a resident of California who was of Spanish or Mexican descent and lived there before the gold rush",
+    "caravan": "a group of people and animals traveling together, usually for trade",
+    "caravel": "a small, fast ship used by Spanish and Portuguese explorers",
+    "cash crop": "a crop grown for sale rather than for use by farmers",
+    "casualty": "a dead or injured person",
+    "cavalry": "army troops who fight on horseback",
+    "cede": "to give up",
+    "charter": "a written grant establishing an institution and detailing members' rights and privileges",
+    "chattel slavery": "a system in which enslaved people have no human rights and are classified as goods",
+    "checks and balances": "the system established by the U.S. Constitution that gives each of the branches of government the power to limit the power of the other two",
+    "chief justice": "the head of the judicial branch of the government; presides over the Supreme Court",
+    "chiefdom": "a large community of people ruled by a chief",
+    "circumnavigate": "to travel completely around Earth",
+    "a bill": "granting full equality and citizenship to \"every race and color\"",
+    "glossary civilian": "a person who is not in the military",
+    "civilization": "a society with a highly developed culture and technology",
+    "columbian exchange": "the exchange of plants, animals, microbes, people, and ideas between Europe and the Americas following Columbus's first voyage to the Western Hemisphere",
+    "commerce clause": "a provision in Article 1 of the U.S. Constitution granting Congress the power to make laws concerning foreign trade as well as trade among the states and with Native American nations",
+    "committee of correspondence": "in the Revolutionary era, a group of colonists whose duty it was to spread news about protests against the British",
+    "commodity": "a trade good",
+    "common market": "a group of countries or states that allows the members to trade freely among themselves",
+    "common school": "a colonial elementary school",
+    "common school movement": "an educational reform movement in the 1830s that promoted free public schools funded by property taxes and managed by local governments",
+    "a deal": "in which Democrats agreed to make Rutherford B. Hayes president if Republicans ended Reconstruction and pulled federal troops out of the South",
+    "conestoga wagon": "a kind of wagon, made by German settlers in North America, that could carry heavy loads",
+    "confederacy": "the 11 southern states that seceded from the Union to form their own nation, the Confederate States of America",
+    "conformity": "an obedience to a set of beliefs",
+    "conquistador": "a Spanish conqueror who sought gold and other riches in the Americas",
+    "conscription act": "a law instituted by the Union in 1863 stating that men between the ages of 20 and 45 years of age were liable to be drafted into the military, but they could pay $300 to avoid service",
+    "constitution": "a document that organizes a government and states its powers",
+    "constitutionalism": "the concept of governing based on a constitution",
+    "contiguous": "connected",
+    "continental army": "the American army formed in 1775 by the Second Continental Congress and led by General George Washington",
+    "continental divide": "the high point in the Rocky Mountains that divides the watersheds of the Atlantic and Pacific oceans",
+    "convert": "to persuade to change one's beliefs; often refers to a change in religion",
+    "copperhead": "a negative nickname for Democrats who opposed emancipation of enslaved people and the draft",
+    "counterattack": "an attack made in response to a previous attack",
+    "craft union": "a labor union that advocates for workers' rights and protections, whose members are specialized skilled workers or craftsmen",
+    "credit": "the privilege of purchasing something or borrowing money and paying the money back over time",
+    "crittenden plan": "a proposal that stated the federal government would have no power to abolish slavery in the states where it already existed; it reestablished and extended the Missouri Compromise line to the Pacific Ocean",
+    "currency act": "the British law that regulated paper money in the American colonies",
+    "customs": "the taxes placed on imported and exported goods",
+    "d declaration of independence": "the document declaring U.S. independence from Great Britain, adopted July 4, 1776",
+    "defect": "to break away",
+    "defensive war": "a war to protect one's own land, on familiar ground, from outside attackers",
+    "delegate": "a person chosen or elected to represent a group of people",
+    "depression": "a period of slow economic activity when many people are without work",
+    "desert": "to run away from the army or another branch of the military to avoid military service",
+    "diplomat": "a person sent to another nation to represent his or her country's interests",
+    "dissenter": "a person who disagrees with a majority belief or position",
+    "diversity": "a wide variety",
+    "doctrine": "a principle or set of beliefs accepted by a group",
+    "doctrine of nullification": "a doctrine that said a state could nullify, or reject, a federal law they felt was unconstitutional, held by some southern politicians before the Civil War",
+    "domestic service": "housework in another person's home, performed as a job",
+    "domesticate": "to raise plants and animals for human benefit and consumption",
+    "domestication": "the practice of raising animals and growing plants for human benefit",
+    "draft": "a mandatory term of military service",
+    "dred scott decision": "a Supreme Court decision that African Americans held no rights as citizens and that the Missouri Compromise of 1820 was unconstitutional; Dred Scott, the escaped slave at the center of the case, was returned to slavery",
+    "drumlin": "a smooth- sloped hill made of glacial sediments",
+    "dual sovereignty": "the concept that state governments have certain powers the federal government cannot overrule",
+    "duty": "a tax on imports",
+    "e earthworks": "human- made land modifications",
+    "economic activity": "actions that involve the production, distribution, and consumption of goods and services",
+    "electoral college": "the group that elects the U.S. president; each state receives as many electors as it has congressional representatives and senators combined",
+    "emancipation": "the ending of slavery",
+    "emancipation proclamation": "an 1863 document issued by Abraham Lincoln that freed all slaves living in Confederate-held territory during the American Civil War",
+    "embargo": "a law that restricts commerce with one or more nations",
+    "a federal": "law that set up a system to allow settlers to purchase land in the undeveloped West",
+    "emigrate": "to move away from a country in order to live in another",
+    "encomienda": "a system in Spain's American colonies in which wealthy settlers were given plots of land and allowed to enslave the people who lived there",
+    "enlightenment": "an intellectual movement that emphasized the use of reason to examine previously accepted beliefs",
+    "envoy": "an ambassador",
+    "espionage": "the practice of spying to obtain information",
+    "evacuate": "to leave a location, usually for one's own protection",
+    "evangelize": "to spread one's religious beliefs through public speaking and personal witness",
+    "executive branch": "the section of the U.S. government headed by the president; responsible for enforcing the law",
+    "exemption": "a release from obligations",
+    "exodus": "a mass departure",
+    "expertise": "an expert knowledge or skill",
+    "f factory system": "a method of production in which large crews of people perform work in one location",
+    "famine": "an extreme lack of crops or food causing widespread hunger",
+    "federal": "relating to a government where power is shared between the central, national government and that of states or provinces",
+    "federal marshal": "a law enforcement officer who works for the United States government",
+    "federalism": "the support of a government where power is shared between the central, national government and that of states or provinces",
+    "federalist": "a person who supported the U.S. Constitution of 1787 as it was written during the process of ratification",
+    "feudalism": "a political and social system in which a vassal receives protection from a lord in exchange for obedience and service",
+    "th amendment": "an amendment to the Constitution that says that federal and state governments cannot restrict the right to vote because of race, color, or previous condition of servitude",
+    "financier": "a person who lends or manages money for a business or undertaking",
+    "first continental congress": "the 1774 meeting of representatives from all American colonies to decide on a response to the Intolerable Acts",
+    "flotilla": "a small fleet",
+    "fortification": "a structure built to protect a place from attack",
+    "forty-niner": "one of the thousands of prospective miners who traveled to California seeking gold in 1849",
+    "framers": "delegates to the 1787 Constitutional Convention who helped shape the content and structure of the U.S. Constitution",
+    "freedmen's bureau": "the Bureau of Refugees, Freedmen, and Abandoned Lands, created by Congress in 1865 to help former slaves, as well as poor white southerners",
+    "french revolution": "the 1789 rebellion against the French monarchy that sought to put an end to upper-class privilege and demanded equality for the lower classes",
+    "fugitive slave clause": "a provision in Article 4 of the U.S. Constitution that prevented free states from emancipating enslaved workers who had escaped from their masters in other states",
+    "ndamental orders of connecticut": "a founding document of the Connecticut colony that listed 11 laws and stood as the framework for governing the colony",
+    "g gadsden purchase": "a sale of land in 1853 from Mexico to the United States that established the current U.S. southwestern border",
+    "galleon": "a large sailing ship used especially by the Spanish in the 16th and 17th centuries",
+    "garrison": "a defense force of soldiers",
+    "geographic perspective": "the examination of how geography affects people and culture",
+    "geology": "the study of the processes that shape Earth's rocks and landforms",
+    "gettysburg address n": "an 1863 speech delivered by President Lincoln to commemorate the loss of life at the Battle of Gettysburg and to dedicate a military cemetery",
+    "glacial period": "a period of time in history during which huge sheets of ice covered much of Earth",
+    "great awakening": "a series of Protestant religious revivals that swept across the American colonies",
+    "grievance": "an objection or reason to complain",
+    "gristmill": "a building that houses machinery for grinding grain",
+    "guerrilla": "relating to an independent military group that uses methods such as sneak attacks and sabotage",
+    "gunboat": "a small, fast ship carrying mounted guns",
+    "h habeas corpus": "the right of an arrested person to be brought before a judge before going to jail",
+    "hacienda": "a large plantation in a Spanish-speaking colony",
+    "heretic": "a person who holds beliefs different from the teachings of the Catholic Church",
+    "hessians": "German soldiers hired by the British to fight during the American Revolution",
+    "hierarchy": "the classification of a group of people according to ability or to economic, social, or professional standing",
+    "homestead act": "an act that started a program of public land grants to small farmers",
+    "human geography": "the study of how people and their cultures are affected by physical geography and how human activities affect the environment",
+    "humanism": "a movement that focuses on the importance of the individual",
+    "hunter-gatherer": "a human who hunts animals and gathers wild plants to eat",
+    "i ice age": "a period of time in history during which huge sheets of ice covered much of Earth",
+    "immigrate": "to permanently move to another country",
+    "immunity": "a protection against disease, either natural or induced by vaccination",
+    "impeachment": "the official charge of a president with misconduct while in office",
+    "implied power": "a power not explicitly stated in the Constitution",
+    "impressment": "the act of forcing men into military or naval service",
+    "glossary inauguration": "the ceremony that marks the beginning of a presidency",
+    "incumbent": "the person currently in office; the incumbent president is the current president",
+    "indentured servant": "a person under contract to work, usually without pay, in exchange for free passage to the colonies",
+    "indian removal act": "a law that ended the U.S. government's earlier policy of respecting the rights of Native Americans to remain on their land",
+    "indian territory": "the area of land in present- day Oklahoma and parts of Kansas and Nebraska to which Native Americans were forced to migrate",
+    "indigo": "a plant that produces a blue dye for cloth",
+    "individualism": "self-reliant independence",
+    "industrial revolution": "an era in which widespread production by machinery replaced goods made by hand",
+    "infantry": "foot soldiers",
+    "inflation": "a decrease in the value of money that causes an increase in the price of goods and services",
+    "institution": "an established and accepted practice in a society or culture",
+    "insurrection": "a rebellion",
+    "interchangeable part": "part of a mechanism that can be substituted one for another",
+    "interstate slave trade": "the buying and selling of slaves within the United States",
+    "intolerable acts": "the British laws passed to punish the people of Boston after the Boston Tea Party; also called the Coercive Acts",
+    "ironclad ship": "a ship armored with iron plates to protect it from cannon fire",
+    "iroquois league": "the confederation of five Iroquois- speaking nations: the Mohawk, Oneida, Onondaga, Cayuga, and Seneca; later joined by the Tuscarora",
+    "irrigation": "the supply of water to fields using human-made systems",
+    "j jacksonian democracy": "a political movement that celebrated the common man and defended the will of the people, named for President Andrew Jackson",
+    "joint-stock company": "a company whose shareholders own stock in the company",
+    "judicial branch": "the section of the U.S. government that includes the courts and legal system, led by the Supreme Court; responsible for interpreting the law",
+    "judicial review": "the power to invalidate any law the Supreme Court deems unconstitutional, even if it has been passed by Congress and signed into law by the president",
+    "the": "war against Great Britain that James Madison declared",
+    "jurisdiction": "the authority to enforce laws within a given area",
+    "k kayak": "a canoe with a light frame and a small opening on top in which to sit",
+    "king philip's war": "a violent conflict between Native Americans and English colonists from New England, who were aided by Native American allies",
+    "know-nothing party": "a political party formed in the 1850s to oppose immigration, also called the American Party",
+    "ku klux klan": "the group whose purpose was to maintain the social and political power of white people",
+    "l labor union": "a voluntary association of workers that uses its power to negotiate better working conditions",
+    "legal tender act": "an act that replaced the notes of individual banks with a unified national currency",
+    "legislative branch": "the section of the U.S. government led by Congress; responsible for making the law",
+    "levy": "to require the payment of a tax",
+    "libel": "the publishing of lies",
+    "liberal republican": "a member of a political group during the 1870s that believed the government had become too large and too powerful",
+    "literacy": "the ability to read and write",
+    "literacy test": "test of one's ability to read and write",
+    "loose interpretation": "an understanding of the Constitution as one that gives Congress and the president broad powers",
+    "louisiana purchase": "a treaty between France and the United States in which a large area of land between the Mississippi River and the Rocky Mountains was purchased",
+    "loyalist": "an American colonist who supported Britain during the American Revolution",
+    "lynch": "to hang someone illegally by mob action",
+    "m manifest destiny": "the idea that the United States had the right and the obligation to expand its territory across North America to the Pacific Ocean",
+    "manor system": "an economic system in which peasants are bound to a lord and work his land, or manor, in exchange for food and shelter",
+    "margin": "the amount by which something is won or lost",
+    "market revolution": "the transition from a pre- industrial economy to a market-oriented, capitalist economy",
+    "matrilineal": "relating to descendants traced through the mother",
+    "mayflower compact": "a shipboard contract signed by the Pilgrims on the Mayflower before they landed in North America, binding them to abide by their own laws and establish a civil society",
+    "megafauna": "the large animals of a particular area in the world or a particular time in history",
+    "mercantilism": "an economic policy that gives a country sole ownership of the trade occurring in its colonies",
+    "mercenary": "a soldier who is paid to fight for a country other than his or her own",
+    "mestizo": "a person who has mixed Spanish and Native American ancestry",
+    "middle passage": "the long trip across the Atlantic Ocean by which enslaved Africans were brought to the Americas; the second leg of the triangular trade route",
+    "midwife": "a person who is trained to help deliver babies",
+    "migrate": "to move from one place to another",
+    "militia": "military force made up of local citizens to help protect their town, land, or nation",
+    "minuteman": "an American colonial militia member who was ready to join in combat at a moment's notice",
+    "glossary mission": "a Christian church settlement established to convert native peoples",
+    "missionary": "a person who tries to spread Christianity to others",
+    "missouri compromise": "an agreement that stated the people of Missouri could own slaves and be admitted to the Union along with Maine, a free state",
+    "mobilize": "to organize and prepare troops for war",
+    "monopoly": "the complete and exclusive control of an industry by one company",
+    "monroe doctrine": "an approach to foreign policy that stated the American continents were no longer under European influence",
+    "morphine": "a powerful painkiller",
+    "mortality": "the death rate",
+    "mountain men": "the American fur trappers and explorers who began to explore and move west",
+    "n national debt": "the amount of money a government owes to all its creditors, including to other nations and to companies from which it purchases goods and services",
+    "nationalism": "the concept of loyalty and devotion to one's nation",
+    "nativist": "a person who believes native-born people should be favored more than immigrants",
+    "natural resource": "a material or substance found in nature that can be used to sustain a society or exploited for economic gain, such as minerals, water, or living things",
+    "natural rights": "rights such as life or liberty that a person is born with",
+    "navigation": "the science of finding position and planning routes, often used in relation to seafaring",
+    "navigation acts": "a series of laws passed by the English Parliament to protect English shipping by restricting the transport of goods to and from the English colonies",
+    "neutrality": "the refusal to take sides or become involved",
+    "a legislation": "adopted by Congress to establish stricter control over the government of the Northwest Territory",
+    "northwest passage": "a passage by water between the Atlantic and Pacific oceans along the northern coast of North America",
+    "o oasis": "a fertile place with water in a desert",
+    "ordinance": "an official law, decree, or directive",
+    "overseer": "a supervisor",
+    "p pacifist": "a person who stands against war and violence",
+    "an": "economic crisis triggered by bank and railroad failures",
+    "parallel": "a line of latitude",
+    "parliament": "the legislative body of England, and, later, Great Britain",
+    "passive resistance": "a nonviolent refusal to obey authority and laws",
+    "patriot": "an American colonist who supported the right of the American colonies to govern themselves",
+    "persecute": "to punish, particularly because of beliefs or background",
+    "philanthropist": "someone who actively promotes human welfare",
+    "physical geography": "the study of Earth's exterior physical features",
+    "piedmont": "a relatively flat area between the Appalachian Mountains and the coastal plain",
+    "pilgrimage": "a religious journey",
+    "pioneer": "a settler moving to a new and unfamiliar land",
+    "plantation": "a large farm; on southern plantations, slaves worked to grow and harvest crops",
+    "pleistocene epoch": "a period in the history of Earth in which large animals and plants existed and glaciers covered Earth",
+    "poll tax": "a fee charged when people register to vote",
+    "pontoon": "a portable, cylindrical float used to build a temporary bridge",
+    "popular sovereignty": "the idea that the residents of a region or nation decide an issue by voting",
+    "potlatch": "a gift-giving ceremony practiced by the Kwakiutl and Haida Native American tribes",
+    "power base": "an area or group of people providing the biggest influence over a political candidate",
+    "precedent": "a prior event or decision that serves as an example for events or decisions that follow",
+    "prejudice": "a broad judgment about a group of people not based on reason or fact",
+    "presidential reconstruction": "a policy that stated Confederate states must ratify the 13th Amendment and create new governments with new constitutions before they could rejoin the Union",
+    "presidio": "a military post or settlement",
+    "printing press": "an invention that used movable metal type to print pages",
+    "privateer": "an armed but privately owned ship that acts under the authority of a government to participate in warfare; or a sailor on such a ship",
+    "a law": "requiring colonists to stay east of a line drawn on a map along the crest of the Appalachian Mountains",
+    "profit": "the amount of money left for a business after expenses are deducted",
+    "prophet": "someone who is believed to deliver messages from God or some other divine source",
+    "proprietor": "a person with ownership of a colony, including the right to manage and distribute land and to establish government",
+    "prospector": "a person who searches in the earth for valuable resources, such as gems or precious metals",
+    "protestant": "a follower of the Reformation in Christianity",
+    "provision": "a legal condition that anticipates future needs",
+    "glossary provisions": "the supplies of food, water, and other items needed for a journey",
+    "proviso": "a condition attached to a legal document or legislation",
+    "push-pull factor": "a reason why people immigrate, such as lack of economic opportunity or freedom in one country and the promise of a better life in another",
+    "q quarantine": "to keep infected people away from those who have not yet contracted a disease",
+    "quartering act": "one of several British laws that required American colonists to provide housing and food for British soldiers stationed in North America",
+    "quinine": "a substance made from the bark of a tree that is an effective remedy for malaria",
+    "r racism": "the belief that one race is better than others",
+    "radical": "a person who supports complete social or political change",
+    "radical reconstruction": "the name given to the Republicans' plan in passing the Reconstruction Acts of 1867",
+    "rancho": "land granted by Mexico to settlers in the form of large estates in what is now California",
+    "ratify": "to approve formally, by vote",
+    "ration": "supplied food",
+    "raw material": "the basic substances and elements used to make products",
+    "reaper": "a machine that cuts stalks of wheat or oats",
+    "reconstruction": "the effort to rebuild and reunite the United States following the Civil War",
+    "acts": "that put the Republican Congress in charge of Reconstruction instead of the president",
+    "reinforcements": "more soldiers and supplies sent to help military troops engage in warfare",
+    "religious freedom": "the right to practice the religion of one's choosing without government interference",
+    "rendezvous": "a temporary market where trappers met to trade and socialize",
+    "repeal": "to cancel or nullify, especially a law",
+    "republic": "a form of government in which the people elect representatives to speak for them and enact laws based on their needs",
+    "republican motherhood": "the idea that women should raise their children to be good citizens who participate in the government",
+    "republican party": "a political party founded in 1854 by antislavery leaders",
+    "republicanism": "a government in which people choose representatives to make their laws",
+    "revenue": "income; money that is received",
+    "revival meeting": "an informal religious gathering meant to inspire people to join the faith, often held outdoors or in tents",
+    "royal colony": "a colony ruled by a monarch through an appointed governor",
+    "s salutary neglect": "the policy of the British government to not strictly enforce its colonial policies",
+    "salvation": "the act of being forgiven for wrongdoings or sins",
+    "scapegoat": "an individual or group blamed for the mistakes or faults of others",
+    "scurvy": "a disease linked to malnutrition and a diet lacking in fruits and vegetables",
+    "secede": "to formally withdraw from a nation or organization in order to become independent",
+    "secession": "the act of formally withdrawing from an organization, a nation, or any other group in order to be independent",
+    "second continental congress": "a group of leaders of the American colonies who met to address the problem of British tyranny, declared independence in 1776, and led the United States through the American Revolution",
+    "second great awakening": "an American Protestant movement based on revival meetings and a direct and emotional relationship with God",
+    "sectionalism": "a loyalty to whichever section or region of the country one was from, rather than to the nation as a whole",
+    "sedition": "the act of provoking rebellion",
+    "segregation": "the separation of people based on race",
+    "self-governance": "the control of one's own affairs; the control of community affairs and laws by those who live there rather than by an outside ruler or monarch",
+    "seneca falls convention": "an 1848 women's rights convention organized by Elizabeth Cady Stanton and Lucretia Mott in Seneca Falls, New York",
+    "separation of powers": "the division of governmental power among the three branches of U.S. government: the executive branch, the judicial branch, and the legislative branch",
+    "separatist": "a person in the 16th and 17th centuries who wished to leave the Church of England",
+    "serf": "a person who lived and worked on the private land of a landowner such as a noble or medieval lord",
+    "servitude": "the state of being enslaved",
+    "sharecropping": "an agricultural system in which a farmer raises crops for a landowner in return for part of the money made from selling the crops",
+    "shays's rebellion": "the 1786–1787 uprising of Massachusetts farmers in protest of high taxes",
+    "siege": "a tactic in which a military force surrounds a city in an attempt to take control of it",
+    "skirmish": "a small, short- lasting battle",
+    "slash-and-burn agriculture": "a method of clearing fields for planting that involves cutting and setting fire to existing trees and plants",
+    "slave importation clause": "a provision in Article 1 of the U.S. Constitution that established that the United States would not consider prohibiting the international slave trade in the United States until 1808",
+    "slavery": "a social system in which human beings take complete control of others",
+    "slogan": "a catchy phrase meant to attract and keep attention",
+    "smallpox": "a deadly virus that causes a high fever and small blisters on the skin",
+    "smuggle": "to import or export goods illegally",
+    "social justice": "the fair distribution of opportunities and privileges, including racial equality",
+    "sons of liberty": "the groups of merchants, shopkeepers, and craftsmen who successfully opposed the Stamp Act by establishing networks to boycott British goods",
+    "glossary sovereign": "having the right to self-rule or independent government",
+    "spiritual": "a religious song based on scripture and biblical figures in the Bible, first sung by enslaved people in the South",
+    "spoils system": "the practice of rewarding political backers with government jobs",
+    "stalemate": "a situation in which neither side in a conflict is able to win",
+    "stamp act": "the British law requiring colonists to purchase a stamp for official documents and published papers",
+    "states' rights": "the concept that individual states have rights that the federal government cannot violate",
+    "statute": "a formal, written law",
+    "steamboat": "a boat outfitted with steam boiler engines to power the paddle wheels that propel it forward",
+    "steerage": "the inferior section of a ship housing passengers who pay the lowest fare for the journey",
+    "steppe": "a vast, grassy plain",
+    "stono rebellion": "a 1739 revolt by enslaved Africans against their owners",
+    "strict interpretation": "an understanding of the Constitution as one in which the Constitution is strictly followed as it was written",
+    "strike": "a work stoppage in order to force an employer to comply with demands",
+    "subsidy": "government funds for improvements or support of commerce",
+    "subsistence farming": "the practice of producing enough food for a farmer and his family but not enough to sell for profit",
+    "suffrage": "the right to vote",
+    "sugar act": "the British law that lowered the duty on molasses to cut out smuggling so that the British would get the revenue",
+    "supreme court": "the highest court in the United States",
+    "t tariff": "a tax on imports and exports",
+    "tariff of abominations": "the term used by southerners to refer to the Tariff of 1828 because it stirred feelings of disgust and hatred",
+    "tea act": "the British law stating that only the East India Company was allowed to sell tea to the American colonists",
+    "telegraph": "a machine that sends messages long distances by sending electrical pulses in code over electrical wires",
+    "temperance movement": "a 19th-century reform movement that encouraged the reduction or elimination of alcoholic beverage consumption",
+    "tepee": "a cone-shaped tent made of bison hides",
+    "terrain": "the physical features of the land",
+    "textile": "the cloth and clothing made from cotton and other raw materials",
+    "three-fifths compromise": "the agreement that determined that only three-fifths of the total population of enslaved persons in a state would be counted for purposes of taxation and representation",
+    "tolerance": "the acceptance of others",
+    "total war": "a war in which all rules and laws of war are ignored, and all resources are used for defeating the enemy",
+    "townshend acts": "a set of British laws that placed duties on tea, glass, paper, lead, and paint; required colonists to purchase from Britain",
+    "trading post": "a small settlement established for the purpose of exchanging goods",
+    "trail of tears": "the route the Cherokees and other Native Americans took during their forced migration from the southeast United States to Oklahoma",
+    "traitor": "a person who betrays his or her own people, nation, or cause",
+    "trans-saharan": "across the Sahara",
+    "transcendentalism": "an intellectual and social movement of the 1830s and 1840s that called for rising above society's expectations",
+    "treason": "the crime of aiding the enemy of one's nation or plotting to overthrow one's nation; the act of being disloyal to one's nation",
+    "treaty": "a peace agreement",
+    "treaty of greenville": "a treaty between the United States and a number of Native American nations in which the Native American nations gave up their lands in present- day Ohio and Indiana to the United Sates",
+    "trench warfare": "a battle strategy that uses a system of ditches to give soldiers a protected place from which to fire during battle",
+    "triangular trade": "a transatlantic trade network formed by Europe, West Africa, and the Americas",
+    "tributary": "a creek, stream, or river that flows into a larger river or other body of water",
+    "truce": "an agreement to stop fighting",
+    "tundra": "the flat treeless land found in arctic and subarctic regions",
+    "tyranny": "unjust rule by an absolute ruler",
+    "u unalienable right": "a right that cannot be taken away",
+    "unconstitutional": "an idea or law that goes against the principles of the U.S. Constitution",
+    "underground railroad": "a network of people who worked together to help African Americans escape from slavery from the southern United States to the northern states or to Canada before the Civil War",
+    "unionist": "a member of the Constitutional Union Party",
+    "unorganized territory": "lands governed by the federal government but not belonging to any state",
+    "v vassal": "in the medieval European feudal system, a person, usually a lesser nobleman, who received land and protection from a feudal lord in exchange for obedience and service",
+    "veteran": "a person who has served in the military",
+    "veto": "to formally reject a decision or proposal made by a legislature",
+    "viceroy": "a governor of Spain's colonies in the Americas who represented the Spanish king and queen",
+    "viceroyalty": "a territory governed by a viceroy",
+    "voting rights": "the laws that tell who can vote and when; the civil right to vote",
+    "w wage economy": "an economy in which people are paid for their work",
+    "wagon train": "a large group of covered wagons that traveled together across the North American continent as American pioneers moved westward",
+    "glossary war hawk": "a person who approved of and encouraged war; an American who favored war with Great Britain in 1812",
+    "watershed": "an area of land that includes a particular river or lake and all the bodies of water that flow into it",
+    "whig party": "a political party formed to oppose the policies of Andrew Jackson, who the party believed had exceeded his power as president",
+    "whiskey rebellion": "a series of violent protests among farmers in western Pennsylvania against a tax on whiskey",
+    "writ": "a legal document",
+    "writ of assistance": "a legal document giving authorities the right to enter and search a home or business",
+    "x xyz affair": "the meeting with French agents after France began seizing American ships in the late 18th century in an effort to prevent U.S. trade with Britain",
+    "y yellow fever": "an often fatal disease carried by mosquitoes in tropical climates"
+  }
+}

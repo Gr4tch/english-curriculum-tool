@@ -1,0 +1,39 @@
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & build
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Sensitive credentials & environment variables (NEVER COMMIT)
+.env
+*.env
+credentials*.json
+token*.json
+*token*.json
+.gdrive_token.json
+output/gdrive_token.json
+
+# Streamlit local secrets
+.streamlit/secrets.toml
+
+# Temporary and scratch files
+scratch/
+temp_docs/
+output/google_docs_temp/
+
+# Redundant local PDF hierarchy (catalog.json and output/sections/ are preserved)
+output/American Stories (Sections)/
+input/cengage_cache/
+input/*.pdf
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini

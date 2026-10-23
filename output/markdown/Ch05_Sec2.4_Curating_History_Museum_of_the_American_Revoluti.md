@@ -1,0 +1,16 @@
+# Chapter 5: The Road to Revolution
+## Section 2.4: Curating History: Museum of the American Revolution
+**Unit 3** | **Textbook Pages:** 192–193 | **Section Type:** Museum / Artifact Feature
+
+---
+
+### Official Section Vocabulary
+- **ox** *(Key Concept, p. 192)*: buffalo horn
+
+### Section Reading Passage (By Subheading)
+
+#### 1. CURATING HISTORY: MUSEUM OF THE AMERICAN REVOLUTION (PART 1) (p. 192)
+**[¶1]** CURATING HISTORY The stamp or brand on this musket is unique. It reads "U. States," which was a label required by the Congress to show that this gun was American-made, not European. The Museum of the American Revolution is located in the heart of historic Philadelphia. Visitors find themselves across the street from Carpenter's Hall, the first meeting place of the Continental Congress, and a short walk to the home of founding father Benjamin Franklin. The museum's rich collection of artifacts includes many personal belongings of George Washington, early American weapons, artwork, documents, and thousands of other items that date to the American Revolution. These items help tell the earliest stories of American independence from Britain. How would each of the artifacts shown have been used during the war? American War Drum This drum dates to 1740, well before the American Revolution had begun. It is believed to be the second-oldest dated American drum that exists. The drum is inscribed with the name of its maker, Robert Crosman, from Taunton, Massachusetts. Considered a piece of standard equipment for New Englanders, drums and small, shrill flutes called fifes served as signal instruments for the infantry. They provided musical "commands" to soldiers in the battlefield and around camp. Fife and drum music also distracted soldiers from the drudgery of long marches. What role did fife and drum music play in the American Revolution?
+
+#### 2. CURATING HISTORY: MUSEUM OF THE AMERICAN REVOLUTION (PART 2) (p. 193)
+**[¶1]** Riflemen often engraved their horns with names, dates, and artwork to personalize them. American Military Musket Made around 1775, this musket is pretty rare. By 1777, weapons imported from France and other countries had replaced American-made firearms from the early days of the American Revolution. This particular musket features a flintlock mechanism. The flintlock creates a spark that lights the gunpowder stored in the barrel of the gun. What challenges might the use of this weapon have posed to soldiers? Engraved Powder Horn Virginia rifleman William Waller used this ornate powder horn as he fought British and Hessian soldiers during a battle at Fort Washington on November 16, 1776. Waller was captured. Made of cow, ox, or buffalo horn, this elaborate version bears popular slogans from the American Revolution, including "Liberty or Death," and "Kill or be Kill(e)d." Powder horns were vital pieces of equipment for soldiers during the American Revolution. Riflemen used them to carry and protect the gunpowder they needed to fire their rifles. The design on the musket's flintlock was modeled after the Continental three-dollar bill. — David  McCullough Pulitzer Prize-winning author " The need for wider, and respect for those who championed the cause at the time, has never been greater than now." The Road to Revolution
