@@ -315,7 +315,7 @@ def verify_access() -> bool:
     if st.session_state.get("authenticated", False):
         return True
 
-    expected = "history8th"
+    expected = "HMS8thushistory"
     try:
         if "APP_PASSCODE" in st.secrets:
             expected = str(st.secrets["APP_PASSCODE"]).strip()
@@ -453,45 +453,25 @@ raw_unit = str(ch_info['unit_title'])
 display_unit = raw_unit if raw_unit.lower().startswith("unit") else f"Unit {ch_info['unit_num']}: {raw_unit}"
 eq_text = ch_std_info.get('essential_question', '')
 
-st.markdown(
-    f"""
-    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: stretch; gap: 1.25rem;">
-        <!-- Column 1: Curriculum Unit (Equal space) -->
-        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0;">
-            <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.25rem;">
-                Curriculum Unit
-            </div>
-            <div style="font-size: 0.95rem; font-weight: 600; color: #0f172a; line-height: 1.4;">
-                {display_unit}
-            </div>
-        </div>
-
-        <!-- Long Vertical Dividing Line -->
-        <div style="width: 1.5px; background: #cbd5e1; align-self: stretch; margin: 0 0.25rem;"></div>
-
-        <!-- Column 2: Essential Question (Equal space, wraps cleanly in its own space) -->
-        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0;">
-            <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.25rem;">
-                Essential Question
-            </div>
-            <div style="font-size: 0.90rem; font-style: italic; color: #1e293b; line-height: 1.45; word-wrap: break-word;">
-                "{eq_text}"
-            </div>
-        </div>
-
-        <!-- Long Vertical Dividing Line -->
-        <div style="width: 1.5px; background: #cbd5e1; align-self: stretch; margin: 0 0.25rem;"></div>
-
-        <!-- Column 3: Drive Folder Badge -->
-        <div style="flex-shrink: 0; display: flex; align-items: center;">
-            <div style="font-size: 0.82rem; background: #e2e8f0; padding: 0.45rem 0.8rem; border-radius: 6px; color: #1e293b; white-space: nowrap;">
-                <b>Drive Folder:</b> <code>{ROOT_FOLDER_NAME}</code>
-            </div>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
+banner_html = (
+    '<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #1e3a8a; border-radius: 8px; padding: 0.9rem 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">'
+    '<div style="flex: 1.2; min-width: 220px;">'
+    '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Curriculum Unit</div>'
+    f'<div style="font-size: 0.95rem; font-weight: 600; color: #0f172a; line-height: 1.35;">{display_unit}</div>'
+    '</div>'
+    '<div style="width: 1.5px; height: 42px; background: #cbd5e1;"></div>'
+    '<div style="flex: 2; min-width: 280px;">'
+    '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Essential Question</div>'
+    f'<div style="font-size: 0.88rem; font-style: italic; color: #1e293b; line-height: 1.4;">"{eq_text}"</div>'
+    '</div>'
+    '<div style="width: 1.5px; height: 42px; background: #cbd5e1;"></div>'
+    '<div style="flex-shrink: 0;">'
+    '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Google Drive Folder</div>'
+    f'<div style="font-size: 0.82rem; background: #e2e8f0; padding: 0.35rem 0.75rem; border-radius: 6px; color: #0f172a; font-family: monospace; font-weight: 600; white-space: nowrap;">{ROOT_FOLDER_NAME}</div>'
+    '</div>'
+    '</div>'
 )
+st.markdown(banner_html, unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
