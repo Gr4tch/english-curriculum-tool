@@ -34,11 +34,12 @@ from src.agent_team import (
     sanitize_aesthetics,
     enforce_page_budget_guardrail,
 )
-from src.gdrive_exporter import (
+from doc_exporter import (
     ROOT_FOLDER_NAME,
     TEMP_DOCS_DIR,
     get_gdrive_service,
     build_docx_file,
+    get_docx_bytes,
     export_section_packet_to_google_drive,
     export_chapter_package_to_google_drive,
     export_assessment_package_to_google_drive,
@@ -538,26 +539,6 @@ def resolve_file_path(path_str: Optional[str]) -> Path:
     if root_p.exists():
         return root_p
     return p
-
-
-def get_docx_bytes(
-    markdown_text: str,
-    filename_stem: str,
-    is_student_handout: bool,
-    include_top_student_header: bool = True,
-) -> bytes:
-    TEMP_DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = TEMP_DOCS_DIR / f"{filename_stem}.docx"
-    build_docx_file(
-        markdown_text=markdown_text,
-        doc_title=filename_stem,
-        is_student_handout=is_student_handout,
-        output_path=out_path,
-        compact_mode=True,
-        omit_auto_title=True,
-        include_top_student_header=include_top_student_header,
-    )
-    return out_path.read_bytes()
 
 
 def bump_checklist_version(ch_num: int) -> None:
