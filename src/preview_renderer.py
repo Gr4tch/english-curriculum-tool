@@ -14,7 +14,8 @@ def _dedent_html(fn):
     def wrapper(*args, **kwargs):
         res = fn(*args, **kwargs)
         if isinstance(res, str):
-            return textwrap.dedent(res).strip()
+            # Strip all leading/trailing whitespace from every line so no line ever starts with >=4 spaces
+            return "\n".join(line.strip() for line in res.splitlines() if line.strip())
         return res
     return wrapper
 

@@ -355,6 +355,16 @@ def bump_checklist_version(ch_num: int) -> None:
     st.session_state[k] = st.session_state.get(k, 0) + 1
 
 
+def render_metric_card(label: str, value: str) -> str:
+    """Renders a clean, balanced metric card with legible headings and proportional text."""
+    return (
+        '<div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 0.65rem 0.95rem; min-height: 76px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 1px 3px rgba(15,23,42,0.04);">'
+        f'<div style="font-size: 0.92rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.2rem;">{label}</div>'
+        f'<div style="font-size: 1.05rem; font-weight: 600; color: #0f172a; line-height: 1.35;">{value}</div>'
+        '</div>'
+    )
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # CLOUD SECRETS & PASSCODE AUTHENTICATION GATE
 # ─────────────────────────────────────────────────────────────────────────────
@@ -370,7 +380,13 @@ except Exception:
 
 def verify_access() -> bool:
     """Passcode protection gate for secure multi-user and cloud access."""
+    # 1. Check if already authenticated in session
     if st.session_state.get("authenticated", False):
+        return True
+
+    # 2. Check if auth query parameter is present (preserves session across link clicks)
+    if st.query_params.get("auth") == "ok":
+        st.session_state["authenticated"] = True
         return True
 
     expected = "HMS8thushistory"
@@ -408,6 +424,7 @@ def verify_access() -> bool:
             if login_btn:
                 if entered_code and entered_code.strip() == expected:
                     st.session_state["authenticated"] = True
+                    st.query_params["auth"] = "ok"
                     st.rerun()
                 else:
                     st.error("Incorrect passcode. Please check your credentials.")
@@ -457,10 +474,13 @@ if "nav" in st.query_params:
         st.session_state["nav_view"] = target_nav
         if target_nav == "designer":
             st.session_state["designer_step"] = 1
+    has_auth = st.query_params.get("auth") == "ok" or st.session_state.get("authenticated", False)
     try:
         del st.query_params["nav"]
     except Exception:
         pass
+    if has_auth:
+        st.query_params["auth"] = "ok"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -557,7 +577,7 @@ if st.session_state["nav_view"] == "home":
     with tile_row1_c1:
         st.markdown(
             """
-            <a href="?nav=designer" target="_self" class="tile-card tile-blue">
+            <a href="?nav=designer&auth=ok" target="_self" class="tile-card tile-blue">
                 <div>
                     <div class="tile-title" style="color: #1d4ed8;">1. AI Packet Co-Designer & Chapter Builder</div>
                     <div class="tile-desc">
@@ -576,7 +596,7 @@ if st.session_state["nav_view"] == "home":
     with tile_row1_c2:
         st.markdown(
             """
-            <a href="?nav=studio" target="_self" class="tile-card tile-indigo">
+            <a href="?nav=studio&auth=ok" target="_self" class="tile-card tile-indigo">
                 <div>
                     <div class="tile-title" style="color: #4338ca;">2. Interactive Section Studio & Live Revision</div>
                     <div class="tile-desc">
@@ -597,7 +617,7 @@ if st.session_state["nav_view"] == "home":
     with tile_row2_c1:
         st.markdown(
             """
-            <a href="?nav=assessment" target="_self" class="tile-card tile-amber">
+            <a href="?nav=assessment&auth=ok" target="_self" class="tile-card tile-amber">
                 <div>
                     <div class="tile-title" style="color: #b45309;">3. End-of-Chapter Central Idea Review & Assessment</div>
                     <div class="tile-desc">
@@ -615,7 +635,7 @@ if st.session_state["nav_view"] == "home":
     with tile_row2_c2:
         st.markdown(
             """
-            <a href="?nav=browser" target="_self" class="tile-card tile-teal">
+            <a href="?nav=browser&auth=ok" target="_self" class="tile-card tile-teal">
                 <div>
                     <div class="tile-title" style="color: #0f766e;">4. English Textbook PDF, Markdown & Vocab Browser</div>
                     <div class="tile-desc">
@@ -633,7 +653,7 @@ if st.session_state["nav_view"] == "home":
     st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
     st.markdown(
         """
-        <a href="?nav=gallery" target="_self" class="tile-card tile-emerald">
+        <a href="?nav=gallery&auth=ok" target="_self" class="tile-card tile-emerald">
             <div>
                 <div class="tile-title" style="color: #047857;">5. Strategy & Worksheet Template Gallery (Visual Models & Exemplars)</div>
                 <div class="tile-desc">
@@ -1458,10 +1478,14 @@ elif st.session_state["nav_view"] == "studio":
     pb_info = sec_pkt.get("page_budget", {})
 
     b_col1, b_col2, b_col3, b_col4 = st.columns(4)
-    b_col1.metric("Density", f"{sec_pkt['pages_per_section']} Page(s)")
-    b_col2.metric("Page Budget Fit", f"{pb_info.get('final_layout_units', 0)} / {pb_info.get('max_budget_units', 28)} units")
-    b_col3.metric("Reading Organizer", sec_pkt["recommendations"]["reading_organizer_short"])
-    b_col4.metric("Central Idea Mode", sec_pkt["recommendations"]["central_idea_short"])
+    with b_col1:
+        st.markdown(render_metric_card("Density", f"{sec_pkt['pages_per_section']} Page(s)"), unsafe_allow_html=True)
+    with b_col2:
+        st.markdown(render_metric_card("Page Budget Fit", f"{pb_info.get('final_layout_units', 0)} / {pb_info.get('max_budget_units', 28)} units"), unsafe_allow_html=True)
+    with b_col3:
+        st.markdown(render_metric_card("Reading Organizer", sec_pkt["recommendations"]["reading_organizer_short"]), unsafe_allow_html=True)
+    with b_col4:
+        st.markdown(render_metric_card("Central Idea Mode", sec_pkt["recommendations"]["central_idea_short"]), unsafe_allow_html=True)
 
     st_left, st_right = st.columns([1.35, 1.0])
 
@@ -1718,17 +1742,7 @@ elif st.session_state["nav_view"] == "browser":
             for v in sec_voc:
                 st.markdown(f"- **{v['word']}**: *{v.get('definition', '')}*")
 
-        with st.expander("Inspect Raw JSON Metadata (Technical)", expanded=False):
-            st.json(
-                {
-                    "section_id": selected_pdf_sec["id"],
-                    "printed_pages": selected_pdf_sec["printed_pages"],
-                    "section_type": selected_pdf_sec.get("section_type"),
-                    "printed_main_idea": selected_pdf_sec.get("printed_main_idea"),
-                    "subheadings": selected_pdf_sec.get("subheadings"),
-                    "official_vocab": selected_pdf_sec.get("official_vocab"),
-                }
-            )
+
 
     with br_col2:
         st.markdown("#### Official Content & Academic Vocabulary (pp. R44–R58)")
