@@ -229,9 +229,9 @@ st.markdown(
         color: #1e3a8a;
         margin-right: 0.4rem;
     }
-    /* Prominent Action Download & Export Buttons */
-    div.stDownloadButton > button,
-    div.stDownloadButton > button:first-child {
+    /* 1. Standard Download Buttons (Outline Style: Navy border & text) */
+    div.stDownloadButton > button:not([kind="primary"]),
+    div.stDownloadButton > button:first-child:not([kind="primary"]) {
         background-color: #f8fafc !important;
         color: #1e3a8a !important;
         border: 2px solid #1e3a8a !important;
@@ -243,53 +243,174 @@ st.markdown(
         transition: all 0.15s ease-in-out !important;
         cursor: pointer !important;
     }
-    div.stDownloadButton > button:hover {
+    div.stDownloadButton > button:not([kind="primary"]) p {
+        color: #1e3a8a !important;
+        font-weight: 700 !important;
+    }
+    div.stDownloadButton > button:not([kind="primary"]):hover {
         background-color: #1e3a8a !important;
         color: #ffffff !important;
         box-shadow: 0 4px 8px rgba(30, 58, 138, 0.22) !important;
         transform: translateY(-1px) !important;
     }
+    div.stDownloadButton > button:not([kind="primary"]):hover p {
+        color: #ffffff !important;
+    }
 
-    /* Google Drive Export & Primary Action Buttons (Solid Royal Blue) */
-    div.stButton > button[kind="primary"],
-    div.stButton > button[data-testid="baseButton-primary"],
-    div.stButton > button[data-testid="stBaseButton-primary"],
-    button[kind="primary"],
-    button[data-testid="stBaseButton-primary"],
+    /* 2. Primary Download Buttons (e.g. 2-Page Section PDF in Textbook Browser) */
+    div.stDownloadButton > button[kind="primary"],
+    div.stDownloadButton > button[data-testid="baseButton-primary"],
+    div.stDownloadButton > button[data-testid="stBaseButton-primary"] {
+        background-color: #1e3a8a !important;
+        color: #ffffff !important;
+        border: 2px solid #172554 !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 0.90rem !important;
+        padding: 0.65rem 1rem !important;
+        box-shadow: 0 2px 4px rgba(30, 58, 138, 0.2) !important;
+        transition: all 0.15s ease-in-out !important;
+        cursor: pointer !important;
+    }
+    div.stDownloadButton > button[kind="primary"]:hover {
+        background-color: #172554 !important;
+        border-color: #0f172a !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 8px rgba(30, 58, 138, 0.38) !important;
+        transform: translateY(-1px) !important;
+    }
+    div.stDownloadButton > button[kind="primary"] p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+
+    /* 3. Google Drive Export Buttons (Calm Deep Royal Navy + Official Drive Icon Badge) */
     button[aria-label*="Google Drive"],
     button[aria-label*="google drive"],
     .gdrive-action-btn button {
-        background-color: #2563eb !important;
+        background-color: #1e40af !important;
         color: #ffffff !important;
-        border: 2px solid #1d4ed8 !important;
+        border: 1.5px solid #1d4ed8 !important;
         border-radius: 8px !important;
         font-weight: 700 !important;
         font-size: 0.90rem !important;
         padding: 0.6rem 1rem !important;
-        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.22) !important;
+        box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
         transition: all 0.15s ease-in-out !important;
         cursor: pointer !important;
     }
-    div.stButton > button[kind="primary"]:hover,
-    div.stButton > button[data-testid="baseButton-primary"]:hover,
-    div.stButton > button[data-testid="stBaseButton-primary"]:hover,
-    button[kind="primary"]:hover,
-    button[data-testid="stBaseButton-primary"]:hover,
     button[aria-label*="Google Drive"]:hover,
     button[aria-label*="google drive"]:hover,
     .gdrive-action-btn button:hover {
-        background-color: #1d4ed8 !important;
-        border-color: #1e40af !important;
+        background-color: #1e3a8a !important;
+        border-color: #172554 !important;
         color: #ffffff !important;
-        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.38) !important;
+        box-shadow: 0 4px 8px rgba(30, 64, 175, 0.35) !important;
         transform: translateY(-1px) !important;
     }
-    div.stButton > button[kind="primary"] p,
-    button[kind="primary"] p,
-    button[data-testid="stBaseButton-primary"] p,
+    button[aria-label*="Google Drive"]::before,
+    button[aria-label*="google drive"]::before,
+    .gdrive-action-btn button::before {
+        content: "" !important;
+        display: inline-block !important;
+        width: 22px !important;
+        height: 22px !important;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz1odHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyB2aWV3Qm94PTAgMCA4Ny4zIDc4PjxwYXRoIGZpbGw9IzAwNjZEQSBkPU02LjYgNjYuODVsMy44NSA2LjY1Yy44IDEuNCAxLjk1IDIuNSAzLjMgMy4zbDEzLjc1LTIzLjhIMGMwIDEuNTUuNCAzLjEgMS4yIDQuNXovPjxwYXRoIGZpbGw9IzAwQUM0NyBkPU00My42NSAyNUwyOS45IDEuMmMtMS4zNS44LTIuNSAxLjktMy4zIDMuM2wtMjUuNCA0NEMuNCA0OS45IDAgNTEuNDUgMCA1M2gyNy41ei8+PHBhdGggZmlsbD0jRUE0MzM1IGQ9TTczLjU1IDc2LjhjMS4zNS0uOCAyLjUtMS45IDMuMy0zLjNsOS4yNS0xNmMuOC0xLjQgMS4yLTIuOTUgMS4yLTQuNUg1OS44bDEzLjc1IDIzLjh6Lz48cGF0aCBmaWxsPSMwMDgzMkQgZD1NNDMuNjUgMjVsMTMuNzUtMjMuOGMtMS4zNS0uOC0yLjktMS4yLTQuNS0xLjJIMzQuNGMtMS42IDAtMy4xNS40NS00LjUgMS4yei8+PHBhdGggZmlsbD0jMjY4NEZDIGQ9TTU5LjggNTNoMjcuNWMwLTEuNTUtLjQtMy4xLTEuMi00LjVMNzIuMzUgMjIuN2MtLjgtMS40LTEuOTUtMi41LTMuMy0zLjN6Lz48cGF0aCBmaWxsPSNGRkJBMDAgZD1NNzMuNTUgNzYuOEw1OS44IDUzSDMyLjNsMTMuNzUgMjMuOGMxLjM1LjggMi45IDEuMiA0LjUgMS4yaDE4LjVjMS42IDAgMy4xNS0uNDUgNC41LTEuMnovPjwvc3ZnPg==") !important;
+        background-repeat: no-repeat !important;
+        background-size: 15px 14px !important;
+        background-position: center !important;
+        background-color: #ffffff !important;
+        border-radius: 4px !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) !important;
+        flex-shrink: 0 !important;
+    }
     button[aria-label*="Google Drive"] p,
     button[aria-label*="google drive"] p,
     .gdrive-action-btn button p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        margin: 0 !important;
+    }
+
+    /* 4. AI Revision Buttons (Distinctive Rich Indigo + White Sparkles Badge) */
+    button[aria-label*="Apply AI Revision"],
+    button[aria-label*="AI Revision"] {
+        background-color: #4338ca !important;
+        color: #ffffff !important;
+        border: 1.5px solid #3730a3 !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 0.90rem !important;
+        padding: 0.6rem 1rem !important;
+        box-shadow: 0 2px 4px rgba(67, 56, 202, 0.22) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        transition: all 0.15s ease-in-out !important;
+        cursor: pointer !important;
+    }
+    button[aria-label*="Apply AI Revision"]:hover,
+    button[aria-label*="AI Revision"]:hover {
+        background-color: #3730a3 !important;
+        border-color: #312e81 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 8px rgba(67, 56, 202, 0.38) !important;
+        transform: translateY(-1px) !important;
+    }
+    button[aria-label*="Apply AI Revision"]::before,
+    button[aria-label*="AI Revision"]::before {
+        content: "" !important;
+        display: inline-block !important;
+        width: 22px !important;
+        height: 22px !important;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz1odHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyB2aWV3Qm94PTAgMCAyNCAyNCBmaWxsPSNmZmZmZmYgd2lkdGg9MjQgaGVpZ2h0PTI0PjxwYXRoIGQ9TTE5IDlsMS4yNS0yLjc1TDIzIDVsLTIuNzUtMS4yNUwxOSAxbC0xLjI1IDIuNzVMMTUgNWwyLjc1IDEuMjVMMTkgOXptLTcuNS41TDkgNCA2LjUgOS41IDEgMTJsNS41IDIuNUw5IDIwbDIuNS01LjVMMTcgMTJsLTUuNS0yLjV6TTE5IDE1bC0xLjI1IDIuNzVMMTUgMTlsMi43NSAxLjI1TDE5IDIzbDEuMjUtMi43NUwyMyAxOWwtMi43NS0xLjI1TDE5IDE1ei8+PC9zdmc+") !important;
+        background-repeat: no-repeat !important;
+        background-size: 14px 14px !important;
+        background-position: center !important;
+        background-color: rgba(255, 255, 255, 0.18) !important;
+        border-radius: 4px !important;
+        flex-shrink: 0 !important;
+    }
+    button[aria-label*="Apply AI Revision"] p,
+    button[aria-label*="AI Revision"] p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        margin: 0 !important;
+    }
+
+    /* 5. General Primary Action Buttons (Next, Generate, Access Studio) */
+    div.stButton > button[kind="primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]),
+    div.stButton > button[data-testid="baseButton-primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]),
+    div.stButton > button[data-testid="stBaseButton-primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]),
+    button[kind="primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]) {
+        background-color: #1e3a8a !important;
+        color: #ffffff !important;
+        border: 2px solid #172554 !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 0.90rem !important;
+        padding: 0.6rem 1rem !important;
+        box-shadow: 0 2px 4px rgba(30, 58, 138, 0.2) !important;
+        transition: all 0.15s ease-in-out !important;
+        cursor: pointer !important;
+    }
+    div.stButton > button[kind="primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]):hover,
+    div.stButton > button[data-testid="baseButton-primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]):hover,
+    div.stButton > button[data-testid="stBaseButton-primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]):hover,
+    button[kind="primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]):hover {
+        background-color: #172554 !important;
+        border-color: #0f172a !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 8px rgba(30, 58, 138, 0.35) !important;
+        transform: translateY(-1px) !important;
+    }
+    div.stButton > button[kind="primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]) p,
+    button[kind="primary"]:not([aria-label*="Google Drive"]):not([aria-label*="AI Revision"]) p {
         color: #ffffff !important;
         font-weight: 700 !important;
     }
@@ -1749,8 +1870,7 @@ elif st.session_state["nav_view"] == "browser":
                 type="primary",
                 use_container_width=True,
             )
-            if hier_pdf_path:
-                st.caption(f"Local Path: `{hier_pdf_path}`")
+            st.caption(f"Archived high-resolution 2-page textbook spread for Sec. {selected_pdf_sec['section_code']} (pp. {selected_pdf_sec['printed_pages']}).")
 
         st.markdown("##### Pedagogical Structure & Architecture")
         sec_type_badge = selected_pdf_sec.get("section_type", "Core Narrative")
@@ -1856,10 +1976,11 @@ elif st.session_state["nav_view"] == "gallery":
             st.markdown(f"**Best For:** {ci_curr['best_for']}")
             st.markdown(f"**How It Works:** {ci_curr['description']}")
         with c_info_c2:
-            if st.button(f"Apply '{ci_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True):
+            if st.button(f"Apply '{ci_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ci_{selected_ch_num}"):
                 ch_blueprint["central_idea_strategy"] = ci_choice
                 save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Applied '{ci_curr['short_name']}' to Chapter {selected_ch_num}!")
+                st.success(f"Saved! '{ci_curr['short_name']}' is now set as the active Central Idea strategy for Chapter {selected_ch_num} in the Packet Co-Designer.")
+            st.caption(f"Applies this strategy directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         ci_view1, ci_view2 = st.columns(2)
@@ -1889,10 +2010,11 @@ elif st.session_state["nav_view"] == "gallery":
         with p_info_c1:
             st.markdown(f"**Pedagogical Mechanic:** {pmi_curr['description']}")
         with p_info_c2:
-            if st.button(f"Apply '{pmi_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True):
+            if st.button(f"Apply '{pmi_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_pmi_{selected_ch_num}"):
                 ch_blueprint["printed_main_idea_mode"] = pmi_choice
                 save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Applied '{pmi_curr['short_name']}' to Chapter {selected_ch_num}!")
+                st.success(f"Saved! '{pmi_curr['short_name']}' is now set as the active anti-copycat mechanic for Chapter {selected_ch_num} in the Packet Co-Designer.")
+            st.caption(f"Applies this mechanic directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         pmi_view1, pmi_view2 = st.columns(2)
@@ -1923,10 +2045,11 @@ elif st.session_state["nav_view"] == "gallery":
             st.markdown(f"**Target ELA Standard:** `CCSS RH.6-8.5` (Analyze Text Structure)")
             st.markdown(f"**Text Structure Focus:** {ro_curr['description']}")
         with r_info_c2:
-            if st.button(f"Apply '{ro_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True):
+            if st.button(f"Apply '{ro_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ro_{selected_ch_num}"):
                 ch_blueprint["reading_organizer"] = ro_choice
                 save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Applied '{ro_curr['short_name']}' to Chapter {selected_ch_num}!")
+                st.success(f"Saved! '{ro_curr['short_name']}' is now set as the active graphic organizer for Chapter {selected_ch_num} in the Packet Co-Designer.")
+            st.caption(f"Applies this structure directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         ro_view1, ro_view2 = st.columns(2)
@@ -1959,7 +2082,8 @@ elif st.session_state["nav_view"] == "gallery":
             if st.button(f"Apply '{g_cov_item['short_name']}' to Chapter {selected_ch_num}", key="btn_apply_cov"):
                 ch_blueprint["cover_page_mode"] = gal_cov_choice
                 save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Applied '{g_cov_item['short_name']}' to Chapter {selected_ch_num}!")
+                st.success(f"Saved! '{g_cov_item['short_name']}' is now set as the active cover page for Chapter {selected_ch_num} in the Packet Co-Designer.")
+            st.caption(f"Applies this cover style directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
 
         with cov_c2:
             st.markdown("##### Page Footer Check Box Options")
@@ -1975,7 +2099,8 @@ elif st.session_state["nav_view"] == "gallery":
             if st.button(f"Apply '{g_gb_item['short_name']}' to Chapter {selected_ch_num}", key="btn_apply_gb"):
                 ch_blueprint["grade_box_mode"] = gal_gb_choice
                 save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Applied '{g_gb_item['short_name']}' to Chapter {selected_ch_num}!")
+                st.success(f"Saved! '{g_gb_item['short_name']}' is now set as the active footer layout for Chapter {selected_ch_num} in the Packet Co-Designer.")
+            st.caption(f"Applies this footer layout directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
 
     with gal_tab5:
         st.markdown("#### Optional Writing Extensions (The Writing Revolution)")
@@ -1995,10 +2120,11 @@ elif st.session_state["nav_view"] == "gallery":
             st.markdown(f"**Target Standard:** `CCSS WHST.6-8.2` (Informative Historical Writing)")
             st.markdown(f"**Writing Objective:** {twr_curr['description']}")
         with w_info_c2:
-            if st.button(f"Apply '{twr_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True):
+            if st.button(f"Apply '{twr_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_twr_{selected_ch_num}"):
                 ch_blueprint["optional_twr_strategy"] = twr_choice
                 save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Applied '{twr_curr['short_name']}' to Chapter {selected_ch_num}!")
+                st.success(f"Saved! '{twr_curr['short_name']}' is now set as the active writing extension for Chapter {selected_ch_num} in the Packet Co-Designer.")
+            st.caption(f"Applies this writing extension directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         twr_view1, twr_view2 = st.columns(2)
