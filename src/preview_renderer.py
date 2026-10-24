@@ -127,7 +127,7 @@ def render_preview_handout(strategy_code: str) -> str:
         return f"""
         {COMMON_CSS}
         <div class="ws-container">
-            <div class="ws-title-badge ws-badge-blue">Section 5.1 Worksheet • Central Idea Checkpoint</div>
+            <div class="ws-title-badge ws-badge-blue">Model Strategy Template • Subheading Gists</div>
             <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.4rem;">Part 1: Subheading Gist Checkpoints</div>
             
             <div style="margin-bottom: 0.75rem;">
@@ -166,7 +166,7 @@ def render_preview_handout(strategy_code: str) -> str:
         return f"""
         {COMMON_CSS}
         <div class="ws-container">
-            <div class="ws-title-badge ws-badge-blue">Section 5.2 Worksheet • Box & Bullets</div>
+            <div class="ws-title-badge ws-badge-blue">Model Strategy Template • Box & Bullets</div>
             
             <div class="ws-callout" style="border-left: 5px solid #1e3a8a;">
                 <div style="font-weight: 700; color: #1e3a8a; font-size: 0.88rem; margin-bottom: 0.25rem;">
@@ -203,7 +203,7 @@ def render_preview_handout(strategy_code: str) -> str:
         return f"""
         {COMMON_CSS}
         <div class="ws-container">
-            <div class="ws-title-badge ws-badge-blue">Section 5.3 Worksheet • Historical 'What + So What?'</div>
+            <div class="ws-title-badge ws-badge-blue">Model Strategy Template • Historical 'What + So What?'</div>
             
             <table class="ws-table">
                 <thead>
@@ -239,7 +239,7 @@ def render_preview_handout(strategy_code: str) -> str:
         return f"""
         {COMMON_CSS}
         <div class="ws-container">
-            <div class="ws-title-badge ws-badge-blue">Section 5.4 Worksheet • Claim–Evidence–Reasoning Frame</div>
+            <div class="ws-title-badge ws-badge-blue">Model Strategy Template • Claim–Evidence–Reasoning Frame</div>
             
             <div class="ws-callout" style="background: #f1f5f9; border-left: 4px solid #0f172a;">
                 <b>Focus Question:</b> Why was the Boston Massacre a critical catalyst for the American Revolution?

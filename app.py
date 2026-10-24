@@ -1222,8 +1222,54 @@ elif st.session_state["nav_view"] == "designer":
                 st.rerun()
 
         with col_ai:
-            with st.expander("Browse Strategy & Template Gallery (With Concrete Student Models)", expanded=False):
-                st.caption("Inspect concrete student worksheet layouts and authentic 8th-grade student exemplars:")
+            # 1. LIVE ASSEMBLED WORKSHEET PREVIEW
+            sample_sec = active_sections[0] if active_sections else ch_sections[0]
+            s_code = str(sample_sec["section_code"])
+            s_title = sample_sec["title"]
+            s_pages = sample_sec.get("printed_pages", "")
+
+            st.markdown(
+                f"""
+                <div style="background: #ffffff; border: 2px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 0.75rem; box-shadow: 0 2px 6px rgba(30, 58, 138, 0.08);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                        <span style="background: #1e3a8a; color: #ffffff; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;">
+                            Live Assembled Worksheet Preview
+                        </span>
+                        <span style="font-size: 0.82rem; font-weight: 700; color: #1e3a8a;">
+                            Sec. {s_code}: {s_title} (pp. {s_pages})
+                        </span>
+                    </div>
+                    <div style="font-size: 0.83rem; color: #475569; line-height: 1.4;">
+                        Updates dynamically as you adjust the <strong>Packet Architecture Controls</strong> on the left.
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+            # Generate real assembled sample section packet
+            live_sample_pkt = generate_section_packet(sample_sec, ch_blueprint)
+
+            prev_tab1, prev_tab2 = st.tabs([
+                f"Standard Worksheet (Sec. {s_code})",
+                "Scaffolded Support Edition",
+            ])
+            with prev_tab1:
+                st.markdown(format_booklet_for_web(live_sample_pkt["student_standard_md"]), unsafe_allow_html=True)
+            with prev_tab2:
+                if live_sample_pkt.get("student_scaffolded_md"):
+                    st.markdown(format_booklet_for_web(live_sample_pkt["student_scaffolded_md"]), unsafe_allow_html=True)
+                else:
+                    st.info("Scaffolded edition is disabled in Packet Architecture Controls.")
+
+            st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+
+            # 2. STRATEGY REFERENCE LIBRARY (Clearly labeled as isolated models)
+            with st.expander("Strategy Reference Library (Individual Template Examples)", expanded=False):
+                st.caption(
+                    "Note: These are isolated pedagogical models from the strategy library for inspection. "
+                    f"Your active chapter worksheet for Chapter {selected_ch_num} is displayed in the Live Preview above."
+                )
                 g_tab1, g_tab2, g_tab3, g_tab4, g_tab5 = st.tabs([
                     "Central Idea (4)",
                     "Anti-Copycat (3)",

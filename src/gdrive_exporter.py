@@ -447,12 +447,19 @@ def _populate_formatted_cell(
         p_offset = 1
 
     for idx, sline in enumerate(sublines):
+        clean_sline = sline.strip()
+        # Inside a table cell, calibrate dot/underscore strings so they fit without wrapping
+        if re.match(r'^\.{10,}$', clean_sline):
+            clean_sline = "." * 34
+        elif re.match(r'^_{10,}$', clean_sline):
+            clean_sline = "_" * 32
+
         p = cell.paragraphs[0] if (idx == 0 and p_offset == 0) else cell.add_paragraph()
         if center_align:
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p.paragraph_format.space_before = Pt(1 if idx > 0 else 2)
         p.paragraph_format.space_after = Pt(2)
-        tokens = re.split(r'(\*\*[^*]+\*\*|\*[^*]+\*)', sline.strip())
+        tokens = re.split(r'(\*\*[^*]+\*\*|\*[^*]+\*)', clean_sline)
         for tok in tokens:
             if not tok:
                 continue
@@ -499,10 +506,10 @@ def build_docx_file(
 
     current_section = doc.sections[0]
     for s in doc.sections:
-        s.top_margin = Inches(0.85 if omit_auto_title else 1.0)
-        s.bottom_margin = Inches(0.85 if omit_auto_title else 1.0)
-        s.left_margin = Inches(0.9 if omit_auto_title else 1.0)
-        s.right_margin = Inches(0.9 if omit_auto_title else 1.0)
+        s.top_margin = Inches(0.75 if (omit_auto_title or compact_mode) else 1.0)
+        s.bottom_margin = Inches(0.75 if (omit_auto_title or compact_mode) else 1.0)
+        s.left_margin = Inches(0.85 if (omit_auto_title or compact_mode) else 1.0)
+        s.right_margin = Inches(0.85 if (omit_auto_title or compact_mode) else 1.0)
     current_section.footer.is_linked_to_previous = False
     if current_section.footer.paragraphs:
         current_section.footer.paragraphs[0].text = ""
@@ -514,7 +521,7 @@ def build_docx_file(
         hdr_p = doc.add_paragraph()
         hdr_p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
         hdr_p.paragraph_format.space_before = Pt(0)
-        hdr_p.paragraph_format.space_after = Pt(8 if omit_auto_title else 12)
+        hdr_p.paragraph_format.space_after = Pt(6 if (omit_auto_title or compact_mode) else 12)
         run_hdr = hdr_p.add_run("Name: ____________________   Date: __________   Period: _____")
         run_hdr.font.name = "Calibri"
         run_hdr.font.size = Pt(10)
@@ -581,9 +588,21 @@ def build_docx_file(
                 num_cols in (3, 4)
                 and ("study guide" in header_row_str or "score / stamp" in header_row_str or "teacher stamp" in header_row_str)
             )
+            is_vocab_table = (
+                num_cols == 3
+                and ("key term" in header_row_str or "official textbook definition" in header_row_str or "brief note" in header_row_str)
+            )
             is_cause_effect_table = (
                 num_cols == 2
                 and ("historical cause" in header_row_str or "historical effect" in header_row_str)
+            )
+            is_perspectives_table = (
+                num_cols == 2
+                and ("perspective" in header_row_str or "group" in header_row_str)
+            )
+            is_chronological_table = (
+                num_cols == 2
+                and ("step & subheading" in header_row_str or "locator" in header_row_str or "chronological" in header_row_str)
             )
             is_standards_table = (
                 num_cols == 2
@@ -599,13 +618,28 @@ def build_docx_file(
                 table.autofit = False
                 for c_idx, cw in enumerate(col_widths):
                     table.columns[c_idx].width = cw
-            elif is_Standards := is_standards_table:
-                col_widths = [Inches(2.3), Inches(4.4)]
+            elif is_vocab_table:
+                col_widths = [Inches(1.6), Inches(3.2), Inches(1.9)]
                 table.autofit = False
                 for c_idx, cw in enumerate(col_widths):
                     table.columns[c_idx].width = cw
             elif is_cause_effect_table:
                 col_widths = [Inches(3.35), Inches(3.35)]
+                table.autofit = False
+                for c_idx, cw in enumerate(col_widths):
+                    table.columns[c_idx].width = cw
+            elif is_perspectives_table:
+                col_widths = [Inches(2.5), Inches(4.2)]
+                table.autofit = False
+                for c_idx, cw in enumerate(col_widths):
+                    table.columns[c_idx].width = cw
+            elif is_chronological_table:
+                col_widths = [Inches(2.4), Inches(4.3)]
+                table.autofit = False
+                for c_idx, cw in enumerate(col_widths):
+                    table.columns[c_idx].width = cw
+            elif is_standards_table:
+                col_widths = [Inches(2.3), Inches(4.4)]
                 table.autofit = False
                 for c_idx, cw in enumerate(col_widths):
                     table.columns[c_idx].width = cw
@@ -618,9 +652,11 @@ def build_docx_file(
 
             for r_idx, row_data in enumerate(parsed_rows):
                 if is_cover_tracker_table and r_idx > 0:
-                    set_row_height(table.rows[r_idx], 440, "atLeast")
+                    set_row_height(table.rows[r_idx], 400, "atLeast")
+                elif is_vocab_table and r_idx > 0:
+                    set_row_height(table.rows[r_idx], 300, "atLeast")
                 elif is_student_handout and r_idx > 0 and not is_standards_table:
-                    set_row_height(table.rows[r_idx], 380, "atLeast")
+                    set_row_height(table.rows[r_idx], 340, "atLeast")
 
                 for c_idx in range(num_cols):
                     cell = table.cell(r_idx, c_idx)
@@ -664,7 +700,7 @@ def build_docx_file(
 
             spacer = doc.add_paragraph()
             spacer.paragraph_format.space_before = Pt(0)
-            spacer.paragraph_format.space_after = Pt(3)
+            spacer.paragraph_format.space_after = Pt(2)
 
         table_lines = []
         in_table = False
@@ -685,10 +721,10 @@ def build_docx_file(
         # Special Token 1: Explicit Page Break with Isolated Section Footer
         if stripped == "[PAGE_BREAK]":
             current_section = doc.add_section(WD_SECTION_START.NEW_PAGE)
-            current_section.top_margin = Inches(0.85 if omit_auto_title else 1.0)
-            current_section.bottom_margin = Inches(0.85 if omit_auto_title else 1.0)
-            current_section.left_margin = Inches(0.9 if omit_auto_title else 1.0)
-            current_section.right_margin = Inches(0.9 if omit_auto_title else 1.0)
+            current_section.top_margin = Inches(0.75 if (omit_auto_title or compact_mode) else 1.0)
+            current_section.bottom_margin = Inches(0.75 if (omit_auto_title or compact_mode) else 1.0)
+            current_section.left_margin = Inches(0.85 if (omit_auto_title or compact_mode) else 1.0)
+            current_section.right_margin = Inches(0.85 if (omit_auto_title or compact_mode) else 1.0)
             current_section.footer.is_linked_to_previous = False
             for fp in current_section.footer.paragraphs:
                 fp.text = ""
@@ -816,13 +852,9 @@ def build_docx_file(
                 )
 
             if is_note_taking:
-                line_run = p.add_run(
-                    "..................................................................................................."
-                )
+                line_run = p.add_run("." * 72)
             else:
-                line_run = p.add_run(
-                    "_________________________________________________________________________________"
-                )
+                line_run = p.add_run("_" * 70)
             line_run.font.name = "Calibri"
             line_run.font.size = Pt(10.5)
             line_run.font.color.rgb = RGBColor(0x94, 0xA3, 0xB8)
