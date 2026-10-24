@@ -385,20 +385,177 @@ def set_row_height(row, height_twips: int, rule: str = "atLeast"):
     trPr.append(trHeight)
 
 
+def add_metadata_pills_table(
+    doc,
+    pills: List[Tuple[str, str, str]],
+    width_inches: float = 7.0,
+):
+    """
+    Renders metadata (Day, Standard, Points, Edition) inside a single-row, multi-column table
+    with NO borders (all borders set to 'none'), subtle background shading (e.g. #F2F4F8),
+    and bold colored text.
+    """
+    num_pills = len(pills)
+    if num_pills == 0:
+        return None
+    num_cols = num_pills * 2 - 1
+    table = doc.add_table(rows=1, cols=num_cols)
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = False
+
+    pill_w = [1.3, 2.3, 1.2, 1.75] if num_pills == 4 else [width_inches / num_pills] * num_pills
+    spacer_w = 0.15
+
+    col_widths = []
+    for i in range(num_pills):
+        col_widths.append(Inches(pill_w[i] if i < len(pill_w) else 1.5))
+        if i < num_pills - 1:
+            col_widths.append(Inches(spacer_w))
+
+    for c_idx, w in enumerate(col_widths):
+        table.columns[c_idx].width = w
+
+    for i, (text, bg_hex, text_hex) in enumerate(pills):
+        c_idx = i * 2
+        cell = table.cell(0, c_idx)
+        cell.width = col_widths[c_idx]
+
+        shd = parse_xml(f'<w:shd {nsdecls("w")} w:fill="{bg_hex}"/>')
+        cell._tc.get_or_add_tcPr().append(shd)
+
+        borders = parse_xml(f'''
+            <w:tcBorders {nsdecls("w")}>
+                <w:top w:val="none"/>
+                <w:left w:val="none"/>
+                <w:bottom w:val="none"/>
+                <w:right w:val="none"/>
+            </w:tcBorders>
+        ''')
+        cell._tc.get_or_add_tcPr().append(borders)
+
+        tcMar = parse_xml(f'''
+            <w:tcMar {nsdecls("w")}>
+                <w:top w:w="50" w:type="dxa"/>
+                <w:left w:w="80" w:type="dxa"/>
+                <w:bottom w:w="50" w:type="dxa"/>
+                <w:right w:w="80" w:type="dxa"/>
+            </w:tcMar>
+        ''')
+        cell._tc.get_or_add_tcPr().append(tcMar)
+
+        p = cell.paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.space_before = Pt(1)
+        p.paragraph_format.space_after = Pt(1)
+        p.paragraph_format.line_spacing = 1.0
+        r = p.add_run(text)
+        r.font.name = "Calibri"
+        r.font.size = Pt(8.5)
+        r.font.bold = True
+        r.font.color.rgb = RGBColor.from_string(text_hex)
+
+    for i in range(num_pills - 1):
+        s_idx = i * 2 + 1
+        s_cell = table.cell(0, s_idx)
+        s_cell.width = col_widths[s_idx]
+        s_borders = parse_xml(f'''
+            <w:tcBorders {nsdecls("w")}>
+                <w:top w:val="none"/>
+                <w:left w:val="none"/>
+                <w:bottom w:val="none"/>
+                <w:right w:val="none"/>
+            </w:tcBorders>
+        ''')
+        s_cell._tc.get_or_add_tcPr().append(s_borders)
+        s_cell.paragraphs[0].paragraph_format.space_before = Pt(0)
+        s_cell.paragraphs[0].paragraph_format.space_after = Pt(0)
+
+    sp = doc.add_paragraph()
+    sp.paragraph_format.space_before = Pt(0)
+    sp.paragraph_format.space_after = Pt(4)
+    sp.paragraph_format.line_spacing = 1.0
+    sp.paragraph_format.keep_with_next = True
+    return table
+
+
+def add_student_response_table(
+    doc,
+    num_lines: int = 3,
+    width_inches: float = 7.0,
+    is_note_taking: bool = False,
+):
+    """
+    Generates clean 1-column handwriting response tables where only the bottom border is visible
+    (border-bottom: 0.5pt solid #CCCCCC), with cell height set to 0.3 inches per line (432 twips).
+    Avoids raw underscore characters ('____').
+    """
+    table = doc.add_table(rows=num_lines, cols=1)
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = False
+    table.columns[0].width = Inches(width_inches)
+
+    border_color = "94A3B8" if is_note_taking else "CCCCCC"
+    border_val = "dotted" if is_note_taking else "single"
+
+    for r_idx in range(num_lines):
+        row = table.rows[r_idx]
+        trPr = row._tr.get_or_add_trPr()
+        trHeight = parse_xml(f'<w:trHeight {nsdecls("w")} w:val="432" w:hRule="atLeast"/>')
+        trPr.append(trHeight)
+
+        cell = row.cells[0]
+        cell.width = Inches(width_inches)
+
+        borders = parse_xml(f'''
+            <w:tcBorders {nsdecls("w")}>
+                <w:top w:val="none"/>
+                <w:left w:val="none"/>
+                <w:bottom w:val="{border_val}" w:sz="4" w:space="0" w:color="{border_color}"/>
+                <w:right w:val="none"/>
+            </w:tcBorders>
+        ''')
+        cell._tc.get_or_add_tcPr().append(borders)
+
+        tcMar = parse_xml(f'''
+            <w:tcMar {nsdecls("w")}>
+                <w:top w:w="40" w:type="dxa"/>
+                <w:left w:w="60" w:type="dxa"/>
+                <w:bottom w:w="40" w:type="dxa"/>
+                <w:right w:w="60" w:type="dxa"/>
+            </w:tcMar>
+        ''')
+        cell._tc.get_or_add_tcPr().append(tcMar)
+
+        cp = cell.paragraphs[0]
+        cp.paragraph_format.space_before = Pt(0)
+        cp.paragraph_format.space_after = Pt(0)
+        cp.paragraph_format.line_spacing = 1.15
+
+    sp = doc.add_paragraph()
+    sp.paragraph_format.space_before = Pt(0)
+    sp.paragraph_format.space_after = Pt(4)
+    sp.paragraph_format.line_spacing = 1.15
+    return table
+
+
 def add_styled_paragraph(
     doc,
     text: str,
     style: str = "Normal",
-    space_after: int = 5,
-    space_before: int = 0,
+    space_after: int = 2,
+    space_before: int = 2,
     is_quote: bool = False,
+    keep_with_next: bool = False,
 ):
-    """Adds a paragraph with inline bold/italic parsing and custom spacing."""
+    """Adds a paragraph with inline bold/italic parsing, line_spacing=1.15, and custom spacing."""
     text = text.replace(r"$\rightarrow$", "→").replace(r"\rightarrow", "→").replace("$", "")
 
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(space_after)
     p.paragraph_format.space_before = Pt(space_before)
+    p.paragraph_format.line_spacing = 1.15
+    if keep_with_next:
+        p.paragraph_format.keep_with_next = True
     if is_quote:
         p.paragraph_format.left_indent = Inches(0.35)
 
@@ -448,17 +605,27 @@ def _populate_formatted_cell(
 
     for idx, sline in enumerate(sublines):
         clean_sline = sline.strip()
-        # Inside a table cell, calibrate dot/underscore strings so they fit without wrapping
-        if re.search(r'_{6,}', clean_sline):
-            if re.match(r'^_{6,}$', clean_sline):
-                clean_sline = "_" * 32
-            else:
-                clean_sline = re.sub(r'_{6,}', "_" * 20, clean_sline)
+        # Inside a table cell, render pure underscore/dot lines as clean border lines (avoiding raw characters)
+        if re.match(r'^_{6,}$', clean_sline):
+            p = cell.paragraphs[0] if (idx == 0 and p_offset == 0) else cell.add_paragraph()
+            p.paragraph_format.space_before = Pt(2)
+            p.paragraph_format.space_after = Pt(3)
+            p.paragraph_format.line_spacing = 1.15
+            pBdr = parse_xml(f'<w:pBdr {nsdecls("w")}><w:bottom w:val="single" w:sz="4" w:space="1" w:color="CCCCCC"/></w:pBdr>')
+            p._p.get_or_add_pPr().append(pBdr)
+            continue
+        elif re.match(r'^\.{6,}$', clean_sline):
+            p = cell.paragraphs[0] if (idx == 0 and p_offset == 0) else cell.add_paragraph()
+            p.paragraph_format.space_before = Pt(2)
+            p.paragraph_format.space_after = Pt(3)
+            p.paragraph_format.line_spacing = 1.15
+            pBdr = parse_xml(f'<w:pBdr {nsdecls("w")}><w:bottom w:val="dotted" w:sz="4" w:space="1" w:color="94A3B8"/></w:pBdr>')
+            p._p.get_or_add_pPr().append(pBdr)
+            continue
+        elif re.search(r'_{6,}', clean_sline):
+            clean_sline = re.sub(r'_{6,}', "_" * 20, clean_sline)
         elif re.search(r'\.{6,}', clean_sline):
-            if re.match(r'^\.{6,}$', clean_sline):
-                clean_sline = "." * 28
-            else:
-                clean_sline = re.sub(r'\.{6,}', "." * 18, clean_sline)
+            clean_sline = re.sub(r'\.{6,}', "." * 18, clean_sline)
 
         p = cell.paragraphs[0] if (idx == 0 and p_offset == 0) else cell.add_paragraph()
         if center_align:
@@ -497,25 +664,37 @@ def build_docx_file(
     compact_mode: bool = True,
     omit_auto_title: bool = True,
     include_top_student_header: bool = True,
+    metadata_pills: Optional[List[Tuple[str, str, str]]] = None,
 ) -> Path:
     """
-    Generates a print-ready .docx file locked to vibrant-lovelace's aesthetic standards:
-    - Margins: 0.85" top/bottom and 0.90" left/right for multi-page packets; 1.0" for standalone sheets.
-    - Top-right student header block: 'Name: ____________________   Date: __________   Period: _____'
-      (10pt Calibri Bold, Slate #334155).
-    - Academic Navy (#1E3A8A) and Dark Slate (#0F172A) Calibri typography hierarchy.
-    - Isolated section breaks on [PAGE_BREAK] with unlinked footers and anchored [GRADE_BOX: ...] footer boxes.
-    - Shaded #F1F5F9 table headers, #CCCCCC borders, generous student writing row heights (420–480 twips),
-      and solid (#94A3B8) vs. dotted writing lines.
+    Generates a publication-grade, print-ready .docx file aligning with word-processing layout standards:
+    - 0.75" margins across all sections (7.0" printable width).
+    - Document-wide Normal style with line_spacing=1.15, space_before=Pt(2), space_after=Pt(2).
+    - Top-right student header: 'Name: ____________________   Date: __________   Period: _____'.
+    - Single-row, multi-column metadata pills table with NO borders (all 'none') and subtle shading.
+    - Handwriting sections: 1-column response tables with border-bottom: 0.5pt solid #CCCCCC and 0.3-inch row heights.
+    - Task headers and prompt directions with keep_with_next=True.
+    - Shaded #F8FAFC callout cards with 3pt #1E3A8A left accent bars for blockquotes.
+    - Hard page break before Teacher Plan / Answer Key.
+    - Simple right-aligned footer score notation: 'Sec X.X   _____/100'.
     """
     doc = Document()
 
+    # Document-wide Normal style
+    normal_style = doc.styles["Normal"]
+    normal_style.font.name = "Calibri"
+    normal_style.font.size = Pt(10)
+    normal_style.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
+    normal_style.paragraph_format.space_before = Pt(2)
+    normal_style.paragraph_format.space_after = Pt(2)
+    normal_style.paragraph_format.line_spacing = 1.15
+
     current_section = doc.sections[0]
     for s in doc.sections:
-        s.top_margin = Inches(0.75 if (omit_auto_title or compact_mode) else 1.0)
-        s.bottom_margin = Inches(0.75 if (omit_auto_title or compact_mode) else 1.0)
-        s.left_margin = Inches(0.85 if (omit_auto_title or compact_mode) else 1.0)
-        s.right_margin = Inches(0.85 if (omit_auto_title or compact_mode) else 1.0)
+        s.top_margin = Inches(0.75)
+        s.bottom_margin = Inches(0.75)
+        s.left_margin = Inches(0.75)
+        s.right_margin = Inches(0.75)
     current_section.footer.is_linked_to_previous = False
     if current_section.footer.paragraphs:
         current_section.footer.paragraphs[0].text = ""
@@ -527,7 +706,9 @@ def build_docx_file(
         hdr_p = doc.add_paragraph()
         hdr_p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
         hdr_p.paragraph_format.space_before = Pt(0)
-        hdr_p.paragraph_format.space_after = Pt(6 if (omit_auto_title or compact_mode) else 12)
+        hdr_p.paragraph_format.space_after = Pt(4)
+        hdr_p.paragraph_format.line_spacing = 1.15
+        hdr_p.paragraph_format.keep_with_next = True
         run_hdr = hdr_p.add_run("Name: ____________________   Date: __________   Period: _____")
         run_hdr.font.name = "Calibri"
         run_hdr.font.size = Pt(10)
@@ -540,18 +721,22 @@ def build_docx_file(
     if not omit_auto_title:
         title_p = doc.add_paragraph()
         title_p.paragraph_format.space_before = Pt(0)
-        title_p.paragraph_format.space_after = Pt(2 if display_subtitle else 10)
+        title_p.paragraph_format.space_after = Pt(2 if display_subtitle else 8)
+        title_p.paragraph_format.line_spacing = 1.15
+        title_p.paragraph_format.keep_with_next = True
         main_heading = display_title if display_title else doc_title
         run_title = title_p.add_run(main_heading)
         run_title.font.name = "Calibri"
-        run_title.font.size = Pt(16.5)
+        run_title.font.size = Pt(16.0)
         run_title.font.bold = True
         run_title.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A)
 
         if display_subtitle:
             sub_p = doc.add_paragraph()
             sub_p.paragraph_format.space_before = Pt(0)
-            sub_p.paragraph_format.space_after = Pt(12)
+            sub_p.paragraph_format.space_after = Pt(8)
+            sub_p.paragraph_format.line_spacing = 1.15
+            sub_p.paragraph_format.keep_with_next = True
             run_sub = sub_p.add_run(display_subtitle)
             run_sub.font.name = "Calibri"
             run_sub.font.size = Pt(11)
@@ -619,42 +804,43 @@ def build_docx_file(
                 and "box & bullets" in header_row_str
             )
 
+            # Proportional column widths across 7.0-inch printable width
             if is_cover_tracker_table and num_cols == 3:
-                col_widths = [Inches(1.85), Inches(3.75), Inches(1.10)]
+                col_widths = [Inches(2.0), Inches(3.8), Inches(1.2)]
                 table.autofit = False
                 for c_idx, cw in enumerate(col_widths):
                     table.columns[c_idx].width = cw
             elif is_vocab_table:
-                col_widths = [Inches(1.6), Inches(3.2), Inches(1.9)]
+                col_widths = [Inches(1.7), Inches(3.3), Inches(2.0)]
                 table.autofit = False
                 for c_idx, cw in enumerate(col_widths):
                     table.columns[c_idx].width = cw
             elif is_cause_effect_table:
-                col_widths = [Inches(3.35), Inches(3.35)]
+                col_widths = [Inches(3.5), Inches(3.5)]
                 table.autofit = False
                 for c_idx, cw in enumerate(col_widths):
                     table.columns[c_idx].width = cw
             elif is_perspectives_table:
-                col_widths = [Inches(2.5), Inches(4.2)]
+                col_widths = [Inches(2.6), Inches(4.4)]
                 table.autofit = False
                 for c_idx, cw in enumerate(col_widths):
                     table.columns[c_idx].width = cw
             elif is_chronological_table:
-                col_widths = [Inches(2.4), Inches(4.3)]
+                col_widths = [Inches(2.5), Inches(4.5)]
                 table.autofit = False
                 for c_idx, cw in enumerate(col_widths):
                     table.columns[c_idx].width = cw
             elif is_standards_table:
-                col_widths = [Inches(2.3), Inches(4.4)]
+                col_widths = [Inches(2.4), Inches(4.6)]
                 table.autofit = False
                 for c_idx, cw in enumerate(col_widths):
                     table.columns[c_idx].width = cw
             elif is_box_bullets_table:
-                col_widths = [Inches(6.7)]
+                col_widths = [Inches(7.0)]
                 table.autofit = False
-                table.columns[0].width = Inches(6.7)
+                table.columns[0].width = Inches(7.0)
             else:
-                col_widths = []
+                col_widths = [Inches(7.0 / num_cols)] * num_cols
 
             for r_idx, row_data in enumerate(parsed_rows):
                 if is_cover_tracker_table and r_idx > 0:
@@ -684,8 +870,8 @@ def build_docx_file(
                             cell,
                             cell_text,
                             is_header=(r_idx == 0),
-                            font_size_bold=(11.5 if r_idx == 0 else 10.0),
-                            font_size_reg=(11.5 if r_idx == 0 else 9.5),
+                            font_size_bold=(11.0 if r_idx == 0 else 10.0),
+                            font_size_reg=(11.0 if r_idx == 0 else 9.5),
                             center_align=(r_idx == 0),
                         )
                     else:
@@ -715,31 +901,52 @@ def build_docx_file(
 
             spacer = doc.add_paragraph()
             spacer.paragraph_format.space_before = Pt(0)
-            spacer.paragraph_format.space_after = Pt(2)
+            spacer.paragraph_format.space_after = Pt(3)
+            spacer.paragraph_format.line_spacing = 1.15
 
         table_lines = []
         in_table = False
 
-    for line in lines:
+    line_idx = 0
+    while line_idx < len(lines):
+        line = lines[line_idx]
         stripped = line.strip()
 
         if stripped.startswith("|") and stripped.endswith("|"):
             in_table = True
             table_lines.append(stripped)
+            line_idx += 1
             continue
         elif in_table:
             flush_table()
 
         if not stripped:
+            line_idx += 1
             continue
+
+        # Hard page break before Teacher Answer Key / Teacher Plan
+        is_teacher_key_start = any(k in stripped for k in [
+            "Teacher Plan & Clipboard Key",
+            "Teacher Answer Key",
+            "Master Teacher Plan",
+        ])
+        if is_teacher_key_start and len(doc.paragraphs) > 1:
+            current_section = doc.add_section(WD_SECTION_START.NEW_PAGE)
+            current_section.top_margin = Inches(0.75)
+            current_section.bottom_margin = Inches(0.75)
+            current_section.left_margin = Inches(0.75)
+            current_section.right_margin = Inches(0.75)
+            current_section.footer.is_linked_to_previous = False
+            for fp in current_section.footer.paragraphs:
+                fp.text = ""
 
         # Special Token 1: Explicit Page Break with Isolated Section Footer
         if stripped == "[PAGE_BREAK]":
             current_section = doc.add_section(WD_SECTION_START.NEW_PAGE)
-            current_section.top_margin = Inches(0.75 if (omit_auto_title or compact_mode) else 1.0)
-            current_section.bottom_margin = Inches(0.75 if (omit_auto_title or compact_mode) else 1.0)
-            current_section.left_margin = Inches(0.85 if (omit_auto_title or compact_mode) else 1.0)
-            current_section.right_margin = Inches(0.85 if (omit_auto_title or compact_mode) else 1.0)
+            current_section.top_margin = Inches(0.75)
+            current_section.bottom_margin = Inches(0.75)
+            current_section.left_margin = Inches(0.75)
+            current_section.right_margin = Inches(0.75)
             current_section.footer.is_linked_to_previous = False
             for fp in current_section.footer.paragraphs:
                 fp.text = ""
@@ -748,6 +955,7 @@ def build_docx_file(
                 fp.paragraph_format.line_spacing = Pt(1)
             pending_page_break = False
             last_prompt_line = ""
+            line_idx += 1
             continue
 
         # Special Token 2: Centered Section Heading (e.g., Cover Tracker Table Heading)
@@ -757,11 +965,14 @@ def build_docx_file(
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p.paragraph_format.space_before = Pt(4)
             p.paragraph_format.space_after = Pt(3)
+            p.paragraph_format.line_spacing = 1.15
+            p.paragraph_format.keep_with_next = True
             r = p.add_run(ch_text)
             r.font.name = "Calibri"
             r.font.size = Pt(12)
             r.font.bold = True
             r.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A)
+            line_idx += 1
             continue
 
         # Special Token 3: Simple, Clean Footer Score Notation (e.g. "Sec 1.1   _____/100")
@@ -777,10 +988,49 @@ def build_docx_file(
             fr.font.size = Pt(10.0)
             fr.font.bold = True
             fr.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A)
+            line_idx += 1
             continue
 
         # Skip duplicate student header line if already rendered
         if is_student_handout and include_top_student_header and "**Name:**" in stripped and "_____" in stripped:
+            line_idx += 1
+            continue
+
+        # Section Title with Metadata Pills Table
+        if stripped.startswith("## Section "):
+            m = re.match(r'^## Section (\d+\.?\d*):?\s*([^(]+)\s*(?:\(Textbook pp\.?\s*([^)]+)\))?(.*)', stripped)
+            sec_num = m.group(1) if m else "1.1"
+            sec_title = m.group(2).strip() if m else "Section"
+            pp_str = m.group(3).strip() if (m and m.group(3)) else ""
+            is_scaf = "Scaffolded" in stripped
+
+            p = _apply_pending_page_break(doc.add_paragraph())
+            p.paragraph_format.space_before = Pt(3)
+            p.paragraph_format.space_after = Pt(2)
+            p.paragraph_format.line_spacing = 1.15
+            p.paragraph_format.keep_with_next = True
+
+            disp_pp = f" (Textbook pp. {pp_str})" if pp_str else ""
+            r = p.add_run(f"Section {sec_num}: {sec_title}{disp_pp}")
+            r.font.name = "Calibri"
+            r.font.size = Pt(13.0)
+            r.font.bold = True
+            r.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A)
+
+            # Metadata Pills Table: Single-row, multi-column table with NO borders and subtle background shading
+            if metadata_pills:
+                pills_data = metadata_pills
+            else:
+                day_num = sec_num.split(".")[-1]
+                pills_data = [
+                    (f"DAY {day_num} • SEC {sec_num}", "F2F4F8", "1E3A8A"),
+                    ("CCSS RH.6-8.2 (Central Idea)", "EFF6FF", "1D4ED8"),
+                    ("100 POINTS", "F1F5F9", "334155"),
+                    ("SCAFFOLDED SUPPORT" if is_scaf else "STUDENT COPY", "FEF3C7" if is_scaf else "F0FDF4", "B45309" if is_scaf else "15803D"),
+                ]
+            add_metadata_pills_table(doc, pills_data, width_inches=7.0)
+            last_prompt_line = stripped
+            line_idx += 1
             continue
 
         # Headings
@@ -789,45 +1039,61 @@ def build_docx_file(
             p = _apply_pending_page_break(doc.add_paragraph())
             p.paragraph_format.space_before = Pt(5)
             p.paragraph_format.space_after = Pt(2)
+            p.paragraph_format.line_spacing = 1.15
+            p.paragraph_format.keep_with_next = True
             r = p.add_run(h_text)
             r.font.name = "Calibri"
-            r.font.size = Pt(11.0)
+            r.font.size = Pt(10.5)
             r.font.bold = True
             r.font.color.rgb = RGBColor(0x1E, 0x29, 0x3B)
             last_prompt_line = h_text
+            line_idx += 1
+            continue
         elif stripped.startswith("### "):
             h_text = stripped.lstrip("#").strip()
             p = _apply_pending_page_break(doc.add_paragraph())
             p.paragraph_format.space_before = Pt(6)
             p.paragraph_format.space_after = Pt(2)
+            p.paragraph_format.line_spacing = 1.15
+            p.paragraph_format.keep_with_next = True
             r = p.add_run(h_text)
             r.font.name = "Calibri"
-            r.font.size = Pt(12.0)
+            r.font.size = Pt(11.5)
             r.font.bold = True
             r.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A)
             last_prompt_line = h_text
+            line_idx += 1
+            continue
         elif stripped.startswith("## "):
             h_text = stripped.lstrip("#").strip()
             p = _apply_pending_page_break(doc.add_paragraph())
             p.paragraph_format.space_before = Pt(4)
             p.paragraph_format.space_after = Pt(3)
+            p.paragraph_format.line_spacing = 1.15
+            p.paragraph_format.keep_with_next = True
             r = p.add_run(h_text)
             r.font.name = "Calibri"
-            r.font.size = Pt(13.5)
+            r.font.size = Pt(13.0)
             r.font.bold = True
             r.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A)
             last_prompt_line = h_text
+            line_idx += 1
+            continue
         elif stripped.startswith("# "):
             h_text = stripped.lstrip("#").strip()
             p = _apply_pending_page_break(doc.add_paragraph())
             p.paragraph_format.space_before = Pt(2)
             p.paragraph_format.space_after = Pt(3)
+            p.paragraph_format.line_spacing = 1.15
+            p.paragraph_format.keep_with_next = True
             r = p.add_run(h_text)
             r.font.name = "Calibri"
-            r.font.size = Pt(15.5)
+            r.font.size = Pt(15.0)
             r.font.bold = True
             r.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
             last_prompt_line = h_text
+            line_idx += 1
+            continue
 
         # Blockquote / Callout (Render as a shaded card with Academic Navy left accent bar)
         elif stripped.startswith("> "):
@@ -835,7 +1101,7 @@ def build_docx_file(
             q_table = doc.add_table(rows=1, cols=1)
             q_table.alignment = WD_TABLE_ALIGNMENT.CENTER
             q_cell = q_table.cell(0, 0)
-            q_cell.width = Inches(6.8)
+            q_cell.width = Inches(7.0)
             shading = parse_xml(r'<w:shd {} w:fill="F8FAFC"/>'.format(nsdecls("w")))
             q_cell._tc.get_or_add_tcPr().append(shading)
             borders = parse_xml(r'''
@@ -860,53 +1126,53 @@ def build_docx_file(
             sp_after = doc.add_paragraph()
             sp_after.paragraph_format.space_before = Pt(0)
             sp_after.paragraph_format.space_after = Pt(4)
+            sp_after.paragraph_format.line_spacing = 1.15
             last_prompt_line = q_text
+            line_idx += 1
+            continue
 
-        # Strict Line Protocol: Solid lines for complete sentences, Dotted lines for short gists/notes
+        # Handwriting Response Lines: Clean 1-column response table with border-bottom: 0.5pt solid #CCCCCC (0.3" height per line)
         elif re.search(r'^[\._]{15,}$', stripped):
-            p = _apply_pending_page_break(doc.add_paragraph())
-            p.paragraph_format.space_before = Pt(2)
-            p.paragraph_format.space_after = Pt(6 if omit_auto_title else 8)
-
-            is_note_taking = "...." in stripped
-            if not is_note_taking and last_prompt_line:
-                lpl = last_prompt_line.lower()
-                is_note_taking = any(
-                    k in lpl
-                    for k in [
-                        "gist",
-                        "notes",
-                        "keywords",
-                        "supporting evidence",
-                        "bullet",
-                        "when?",
-                        "where?",
-                        "why?",
-                        "who?",
-                    ]
-                )
-
-            if is_note_taking:
-                line_run = p.add_run("." * 70)
-            else:
-                line_run = p.add_run("_" * 68)
-            line_run.font.name = "Calibri"
-            line_run.font.size = Pt(10.0)
-            line_run.font.color.rgb = RGBColor(0x94, 0xA3, 0xB8)
+            count = 1
+            is_note = "...." in stripped
+            while line_idx + 1 < len(lines) and re.search(r'^[\._]{15,}$', lines[line_idx + 1].strip()):
+                line_idx += 1
+                count += 1
+                if "...." in lines[line_idx].strip():
+                    is_note = True
+            add_student_response_table(doc, num_lines=count, width_inches=7.0, is_note_taking=is_note)
+            line_idx += 1
+            continue
 
         # Divider line
         elif stripped in ["---", "***", "___"]:
             p = _apply_pending_page_break(doc.add_paragraph())
             p.paragraph_format.space_after = Pt(4)
             p.paragraph_format.space_before = Pt(3)
+            p.paragraph_format.line_spacing = 1.15
             r = p.add_run("_________________________________________________________________________________")
             r.font.color.rgb = RGBColor(0xCB, 0xD5, 0xE1)
+            line_idx += 1
+            continue
 
-        # Normal paragraph or bullet item
+        # Normal paragraph or prompt item
         else:
-            p = add_styled_paragraph(doc, stripped, space_after=3, space_before=1)
+            is_hdr_or_prompt = (
+                stripped.startswith("**Part ")
+                or stripped.startswith("**Directions")
+                or stripped.startswith("**Central Idea")
+                or "Directions" in stripped
+            )
+            p = add_styled_paragraph(
+                doc,
+                stripped,
+                space_after=2,
+                space_before=2,
+                keep_with_next=is_hdr_or_prompt,
+            )
             _apply_pending_page_break(p)
             last_prompt_line = stripped
+            line_idx += 1
 
     if in_table:
         flush_table()
