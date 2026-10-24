@@ -415,18 +415,82 @@ st.markdown(
         font-weight: 700 !important;
     }
 
-    /* Prominent Expander Styling */
+    /* Prominent Expander & High-Contrast Light Theme Container Styling */
     div[data-testid="stExpander"] {
         border: 1.5px solid #cbd5e1 !important;
         border-radius: 8px !important;
         background-color: #ffffff !important;
+        color: #0f172a !important;
         margin-bottom: 0.85rem !important;
     }
     div[data-testid="stExpander"] details summary {
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         color: #0f172a !important;
-        font-size: 0.92rem !important;
+        font-size: 0.94rem !important;
         padding: 0.65rem 0.85rem !important;
+        background-color: #f8fafc !important;
+        border-radius: 8px 8px 0 0 !important;
+    }
+    div[data-testid="stExpander"] details summary svg {
+        fill: #1e3a8a !important;
+    }
+    div[data-testid="stExpander"] details[open] summary {
+        border-bottom: 1.5px solid #e2e8f0 !important;
+    }
+    div[data-testid="stExpander"] div[data-testid="stExpanderDetails"] {
+        background-color: #ffffff !important;
+        padding: 1rem !important;
+    }
+    /* Enforce Dark Slate Text on All Text Elements Inside Expanders Regardless of OS Dark Mode */
+    div[data-testid="stExpander"] p,
+    div[data-testid="stExpander"] span,
+    div[data-testid="stExpander"] label,
+    div[data-testid="stExpander"] li,
+    div[data-testid="stExpander"] strong,
+    div[data-testid="stExpander"] em,
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p,
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] li,
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] strong,
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] em,
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] h1,
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] h2,
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] h3,
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] h4,
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] h5,
+    div[data-testid="stExpander"] div[data-testid="stCaptionContainer"] p,
+    div[data-testid="stExpander"] .stCaption {
+        color: #1e293b !important;
+    }
+    div[data-testid="stExpander"] div[data-testid="stCaptionContainer"] p,
+    div[data-testid="stExpander"] .stCaption {
+        color: #475569 !important;
+    }
+    /* Tabs Inside Expanders */
+    div[data-testid="stExpander"] button[data-baseweb="tab"] {
+        color: #475569 !important;
+    }
+    div[data-testid="stExpander"] button[data-baseweb="tab"][aria-selected="true"] {
+        color: #1e3a8a !important;
+        font-weight: 700 !important;
+        border-bottom-color: #1e3a8a !important;
+    }
+    div[data-testid="stExpander"] button[data-baseweb="tab"] p {
+        color: inherit !important;
+    }
+    /* Form Labels inside Expanders (Selectboxes, text inputs) */
+    div[data-testid="stExpander"] label p {
+        color: #0f172a !important;
+        font-weight: 700 !important;
+    }
+    /* Preserve Button Text Colors Inside Expanders */
+    div[data-testid="stExpander"] button[kind="primary"] p,
+    div[data-testid="stExpander"] button[aria-label*="Google Drive"] p,
+    div[data-testid="stExpander"] button[aria-label*="AI Revision"] p,
+    div[data-testid="stExpander"] div.stDownloadButton > button[kind="primary"] p {
+        color: #ffffff !important;
+    }
+    div[data-testid="stExpander"] div.stDownloadButton > button:not([kind="primary"]) p {
+        color: #1e3a8a !important;
     }
     </style>
     """,
