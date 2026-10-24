@@ -1209,7 +1209,7 @@ def format_booklet_for_web(booklet_md: str) -> str:
         box_text = match.group(1).strip()
         return (
             f'<div style="display: flex; justify-content: flex-end; margin: 1.25rem 0 0.5rem 0;">'
-            f'<div style="border: 1.5px solid #94a3b8; border-radius: 6px; background: #f8fafc; padding: 0.45rem 1rem; font-size: 0.85rem; font-weight: 600; color: #1e3a8a; box-shadow: 0 1px 2px rgba(15,23,42,0.04);">'
+            f'<div style="font-size: 0.90rem; font-weight: 700; color: #1e3a8a; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 4px; padding: 0.35rem 0.85rem; letter-spacing: 0.03em;">'
             f'{box_text}'
             f'</div></div>'
         )

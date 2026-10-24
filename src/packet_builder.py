@@ -751,13 +751,13 @@ def _render_reading_organizer_component(
                 if is_scaffolded:
                     e_cell = f"**Effect {idx}:** As a result, {sh['effect'][:28]} _____________________________<br>______________________________________________________."
                 else:
-                    e_cell = f"**Effect {idx}:** ______________________________________________________<br>______________________________________________________"
+                    e_cell = f"**Effect {idx}:**<br>______________________________________________________<br>______________________________________________________"
                 keys.append(f"Row {idx} Effect ({sh['name']}): {sh['effect']} {sh['citation']}")
             else:
                 if is_scaffolded:
                     c_cell = f"**{idx}. {sh['name']}:** Because {sh['cause'][:28]} _____________________________<br>______________________________________________________."
                 else:
-                    c_cell = f"**{idx}. {sh['name']}:** ______________________________________________________<br>______________________________________________________"
+                    c_cell = f"**{idx}. {sh['name']}:**<br>______________________________________________________<br>______________________________________________________"
                 e_cell = f"**Effect {idx}:** {sh['effect']}"
                 keys.append(f"Row {idx} Cause ({sh['name']}): {sh['cause']} {sh['citation']}")
             lines.append(f"| {c_cell} | {e_cell} |")
@@ -922,6 +922,7 @@ def _render_central_idea_and_anti_copycat_component(
         else:
             lines.append(SOLID_LINE)
             lines.append(SOLID_LINE)
+            lines.append(SOLID_LINE)
         keys.append(f"Central Idea ('What + So What' / Upgraded Main Idea): {kb['exemplar_central_idea']}")
 
     return "\n".join(lines), keys
@@ -983,13 +984,12 @@ def _render_builtin_questions_and_optional_twr(
 
 
 def _format_grade_box_token(grade_box_mode: str, label_prefix: str = "Section Check") -> str:
+    if grade_box_mode == "none":
+        return ""
     if grade_box_mode == "points_10":
-        return f"[GRADE_BOX: {label_prefix}: ______ / 10 pts   Initials: ________]"
-    elif grade_box_mode == "points_100":
-        return f"[GRADE_BOX: {label_prefix}: ______ / 100 pts   Initials: ________]"
-    elif grade_box_mode == "stamp_box":
-        return f"[GRADE_BOX: {label_prefix} Complete   Teacher Stamp / Initials: ________]"
-    return ""
+        return f"[GRADE_BOX: {label_prefix}   _____/10]"
+    # Standard clean score notation across the board
+    return f"[GRADE_BOX: {label_prefix}   _____/100]"
 
 
 # ─────────────────────────────────────────────────────────────────────────────

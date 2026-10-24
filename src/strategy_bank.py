@@ -402,25 +402,25 @@ COVER_PAGE_MODES: List[Dict[str, str]] = [
 
 GRADE_BOX_MODES: List[Dict[str, str]] = [
     {
+        "code": "points_100",
+        "name": "100-Point Score Notation (Sec X.X   ___/100) — Default",
+        "short_name": "100-Point Score (___/100)",
+        "description": "Prints a simple, clean right-aligned score line in the footer of every worksheet page for quick grading.",
+        "preview_text": "Sec 1.1   _____/100",
+    },
+    {
+        "code": "points_10",
+        "name": "10-Point Score Notation (Sec X.X   ___/10)",
+        "short_name": "10-Point Score (___/10)",
+        "description": "Prints a simple 10-point daily score line in the footer of every worksheet page.",
+        "preview_text": "Sec 1.1   _____/10",
+    },
+    {
         "code": "stamp_box",
         "name": "Teacher Stamp / Initials Box",
         "short_name": "Teacher Stamp / Initials Box",
         "description": "Prints a clean rectangular stamp/signature box in the footer of every worksheet page for quick classroom walkthrough grading.",
-        "preview_text": "┌────────────────────────────────────────────────────────┐\n│ Teacher Stamp / Completion Initials: [                 ]│\n└────────────────────────────────────────────────────────┘",
-    },
-    {
-        "code": "points_10",
-        "name": "10-Point Walk & Initial Box",
-        "short_name": "10-Point Walk & Initial Box",
-        "description": "Prints a 10-point daily score box with teacher initial space in the footer of every page.",
-        "preview_text": "┌────────────────────────────────────────────────────────┐\n│ Daily Score: ________ / 10 pts    Teacher Init: [      ]│\n└────────────────────────────────────────────────────────┘",
-    },
-    {
-        "code": "points_100",
-        "name": "100-Point Walk & Initial Box",
-        "short_name": "100-Point Walk & Initial Box",
-        "description": "Prints a 100-point percentage score box with teacher initial space in the footer of every page.",
-        "preview_text": "┌────────────────────────────────────────────────────────┐\n│ Daily Score: _______ / 100 pts    Teacher Init: [      ]│\n└────────────────────────────────────────────────────────┘",
+        "preview_text": "Teacher Stamp / Initials: [         ]",
     },
     {
         "code": "none",

@@ -449,10 +449,16 @@ def _populate_formatted_cell(
     for idx, sline in enumerate(sublines):
         clean_sline = sline.strip()
         # Inside a table cell, calibrate dot/underscore strings so they fit without wrapping
-        if re.match(r'^\.{10,}$', clean_sline):
-            clean_sline = "." * 34
-        elif re.match(r'^_{10,}$', clean_sline):
-            clean_sline = "_" * 32
+        if re.search(r'_{6,}', clean_sline):
+            if re.match(r'^_{6,}$', clean_sline):
+                clean_sline = "_" * 32
+            else:
+                clean_sline = re.sub(r'_{6,}', "_" * 20, clean_sline)
+        elif re.search(r'\.{6,}', clean_sline):
+            if re.match(r'^\.{6,}$', clean_sline):
+                clean_sline = "." * 28
+            else:
+                clean_sline = re.sub(r'\.{6,}', "." * 18, clean_sline)
 
         p = cell.paragraphs[0] if (idx == 0 and p_offset == 0) else cell.add_paragraph()
         if center_align:
@@ -654,9 +660,9 @@ def build_docx_file(
                 if is_cover_tracker_table and r_idx > 0:
                     set_row_height(table.rows[r_idx], 400, "atLeast")
                 elif is_vocab_table and r_idx > 0:
-                    set_row_height(table.rows[r_idx], 300, "atLeast")
+                    set_row_height(table.rows[r_idx], 440, "atLeast")
                 elif is_student_handout and r_idx > 0 and not is_standards_table:
-                    set_row_height(table.rows[r_idx], 340, "atLeast")
+                    set_row_height(table.rows[r_idx], 480, "atLeast")
 
                 for c_idx in range(num_cols):
                     cell = table.cell(r_idx, c_idx)
@@ -694,6 +700,15 @@ def build_docx_file(
 
                     set_cell_border(cell, color=("CBD5E1" if is_standards_table else "CCCCCC"))
                     set_cell_v_align(cell, "top")
+                    tcMar = parse_xml(r'''
+                        <w:tcMar {} >
+                            <w:top w:w="80" w:type="dxa"/>
+                            <w:left w:w="120" w:type="dxa"/>
+                            <w:bottom w:w="80" w:type="dxa"/>
+                            <w:right w:w="120" w:type="dxa"/>
+                        </w:tcMar>
+                    '''.format(nsdecls("w")))
+                    cell._tc.get_or_add_tcPr().append(tcMar)
                     if r_idx == 0:
                         shading = parse_xml(r'<w:shd {} w:fill="F1F5F9"/>'.format(nsdecls("w")))
                         cell._tc.get_or_add_tcPr().append(shading)
@@ -749,25 +764,19 @@ def build_docx_file(
             r.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A)
             continue
 
-        # Special Token 3: Walk-and-Initial Grade / Stamp Box anchored in Page Footer
+        # Special Token 3: Simple, Clean Footer Score Notation (e.g. "Sec 1.1   _____/100")
         if stripped.startswith("[GRADE_BOX:") and stripped.endswith("]"):
             box_text = stripped[len("[GRADE_BOX:"):-1].strip()
-            g_table = current_section.footer.add_table(rows=1, cols=1, width=Inches(3.6))
-            g_table.alignment = WD_TABLE_ALIGNMENT.RIGHT
-            g_cell = g_table.cell(0, 0)
-            g_cell.text = ""
-            gp = g_cell.paragraphs[0]
-            gp.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-            gp.paragraph_format.space_before = Pt(2)
-            gp.paragraph_format.space_after = Pt(2)
-            gr = gp.add_run(f"  {box_text}  ")
-            gr.font.name = "Calibri"
-            gr.font.size = Pt(9.5)
-            gr.font.bold = True
-            gr.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A)
-            set_cell_border(g_cell)
-            shading = parse_xml(r'<w:shd {} w:fill="F8FAFC"/>'.format(nsdecls("w")))
-            g_cell._tc.get_or_add_tcPr().append(shading)
+            fp = current_section.footer.paragraphs[0]
+            fp.text = ""
+            fp.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+            fp.paragraph_format.space_before = Pt(0)
+            fp.paragraph_format.space_after = Pt(0)
+            fr = fp.add_run(box_text)
+            fr.font.name = "Calibri"
+            fr.font.size = Pt(10.0)
+            fr.font.bold = True
+            fr.font.color.rgb = RGBColor(0x1E, 0x3A, 0x8A)
             continue
 
         # Skip duplicate student header line if already rendered
@@ -820,18 +829,44 @@ def build_docx_file(
             r.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
             last_prompt_line = h_text
 
-        # Blockquote / Callout
+        # Blockquote / Callout (Render as a shaded card with Academic Navy left accent bar)
         elif stripped.startswith("> "):
             q_text = stripped[2:].strip()
-            p = add_styled_paragraph(doc, q_text, space_after=4, space_before=2, is_quote=True)
-            _apply_pending_page_break(p)
+            q_table = doc.add_table(rows=1, cols=1)
+            q_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+            q_cell = q_table.cell(0, 0)
+            q_cell.width = Inches(6.8)
+            shading = parse_xml(r'<w:shd {} w:fill="F8FAFC"/>'.format(nsdecls("w")))
+            q_cell._tc.get_or_add_tcPr().append(shading)
+            borders = parse_xml(r'''
+                <w:tcBorders {} >
+                    <w:top w:val="none"/>
+                    <w:left w:val="single" w:sz="24" w:space="0" w:color="1E3A8A"/>
+                    <w:bottom w:val="none"/>
+                    <w:right w:val="none"/>
+                </w:tcBorders>
+            '''.format(nsdecls("w")))
+            q_cell._tc.get_or_add_tcPr().append(borders)
+            tcMar = parse_xml(r'''
+                <w:tcMar {} >
+                    <w:top w:w="80" w:type="dxa"/>
+                    <w:left w:w="140" w:type="dxa"/>
+                    <w:bottom w:w="80" w:type="dxa"/>
+                    <w:right w:w="140" w:type="dxa"/>
+                </w:tcMar>
+            '''.format(nsdecls("w")))
+            q_cell._tc.get_or_add_tcPr().append(tcMar)
+            _populate_formatted_cell(q_cell, q_text, is_header=False, font_size_bold=10.0, font_size_reg=9.5)
+            sp_after = doc.add_paragraph()
+            sp_after.paragraph_format.space_before = Pt(0)
+            sp_after.paragraph_format.space_after = Pt(4)
             last_prompt_line = q_text
 
         # Strict Line Protocol: Solid lines for complete sentences, Dotted lines for short gists/notes
         elif re.search(r'^[\._]{15,}$', stripped):
             p = _apply_pending_page_break(doc.add_paragraph())
             p.paragraph_format.space_before = Pt(2)
-            p.paragraph_format.space_after = Pt(8 if omit_auto_title else 12)
+            p.paragraph_format.space_after = Pt(6 if omit_auto_title else 8)
 
             is_note_taking = "...." in stripped
             if not is_note_taking and last_prompt_line:
@@ -852,11 +887,11 @@ def build_docx_file(
                 )
 
             if is_note_taking:
-                line_run = p.add_run("." * 72)
+                line_run = p.add_run("." * 70)
             else:
-                line_run = p.add_run("_" * 70)
+                line_run = p.add_run("_" * 68)
             line_run.font.name = "Calibri"
-            line_run.font.size = Pt(10.5)
+            line_run.font.size = Pt(10.0)
             line_run.font.color.rgb = RGBColor(0x94, 0xA3, 0xB8)
 
         # Divider line

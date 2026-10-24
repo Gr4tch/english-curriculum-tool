@@ -52,7 +52,7 @@ def get_default_chapter_blueprint(chapter_num: int) -> Dict[str, Any]:
         "reading_mode": "mode_mixed_flexible",
         "scaffolding_mode": "both",  # 'standard', 'scaffolded', or 'both'
         "cover_page_mode": "central_idea_tracker",  # 'central_idea_tracker', 'score_checklist', 'none'
-        "grade_box_mode": "stamp_box",  # 'stamp_box', 'points_10', 'points_100', 'none'
+        "grade_box_mode": "points_100",  # 'points_100', 'points_10', 'stamp_box', 'none'
         "vocab_mode": "vocab_official_box",
         "central_idea_strategy": "auto_recommend",
         "printed_main_idea_mode": "auto_recommend",
