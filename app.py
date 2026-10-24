@@ -726,6 +726,7 @@ ch_blueprint = get_chapter_blueprint(selected_ch_num, ch_info["chapter_title"])
 ch_std_info = CHAPTER_STANDARDS_MAP.get(str(selected_ch_num), CHAPTER_STANDARDS_MAP["5"])
 
 checked_codes = ch_blueprint.get("selected_sections", [])
+active_sections = [s for s in ch_sections if str(s["section_code"]) in checked_codes]
 pages_per_sec = int(ch_blueprint.get("pages_per_section", 1))
 has_cover = ch_blueprint.get("cover_page_mode", "central_idea_tracker") != "none"
 total_pkt_pages = len(checked_codes) * pages_per_sec + (1 if (has_cover and checked_codes) else 0)
@@ -1223,20 +1224,16 @@ elif st.session_state["nav_view"] == "designer":
 
         with col_ai:
             # 1. LIVE ASSEMBLED WORKSHEET PREVIEW
-            sample_sec = active_sections[0] if active_sections else ch_sections[0]
-            s_code = str(sample_sec["section_code"])
-            s_title = sample_sec["title"]
-            s_pages = sample_sec.get("printed_pages", "")
+            preview_candidates = [s for s in ch_sections if str(s["section_code"]) in ch_blueprint.get("selected_sections", [])]
+            if not preview_candidates:
+                preview_candidates = ch_sections
 
             st.markdown(
-                f"""
-                <div style="background: #ffffff; border: 2px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 0.75rem; box-shadow: 0 2px 6px rgba(30, 58, 138, 0.08);">
+                """
+                <div style="background: #ffffff; border: 2px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 0.5rem; box-shadow: 0 2px 6px rgba(30, 58, 138, 0.08);">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
                         <span style="background: #1e3a8a; color: #ffffff; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;">
                             Live Assembled Worksheet Preview
-                        </span>
-                        <span style="font-size: 0.82rem; font-weight: 700; color: #1e3a8a;">
-                            Sec. {s_code}: {s_title} (pp. {s_pages})
                         </span>
                     </div>
                     <div style="font-size: 0.83rem; color: #475569; line-height: 1.4;">
@@ -1246,6 +1243,19 @@ elif st.session_state["nav_view"] == "designer":
                 """,
                 unsafe_allow_html=True,
             )
+
+            if len(preview_candidates) > 1:
+                sample_sec = st.selectbox(
+                    "Select section spread to preview:",
+                    options=preview_candidates,
+                    format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s.get('printed_pages', '')})",
+                    key="step2_preview_sec_select",
+                    help="Choose which section from your chapter to inspect with your current architecture settings.",
+                )
+            else:
+                sample_sec = preview_candidates[0]
+
+            s_code = str(sample_sec["section_code"])
 
             # Generate real assembled sample section packet
             live_sample_pkt = generate_section_packet(sample_sec, ch_blueprint)
