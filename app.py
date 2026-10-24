@@ -122,20 +122,60 @@ st.markdown(
     .tile-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
-        border-top: 4px solid #1e3a8a;
         border-radius: 12px;
         padding: 1.25rem 1.25rem 0.85rem 1.25rem;
         min-height: 165px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        display: block;
+        text-decoration: none !important;
+        color: inherit !important;
+        cursor: pointer;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
         margin-bottom: 0.5rem;
     }
     .tile-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px -2px rgba(15, 23, 42, 0.1);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.10);
+    }
+    .tile-blue {
+        border-top: 4px solid #2563eb !important;
+        background: linear-gradient(180deg, #eff6ff 0%, #ffffff 42%);
+    }
+    .tile-blue:hover {
+        border-color: #93c5fd;
+        border-top: 4px solid #1d4ed8 !important;
+    }
+    .tile-indigo {
+        border-top: 4px solid #6366f1 !important;
+        background: linear-gradient(180deg, #eef2ff 0%, #ffffff 42%);
+    }
+    .tile-indigo:hover {
+        border-color: #c7d2fe;
+        border-top: 4px solid #4f46e5 !important;
+    }
+    .tile-amber {
+        border-top: 4px solid #d97706 !important;
+        background: linear-gradient(180deg, #fffbeb 0%, #ffffff 42%);
+    }
+    .tile-amber:hover {
+        border-color: #fde68a;
+        border-top: 4px solid #b45309 !important;
+    }
+    .tile-teal {
+        border-top: 4px solid #0d9488 !important;
+        background: linear-gradient(180deg, #f0fdfa 0%, #ffffff 42%);
+    }
+    .tile-teal:hover {
+        border-color: #99f6e4;
+        border-top: 4px solid #0f766e !important;
+    }
+    .tile-emerald {
+        border-top: 4px solid #059669 !important;
+        background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 42%);
+    }
+    .tile-emerald:hover {
+        border-color: #a7f3d0;
+        border-top: 4px solid #047857 !important;
     }
     .tile-title {
         font-size: 1.10rem;
@@ -410,6 +450,18 @@ if "designer_step" not in st.session_state:
 if "selected_ch_num" not in st.session_state:
     st.session_state["selected_ch_num"] = 5 if 5 in sorted_chapter_nums else sorted_chapter_nums[0]
 
+# Direct tile click navigation via query parameters
+if "nav" in st.query_params:
+    target_nav = str(st.query_params["nav"]).strip().lower()
+    if target_nav in ["designer", "studio", "assessment", "browser", "gallery", "home"]:
+        st.session_state["nav_view"] = target_nav
+        if target_nav == "designer":
+            st.session_state["designer_step"] = 1
+    try:
+        del st.query_params["nav"]
+    except Exception:
+        pass
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 1. THIN TOP BAR: CHAPTER SELECTOR, ESSENTIAL QUESTION & STATUS PILL
@@ -505,18 +557,18 @@ if st.session_state["nav_view"] == "home":
     with tile_row1_c1:
         st.markdown(
             """
-            <div class="tile-card">
+            <a href="?nav=designer" target="_self" class="tile-card tile-blue">
                 <div>
-                    <div class="tile-title">1. AI Packet Co-Designer & Chapter Builder</div>
+                    <div class="tile-title" style="color: #1d4ed8;">1. AI Packet Co-Designer & Chapter Builder</div>
                     <div class="tile-desc">
                         Step-by-step guided wizard to select sections from scratch, configure Central Idea synthesis & anti-copycat modes, adapt to 40-minute pacing, and compile complete student booklets + teacher clipboard answer keys.
                     </div>
                 </div>
-            </div>
+            </a>
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Open Packet Co-Designer ->", type="primary", use_container_width=True, key="btn_tile_1"):
+        if st.button("Open Packet Co-Designer ->", use_container_width=True, key="btn_tile_1"):
             st.session_state["nav_view"] = "designer"
             st.session_state["designer_step"] = 1
             st.rerun()
@@ -524,14 +576,14 @@ if st.session_state["nav_view"] == "home":
     with tile_row1_c2:
         st.markdown(
             """
-            <div class="tile-card">
+            <a href="?nav=studio" target="_self" class="tile-card tile-indigo">
                 <div>
-                    <div class="tile-title">2. Interactive Section Studio & Live Revision</div>
+                    <div class="tile-title" style="color: #4338ca;">2. Interactive Section Studio & Live Revision</div>
                     <div class="tile-desc">
                         Inspect any individual 2-page spread, compare Standard and Scaffolded worksheets side-by-side with the textbook passage, chat with AI to tweak questions, and download section-level Word documents or 2-page PDFs.
                     </div>
                 </div>
-            </div>
+            </a>
             """,
             unsafe_allow_html=True,
         )
@@ -545,14 +597,14 @@ if st.session_state["nav_view"] == "home":
     with tile_row2_c1:
         st.markdown(
             """
-            <div class="tile-card">
+            <a href="?nav=assessment" target="_self" class="tile-card tile-amber">
                 <div>
-                    <div class="tile-title">3. End-of-Chapter Central Idea Review & Assessment</div>
+                    <div class="tile-title" style="color: #b45309;">3. End-of-Chapter Central Idea Review & Assessment</div>
                     <div class="tile-desc">
                         Generate a passage-grounded chapter review test, scaffolded review with word banks & sentence starters, and access the official textbook Chapter Review questions.
                     </div>
                 </div>
-            </div>
+            </a>
             """,
             unsafe_allow_html=True,
         )
@@ -563,14 +615,14 @@ if st.session_state["nav_view"] == "home":
     with tile_row2_c2:
         st.markdown(
             """
-            <div class="tile-card">
+            <a href="?nav=browser" target="_self" class="tile-card tile-teal">
                 <div>
-                    <div class="tile-title">4. English Textbook PDF, Markdown & Vocab Browser</div>
+                    <div class="tile-title" style="color: #0f766e;">4. English Textbook PDF, Markdown & Vocab Browser</div>
                     <div class="tile-desc">
                         Browse and download all 194 searchable 2-page English Section PDFs, view paragraph-numbered markdown ([¶1]..[¶N]), and inspect clean official vocabulary.
                     </div>
                 </div>
-            </div>
+            </a>
             """,
             unsafe_allow_html=True,
         )
@@ -581,14 +633,14 @@ if st.session_state["nav_view"] == "home":
     st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
     st.markdown(
         """
-        <div class="tile-card" style="border-top: 4px solid #059669;">
+        <a href="?nav=gallery" target="_self" class="tile-card tile-emerald">
             <div>
-                <div class="tile-title">5. Strategy & Worksheet Template Gallery (Visual Models & Exemplars)</div>
+                <div class="tile-title" style="color: #047857;">5. Strategy & Worksheet Template Gallery (Visual Models & Exemplars)</div>
                 <div class="tile-desc">
                     Browse concrete student handout layouts, anti-copycat mechanics, and completed 8th-grade student exemplars for all Central Idea synthesis templates, Anti-Copycat modes, Active Reading organizers, and optional writing extensions.
                 </div>
             </div>
-        </div>
+        </a>
         """,
         unsafe_allow_html=True,
     )
