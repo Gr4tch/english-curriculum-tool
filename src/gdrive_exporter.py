@@ -55,31 +55,43 @@ def get_gdrive_service():
     try:
         import streamlit as st
         if "GDRIVE_TOKEN_JSON" in st.secrets:
-            token_data = json.loads(st.secrets["GDRIVE_TOKEN_JSON"])
-    except Exception:
-        pass
+            sec_val = st.secrets["GDRIVE_TOKEN_JSON"]
+            if isinstance(sec_val, (dict, list)):
+                token_data = dict(sec_val)
+            elif isinstance(sec_val, str):
+                token_data = json.loads(sec_val.strip())
+    except Exception as e:
+        logger.warning(f"Could not load GDRIVE_TOKEN_JSON from st.secrets: {e}")
 
     if not token_data and "GDRIVE_TOKEN_JSON" in os.environ:
         try:
-            token_data = json.loads(os.environ["GDRIVE_TOKEN_JSON"])
-        except Exception:
-            pass
+            token_data = json.loads(os.environ["GDRIVE_TOKEN_JSON"].strip())
+        except Exception as e:
+            logger.warning(f"Could not load GDRIVE_TOKEN_JSON from os.environ: {e}")
 
     if not token_data:
         token_path = get_token_file()
         if not token_path or not token_path.exists():
             raise FileNotFoundError(
-                "Google Drive token file not found. Please ensure you are logged into Google Drive or configure GDRIVE_TOKEN_JSON in app secrets."
+                "Google Drive credentials not found. To enable Google Drive exports on Streamlit Cloud, "
+                "please configure your GDRIVE_TOKEN_JSON secret in Streamlit Settings -> Secrets."
             )
         token_data = json.loads(token_path.read_text(encoding="utf-8"))
 
     tok = token_data.get("token", {})
+    if isinstance(tok, str):
+        try:
+            tok = json.loads(tok)
+        except Exception:
+            pass
 
-    access_token = tok.get("access_token") if isinstance(tok, dict) else token_data.get("access_token")
-    refresh_token = tok.get("refresh_token") if isinstance(tok, dict) else token_data.get("refresh_token")
+    access_token = tok.get("access_token") if (isinstance(tok, dict) or hasattr(tok, "get")) else token_data.get("access_token")
+    refresh_token = tok.get("refresh_token") if (isinstance(tok, dict) or hasattr(tok, "get")) else token_data.get("refresh_token")
     client_id = token_data.get("client_id")
     client_secret = token_data.get("client_secret")
     scopes = token_data.get("scopes", ["https://www.googleapis.com/auth/drive"])
+    if isinstance(scopes, str):
+        scopes = [s.strip() for s in scopes.split(",")]
 
     if not access_token or not refresh_token:
         raise ValueError("Invalid Google Drive token structure: missing access or refresh token.")
@@ -1029,9 +1041,14 @@ def export_section_packet_to_google_drive(
     # 4. Searchable 2-Page English Section PDF
     pdf_res = None
     if include_section_pdf and section_meta.get("pdf_file"):
-        pdf_p = Path(section_meta["pdf_file"])
+        pdf_raw = str(section_meta["pdf_file"]).replace("\\", "/")
+        pdf_p = Path(pdf_raw)
+        if not pdf_p.exists():
+            root_pdf = Path(__file__).resolve().parent.parent / pdf_raw
+            if root_pdf.exists():
+                pdf_p = root_pdf
         if pdf_p.exists():
-            pdf_name = f"Sec {sec_code} - {sec_title} (Textbook pp. {section_meta['printed_pages']}).pdf"
+            pdf_name = f"Sec {sec_code} - {sec_title} (Textbook pp. {section_meta.get('printed_pages', '')}).pdf"
             pdf_res = upload_pdf_to_google_drive(
                 service,
                 pdf_path=pdf_p,
@@ -1215,4 +1232,64 @@ def export_chapter_package_to_google_drive(
         "scaffolded_student_booklet": scaf_booklet_res,
         "assessment": assessment_res,
         "sections": section_exports,
+    }
+
+
+def export_assessment_package_to_google_drive(
+    chapter_num: int,
+    chapter_title: str,
+    assessment_data: Dict[str, str],
+    additional_email: Optional[str] = None,
+    service=None,
+) -> Dict[str, Any]:
+    """
+    Exports the End-of-Chapter Central Idea Review & Assessment Google Docs
+    (Standard, Scaffolded, Teacher Key) into the Chapter's Google Drive folder.
+    """
+    if service is None:
+        service = get_gdrive_service()
+
+    chapter_folder_id, chapter_path_display, chapter_folder_url = get_target_chapter_folder(
+        service,
+        chapter_num=chapter_num,
+        chapter_title=chapter_title,
+        additional_email=additional_email,
+    )
+
+    TEMP_DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    ch_prefix = f"Chp {chapter_num:02d}"
+
+    docs_res = {}
+    for key_label, doc_suffix, is_stud in [
+        ("standard_test_md", "Central Idea Review & Assessment (Standard)", True),
+        ("scaffolded_test_md", "Central Idea Review & Assessment (Scaffolded)", True),
+        ("teacher_key_md", "Central Idea Review & Assessment (Teacher Answer Key)", False),
+    ]:
+        md_txt = assessment_data.get(key_label)
+        if md_txt:
+            t_base = f"{ch_prefix} - {doc_suffix}"
+            t_name = get_versioned_filename(service, chapter_folder_id, t_base)
+            t_path = TEMP_DOCS_DIR / f"{t_name}.docx"
+            build_docx_file(
+                markdown_text=md_txt,
+                doc_title=t_name,
+                is_student_handout=is_stud,
+                output_path=t_path,
+                compact_mode=True,
+                omit_auto_title=True,
+                include_top_student_header=is_stud,
+            )
+            docs_res[key_label] = upload_docx_as_google_doc(
+                service,
+                docx_path=t_path,
+                doc_name=t_name,
+                parent_folder_id=chapter_folder_id,
+                additional_email=additional_email,
+            )
+
+    return {
+        "chapter_folder_path": chapter_path_display,
+        "chapter_folder_id": chapter_folder_id,
+        "chapter_folder_url": chapter_folder_url,
+        "docs": docs_res,
     }

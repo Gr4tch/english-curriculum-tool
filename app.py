@@ -41,6 +41,7 @@ from src.gdrive_exporter import (
     build_docx_file,
     export_section_packet_to_google_drive,
     export_chapter_package_to_google_drive,
+    export_assessment_package_to_google_drive,
 )
 from src.preview_renderer import (
     render_preview_handout,
@@ -249,7 +250,14 @@ st.markdown(
         transform: translateY(-1px) !important;
     }
 
-    /* Google Drive Export Button */
+    /* Google Drive Export & Primary Action Buttons (Solid Royal Blue) */
+    div.stButton > button[kind="primary"],
+    div.stButton > button[data-testid="baseButton-primary"],
+    div.stButton > button[data-testid="stBaseButton-primary"],
+    button[kind="primary"],
+    button[data-testid="stBaseButton-primary"],
+    button[aria-label*="Google Drive"],
+    button[aria-label*="google drive"],
     .gdrive-action-btn button {
         background-color: #2563eb !important;
         color: #ffffff !important;
@@ -258,15 +266,32 @@ st.markdown(
         font-weight: 700 !important;
         font-size: 0.90rem !important;
         padding: 0.6rem 1rem !important;
-        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.18) !important;
+        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.22) !important;
         transition: all 0.15s ease-in-out !important;
         cursor: pointer !important;
     }
+    div.stButton > button[kind="primary"]:hover,
+    div.stButton > button[data-testid="baseButton-primary"]:hover,
+    div.stButton > button[data-testid="stBaseButton-primary"]:hover,
+    button[kind="primary"]:hover,
+    button[data-testid="stBaseButton-primary"]:hover,
+    button[aria-label*="Google Drive"]:hover,
+    button[aria-label*="google drive"]:hover,
     .gdrive-action-btn button:hover {
         background-color: #1d4ed8 !important;
+        border-color: #1e40af !important;
         color: #ffffff !important;
-        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3) !important;
+        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.38) !important;
         transform: translateY(-1px) !important;
+    }
+    div.stButton > button[kind="primary"] p,
+    button[kind="primary"] p,
+    button[data-testid="stBaseButton-primary"] p,
+    button[aria-label*="Google Drive"] p,
+    button[aria-label*="google drive"] p,
+    .gdrive-action-btn button p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
     }
 
     /* Prominent Expander Styling */
@@ -1350,8 +1375,7 @@ elif st.session_state["nav_view"] == "designer":
                     )
 
                 with d_c4:
-                    st.markdown('<div class="gdrive-action-btn">', unsafe_allow_html=True)
-                    if st.button("Export to Google Drive", use_container_width=True):
+                    if st.button("Export to Google Drive", type="primary", use_container_width=True, key="btn_gdrive_export_ch"):
                         prog = st.empty()
                         try:
                             sec_map_by_code = {str(s["section_code"]): s for s in active_sections}
@@ -1385,7 +1409,6 @@ elif st.session_state["nav_view"] == "designer":
                         except Exception as e:
                             prog.empty()
                             st.error(f"Google Drive export error: {e}")
-                    st.markdown('</div>', unsafe_allow_html=True)
 
                 st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
                 prev_1, prev_2, prev_3 = st.tabs(
@@ -1575,7 +1598,7 @@ elif st.session_state["nav_view"] == "studio":
             use_container_width=True,
         )
 
-        if st.button(f"Export Sec. {s_code} + 2-Page PDF to Google Drive", use_container_width=True):
+        if st.button(f"Export Sec. {s_code} + 2-Page PDF to Google Drive", type="primary", use_container_width=True, key=f"btn_gdrive_export_sec_{s_code}"):
             with st.spinner("Uploading to Google Drive..."):
                 try:
                     s_res = export_section_packet_to_google_drive(
@@ -1620,7 +1643,7 @@ elif st.session_state["nav_view"] == "assessment":
     ch_rev_obj = chapter_reviews.get(str(selected_ch_num), {})
     test_bundle = build_chapter_review_and_assessment(selected_ch_num, ch_info["chapter_title"], pkts_for_test, ch_rev_obj)
 
-    t_dl1, t_dl2, t_dl3 = st.columns(3)
+    t_dl1, t_dl2, t_dl3, t_dl4 = st.columns(4)
     with t_dl1:
         st.download_button(
             "Standard Assessment (.docx)",
@@ -1645,6 +1668,24 @@ elif st.session_state["nav_view"] == "assessment":
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             use_container_width=True,
         )
+    with t_dl4:
+        if st.button("Export to Google Drive", type="primary", use_container_width=True, key="btn_gdrive_export_assessment"):
+            with st.spinner("Uploading Assessment docs to Google Drive..."):
+                try:
+                    as_res = export_assessment_package_to_google_drive(
+                        chapter_num=selected_ch_num,
+                        chapter_title=ch_info["chapter_title"],
+                        assessment_data=test_bundle,
+                    )
+                    st.success(
+                        f"Uploaded to **{as_res['chapter_folder_path']}**\n\n"
+                        f"- [Open Chapter Folder]({as_res['chapter_folder_url']})\n"
+                        f"- [Standard Assessment]({as_res['docs'].get('standard_test_md', {}).get('url', '#')})\n"
+                        f"- [Scaffolded Assessment]({as_res['docs'].get('scaffolded_test_md', {}).get('url', '#')})\n"
+                        f"- [Answer Key]({as_res['docs'].get('teacher_key_md', {}).get('url', '#')})"
+                    )
+                except Exception as e:
+                    st.error(f"Google Drive upload error: {e}")
 
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
     rev_t1, rev_t2, rev_t3, rev_t4 = st.tabs(
