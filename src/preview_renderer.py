@@ -1685,25 +1685,16 @@ HALF_SHEET_CSS = """
 }
 .half-sheet-cut-divider {
     height: 0.22in;
-    border-top: 2px dashed #94a3b8;
-    text-align: center;
-    position: relative;
+    display: flex;
+    align-items: center;
     box-sizing: border-box;
     margin: 0.04in 0;
 }
-.half-sheet-cut-badge {
-    background: #ffffff;
-    color: #475569;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    padding: 0.10rem 0.60rem;
-    border: 1.5px solid #cbd5e1;
-    border-radius: 9999px;
-    position: relative;
-    top: -10px;
-    display: inline-block;
-    text-transform: uppercase;
+.half-sheet-cut-divider::before {
+    content: "";
+    display: block;
+    width: 100%;
+    border-top: 2px dashed #94a3b8;
 }
 @media print {
     body {
@@ -1750,9 +1741,7 @@ def format_half_sheet_2up(handout_html: str) -> str:
     <div class="half-sheet-item">
         {compact_body}
     </div>
-    <div class="half-sheet-cut-divider">
-        <span class="half-sheet-cut-badge">[CUT] Cut Along Dashed Line &bull; 2 Handouts per Sheet</span>
-    </div>
+    <div class="half-sheet-cut-divider"></div>
     <div class="half-sheet-item">
         {compact_body}
     </div>
