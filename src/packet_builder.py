@@ -1207,6 +1207,38 @@ def build_standalone_strategy_handout(
             section_meta, kb, dummy_bp, {}, is_scaffolded=True
         )
         keys = std_keys
+    elif strategy_category in ("vocab", "vocabulary"):
+        s_obj = {"name": "Vocabulary Practice", "short_name": "Vocabulary Practice", "description": "Key vocabulary application"}
+        std_code = "CCSS L.6-8.4"
+        vocab_items = section_meta.get("official_vocab", [])[:4]
+        words_str = ", ".join(v.get("word", "") for v in vocab_items if v.get("word")) or "key historical terms"
+        comp_md_std = (
+            f"**Official Section Vocabulary Practice:**\n"
+            f"> **Word Bank:** {words_str}\n\n"
+            f"**Directions:** Read each term in context from pages {pp}. Write the term that best matches each historical clue:\n\n"
+        )
+        for i, v in enumerate(vocab_items, 1):
+            comp_md_std += f"{i}. _________________________ : {v.get('definition', 'Key historical concept from reading.')}\n\n"
+        comp_md_scaf = comp_md_std + "\n*First letter hints provided in word bank.*"
+        keys = [f"Vocabulary Term {i} ({v.get('word', '')}): {v.get('definition', '')}" for i, v in enumerate(vocab_items, 1)]
+    elif strategy_category in ("assessment", "quiz"):
+        s_obj = {"name": "Section Check & Quiz", "short_name": "Section Assessment", "description": "Reading check and critical viewing questions"}
+        std_code = "CCSS RH.6-8.1"
+        q1 = kb.get("say_something_q", "What was the most important historical development explained in this section?")
+        comp_md_std = (
+            f"**Section Reading Check & Synthesis:**\n\n"
+            f"1. **Reading Check Question:** {q1}\n"
+            f"_________________________________________________________________________________\n"
+            f"_________________________________________________________________________________\n\n"
+            f"2. **Critical Viewing & Historical Reasoning:** How did the events in Section {sec_code} alter the relationship between American colonists and Great Britain?\n"
+            f"_________________________________________________________________________________\n"
+            f"_________________________________________________________________________________\n"
+        )
+        comp_md_scaf = comp_md_std + "\n*Sentence Starter: After these events occurred, colonists responded by...*"
+        keys = [
+            f"Reading Check Question 1: {kb.get('reading_check_a', 'Colonists resisted British policies.')}",
+            f"Critical Viewing / Synthesis Question 2: {kb.get('critical_viewing_a', 'Tensions escalated leading toward revolution.')}",
+        ]
     else:
         s_obj = {"name": "Strategy Model", "short_name": "Strategy", "description": ""}
         std_code = "CCSS ELA-History"
@@ -1508,4 +1540,188 @@ def build_chapter_review_and_assessment(
         "standard_test_md": _build_test_md(is_scaf=False),
         "scaffolded_test_md": _build_test_md(is_scaf=True),
         "teacher_key_md": sanitize_aesthetics("\n".join(key_lines)),
+    }
+
+
+def _render_front_cover_page(
+    chapter_num: int,
+    chapter_title: str,
+    pages_config: List[Dict[str, Any]],
+    cover_mode: str = "central_idea_tracker",
+) -> str:
+    """
+    Renders the front cover page for modular packets:
+      - 'central_idea_tracker': Essential Question + Central Idea Study Guide Tracker table
+      - 'score_checklist': Essential Question + Section Score / Stamp Table
+      - 'none': Empty string
+    """
+    if cover_mode == "none":
+        return ""
+
+    ch_std = CHAPTER_STANDARDS_MAP.get(str(chapter_num), CHAPTER_STANDARDS_MAP.get("5", {}))
+    eq = ch_std.get("essential_question", "What key historical developments shaped this era?")
+
+    seen = set()
+    sec_entries = []
+    for p in pages_config:
+        sm = p.get("section_meta", {})
+        code = str(sm.get("section_code", ""))
+        if code and code not in seen:
+            seen.add(code)
+            sec_entries.append({
+                "code": code,
+                "title": sm.get("title", ""),
+                "pages": sm.get("printed_pages", ""),
+            })
+
+    cover_lines = [
+        f"# Chapter {chapter_num}: {chapter_title} — Curriculum Packet",
+        f"**Chapter Essential Question:** *{eq}*",
+    ]
+
+    if cover_mode == "score_checklist":
+        cover_lines.extend([
+            "**Packet Instructions:** Complete each section activity in this packet and track your completion stamps or scores below.",
+            "[CENTER_HEADING: Chapter Section Completion & Score Tracker]",
+            "| Section # | Section Title & Textbook Pages | Status / Completion Date | Teacher Stamp / Score |",
+            "| :--- | :--- | :---: | :---: |",
+        ])
+        for s in sec_entries:
+            cover_lines.append(
+                f"| **Sec. {s['code']}** | {s['title']} *(pp. {s['pages']})* | [   /   ] | _____ / 100 |"
+            )
+    else:
+        cover_lines.extend([
+            "**Chapter Central Idea Study Guide Tracker:** As we complete each section in this unit, record your **1-sentence Central Idea takeaway** in the table below. This cover page serves as your end-of-unit study guide!",
+            "[CENTER_HEADING: Cumulative Central Idea Study Guide Tracker]",
+            "| Section & Pages | 1-Sentence Central Idea Takeaway (Study Guide Log) | Teacher Stamp |",
+            "| :--- | :--- | :---: |",
+        ])
+        for s in sec_entries:
+            cover_lines.append(
+                f"| **Sec. {s['code']}:** {s['title']}<br>*(pp. {s['pages']})* | ________________________________________________________________<br>________________________________________________________________ | [ STAMP ] |"
+            )
+
+    return "\n".join(cover_lines).strip()
+
+
+def build_custom_modular_packet(
+    pages_config: List[Dict[str, Any]],
+    include_cover: bool = False,
+    cover_mode: str = "central_idea_tracker",
+    footer_mode: str = "gb_01_points_stamp",
+    packet_title: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Builds a custom modular student packet and matching teacher answer key page-by-page
+    from the Dynamic Page Tray.
+    Each item in pages_config specifies:
+      - section_meta: Dict[str, Any]
+      - strategy_type: str (e.g. 'reading_organizer', 'central_idea', 'anti_copycat', 'twr', 'vocab', 'assessment')
+      - strategy_code: str (e.g. 'read_01_cause_effect', 'ci_01_subheading_gist', etc.)
+      - is_scaffolded: bool (per-page scaffolding toggle)
+      - raw_passage_md: str (optional)
+    """
+    from src.preview_renderer import format_booklet_for_web
+    from pdf_exporter import html_to_pdf_bytes, create_pdf_bundle_zip
+
+    if not pages_config:
+        empty_md = "## Empty Packet\n\nNo pages currently in packet. Add a page to begin."
+        empty_html = format_booklet_for_web(empty_md)
+        empty_pdf = html_to_pdf_bytes(empty_html, "Empty Packet")
+        return {
+            "student_packet_md": empty_md,
+            "student_packet_html": empty_html,
+            "teacher_key_md": empty_md,
+            "teacher_key_html": empty_html,
+            "student_pdf_bytes": empty_pdf,
+            "teacher_pdf_bytes": empty_pdf,
+            "bundle_zip_bytes": create_pdf_bundle_zip({"Student_Packet.pdf": empty_pdf}),
+            "total_pages": 0,
+            "base_filename": "Empty_Packet",
+            "is_single_section": True,
+            "primary_chapter_num": 1,
+            "primary_chapter_title": "Curriculum",
+            "primary_section_code": "1.1",
+            "primary_section_title": "Section",
+        }
+
+    first_sec = pages_config[0]["section_meta"]
+    ch_num = first_sec.get("chapter_num", 1)
+    ch_title = first_sec.get("chapter_title", f"Chapter {ch_num}")
+    sec_code = str(first_sec.get("section_code", "1.1"))
+    sec_title = first_sec.get("title", "Section")
+
+    all_ch_nums = sorted(list(set(p["section_meta"].get("chapter_num", ch_num) for p in pages_config)))
+    all_sec_codes = [str(p["section_meta"].get("section_code", "")) for p in pages_config]
+    is_single_sec = len(all_ch_nums) == 1 and len(set(all_sec_codes)) == 1
+
+    if is_single_sec:
+        base_filename = f"Chp{ch_num:02d}_Sec{sec_code}_Packet"
+    elif len(all_ch_nums) == 1:
+        clean_sec_range = f"{all_sec_codes[0]}-{all_sec_codes[-1]}" if all_sec_codes else f"Sec{sec_code}"
+        base_filename = f"Chp{ch_num:02d}_Sec{clean_sec_range}_Packet"
+    else:
+        base_filename = f"Custom_Chp{all_ch_nums[0]}-Chp{all_ch_nums[-1]}_Packet"
+
+    student_pages_md = []
+    teacher_pages_md = []
+
+    # Optional Cover Page
+    if include_cover and len(pages_config) >= 2 and cover_mode != "none":
+        cov_md = _render_front_cover_page(ch_num, ch_title, pages_config, cover_mode)
+        if cov_md:
+            student_pages_md.append(cov_md)
+
+    # Render each page
+    for idx, p_cfg in enumerate(pages_config, 1):
+        s_meta = p_cfg["section_meta"]
+        s_type = p_cfg.get("strategy_type", "central_idea")
+        s_code = p_cfg.get("strategy_code", "ci_01_subheading_gist")
+        is_scaf = bool(p_cfg.get("is_scaffolded", False))
+        raw_md = p_cfg.get("raw_passage_md", "")
+
+        handout = build_standalone_strategy_handout(
+            section_meta=s_meta,
+            strategy_category=s_type,
+            strategy_code=s_code,
+            markdown_text=raw_md,
+            is_scaffolded=is_scaf,
+        )
+
+        std_md = handout["student_scaffolded_md" if is_scaf else "student_standard_md"]
+        ex_md = handout["exemplar_md"]
+
+        student_pages_md.append(std_md)
+        teacher_pages_md.append(ex_md)
+
+    full_student_md = "\n\n[PAGE_BREAK]\n\n".join(student_pages_md)
+    full_teacher_md = "\n\n[PAGE_BREAK]\n\n".join(teacher_pages_md)
+
+    full_student_html = format_booklet_for_web(full_student_md)
+    full_teacher_html = format_booklet_for_web(full_teacher_md)
+
+    student_pdf = html_to_pdf_bytes(full_student_html, title=f"{base_filename} - Student Packet")
+    teacher_pdf = html_to_pdf_bytes(full_teacher_html, title=f"{base_filename} - Teacher Answer Key")
+
+    bundle_zip = create_pdf_bundle_zip({
+        f"{base_filename}_Student_Packet.pdf": student_pdf,
+        f"{base_filename}_Teacher_Answer_Key.pdf": teacher_pdf,
+    })
+
+    return {
+        "student_packet_md": full_student_md,
+        "student_packet_html": full_student_html,
+        "teacher_key_md": full_teacher_md,
+        "teacher_key_html": full_teacher_html,
+        "student_pdf_bytes": student_pdf,
+        "teacher_pdf_bytes": teacher_pdf,
+        "bundle_zip_bytes": bundle_zip,
+        "total_pages": len(pages_config) + (1 if (include_cover and len(pages_config) >= 2) else 0),
+        "base_filename": base_filename,
+        "is_single_section": is_single_sec,
+        "primary_chapter_num": ch_num,
+        "primary_chapter_title": ch_title,
+        "primary_section_code": sec_code,
+        "primary_section_title": sec_title,
     }
