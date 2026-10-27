@@ -847,16 +847,16 @@ if st.session_state["nav_view"] == "home":
         """
         <a href="?nav=gallery&auth=ok" target="_self" class="tile-card tile-emerald">
             <div>
-                <div class="tile-title" style="color: #047857;">5. Strategy & Worksheet Template Gallery (Visual Models & Exemplars)</div>
+                <div class="tile-title" style="color: #047857;">5. Individual Section Worksheet Printer & Strategy Gallery</div>
                 <div class="tile-desc">
-                    Browse concrete student handout layouts, anti-copycat mechanics, and completed 8th-grade student exemplars for all Central Idea synthesis templates, Anti-Copycat modes, Active Reading organizers, and optional writing extensions.
+                    Select any chapter and section to preview, customize, and print or export standalone student worksheets (Standard & Scaffolded), Teacher Answer Keys, or browse the strategy template models.
                 </div>
             </div>
         </a>
         """,
         unsafe_allow_html=True,
     )
-    if st.button("Open Strategy & Template Gallery ->", use_container_width=True, key="btn_tile_5"):
+    if st.button("Open Section Worksheet Printer & Gallery ->", use_container_width=True, key="btn_tile_5"):
         st.session_state["nav_view"] = "gallery"
         st.rerun()
 
@@ -1691,18 +1691,32 @@ elif st.session_state["nav_view"] == "studio":
         unsafe_allow_html=True,
     )
 
-    studio_sel_c1, studio_sel_c2 = st.columns([4, 1.2])
+    studio_sel_c0, studio_sel_c1, studio_sel_c2 = st.columns([1.5, 3.2, 1.2])
+    with studio_sel_c0:
+        cur_studio_ch = st.session_state.get("studio_ch_num", selected_ch_num)
+        studio_ch_idx = sorted_chapter_nums.index(cur_studio_ch) if cur_studio_ch in sorted_chapter_nums else 0
+        studio_ch_num = st.selectbox(
+            "Select Chapter:",
+            options=sorted_chapter_nums,
+            index=studio_ch_idx,
+            format_func=lambda n: f"Ch. {n:02d}: {chapters_map[n]['chapter_title']}",
+            key="studio_ch_select",
+        )
+        st.session_state["studio_ch_num"] = studio_ch_num
+        studio_ch_info = chapters_map[studio_ch_num]
+        studio_ch_sections = studio_ch_info["sections"]
+        studio_blueprint = get_chapter_blueprint(studio_ch_num, studio_ch_info["chapter_title"])
+
     with studio_sel_c1:
         selected_studio_sec = st.selectbox(
             "Select Section Spread to Inspect or Revise:",
-            options=ch_sections,
+            options=studio_ch_sections,
             format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']}) — [{s.get('section_type', 'Core Narrative')}]",
-            key=f"studio_sec_{selected_ch_num}",
-            label_visibility="collapsed",
+            key=f"studio_sec_{studio_ch_num}",
         )
 
     s_code = str(selected_studio_sec["section_code"])
-    studio_pkt_key = f"studio_pkt_ch{selected_ch_num}_sec_{s_code}"
+    studio_pkt_key = f"studio_pkt_ch{studio_ch_num}_sec_{s_code}"
 
     md_path = resolve_file_path(selected_studio_sec.get("md_file"))
     raw_passage_md = md_path.read_text(encoding="utf-8") if md_path.exists() else ""
@@ -1710,13 +1724,13 @@ elif st.session_state["nav_view"] == "studio":
     with studio_sel_c2:
         if st.button("Reset to Defaults", key=f"rst_{studio_pkt_key}", use_container_width=True):
             st.session_state[studio_pkt_key] = generate_section_packet(
-                selected_studio_sec, ch_blueprint, raw_passage_md
+                selected_studio_sec, studio_blueprint, raw_passage_md
             )
             st.rerun()
 
     if studio_pkt_key not in st.session_state:
         st.session_state[studio_pkt_key] = generate_section_packet(
-            selected_studio_sec, ch_blueprint, raw_passage_md
+            selected_studio_sec, studio_blueprint, raw_passage_md
         )
 
     sec_pkt = st.session_state[studio_pkt_key]
@@ -1798,24 +1812,24 @@ elif st.session_state["nav_view"] == "studio":
         with s1:
             st.download_button(
                 "Standard (.docx)",
-                data=get_docx_bytes(sec_pkt["student_standard_md"], f"Chp_{selected_ch_num:02d}_Sec_{s_code}_Standard", True),
-                file_name=f"Chp_{selected_ch_num:02d}_Sec_{s_code}_Standard.docx",
+                data=get_docx_bytes(sec_pkt["student_standard_md"], f"Chp_{studio_ch_num:02d}_Sec_{s_code}_Standard", True),
+                file_name=f"Chp_{studio_ch_num:02d}_Sec_{s_code}_Standard.docx",
                 mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 use_container_width=True,
             )
         with s2:
             st.download_button(
                 "Scaffolded (.docx)",
-                data=get_docx_bytes(sec_pkt["student_scaffolded_md"], f"Chp_{selected_ch_num:02d}_Sec_{s_code}_Scaffolded", True),
-                file_name=f"Chp_{selected_ch_num:02d}_Sec_{s_code}_Scaffolded.docx",
+                data=get_docx_bytes(sec_pkt["student_scaffolded_md"], f"Chp_{studio_ch_num:02d}_Sec_{s_code}_Scaffolded", True),
+                file_name=f"Chp_{studio_ch_num:02d}_Sec_{s_code}_Scaffolded.docx",
                 mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 use_container_width=True,
             )
 
         st.download_button(
             "Section Teacher Plan & Clipboard Key (.docx)",
-            data=get_docx_bytes(sec_pkt["teacher_key_md"], f"Chp_{selected_ch_num:02d}_Sec_{s_code}_Key", False, False),
-            file_name=f"Chp_{selected_ch_num:02d}_Sec_{s_code}_Teacher_Key.docx",
+            data=get_docx_bytes(sec_pkt["teacher_key_md"], f"Chp_{studio_ch_num:02d}_Sec_{s_code}_Key", False, False),
+            file_name=f"Chp_{studio_ch_num:02d}_Sec_{s_code}_Teacher_Key.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             use_container_width=True,
         )
@@ -2041,197 +2055,443 @@ elif st.session_state["nav_view"] == "gallery":
             st.session_state["designer_step"] = 2
             st.rerun()
     with g_top_c3:
-        st.markdown("<h3 style='margin:0; text-align:right;'>Strategy & Template Gallery</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='margin:0; text-align:right;'>Individual Section Worksheet Printer & Gallery</h3>", unsafe_allow_html=True)
 
     st.divider()
 
-    st.markdown("### Interactive Worksheet Strategy & Template Gallery")
-    st.caption(
-        "Browse concrete student handout formats, anti-copycat mechanics, and completed 8th-grade student exemplars based on **Chapter 5: The Road to Revolution**. "
-        "Use this gallery to see exactly what students will see and write on their printed worksheets before you generate your chapter package."
-    )
-
-    gal_tab1, gal_tab2, gal_tab3, gal_tab4, gal_tab5 = st.tabs([
-        "1. Central Idea Strategies (4 Models)",
-        "2. Anti-Copycat Modes (3 Mechanics)",
-        "3. Active Reading Organizers (5 Structures)",
-        "4. Covers & Footers (7 Layouts)",
-        "5. Writing Extensions (The Writing Revolution)",
+    main_gal_tab1, main_gal_tab2 = st.tabs([
+        "Print Individual Section Worksheets",
+        "Strategy & Template Models (Exemplar Gallery)",
     ])
 
-    with gal_tab1:
-        st.markdown("#### Central Idea Synthesis Templates (CCSS RH.6-8.2)")
-        st.caption("Teach 8th graders to determine the central ideas of a historical text and formulate concise, evidence-based historical claims.")
-
-        ci_choice = st.selectbox(
-            "Select Central Idea Template to Explore:",
-            options=[s["code"] for s in CENTRAL_IDEA_STRATEGIES],
-            format_func=lambda c: get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, c)["name"],
-            key="gal_ci_select",
+    with main_gal_tab1:
+        st.markdown(
+            """
+            <div style="background: #ffffff; border: 1.5px solid #bbf7d0; border-left: 5px solid #16a34a; border-radius: 8px; padding: 0.85rem 1.15rem 0.65rem 1.15rem; margin-bottom: 0.95rem; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;">
+                    <div style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #166534;">
+                        Select Chapter and Section Spread to Print
+                    </div>
+                    <div style="font-size: 0.80rem; color: #64748b;">
+                        Print standalone 1-day student handouts (Standard & Scaffolded) and Teacher Keys for any specific section spread:
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
-        ci_curr = get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, ci_choice)
 
-        c_info_c1, c_info_c2 = st.columns([1.5, 1.0])
-        with c_info_c1:
-            st.markdown(f"**Target ELA Standard:** `CCSS RH.6-8.2` (Determine Central Idea & Summary)")
-            st.markdown(f"**Best For:** {ci_curr['best_for']}")
-            st.markdown(f"**How It Works:** {ci_curr['description']}")
-        with c_info_c2:
-            if st.button(f"Apply '{ci_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ci_{selected_ch_num}"):
-                ch_blueprint["central_idea_strategy"] = ci_choice
-                save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Saved! '{ci_curr['short_name']}' is now set as the active Central Idea strategy for Chapter {selected_ch_num} in the Packet Co-Designer.")
-            st.caption(f"Applies this strategy directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
-
-        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-        ci_view1, ci_view2 = st.columns(2)
-        with ci_view1:
-            st.markdown("##### Printed Student Handout Format")
-            st.markdown(render_preview_handout(ci_choice), unsafe_allow_html=True)
-            if ci_curr.get("scaffolded_md"):
-                st.markdown(render_preview_scaffold(ci_curr["scaffolded_md"]), unsafe_allow_html=True)
-
-        with ci_view2:
-            st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
-            st.markdown(render_preview_exemplar(ci_choice), unsafe_allow_html=True)
-
-    with gal_tab2:
-        st.markdown("#### Anti-Copycat Modes for Textbook's Printed MAIN IDEA Box")
-        st.caption("Guarantees students cannot blindly copy the textbook's printed 1-sentence Main Idea box as their own answer.")
-
-        pmi_choice = st.selectbox(
-            "Select Anti-Copycat Mode to Explore:",
-            options=[m["code"] for m in PRINTED_MAIN_IDEA_MODES],
-            format_func=lambda c: get_strategy_by_code(PRINTED_MAIN_IDEA_MODES, c)["name"],
-            key="gal_pmi_select",
-        )
-        pmi_curr = get_strategy_by_code(PRINTED_MAIN_IDEA_MODES, pmi_choice)
-
-        p_info_c1, p_info_c2 = st.columns([1.5, 1.0])
-        with p_info_c1:
-            st.markdown(f"**Pedagogical Mechanic:** {pmi_curr['description']}")
-        with p_info_c2:
-            if st.button(f"Apply '{pmi_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_pmi_{selected_ch_num}"):
-                ch_blueprint["printed_main_idea_mode"] = pmi_choice
-                save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Saved! '{pmi_curr['short_name']}' is now set as the active anti-copycat mechanic for Chapter {selected_ch_num} in the Packet Co-Designer.")
-            st.caption(f"Applies this mechanic directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
-
-        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-        pmi_view1, pmi_view2 = st.columns(2)
-        with pmi_view1:
-            st.markdown("##### Printed Student Handout Format")
-            st.markdown(render_preview_handout(pmi_choice), unsafe_allow_html=True)
-            if pmi_curr.get("scaffolded_md"):
-                st.markdown(render_preview_scaffold(pmi_curr["scaffolded_md"]), unsafe_allow_html=True)
-
-        with pmi_view2:
-            st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
-            st.markdown(render_preview_exemplar(pmi_choice), unsafe_allow_html=True)
-
-    with gal_tab3:
-        st.markdown("#### Active Reading & Text Structure Organizers (CCSS RH.6-8.5)")
-        st.caption("Active reading organizers guide students through each 2-page spread according to its specific historical text structure.")
-
-        ro_choice = st.selectbox(
-            "Select Active Reading Organizer to Explore:",
-            options=[r["code"] for r in READING_ORGANIZERS],
-            format_func=lambda c: get_strategy_by_code(READING_ORGANIZERS, c)["name"],
-            key="gal_ro_select",
-        )
-        ro_curr = get_strategy_by_code(READING_ORGANIZERS, ro_choice)
-
-        r_info_c1, r_info_c2 = st.columns([1.5, 1.0])
-        with r_info_c1:
-            st.markdown(f"**Target ELA Standard:** `CCSS RH.6-8.5` (Analyze Text Structure)")
-            st.markdown(f"**Text Structure Focus:** {ro_curr['description']}")
-        with r_info_c2:
-            if st.button(f"Apply '{ro_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ro_{selected_ch_num}"):
-                ch_blueprint["reading_organizer"] = ro_choice
-                save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Saved! '{ro_curr['short_name']}' is now set as the active graphic organizer for Chapter {selected_ch_num} in the Packet Co-Designer.")
-            st.caption(f"Applies this structure directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
-
-        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-        ro_view1, ro_view2 = st.columns(2)
-        with ro_view1:
-            st.markdown("##### Printed Student Handout Format")
-            st.markdown(render_preview_handout(ro_choice), unsafe_allow_html=True)
-            if ro_curr.get("scaffolded_md"):
-                st.markdown(render_preview_scaffold(ro_curr["scaffolded_md"]), unsafe_allow_html=True)
-
-        with ro_view2:
-            st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
-            st.markdown(render_preview_exemplar(ro_choice), unsafe_allow_html=True)
-
-    with gal_tab4:
-        st.markdown("#### Booklet Front Cover Pages & Page Footer Check Boxes")
-        st.caption("Inspect how the cumulative front cover study guide and daily footer check boxes look when printed.")
-
-        cov_c1, cov_c2 = st.columns(2)
-        with cov_c1:
-            st.markdown("##### Booklet Front Cover Options")
-            gal_cov_choice = st.selectbox(
-                "Choose Cover Format to Preview:",
-                options=[c["code"] for c in COVER_PAGE_MODES],
-                format_func=lambda c: get_strategy_by_code(COVER_PAGE_MODES, c)["name"],
-                key="gal_cov_select_box",
+        c_ch, c_sec = st.columns([1.1, 1.9])
+        with c_ch:
+            cur_gal_ch = st.session_state.get("gal_print_ch_num", selected_ch_num)
+            gal_ch_idx = sorted_chapter_nums.index(cur_gal_ch) if cur_gal_ch in sorted_chapter_nums else 0
+            gal_print_ch_num = st.selectbox(
+                "1. Select Chapter:",
+                options=sorted_chapter_nums,
+                index=gal_ch_idx,
+                format_func=lambda n: f"Chapter {n:02d}: {chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} spreads)",
+                key="gal_print_ch_select",
             )
-            g_cov_item = get_strategy_by_code(COVER_PAGE_MODES, gal_cov_choice)
-            st.markdown(f"**How It Functions:** {g_cov_item['description']}")
-            st.markdown(render_preview_cover(gal_cov_choice), unsafe_allow_html=True)
-            if st.button(f"Apply '{g_cov_item['short_name']}' to Chapter {selected_ch_num}", key="btn_apply_cov"):
-                ch_blueprint["cover_page_mode"] = gal_cov_choice
-                save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Saved! '{g_cov_item['short_name']}' is now set as the active cover page for Chapter {selected_ch_num} in the Packet Co-Designer.")
-            st.caption(f"Applies this cover style directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+            st.session_state["gal_print_ch_num"] = gal_print_ch_num
 
-        with cov_c2:
-            st.markdown("##### Page Footer Check Box Options")
-            gal_gb_choice = st.selectbox(
-                "Choose Footer Check Box Layout to Preview:",
-                options=[g["code"] for g in GRADE_BOX_MODES],
-                format_func=lambda c: get_strategy_by_code(GRADE_BOX_MODES, c)["name"],
-                key="gal_gb_select_box",
+        gal_ch_info = chapters_map[gal_print_ch_num]
+        gal_ch_sections = gal_ch_info["sections"]
+        gal_ch_bp = get_chapter_blueprint(gal_print_ch_num, gal_ch_info["chapter_title"])
+
+        with c_sec:
+            gal_selected_sec = st.selectbox(
+                "2. Select Section Spread to Print:",
+                options=gal_ch_sections,
+                format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']}) — [{s.get('section_type', 'Core Narrative')}]",
+                key=f"gal_print_sec_select_{gal_print_ch_num}",
             )
-            g_gb_item = get_strategy_by_code(GRADE_BOX_MODES, gal_gb_choice)
-            st.markdown(f"**Grading Use:** {g_gb_item['description']}")
-            st.markdown(render_preview_footer(gal_gb_choice), unsafe_allow_html=True)
-            if st.button(f"Apply '{g_gb_item['short_name']}' to Chapter {selected_ch_num}", key="btn_apply_gb"):
-                ch_blueprint["grade_box_mode"] = gal_gb_choice
-                save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Saved! '{g_gb_item['short_name']}' is now set as the active footer layout for Chapter {selected_ch_num} in the Packet Co-Designer.")
-            st.caption(f"Applies this footer layout directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
 
-    with gal_tab5:
-        st.markdown("#### Optional Writing Extensions (The Writing Revolution)")
-        st.caption("Sentence-level writing extensions grounded in Judith Hochman's The Writing Revolution (TWR) — completely optional and turned off by default.")
+        gal_sec_code = str(gal_selected_sec["section_code"])
+        gal_md_path = resolve_file_path(gal_selected_sec.get("md_file"))
+        gal_raw_passage_md = gal_md_path.read_text(encoding="utf-8") if gal_md_path.exists() else ""
 
-        twr_active = [t for t in OPTIONAL_TWR_STRATEGIES if t["code"] != "twr_none"]
-        twr_choice = st.selectbox(
-            "Select Writing Extension to Explore:",
-            options=[t["code"] for t in twr_active],
-            format_func=lambda c: get_strategy_by_code(twr_active, c)["name"],
-            key="gal_twr_select",
+        # Section Info Card
+        sec_vocab = gal_selected_sec.get("official_vocab", [])
+        vocab_preview = ", ".join([v["word"] for v in sec_vocab[:4]]) if sec_vocab else "None listed"
+        if len(sec_vocab) > 4:
+            vocab_preview += f" (+{len(sec_vocab) - 4} more)"
+
+        st.markdown(
+            f"""
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1.15rem; margin-bottom: 0.95rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                    <div>
+                        <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em;">Selected Section Spread</div>
+                        <div style="font-size: 1.05rem; font-weight: 700; color: #0f172a;">Sec. {gal_sec_code}: {gal_selected_sec['title']} (pp. {gal_selected_sec['printed_pages']})</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="badge-pill" style="font-size: 0.78rem; padding: 0.25rem 0.65rem;">
+                            {gal_selected_sec.get('section_type', 'Core Narrative')}
+                        </span>
+                        &nbsp;
+                        <span class="badge-pill" style="font-size: 0.78rem; padding: 0.25rem 0.65rem;">
+                            {gal_selected_sec.get('word_count', 0)} Words
+                        </span>
+                    </div>
+                </div>
+                <div style="margin-top: 0.5rem; font-size: 0.84rem; color: #334155;">
+                    <b>Official Content Vocab:</b> {vocab_preview}
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
-        twr_curr = get_strategy_by_code(twr_active, twr_choice)
 
-        w_info_c1, w_info_c2 = st.columns([1.5, 1.0])
-        with w_info_c1:
-            st.markdown(f"**Target Standard:** `CCSS WHST.6-8.2` (Informative Historical Writing)")
-            st.markdown(f"**Writing Objective:** {twr_curr['description']}")
-        with w_info_c2:
-            if st.button(f"Apply '{twr_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_twr_{selected_ch_num}"):
-                ch_blueprint["optional_twr_strategy"] = twr_choice
-                save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                st.success(f"Saved! '{twr_curr['short_name']}' is now set as the active writing extension for Chapter {selected_ch_num} in the Packet Co-Designer.")
-            st.caption(f"Applies this writing extension directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+        # Strategy Customization Expander
+        with st.expander("Customize Strategy & Architecture for this Worksheet (Optional)", expanded=False):
+            st.caption("Change the pedagogical strategy for this specific printed worksheet. Leave on defaults to use the recommended textbook structure.")
+            cust_c1, cust_c2 = st.columns(2)
+            with cust_c1:
+                ci_opts = [s["code"] for s in CENTRAL_IDEA_STRATEGIES]
+                rec_ci = gal_ch_bp.get("central_idea_strategy", "ci_claims_evidence")
+                selected_ci = st.selectbox(
+                    "Central Idea Synthesis Model:",
+                    options=ci_opts,
+                    index=ci_opts.index(rec_ci) if rec_ci in ci_opts else 0,
+                    format_func=lambda c: get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, c)["name"],
+                    key=f"gal_ci_{gal_print_ch_num}_{gal_sec_code}",
+                )
+                pmi_opts = [m["code"] for m in PRINTED_MAIN_IDEA_MODES]
+                rec_pmi = gal_ch_bp.get("printed_main_idea_mode", "pmi_paraphrase_challenge")
+                selected_pmi = st.selectbox(
+                    "Anti-Copycat Mechanic (Textbook Main Idea Box):",
+                    options=pmi_opts,
+                    index=pmi_opts.index(rec_pmi) if rec_pmi in pmi_opts else 0,
+                    format_func=lambda c: get_strategy_by_code(PRINTED_MAIN_IDEA_MODES, c)["name"],
+                    key=f"gal_pmi_{gal_print_ch_num}_{gal_sec_code}",
+                )
+            with cust_c2:
+                ro_opts = [r["code"] for r in READING_ORGANIZERS]
+                rec_ro = gal_ch_bp.get("reading_organizer", "read_01_cause_effect")
+                selected_ro = st.selectbox(
+                    "Active Reading Graphic Organizer:",
+                    options=ro_opts,
+                    index=ro_opts.index(rec_ro) if rec_ro in ro_opts else 0,
+                    format_func=lambda c: get_strategy_by_code(READING_ORGANIZERS, c)["name"],
+                    key=f"gal_ro_{gal_print_ch_num}_{gal_sec_code}",
+                )
+                twr_opts = [t["code"] for t in OPTIONAL_TWR_STRATEGIES]
+                rec_twr = gal_ch_bp.get("optional_twr_strategy", "twr_none")
+                selected_twr = st.selectbox(
+                    "Optional Writing Extension (The Writing Revolution):",
+                    options=twr_opts,
+                    index=twr_opts.index(rec_twr) if rec_twr in twr_opts else 0,
+                    format_func=lambda c: get_strategy_by_code(OPTIONAL_TWR_STRATEGIES, c)["name"],
+                    key=f"gal_twr_{gal_print_ch_num}_{gal_sec_code}",
+                )
+
+        # Build custom blueprint for this generation
+        cur_bp = dict(gal_ch_bp)
+        cur_bp["central_idea_strategy"] = selected_ci
+        cur_bp["printed_main_idea_mode"] = selected_pmi
+        cur_bp["reading_organizer"] = selected_ro
+        cur_bp["optional_twr_strategy"] = selected_twr
+
+        pkt_cache_key = f"gal_pkt_ch{gal_print_ch_num}_sec{gal_sec_code}_{selected_ci}_{selected_ro}_{selected_pmi}_{selected_twr}"
+        if pkt_cache_key not in st.session_state:
+            st.session_state[pkt_cache_key] = generate_section_packet(
+                gal_selected_sec, cur_bp, gal_raw_passage_md
+            )
+        gal_pkt = st.session_state[pkt_cache_key]
+
+        st.markdown("#### Print, Download & Export Options")
+        d_c1, d_c2, d_c3, d_c4 = st.columns([1.2, 1.2, 1.3, 1.3])
+        with d_c1:
+            std_bytes = get_docx_bytes(
+                gal_pkt["student_standard_md"],
+                f"Chp_{gal_print_ch_num:02d}_Sec_{gal_sec_code}_Standard",
+                is_student_handout=True,
+            )
+            st.download_button(
+                "Standard Worksheet (.docx)",
+                data=std_bytes,
+                file_name=f"Chp_{gal_print_ch_num:02d}_Sec_{gal_sec_code}_Standard.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                use_container_width=True,
+            )
+        with d_c2:
+            scaf_bytes = get_docx_bytes(
+                gal_pkt["student_scaffolded_md"],
+                f"Chp_{gal_print_ch_num:02d}_Sec_{gal_sec_code}_Scaffolded",
+                is_student_handout=True,
+            )
+            st.download_button(
+                "Scaffolded Worksheet (.docx)",
+                data=scaf_bytes,
+                file_name=f"Chp_{gal_print_ch_num:02d}_Sec_{gal_sec_code}_Scaffolded.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                use_container_width=True,
+            )
+        with d_c3:
+            key_bytes = get_docx_bytes(
+                gal_pkt["teacher_key_md"],
+                f"Chp_{gal_print_ch_num:02d}_Sec_{gal_sec_code}_Teacher_Key",
+                is_student_handout=False,
+                include_top_student_header=False,
+            )
+            st.download_button(
+                "Teacher Clipboard Key (.docx)",
+                data=key_bytes,
+                file_name=f"Chp_{gal_print_ch_num:02d}_Sec_{gal_sec_code}_Teacher_Key.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                use_container_width=True,
+            )
+        with d_c4:
+            sec_pdf_path = resolve_file_path(gal_selected_sec.get("pdf_file"))
+            if sec_pdf_path and sec_pdf_path.exists():
+                st.download_button(
+                    "Original Textbook 2-Page PDF",
+                    data=sec_pdf_path.read_bytes(),
+                    file_name=sec_pdf_path.name,
+                    mime="application/pdf",
+                    use_container_width=True,
+                )
+            else:
+                st.button("Textbook PDF Unavailable", disabled=True, use_container_width=True)
+
+        g_col1, g_col2 = st.columns([1.5, 1.2])
+        with g_col1:
+            if st.button(
+                f"Export Sec. {gal_sec_code} to Google Drive",
+                type="primary",
+                use_container_width=True,
+                key=f"btn_gal_gdrive_{gal_print_ch_num}_{gal_sec_code}",
+            ):
+                with st.spinner("Exporting Section to Google Drive..."):
+                    try:
+                        g_res = export_section_packet_to_google_drive(
+                            section_meta=gal_selected_sec,
+                            packet_data=gal_pkt,
+                            include_scaffolded=True,
+                            include_section_pdf=True,
+                        )
+                        st.success(
+                            f"Exported to Google Drive Folder: **{g_res['folder_path']}**\n\n"
+                            f"- [Open Folder in Drive]({g_res['folder_url']})\n"
+                            f"- [Standard Worksheet (Google Doc)]({g_res['student_standard']['url']})\n"
+                            f"- [Scaffolded Worksheet (Google Doc)]({g_res['student_scaffolded']['url']})\n"
+                            f"- [Teacher Answer Key (Google Doc)]({g_res['teacher_key']['url']})"
+                        )
+                    except Exception as e:
+                        st.error(f"Google Drive export error: {e}")
+        with g_col2:
+            st.info("Tip: Open the downloaded .docx in Word / Google Docs for native printing, or print directly from your browser (Ctrl+P) on the preview below.")
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-        twr_view1, twr_view2 = st.columns(2)
-        with twr_view1:
-            st.markdown("##### Printed Student Handout Format")
-            st.markdown(render_preview_handout(twr_choice), unsafe_allow_html=True)
-        with twr_view2:
-            st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
-            st.markdown(render_preview_exemplar(twr_choice), unsafe_allow_html=True)
+        prev_std, prev_scaf, prev_key, prev_text = st.tabs([
+            "Standard Student Worksheet",
+            "Scaffolded Student Worksheet",
+            "Teacher Clipboard Answer Key",
+            "2-Page Textbook Passage",
+        ])
+        with prev_std:
+            st.markdown(format_booklet_for_web(gal_pkt["student_standard_md"]), unsafe_allow_html=True)
+        with prev_scaf:
+            st.markdown(format_booklet_for_web(gal_pkt["student_scaffolded_md"]), unsafe_allow_html=True)
+        with prev_key:
+            st.markdown(gal_pkt["teacher_key_md"])
+        with prev_text:
+            if gal_selected_sec.get("printed_main_idea"):
+                st.info(f"**Printed Textbook MAIN IDEA (p. {gal_selected_sec.get('start_page', '')}):** *{gal_selected_sec['printed_main_idea']}*")
+            if gal_raw_passage_md:
+                with st.container(height=520):
+                    st.markdown(gal_raw_passage_md)
+            else:
+                st.warning("Textbook passage markdown file could not be loaded.")
+
+    with main_gal_tab2:
+        st.markdown("### Interactive Worksheet Strategy & Template Models")
+        st.caption(
+            "Browse concrete student handout formats, anti-copycat mechanics, and completed 8th-grade student exemplars based on **Chapter 5: The Road to Revolution**. "
+            "Use this gallery to see exactly what students will see and write on their printed worksheets before you generate your chapter package."
+        )
+
+        gal_tab1, gal_tab2, gal_tab3, gal_tab4, gal_tab5 = st.tabs([
+            "1. Central Idea Strategies (4 Models)",
+            "2. Anti-Copycat Modes (3 Mechanics)",
+            "3. Active Reading Organizers (5 Structures)",
+            "4. Covers & Footers (7 Layouts)",
+            "5. Writing Extensions (The Writing Revolution)",
+        ])
+
+        with gal_tab1:
+            st.markdown("#### Central Idea Synthesis Templates (CCSS RH.6-8.2)")
+            st.caption("Teach 8th graders to determine the central ideas of a historical text and formulate concise, evidence-based historical claims.")
+
+            ci_choice = st.selectbox(
+                "Select Central Idea Template to Explore:",
+                options=[s["code"] for s in CENTRAL_IDEA_STRATEGIES],
+                format_func=lambda c: get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, c)["name"],
+                key="gal_ci_select",
+            )
+            ci_curr = get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, ci_choice)
+
+            c_info_c1, c_info_c2 = st.columns([1.5, 1.0])
+            with c_info_c1:
+                st.markdown(f"**Target ELA Standard:** `CCSS RH.6-8.2` (Determine Central Idea & Summary)")
+                st.markdown(f"**Best For:** {ci_curr['best_for']}")
+                st.markdown(f"**How It Works:** {ci_curr['description']}")
+            with c_info_c2:
+                if st.button(f"Apply '{ci_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ci_{selected_ch_num}"):
+                    ch_blueprint["central_idea_strategy"] = ci_choice
+                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
+                    st.success(f"Saved! '{ci_curr['short_name']}' is now set as the active Central Idea strategy for Chapter {selected_ch_num} in the Packet Co-Designer.")
+                st.caption(f"Applies this strategy directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            ci_view1, ci_view2 = st.columns(2)
+            with ci_view1:
+                st.markdown("##### Printed Student Handout Format")
+                st.markdown(render_preview_handout(ci_choice), unsafe_allow_html=True)
+                if ci_curr.get("scaffolded_md"):
+                    st.markdown(render_preview_scaffold(ci_curr["scaffolded_md"]), unsafe_allow_html=True)
+
+            with ci_view2:
+                st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
+                st.markdown(render_preview_exemplar(ci_choice), unsafe_allow_html=True)
+
+        with gal_tab2:
+            st.markdown("#### Anti-Copycat Modes for Textbook's Printed MAIN IDEA Box")
+            st.caption("Guarantees students cannot blindly copy the textbook's printed 1-sentence Main Idea box as their own answer.")
+
+            pmi_choice = st.selectbox(
+                "Select Anti-Copycat Mode to Explore:",
+                options=[m["code"] for m in PRINTED_MAIN_IDEA_MODES],
+                format_func=lambda c: get_strategy_by_code(PRINTED_MAIN_IDEA_MODES, c)["name"],
+                key="gal_pmi_select",
+            )
+            pmi_curr = get_strategy_by_code(PRINTED_MAIN_IDEA_MODES, pmi_choice)
+
+            p_info_c1, p_info_c2 = st.columns([1.5, 1.0])
+            with p_info_c1:
+                st.markdown(f"**Pedagogical Mechanic:** {pmi_curr['description']}")
+            with p_info_c2:
+                if st.button(f"Apply '{pmi_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_pmi_{selected_ch_num}"):
+                    ch_blueprint["printed_main_idea_mode"] = pmi_choice
+                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
+                    st.success(f"Saved! '{pmi_curr['short_name']}' is now set as the active anti-copycat mechanic for Chapter {selected_ch_num} in the Packet Co-Designer.")
+                st.caption(f"Applies this mechanic directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            pmi_view1, pmi_view2 = st.columns(2)
+            with pmi_view1:
+                st.markdown("##### Printed Student Handout Format")
+                st.markdown(render_preview_handout(pmi_choice), unsafe_allow_html=True)
+                if pmi_curr.get("scaffolded_md"):
+                    st.markdown(render_preview_scaffold(pmi_curr["scaffolded_md"]), unsafe_allow_html=True)
+
+            with pmi_view2:
+                st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
+                st.markdown(render_preview_exemplar(pmi_choice), unsafe_allow_html=True)
+
+        with gal_tab3:
+            st.markdown("#### Active Reading & Text Structure Organizers (CCSS RH.6-8.5)")
+            st.caption("Active reading organizers guide students through each 2-page spread according to its specific historical text structure.")
+
+            ro_choice = st.selectbox(
+                "Select Active Reading Organizer to Explore:",
+                options=[r["code"] for r in READING_ORGANIZERS],
+                format_func=lambda c: get_strategy_by_code(READING_ORGANIZERS, c)["name"],
+                key="gal_ro_select",
+            )
+            ro_curr = get_strategy_by_code(READING_ORGANIZERS, ro_choice)
+
+            r_info_c1, r_info_c2 = st.columns([1.5, 1.0])
+            with r_info_c1:
+                st.markdown(f"**Target ELA Standard:** `CCSS RH.6-8.5` (Analyze Text Structure)")
+                st.markdown(f"**Text Structure Focus:** {ro_curr['description']}")
+            with r_info_c2:
+                if st.button(f"Apply '{ro_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ro_{selected_ch_num}"):
+                    ch_blueprint["reading_organizer"] = ro_choice
+                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
+                    st.success(f"Saved! '{ro_curr['short_name']}' is now set as the active graphic organizer for Chapter {selected_ch_num} in the Packet Co-Designer.")
+                st.caption(f"Applies this structure directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            ro_view1, ro_view2 = st.columns(2)
+            with ro_view1:
+                st.markdown("##### Printed Student Handout Format")
+                st.markdown(render_preview_handout(ro_choice), unsafe_allow_html=True)
+                if ro_curr.get("scaffolded_md"):
+                    st.markdown(render_preview_scaffold(ro_curr["scaffolded_md"]), unsafe_allow_html=True)
+
+            with ro_view2:
+                st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
+                st.markdown(render_preview_exemplar(ro_choice), unsafe_allow_html=True)
+
+        with gal_tab4:
+            st.markdown("#### Booklet Front Cover Pages & Page Footer Check Boxes")
+            st.caption("Inspect how the cumulative front cover study guide and daily footer check boxes look when printed.")
+
+            cov_c1, cov_c2 = st.columns(2)
+            with cov_c1:
+                st.markdown("##### Booklet Front Cover Options")
+                gal_cov_choice = st.selectbox(
+                    "Choose Cover Format to Preview:",
+                    options=[c["code"] for c in COVER_PAGE_MODES],
+                    format_func=lambda c: get_strategy_by_code(COVER_PAGE_MODES, c)["name"],
+                    key="gal_cov_select_box",
+                )
+                g_cov_item = get_strategy_by_code(COVER_PAGE_MODES, gal_cov_choice)
+                st.markdown(f"**How It Functions:** {g_cov_item['description']}")
+                st.markdown(render_preview_cover(gal_cov_choice), unsafe_allow_html=True)
+                if st.button(f"Apply '{g_cov_item['short_name']}' to Chapter {selected_ch_num}", key="btn_apply_cov"):
+                    ch_blueprint["cover_page_mode"] = gal_cov_choice
+                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
+                    st.success(f"Saved! '{g_cov_item['short_name']}' is now set as the active cover page for Chapter {selected_ch_num} in the Packet Co-Designer.")
+                st.caption(f"Applies this cover style directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+
+            with cov_c2:
+                st.markdown("##### Page Footer Check Box Options")
+                gal_gb_choice = st.selectbox(
+                    "Choose Footer Check Box Layout to Preview:",
+                    options=[g["code"] for g in GRADE_BOX_MODES],
+                    format_func=lambda c: get_strategy_by_code(GRADE_BOX_MODES, c)["name"],
+                    key="gal_gb_select_box",
+                )
+                g_gb_item = get_strategy_by_code(GRADE_BOX_MODES, gal_gb_choice)
+                st.markdown(f"**Grading Use:** {g_gb_item['description']}")
+                st.markdown(render_preview_footer(gal_gb_choice), unsafe_allow_html=True)
+                if st.button(f"Apply '{g_gb_item['short_name']}' to Chapter {selected_ch_num}", key="btn_apply_gb"):
+                    ch_blueprint["grade_box_mode"] = gal_gb_choice
+                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
+                    st.success(f"Saved! '{g_gb_item['short_name']}' is now set as the active footer layout for Chapter {selected_ch_num} in the Packet Co-Designer.")
+                st.caption(f"Applies this footer layout directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+
+        with gal_tab5:
+            st.markdown("#### Optional Writing Extensions (The Writing Revolution)")
+            st.caption("Sentence-level writing extensions grounded in Judith Hochman's The Writing Revolution (TWR) — completely optional and turned off by default.")
+
+            twr_active = [t for t in OPTIONAL_TWR_STRATEGIES if t["code"] != "twr_none"]
+            twr_choice = st.selectbox(
+                "Select Writing Extension to Explore:",
+                options=[t["code"] for t in twr_active],
+                format_func=lambda c: get_strategy_by_code(twr_active, c)["name"],
+                key="gal_twr_select",
+            )
+            twr_curr = get_strategy_by_code(twr_active, twr_choice)
+
+            w_info_c1, w_info_c2 = st.columns([1.5, 1.0])
+            with w_info_c1:
+                st.markdown(f"**Target Standard:** `CCSS WHST.6-8.2` (Informative Historical Writing)")
+                st.markdown(f"**Writing Objective:** {twr_curr['description']}")
+            with w_info_c2:
+                if st.button(f"Apply '{twr_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_twr_{selected_ch_num}"):
+                    ch_blueprint["optional_twr_strategy"] = twr_choice
+                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
+                    st.success(f"Saved! '{twr_curr['short_name']}' is now set as the active writing extension for Chapter {selected_ch_num} in the Packet Co-Designer.")
+                st.caption(f"Applies this writing extension directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            twr_view1, twr_view2 = st.columns(2)
+            with twr_view1:
+                st.markdown("##### Printed Student Handout Format")
+                st.markdown(render_preview_handout(twr_choice), unsafe_allow_html=True)
+            with twr_view2:
+                st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
+                st.markdown(render_preview_exemplar(twr_choice), unsafe_allow_html=True)
