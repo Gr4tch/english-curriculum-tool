@@ -4,9 +4,21 @@ Renders crisp, professionally formatted HTML mockups of student worksheets,
 authentic 8th-grade exemplars, and scaffolded support boxes.
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import re
 import textwrap
+
+
+def _detect_strategy_category(strategy_code: str) -> str:
+    if strategy_code.startswith("ci_"):
+        return "central_idea"
+    elif strategy_code.startswith("pmi_") or strategy_code.startswith("mode_"):
+        return "anti_copycat"
+    elif strategy_code.startswith("read_") or strategy_code.startswith("ro_"):
+        return "reading_organizer"
+    elif strategy_code.startswith("twr_"):
+        return "twr"
+    return "central_idea"
 
 
 def _dedent_html(fn):
@@ -120,9 +132,27 @@ COMMON_CSS = """
 
 
 @_dedent_html
-def render_preview_handout(strategy_code: str) -> str:
+def render_preview_handout(
+    strategy_code: str,
+    section_meta: Optional[Dict[str, Any]] = None,
+    is_scaffolded: bool = False,
+    raw_passage_md: str = "",
+) -> str:
     """Renders a realistic, clean printed student worksheet format."""
-    # ── CENTRAL IDEA STRATEGIES ──
+    if section_meta is not None:
+        from src.packet_builder import build_standalone_strategy_handout
+        cat_name = _detect_strategy_category(strategy_code)
+        handout = build_standalone_strategy_handout(
+            section_meta=section_meta,
+            strategy_category=cat_name,
+            strategy_code=strategy_code,
+            markdown_text=raw_passage_md,
+            is_scaffolded=is_scaffolded,
+        )
+        md_text = handout["student_scaffolded_md" if is_scaffolded else "student_standard_md"]
+        return format_booklet_for_web(md_text)
+
+    # ── CENTRAL IDEA STRATEGIES (Generic Template Fallback) ──
     if strategy_code == "ci_01_subheading_gist":
         return f"""
         {COMMON_CSS}
@@ -632,8 +662,24 @@ def render_preview_handout(strategy_code: str) -> str:
 
 
 @_dedent_html
-def render_preview_exemplar(strategy_code: str) -> str:
+def render_preview_exemplar(
+    strategy_code: str,
+    section_meta: Optional[Dict[str, Any]] = None,
+    raw_passage_md: str = "",
+) -> str:
     """Renders a realistic, clean completed 8th-grade student exemplar response."""
+    if section_meta is not None:
+        from src.packet_builder import build_standalone_strategy_handout
+        cat_name = _detect_strategy_category(strategy_code)
+        handout = build_standalone_strategy_handout(
+            section_meta=section_meta,
+            strategy_category=cat_name,
+            strategy_code=strategy_code,
+            markdown_text=raw_passage_md,
+        )
+        return format_booklet_for_web(handout["exemplar_md"])
+
+    # ── Generic Model Exemplar Fallback (Chapter 5) ──
     if strategy_code == "ci_01_subheading_gist":
         return f"""
         {COMMON_CSS}
@@ -1186,46 +1232,47 @@ def render_preview_scaffold(scaffold_text: str) -> str:
     """
 
 
+def _convert_md_table_to_html(md: str) -> str:
+    """Converts standard markdown tables into styled .ws-table HTML."""
+    table_pattern = re.compile(r'((?:^\|[^\n]+\|\r?\n)+)', re.MULTILINE)
+
+    def _rep_table(match):
+        raw_table = match.group(1).strip()
+        lines = [line.strip() for line in raw_table.splitlines() if line.strip()]
+        if len(lines) < 2:
+            return raw_table
+
+        header_line = lines[0]
+        sep_line = lines[1]
+        if not re.match(r'^\|[\s\:\-\|]+\|$', sep_line):
+            return raw_table
+
+        headers = [h.strip() for h in header_line.strip('|').split('|')]
+        th_html = ''.join(f'<th>{h}</th>' for h in headers)
+
+        rows_html = []
+        for row_line in lines[2:]:
+            cells = [c.strip() for c in row_line.strip('|').split('|')]
+            td_html = ''.join(f'<td>{c}</td>' for c in cells)
+            rows_html.append(f'<tr>{td_html}</tr>')
+
+        tbody_content = ''.join(rows_html)
+        return f'<table class="ws-table"><thead><tr>{th_html}</tr></thead><tbody>{tbody_content}</tbody></table>'
+
+    return table_pattern.sub(_rep_table, md)
+
+
 def format_booklet_for_web(booklet_md: str) -> str:
     """
-    Transforms the compiled booklet markdown for clean, artifact-free web preview in Streamlit:
-    - Renders [CENTER_HEADING: ...] as styled centered academic headers.
-    - Renders [GRADE_BOX: ...] as handsome right-aligned footer cards.
-    - Renders [PAGE_BREAK] as a clean, emoji-free section divider.
-    - Strips any stray emojis.
+    Transforms compiled booklet and standalone strategy markdown into spectacular,
+    museum-quality HTML layouts matching the visual excellence of the model templates.
     """
     if not booklet_md:
         return ""
 
-    # 1. Clean [CENTER_HEADING: ...]
-    cleaned = re.sub(
-        r'\[CENTER_HEADING:\s*([^\]]+)\]',
-        r'<div style="text-align: center; font-size: 1.12rem; font-weight: 700; color: #1e3a8a; margin: 1.35rem 0 0.65rem 0; letter-spacing: 0.02em;">\1</div>',
-        booklet_md,
-    )
+    pages = booklet_md.split("[PAGE_BREAK]")
+    formatted_pages = []
 
-    # 2. Clean [GRADE_BOX: ...] into a RIGHT-ALIGNED footer card
-    def _replace_grade_box(match):
-        box_text = match.group(1).strip()
-        return (
-            f'<div style="display: flex; justify-content: flex-end; margin: 1.25rem 0 0.5rem 0;">'
-            f'<div style="font-size: 0.90rem; font-weight: 700; color: #1e3a8a; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 4px; padding: 0.35rem 0.85rem; letter-spacing: 0.03em;">'
-            f'{box_text}'
-            f'</div></div>'
-        )
-
-    cleaned = re.sub(r'\[GRADE_BOX:\s*([^\]]+)\]', _replace_grade_box, cleaned)
-
-    # 3. Clean [PAGE_BREAK] without any emojis
-    page_break_html = (
-        '\n\n<div style="margin: 2.5rem 0 2rem 0; border-top: 2px dashed #cbd5e1; text-align: center;">'
-        '<span style="background: #ffffff; color: #64748b; font-size: 0.78rem; font-weight: 700; padding: 0.25rem 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 9999px; position: relative; top: -12px; text-transform: uppercase; letter-spacing: 0.06em;">'
-        'Page Break'
-        '</span></div>\n\n'
-    )
-    cleaned = cleaned.replace("[PAGE_BREAK]", page_break_html)
-
-    # 4. Strip any stray emojis
     emoji_pattern = re.compile(
         "["
         "\U0001F300-\U0001F9FF"
@@ -1235,6 +1282,206 @@ def format_booklet_for_web(booklet_md: str) -> str:
         "]+",
         flags=re.UNICODE,
     )
-    cleaned = emoji_pattern.sub("", cleaned)
 
-    return cleaned
+    for page_idx, raw_page in enumerate(pages):
+        page = emoji_pattern.sub("", raw_page)
+        if not page.strip():
+            continue
+
+        # 1. Convert handwriting lines: ASCII dots and underscores
+        page = re.sub(r"\.{10,}", '<div class="ws-dotted-line"></div>', page)
+        page = re.sub(r"_{8,}", '<div class="ws-solid-line"></div>', page)
+
+        # 2. Convert markdown tables
+        page = _convert_md_table_to_html(page)
+
+        # 3. Handle [CENTER_HEADING: ...]
+        page = re.sub(
+            r'\[CENTER_HEADING:\s*([^\]]+)\]',
+            r'<div style="text-align: center; font-size: 1.05rem; font-weight: 700; color: #1e3a8a; margin: 1.15rem 0 0.5rem 0; letter-spacing: 0.02em;">\1</div>',
+            page,
+        )
+
+        # 4. Handle [GRADE_BOX: ...]
+        def _replace_grade_box(match):
+            box_text = match.group(1).strip()
+            return (
+                f'<div style="display: flex; justify-content: flex-end; margin: 1.15rem 0 0.35rem 0;">'
+                f'<div style="font-size: 0.88rem; font-weight: 700; color: #1e3a8a; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 4px; padding: 0.35rem 0.85rem; letter-spacing: 0.03em;">'
+                f'{box_text}'
+                f'</div></div>'
+            )
+        page = re.sub(r'\[GRADE_BOX:\s*([^\]]+)\]', _replace_grade_box, page)
+
+        # 5. Check if page is an Exemplar page
+        if re.search(r"^#\s+Student Exemplar & Answer Key:", page, flags=re.MULTILINE):
+            def _rep_ex_header(m):
+                sec_id = m.group(1).strip()
+                strat = m.group(2).strip()
+                return (
+                    f'<div class="ws-title-badge ws-badge-green">Authentic 8th-Grade Student Exemplar • Sec. {sec_id}</div>\n'
+                    f'<div style="font-size: 1.15rem; font-weight: 700; color: #064e3b; margin: 0.15rem 0 0.25rem 0;">{strat} — <span style="color: #10b981;">Score: 100/100</span></div>\n'
+                )
+            page = re.sub(
+                r"^#\s+Student Exemplar & Answer Key:\s*Sec\.\s*([^\s—]+)\s*—\s*([^\n]+)",
+                _rep_ex_header,
+                page,
+                flags=re.MULTILINE,
+            )
+
+            # Style Textbook Reference line
+            page = re.sub(
+                r"^\*\*Textbook Reference:\*\*\s*(.*?)(?=\n)",
+                r'<div style="font-size: 0.82rem; color: #047857; margin-bottom: 0.75rem; border-bottom: 1px solid #bbf7d0; padding-bottom: 0.4rem;"><b>Textbook Reference:</b> \1</div>',
+                page,
+                flags=re.MULTILINE,
+            )
+
+            # Remove redundant headers
+            page = re.sub(r"^###\s+Authentic 8th-Grade Student Model Response\n+", "", page, flags=re.MULTILINE)
+            page = re.sub(r"^>\s*\*Student Response Sample for [^\*]+\*:\n+", "", page, flags=re.MULTILINE)
+
+            # Transform bullet exemplar answers into styled green pills
+            def _rep_ex_bullet(m):
+                label = m.group(1).strip()
+                ans = m.group(2).strip()
+                return (
+                    f'<div style="margin-bottom: 0.75rem;">\n'
+                    f'<div style="font-weight: 700; color: #064e3b; font-size: 0.86rem; margin-bottom: 0.2rem;">{label}:</div>\n'
+                    f'<div class="ws-student-answer" style="display: block; padding: 0.45rem 0.65rem; font-size: 0.88rem; line-height: 1.45;">{ans}</div>\n'
+                    f'</div>'
+                )
+            page = re.sub(
+                r"^\s*-\s+\*\*([^\:]+)\:\s*(.*?)\*\*",
+                _rep_ex_bullet,
+                page,
+                flags=re.MULTILINE,
+            )
+
+            # Style Textbook Source Grounding callout
+            def _rep_grounding(m):
+                pg = m.group(1).strip()
+                raw_txt = m.group(2).strip()
+                clean_txt = re.sub(r'^[\s*"\']+|[\s*"\']+$', '', raw_txt)
+                return (
+                    f'<div class="ws-callout" style="background: #ffffff; border: 1.5px solid #a7f3d0; border-left: 5px solid #10b981; margin-top: 0.85rem; font-size: 0.83rem; color: #14532d;">\n'
+                    f'<b>Textbook Source Grounding (p. {pg}):</b> "<i>{clean_txt}</i>"\n'
+                    f'</div>'
+                )
+            page = re.sub(
+                r"^\*Textbook Source Grounding \(p\.\s*(\d+)\):\*\s*(.*)",
+                _rep_grounding,
+                page,
+                flags=re.MULTILINE,
+            )
+
+            wrapped_page = f'<div class="ws-exemplar-container">\n{page.strip()}\n</div>'
+            formatted_pages.append(wrapped_page)
+
+        # 6. Check if page is Cover Page
+        elif re.search(r"^#\s+Chapter\s+\d+:", page, flags=re.MULTILINE):
+            def _rep_cov_header(m):
+                cnum = m.group(1).strip()
+                ctitle = m.group(2).strip()
+                edition = m.group(3).strip()
+                return (
+                    f'<div class="ws-title-badge ws-badge-blue">Chapter {cnum} • {edition}</div>\n'
+                    f'<div style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0.2rem 0 0.35rem 0;">Chapter {cnum}: {ctitle}</div>\n'
+                )
+            page = re.sub(
+                r"^#\s+Chapter\s+(\d+):\s*([^\n—]+)\s*—\s*([^\n]+)",
+                _rep_cov_header,
+                page,
+                flags=re.MULTILINE,
+            )
+            wrapped_page = f'<div class="ws-container" style="border: 2px solid #3b82f6; background: #ffffff;">\n{page.strip()}\n</div>'
+            formatted_pages.append(wrapped_page)
+
+        # 7. Standard Student Section Handout
+        elif re.search(r"^##\s+Section\s+[\d\.]+", page, flags=re.MULTILINE):
+            def _rep_handout_header(m):
+                sec_id = m.group(1).strip()
+                full_rest = m.group(2).strip()
+                is_scaf = "scaffolded" in full_rest.lower()
+
+                pg_match = re.search(r'\((?:Textbook\s+)?pp?\.\s*([^\)]+)\)', full_rest)
+                pgs_str = f"(pp. {pg_match.group(1)})" if pg_match else ""
+
+                clean_title = re.sub(r'\((?:Textbook\s+)?pp?\.[^\)]+\)', '', full_rest)
+                clean_title = re.sub(r'\*?\([^\)]*scaffolded[^\)]*\)\*?', '', clean_title, flags=re.IGNORECASE).strip()
+
+                scaf_badge = ' <span style="background: #fef3c7; color: #b45309; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; text-transform: uppercase; margin-left: 0.4rem;">Scaffolded Edition</span>' if is_scaf else ""
+
+                return (
+                    f'<div class="ws-title-badge ws-badge-blue">Section {sec_id} Handout • {clean_title}</div>{scaf_badge}\n'
+                    f'<div style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin: 0.15rem 0 0.25rem 0;">Section {sec_id}: {clean_title} <span style="font-size: 0.85rem; font-weight: 500; color: #64748b;">{pgs_str}</span></div>\n'
+                    f'<div style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.35rem;">\n'
+                    f'<span><b>Name:</b> ___________________________</span><span><b>Date:</b> _____________</span><span><b>Class:</b> ________</span>\n'
+                    f'</div>\n'
+                )
+            page = re.sub(
+                r"^##\s+Section\s+([\d\.]+):?\s+(.*)",
+                _rep_handout_header,
+                page,
+                flags=re.MULTILINE,
+            )
+
+            # Style Strategy Focus badge
+            page = re.sub(
+                r"^>\s*\*\*Strategy Focus:\*\*\s*(.*?)(?=\n)",
+                r'<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 6px; padding: 0.45rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.85rem; color: #1e3a8a;">'
+                r'<b>Strategy Focus:</b> \1'
+                r'</div>',
+                page,
+                flags=re.MULTILINE,
+            )
+
+            # Style Textbook Printed Main Idea callout
+            def _rep_pmi_callout(m):
+                pg = m.group(1).strip()
+                raw_txt = m.group(2).strip()
+                clean_txt = re.sub(r'^[\s*"\']+|[\s*"\']+$', '', raw_txt)
+                return (
+                    f'<div class="ws-callout" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #1e3a8a; margin: 0.75rem 0;">\n'
+                    f'<div style="font-size: 0.75rem; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">Textbook Printed Main Idea (p. {pg})</div>\n'
+                    f'<div style="font-style: italic; color: #1e293b; font-size: 0.90rem;">"{clean_txt}"</div>\n'
+                    f'</div>'
+                )
+            page = re.sub(
+                r"^>\s*\*\*Textbook Printed Main Idea \(p\.\s*(\d+)\):\*\s*(.*)",
+                _rep_pmi_callout,
+                page,
+                flags=re.MULTILINE,
+            )
+
+            # Clean prompt subheading labels
+            page = re.sub(
+                r"^\s*-\s+\*\*Gist for ([^\n:]+):\*\*",
+                r'<div style="font-weight: 600; color: #1e3a8a; font-size: 0.88rem; margin: 0.65rem 0 0.15rem 0;">• \1:</div><div style="font-style: italic; color: #64748b; font-size: 0.80rem;">10-Word Subheading Gist:</div>',
+                page,
+                flags=re.MULTILINE,
+            )
+
+            # Style sub-headings / parts
+            page = re.sub(
+                r"^###\s+([^\n]+)",
+                r'<div style="font-weight: 700; color: #0f172a; font-size: 0.95rem; margin: 0.85rem 0 0.35rem 0;">\1</div>',
+                page,
+                flags=re.MULTILINE,
+            )
+
+            wrapped_page = f'<div class="ws-container">\n{page.strip()}\n</div>'
+            formatted_pages.append(wrapped_page)
+
+        else:
+            formatted_pages.append(f'<div class="ws-container">\n{page.strip()}\n</div>')
+
+    page_break_divider = (
+        '\n\n<div style="margin: 2.5rem 0 2rem 0; border-top: 2px dashed #cbd5e1; text-align: center;">'
+        '<span style="background: #ffffff; color: #64748b; font-size: 0.78rem; font-weight: 700; padding: 0.25rem 0.85rem; border: 1.5px solid #cbd5e1; border-radius: 9999px; position: relative; top: -12px; text-transform: uppercase; letter-spacing: 0.06em;">'
+        'Page Break'
+        '</span></div>\n\n'
+    )
+
+    full_html = page_break_divider.join(formatted_pages)
+    return f"{COMMON_CSS}\n{full_html}"

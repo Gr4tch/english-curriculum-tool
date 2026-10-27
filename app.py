@@ -2436,6 +2436,8 @@ elif st.session_state["nav_view"] == "gallery":
             with ci_view1:
                 st.markdown(f"##### Printed Student Handout (Sec. {g2_sec_code})")
                 st.markdown(format_booklet_for_web(ci_handout["student_standard_md"]), unsafe_allow_html=True)
+                with st.expander("View Scaffolded Support Handout"):
+                    st.markdown(format_booklet_for_web(ci_handout["student_scaffolded_md"]), unsafe_allow_html=True)
                 with st.expander("View Generic Template Model"):
                     st.markdown(render_preview_handout(ci_choice), unsafe_allow_html=True)
                     if ci_curr.get("scaffolded_md"):
@@ -2524,6 +2526,8 @@ elif st.session_state["nav_view"] == "gallery":
             with pmi_view1:
                 st.markdown(f"##### Printed Student Handout (Sec. {g2_sec_code})")
                 st.markdown(format_booklet_for_web(pmi_handout["student_standard_md"]), unsafe_allow_html=True)
+                with st.expander("View Scaffolded Support Handout"):
+                    st.markdown(format_booklet_for_web(pmi_handout["student_scaffolded_md"]), unsafe_allow_html=True)
                 with st.expander("View Generic Template Model"):
                     st.markdown(render_preview_handout(pmi_choice), unsafe_allow_html=True)
                     if pmi_curr.get("scaffolded_md"):
@@ -2612,6 +2616,8 @@ elif st.session_state["nav_view"] == "gallery":
             with ro_view1:
                 st.markdown(f"##### Printed Student Handout (Sec. {g2_sec_code})")
                 st.markdown(format_booklet_for_web(ro_handout["student_standard_md"]), unsafe_allow_html=True)
+                with st.expander("View Scaffolded Support Handout"):
+                    st.markdown(format_booklet_for_web(ro_handout["student_scaffolded_md"]), unsafe_allow_html=True)
                 with st.expander("View Generic Template Model"):
                     st.markdown(render_preview_handout(ro_choice), unsafe_allow_html=True)
                     if ro_curr.get("scaffolded_md"):
@@ -2740,6 +2746,8 @@ elif st.session_state["nav_view"] == "gallery":
             with twr_view1:
                 st.markdown(f"##### Printed Student Handout (Sec. {g2_sec_code})")
                 st.markdown(format_booklet_for_web(twr_handout["student_standard_md"]), unsafe_allow_html=True)
+                with st.expander("View Scaffolded Support Handout"):
+                    st.markdown(format_booklet_for_web(twr_handout["student_scaffolded_md"]), unsafe_allow_html=True)
                 with st.expander("View Generic Template Model"):
                     st.markdown(render_preview_handout(twr_choice), unsafe_allow_html=True)
             with twr_view2:
