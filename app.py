@@ -658,70 +658,71 @@ if "nav" in st.query_params:
 # 1. TOP BAR: CHAPTER SELECTOR, ESSENTIAL QUESTION & LOG OUT
 # ─────────────────────────────────────────────────────────────────────────────
 
-top_col1, top_col2 = st.columns([1.5, 1.2])
-
-with top_col1:
-    cur_ch = st.session_state["selected_ch_num"]
-    cur_ch_idx = sorted_chapter_nums.index(cur_ch) if cur_ch in sorted_chapter_nums else 0
-
-    def on_ch_change():
-        st.session_state["selected_ch_num"] = st.session_state["top_ch_select"]
-
-    st.selectbox(
-        "Current Textbook Chapter:",
-        options=sorted_chapter_nums,
-        index=cur_ch_idx,
-        format_func=lambda n: f"Chapter {n:02d}: {chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} spreads)",
-        key="top_ch_select",
-        on_change=on_ch_change,
-        label_visibility="collapsed",
-    )
-
 selected_ch_num = st.session_state["selected_ch_num"]
 ch_info = chapters_map[selected_ch_num]
 ch_sections = ch_info["sections"]
 ch_std_info = CHAPTER_STANDARDS_MAP.get(str(selected_ch_num), CHAPTER_STANDARDS_MAP.get("5", {}))
-
-with top_col2:
-    tc_pill, tc_out = st.columns([3.2, 1])
-    with tc_pill:
-        render_clean_html(
-            f"""
-            <div style="text-align: right; padding-top: 0.25rem; white-space: nowrap;">
-                <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
-                    <b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections Available
-                </span>
-            </div>
-            """
-        )
-    with tc_out:
-        if st.button("Log Out", key="top_logout_btn", use_container_width=True):
-            st.session_state["authenticated"] = False
-            st.rerun()
-
 raw_unit = str(ch_info['unit_title'])
 display_unit = raw_unit if raw_unit.lower().startswith("unit") else f"Unit {ch_info['unit_num']}: {raw_unit}"
 eq_text = ch_std_info.get('essential_question', '')
 
-banner_html = (
-    '<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1.15rem; margin-bottom: 1.0rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">'
-    '<div style="flex: 1.2; min-width: 200px;">'
-    '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Curriculum Unit</div>'
-    f'<div style="font-size: 0.95rem; font-weight: 600; color: #0f172a; line-height: 1.35;">{display_unit}</div>'
-    '</div>'
-    '<div style="width: 1.5px; height: 38px; background: #cbd5e1;"></div>'
-    '<div style="flex: 2; min-width: 260px;">'
-    '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Essential Question</div>'
-    f'<div style="font-size: 0.88rem; font-style: italic; color: #1e293b; line-height: 1.4;">"{eq_text}"</div>'
-    '</div>'
-    '<div style="width: 1.5px; height: 38px; background: #cbd5e1;"></div>'
-    '<div style="flex-shrink: 0;">'
-    '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Google Drive Folder</div>'
-    f'<div style="font-size: 0.82rem; background: #e2e8f0; padding: 0.35rem 0.75rem; border-radius: 6px; color: #0f172a; font-family: monospace; font-weight: 600; white-space: nowrap;">{ROOT_FOLDER_NAME}</div>'
-    '</div>'
-    '</div>'
-)
-render_clean_html(banner_html)
+# Render full contextual banner & chapter selector on Home Gateway screen
+if st.session_state["nav_view"] == "home":
+    top_col1, top_col2 = st.columns([1.5, 1.2])
+
+    with top_col1:
+        cur_ch = st.session_state["selected_ch_num"]
+        cur_ch_idx = sorted_chapter_nums.index(cur_ch) if cur_ch in sorted_chapter_nums else 0
+
+        def on_ch_change():
+            st.session_state["selected_ch_num"] = st.session_state["top_ch_select"]
+
+        st.selectbox(
+            "Current Textbook Chapter:",
+            options=sorted_chapter_nums,
+            index=cur_ch_idx,
+            format_func=lambda n: f"Chapter {n:02d}: {chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} spreads)",
+            key="top_ch_select",
+            on_change=on_ch_change,
+            label_visibility="collapsed",
+        )
+
+    with top_col2:
+        tc_pill, tc_out = st.columns([3.2, 1])
+        with tc_pill:
+            render_clean_html(
+                f"""
+                <div style="text-align: right; padding-top: 0.25rem; white-space: nowrap;">
+                    <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
+                        <b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections Available
+                    </span>
+                </div>
+                """
+            )
+        with tc_out:
+            if st.button("Log Out", key="top_logout_btn", use_container_width=True):
+                st.session_state["authenticated"] = False
+                st.rerun()
+
+    banner_html = (
+        '<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1.15rem; margin-bottom: 1.0rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">'
+        '<div style="flex: 1.2; min-width: 200px;">'
+        '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Curriculum Unit</div>'
+        f'<div style="font-size: 0.95rem; font-weight: 600; color: #0f172a; line-height: 1.35;">{display_unit}</div>'
+        '</div>'
+        '<div style="width: 1.5px; height: 38px; background: #cbd5e1;"></div>'
+        '<div style="flex: 2; min-width: 260px;">'
+        '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Essential Question</div>'
+        f'<div style="font-size: 0.88rem; font-style: italic; color: #1e293b; line-height: 1.4;">"{eq_text}"</div>'
+        '</div>'
+        '<div style="width: 1.5px; height: 38px; background: #cbd5e1;"></div>'
+        '<div style="flex-shrink: 0;">'
+        '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Google Drive Folder</div>'
+        f'<div style="font-size: 0.82rem; background: #e2e8f0; padding: 0.35rem 0.75rem; border-radius: 6px; color: #0f172a; font-family: monospace; font-weight: 600; white-space: nowrap;">{ROOT_FOLDER_NAME}</div>'
+        '</div>'
+        '</div>'
+    )
+    render_clean_html(banner_html)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -773,23 +774,30 @@ if st.session_state["nav_view"] == "home":
 elif st.session_state["nav_view"] == "packet":
 
     # Breadcrumb Header
-    b_col1, b_col2 = st.columns([1.2, 2.5])
+    b_col1, b_col2, b_col3, b_col4 = st.columns([1.1, 2.5, 0.8, 0.7])
     with b_col1:
-        if st.button("<- Return to Main Menu", use_container_width=True, key="btn_back_packet"):
+        if st.button("<- Main Menu", use_container_width=True, key="btn_back_packet"):
             st.session_state["nav_view"] = "home"
             st.rerun()
     with b_col2:
         render_clean_html(
-            """
-            <div style="text-align: right; padding-top: 0.2rem;">
-                <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
-                    <b>Pathway 1:</b> Modular Curriculum Packet Builder
+            f"""
+            <div style="padding-top: 0.2rem;">
+                <span class="badge-pill" style="font-size: 0.86rem; padding: 0.30rem 0.75rem;">
+                    <b>Pathway 1:</b> Modular Packet Builder &bull; Chapter {selected_ch_num:02d}
                 </span>
             </div>
             """
         )
-
-    st.divider()
+    with b_col3:
+        with st.popover("Context"):
+            st.markdown(f"**Curriculum Unit:** {display_unit}")
+            st.markdown(f"**Essential Question:** *\"{eq_text}\"*")
+            st.markdown(f"**Google Drive Folder:** `{ROOT_FOLDER_NAME}`")
+    with b_col4:
+        if st.button("Log Out", key="packet_logout_btn", use_container_width=True):
+            st.session_state["authenticated"] = False
+            st.rerun()
 
     # Initialize Page Tray state if not present
     if "tray_pages" not in st.session_state:
@@ -1284,77 +1292,76 @@ elif st.session_state["nav_view"] == "packet":
 
 elif st.session_state["nav_view"] == "gallery":
 
-    # Breadcrumb Header
-    b_col1, b_col2 = st.columns([1.2, 2.5])
-    with b_col1:
-        if st.button("<- Return to Main Menu", use_container_width=True, key="btn_back_gallery"):
+    # ── Tier 1: Single-Row Universal Navigation & Scope Bar (~38px) ──
+    nav_c1, nav_c2, nav_c3, nav_c4, nav_c5 = st.columns([1.1, 1.8, 2.4, 0.9, 0.7])
+    with nav_c1:
+        if st.button("<- Main Menu", use_container_width=True, key="btn_back_gallery"):
             st.session_state["nav_view"] = "home"
             st.session_state["gal_active_tile_code"] = None
             st.rerun()
-    with b_col2:
-        render_clean_html(
-            """
-            <div style="text-align: right; padding-top: 0.2rem;">
-                <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
-                    <b>Pathway 2:</b> Standalone Strategy Worksheet Gallery
-                </span>
-            </div>
-            """
-        )
 
-    st.divider()
+    with nav_c2:
+        def on_gal_ch_change():
+            st.session_state["selected_ch_num"] = st.session_state["gal_select_ch"]
 
-    # ── Step 1: Select Textbook Context ──
-    st.markdown("#### Step 1: Select Textbook Chapter & Section Spread")
-
-    gal_c_ch, gal_c_sec = st.columns([1.2, 2.0])
-    with gal_c_ch:
-        gal_ch_idx = sorted_chapter_nums.index(selected_ch_num) if selected_ch_num in sorted_chapter_nums else 0
+        cur_ch = st.session_state["selected_ch_num"]
+        cur_ch_idx = sorted_chapter_nums.index(cur_ch) if cur_ch in sorted_chapter_nums else 0
         gal_ch_num = st.selectbox(
             "Textbook Chapter:",
             options=sorted_chapter_nums,
-            index=gal_ch_idx,
-            format_func=lambda n: f"Chapter {n:02d}: {chapters_map[n]['chapter_title']}",
+            index=cur_ch_idx,
+            format_func=lambda n: f"Chp {n:02d}: {chapters_map[n]['chapter_title']}",
             key="gal_select_ch",
+            on_change=on_gal_ch_change,
+            label_visibility="collapsed",
         )
-    gal_ch_sections = chapters_map[gal_ch_num]["sections"]
+        gal_ch_sections = chapters_map[gal_ch_num]["sections"]
 
-    with gal_c_sec:
+    with nav_c3:
         gal_selected_sec = st.selectbox(
             "Section Spread to Practice:",
             options=gal_ch_sections,
-            format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']}) — [{s.get('section_type', 'Core Narrative')}]",
+            format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']})",
             key=f"gal_select_sec_{gal_ch_num}",
+            label_visibility="collapsed",
         )
+
+    with nav_c4:
+        with st.popover("Context"):
+            st.markdown(f"**Curriculum Unit:** {display_unit}")
+            st.markdown(f"**Essential Question:** *\"{eq_text}\"*")
+            st.markdown(f"**Google Drive Folder:** `{ROOT_FOLDER_NAME}`")
+            st.caption(f"{len(gal_ch_sections)} section spreads in Chapter {gal_ch_num:02d}.")
+
+    with nav_c5:
+        if st.button("Log Out", key="gal_logout_btn", use_container_width=True):
+            st.session_state["authenticated"] = False
+            st.rerun()
 
     gal_sec_code = str(gal_selected_sec["section_code"])
     gal_md_path = resolve_file_path(gal_selected_sec.get("md_file"))
     gal_raw_md = gal_md_path.read_text(encoding="utf-8") if gal_md_path.exists() else ""
 
-    # Section Context Card
     sec_vocab = gal_selected_sec.get("official_vocab", [])
-    vocab_summary = ", ".join([v["word"] for v in sec_vocab[:5]]) if sec_vocab else "None listed"
-    if len(sec_vocab) > 5:
-        vocab_summary += f" (+{len(sec_vocab) - 5} more)"
+    vocab_summary = ", ".join([v["word"] for v in sec_vocab[:4]]) if sec_vocab else "None listed"
+    if len(sec_vocab) > 4:
+        vocab_summary += f" (+{len(sec_vocab) - 4} more)"
 
+    mi_str = gal_selected_sec.get('printed_main_idea', '')
+    if len(mi_str) > 85:
+        mi_str = mi_str[:82] + "..."
+
+    # ── Tier 2: Context Micro-Bar (~24px) ──
     render_clean_html(
         f"""
-        <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1.15rem; margin-bottom: 1.0rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                <div>
-                    <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em;">Active Section Spread</div>
-                    <div style="font-size: 1.05rem; font-weight: 700; color: #0f172a;">Sec. {gal_sec_code}: {gal_selected_sec['title']} (pp. {gal_selected_sec['printed_pages']})</div>
-                </div>
-                <div style="text-align: right;">
-                    <span class="badge-pill">{gal_selected_sec.get('section_type', 'Core Narrative')}</span>
-                    <span class="badge-pill">{gal_selected_sec.get('word_count', 0)} Words</span>
-                </div>
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.28rem 0.70rem; margin: 0.25rem 0 0.50rem 0; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: #475569; flex-wrap: wrap; gap: 0.4rem;">
+            <div>
+                <span class="badge-pill" style="font-size: 0.70rem; padding: 0.10rem 0.45rem;">{gal_selected_sec.get('section_type', 'Core Narrative')}</span>
+                <span style="font-weight: 600; color: #1e293b;">{gal_selected_sec.get('word_count', 0)} words</span>
+                &bull; <i>"{mi_str}"</i>
             </div>
-            <div style="margin-top: 0.45rem; font-size: 0.84rem; color: #334155;">
-                <b>Textbook Main Idea:</b> <i>"{gal_selected_sec.get('printed_main_idea', 'None listed')}"</i>
-            </div>
-            <div style="margin-top: 0.25rem; font-size: 0.84rem; color: #334155;">
-                <b>Official Vocabulary:</b> {vocab_summary}
+            <div>
+                <b>Vocab:</b> <span style="color: #1e3a8a; font-weight: 600;">{vocab_summary}</span>
             </div>
         </div>
         """
@@ -1364,7 +1371,7 @@ elif st.session_state["nav_view"] == "gallery":
 
     if not active_tile_code:
         # ── Step 2: All-in-One Visual Strategy Grid (Open Browsing Mode) ──
-        st.markdown("#### Step 2: All-in-One Visual Strategy Grid — Choose a Worksheet Layout")
+        st.markdown("<div style='font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.20rem;'>All-in-One Visual Strategy Grid — Choose a Worksheet Layout</div>", unsafe_allow_html=True)
         st.caption("Select any template card below to generate a focused 1-page worksheet and authentic student exemplar grounded in this section:")
 
         category_filter = st.radio(
@@ -1406,35 +1413,58 @@ elif st.session_state["nav_view"] == "gallery":
         st.info("Select any template card above to generate and preview your 1-page student worksheet, exemplar key, and PDF downloads.")
 
     else:
-        # ── Strategy Selected: Minimized Gallery Bar + Immediate Full-Sized Preview ──
+        # ── Strategy Selected: Action & Format Toolbar + Immediate Full-Sized Preview ──
         active_tile = get_tile_by_code(active_tile_code) or ALL_STRATEGY_TILES[0]
+        cat_lookup = {
+            "Central Idea": "central_idea",
+            "Anti-Copycat": "anti_copycat",
+            "Active Reading": "reading_organizer",
+            "The Writing Revolution": "twr",
+            "Writing (TWR)": "twr",
+            "Vocabulary": "vocab",
+            "Assessment": "assessment",
+        }
+        active_cat_key = cat_lookup.get(active_tile["category"], "central_idea")
 
-        # Minimized Strategy Header Bar
-        bar_col1, bar_col2 = st.columns([3.2, 1.2])
-        with bar_col1:
-            render_clean_html(
-                f"""
-                <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 0.65rem 1rem; margin-bottom: 0.35rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem;">
-                        <div>
-                            <span style="font-size: 0.72rem; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.05em;">Active Worksheet Layout</span>
-                            <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">{active_tile['name']}</div>
-                        </div>
-                        <span class="badge-pill" style="font-size: 0.8rem; padding: 0.2rem 0.65rem; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;">{active_tile['category']}</span>
+        # ── Compact Action & Format Toolbar (~40px) ──
+        tb_col1, tb_col2 = st.columns([1.6, 2.2])
+        with tb_col1:
+            t_sub1, t_sub2 = st.columns([2.3, 1.2])
+            with t_sub1:
+                render_clean_html(
+                    f"""
+                    <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 0.30rem 0.60rem; display: flex; align-items: center; justify-content: space-between; height: 38px; box-sizing: border-box;">
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #166534; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {active_tile['name']}
+                        </span>
+                        <span class="badge-pill" style="font-size: 0.68rem; padding: 0.10rem 0.35rem; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; margin-left: 0.35rem;">{active_tile['category']}</span>
                     </div>
-                    <div style="font-size: 0.78rem; color: #334155; margin-top: 0.25rem;">
-                        <b>Focus:</b> {active_tile['subtitle']} &bull; <i>{active_tile['best_for']}</i>
-                    </div>
-                </div>
-                """
-            )
-        with bar_col2:
-            if st.button("Browse All Strategies", use_container_width=True, key="btn_clear_active_tile"):
-                st.session_state["gal_active_tile_code"] = None
-                st.rerun()
+                    """
+                )
+            with t_sub2:
+                if st.button("Change", key="btn_clear_active_tile", use_container_width=True, help="Switch to a different curriculum strategy layout"):
+                    st.session_state["gal_active_tile_code"] = None
+                    st.rerun()
+
+        with tb_col2:
+            scaf_c, hs_c = st.columns(2)
+            with scaf_c:
+                is_scaf_ws = st.checkbox(
+                    "Scaffolded Edition",
+                    value=st.session_state.get("gal_scaf_toggle", False),
+                    key="gal_scaf_toggle",
+                    help="Adds sentence starters, word banks, and structured fill-in-the-blanks for differentiated support.",
+                )
+            with hs_c:
+                is_half_sheet = st.checkbox(
+                    "2-Up Half-Sheets (50% Paper)",
+                    value=st.session_state.get("gal_half_sheet_toggle", False),
+                    key="gal_half_sheet_toggle",
+                    help="Formats two identical compact worksheets onto a single 8.5x11 letter page separated by a dashed cut line to cut photocopy usage in half.",
+                )
 
         # Minimized Expander for Quick Layout Switching
-        with st.expander(f"Change Worksheet Layout (Currently: {active_tile['name']})", expanded=False):
+        with st.expander(f"Quick-Switch Layout (Currently: {active_tile['name']})", expanded=False):
             min_cat_filter = st.radio(
                 "Filter by Pedagogical Category:",
                 options=[
@@ -1468,36 +1498,6 @@ elif st.session_state["nav_view"] == "gallery":
                 key_prefix="min",
                 btn_label_selected="Active Layout",
                 btn_label_unselected="Switch to This Layout",
-            )
-
-        # ── Step 3: Full-Sized Preview & Export ──
-        cat_lookup = {
-            "Central Idea": "central_idea",
-            "Anti-Copycat": "anti_copycat",
-            "Active Reading": "reading_organizer",
-            "The Writing Revolution": "twr",
-            "Writing (TWR)": "twr",
-            "Vocabulary": "vocab",
-            "Assessment": "assessment",
-        }
-        active_cat_key = cat_lookup.get(active_tile["category"], "central_idea")
-
-        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-        st.markdown(f"#### Step 2: Live Preview & Export — {active_tile['name']}")
-
-        ws_opt_c1, ws_opt_c2 = st.columns([1.5, 1.8])
-        with ws_opt_c1:
-            is_scaf_ws = st.checkbox(
-                "Generate Scaffolded Support Edition (sentence stems, word banks)",
-                value=st.session_state.get("gal_scaf_toggle", False),
-                key="gal_scaf_toggle",
-            )
-        with ws_opt_c2:
-            is_half_sheet = st.checkbox(
-                "Format as 2-Up Half-Sheets (2 copies per page — saves 50% paper)",
-                value=st.session_state.get("gal_half_sheet_toggle", False),
-                key="gal_half_sheet_toggle",
-                help="Formats two identical compact worksheets onto a single 8.5x11 letter page separated by a dashed cut line to cut photocopy usage in half.",
             )
 
         # Build focused handout
