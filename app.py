@@ -5,7 +5,6 @@ National Geographic: American Stories (Beginnings to 1877)
 Features a 2-Path Guided Wizard:
   1. Modular Curriculum Packet Builder (Dynamic Horizontal Page Tray, Scope Chooser, Presets, Cover & Footer options)
   2. Standalone Strategy Worksheet Gallery (All-in-One Visual Thumbnail Grid across 18 strategies, Side-by-Side Review)
-  3. Textbook & Vocabulary Browser (Searchable 2-page PDFs, paragraph-numbered markdown, official vocabulary)
 
 Exports directly to 100% Vector Print-Ready PDFs (Letter size) and synchronized Google Drive folders.
 """
@@ -464,6 +463,16 @@ def resolve_file_path(path_str: Optional[str]) -> Path:
     return p
 
 
+def render_clean_html(html_str: str) -> None:
+    """
+    Safely renders HTML in Streamlit by collapsing inter-tag newlines and leading indentation.
+    Guarantees CommonMark/Markdown never coerces indented HTML or empty conditional lines into <pre><code> blocks.
+    """
+    clean = re.sub(r">\s*\n\s*<", "><", html_str.strip())
+    clean = re.sub(r"\n\s*", " ", clean)
+    st.markdown(clean, unsafe_allow_html=True)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # CLOUD SECRETS & PASSCODE AUTHENTICATION GATE
 # ─────────────────────────────────────────────────────────────────────────────
@@ -562,7 +571,7 @@ if "selected_ch_num" not in st.session_state:
 # Direct navigation via query parameters
 if "nav" in st.query_params:
     target_nav = str(st.query_params["nav"]).strip().lower()
-    if target_nav in ["packet", "gallery", "browser", "home"]:
+    if target_nav in ["packet", "gallery", "home"]:
         st.session_state["nav_view"] = target_nav
     has_auth = st.query_params.get("auth") == "ok" or st.session_state.get("authenticated", False)
     try:
@@ -604,15 +613,14 @@ ch_std_info = CHAPTER_STANDARDS_MAP.get(str(selected_ch_num), CHAPTER_STANDARDS_
 with top_col2:
     tc_pill, tc_out = st.columns([3.2, 1])
     with tc_pill:
-        st.markdown(
+        render_clean_html(
             f"""
             <div style="text-align: right; padding-top: 0.25rem; white-space: nowrap;">
                 <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
                     <b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections Available
                 </span>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """
         )
     with tc_out:
         if st.button("Log Out", key="top_logout_btn", use_container_width=True):
@@ -641,7 +649,7 @@ banner_html = (
     '</div>'
     '</div>'
 )
-st.markdown(banner_html, unsafe_allow_html=True)
+render_clean_html(banner_html)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -655,7 +663,7 @@ if st.session_state["nav_view"] == "home":
     h_col1, h_col2 = st.columns(2)
 
     with h_col1:
-        st.markdown(
+        render_clean_html(
             """
             <a href="?nav=packet&auth=ok" target="_self" class="hero-card hero-blue">
                 <div>
@@ -665,15 +673,14 @@ if st.session_state["nav_view"] == "home":
                     </div>
                 </div>
             </a>
-            """,
-            unsafe_allow_html=True,
+            """
         )
         if st.button("Open Packet Builder ->", use_container_width=True, key="btn_hero_packet", type="primary"):
             st.session_state["nav_view"] = "packet"
             st.rerun()
 
     with h_col2:
-        st.markdown(
+        render_clean_html(
             """
             <a href="?nav=gallery&auth=ok" target="_self" class="hero-card hero-indigo">
                 <div>
@@ -683,30 +690,11 @@ if st.session_state["nav_view"] == "home":
                     </div>
                 </div>
             </a>
-            """,
-            unsafe_allow_html=True,
+            """
         )
         if st.button("Open Worksheet Gallery ->", use_container_width=True, key="btn_hero_gallery", type="primary"):
             st.session_state["nav_view"] = "gallery"
             st.rerun()
-
-    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-    st.markdown(
-        """
-        <a href="?nav=browser&auth=ok" target="_self" class="hero-card hero-teal" style="min-height: 120px; padding: 1.1rem 1.4rem;">
-            <div>
-                <div class="hero-title" style="color: #0f766e; font-size: 1.10rem;">3. English Textbook & Vocabulary Browser</div>
-                <div class="hero-desc" style="margin-bottom: 0;">
-                    Read paragraph-numbered textbook spreads ([¶1]..[¶N]), browse official vocabulary definitions, or download the original 2-page textbook PDFs.
-                </div>
-            </div>
-        </a>
-        """,
-        unsafe_allow_html=True,
-    )
-    if st.button("Open Textbook Browser ->", use_container_width=True, key="btn_hero_browser"):
-        st.session_state["nav_view"] = "browser"
-        st.rerun()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -722,15 +710,14 @@ elif st.session_state["nav_view"] == "packet":
             st.session_state["nav_view"] = "home"
             st.rerun()
     with b_col2:
-        st.markdown(
+        render_clean_html(
             """
             <div style="text-align: right; padding-top: 0.2rem;">
                 <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
                     <b>Pathway 1:</b> Modular Curriculum Packet Builder
                 </span>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """
         )
 
     st.divider()
@@ -907,13 +894,12 @@ elif st.session_state["nav_view"] == "packet":
                 st.session_state["active_tray_idx"] = i
                 st.rerun()
 
-            st.markdown(
+            render_clean_html(
                 f"""
                 <div style="font-size: 0.76rem; text-align: center; color: #475569; margin-top: -0.3rem;">
                     <b>{s_name}</b> {scaf_badge}
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
     # "+ Add Page" Slot
@@ -941,7 +927,7 @@ elif st.session_state["nav_view"] == "packet":
         active_p = tray_pages[active_idx]
 
         with st.container(border=True):
-            st.markdown(
+            render_clean_html(
                 f"""
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                     <div style="font-size: 1.05rem; font-weight: 700; color: #1e3a8a;">
@@ -951,8 +937,7 @@ elif st.session_state["nav_view"] == "packet":
                         <span class="badge-pill badge-gray">Total Packet: {total_pages} pgs ({total_sheets} sheets)</span>
                     </div>
                 </div>
-                """,
-                unsafe_allow_html=True,
+                """
             )
 
             ed_c1, ed_c2 = st.columns(2)
@@ -1234,15 +1219,14 @@ elif st.session_state["nav_view"] == "gallery":
             st.session_state["nav_view"] = "home"
             st.rerun()
     with b_col2:
-        st.markdown(
+        render_clean_html(
             """
             <div style="text-align: right; padding-top: 0.2rem;">
                 <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
                     <b>Pathway 2:</b> Standalone Strategy Worksheet Gallery
                 </span>
             </div>
-            """,
-            unsafe_allow_html=True,
+            """
         )
 
     st.divider()
@@ -1280,7 +1264,7 @@ elif st.session_state["nav_view"] == "gallery":
     if len(sec_vocab) > 5:
         vocab_summary += f" (+{len(sec_vocab) - 5} more)"
 
-    st.markdown(
+    render_clean_html(
         f"""
         <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1.15rem; margin-bottom: 1.0rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
@@ -1300,8 +1284,7 @@ elif st.session_state["nav_view"] == "gallery":
                 <b>Official Vocabulary:</b> {vocab_summary}
             </div>
         </div>
-        """,
-        unsafe_allow_html=True,
+        """
     )
 
     # ── Step 2: All-in-One Visual Strategy Grid ──
@@ -1350,28 +1333,25 @@ elif st.session_state["nav_view"] == "gallery":
             with cols[col_idx]:
                 is_sel = (tile["code"] == active_tile_code)
                 border_style = "border: 2.5px solid #1e3a8a; background: #f0f7ff;" if is_sel else "border: 1px solid #cbd5e1; background: #ffffff;"
+                sel_badge_html = '<span style="font-size: 0.72rem; font-weight: 700; color: #1e3a8a;">Selected</span>' if is_sel else ''
+                clean_thumb = re.sub(r">\s*\n\s*<", "><", re.sub(r"\n\s*", " ", tile["thumbnail_svg"].strip()))
 
-                st.markdown(
-                    f"""
-                    <div style="{border_style} border-radius: 10px; padding: 0.75rem; margin-bottom: 0.6rem; min-height: 255px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-                                <span class="badge-pill" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">{tile['category']}</span>
-                                {'<span style="font-size: 0.72rem; font-weight: 700; color: #1e3a8a;">Selected</span>' if is_sel else ''}
-                            </div>
-                            <div style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">{tile['name']}</div>
-                            <div style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.5rem;">{tile['subtitle']}</div>
-                            <div style="margin-bottom: 0.5rem;">
-                                {tile['thumbnail_svg']}
-                            </div>
-                        </div>
-                        <div style="font-size: 0.76rem; color: #334155; margin-top: 0.35rem; line-height: 1.35;">
-                            <b>Target:</b> {tile['best_for']}
-                        </div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
+                card_html = (
+                    f'<div style="{border_style} border-radius: 10px; padding: 0.75rem; margin-bottom: 0.6rem; min-height: 255px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">'
+                    f'<div>'
+                    f'<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">'
+                    f'<span class="badge-pill" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">{tile["category"]}</span>'
+                    f'{sel_badge_html}'
+                    f'</div>'
+                    f'<div style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">{tile["name"]}</div>'
+                    f'<div style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.5rem;">{tile["subtitle"]}</div>'
+                    f'<div style="margin-bottom: 0.5rem;">{clean_thumb}</div>'
+                    f'</div>'
+                    f'<div style="font-size: 0.76rem; color: #334155; margin-top: 0.35rem; line-height: 1.35;"><b>Target:</b> {tile["best_for"]}</div>'
+                    f'</div>'
                 )
+
+                render_clean_html(card_html)
 
                 if st.button(
                     "Selected Layout" if is_sel else "Select This Layout",
@@ -1521,89 +1501,3 @@ elif st.session_state["nav_view"] == "gallery":
                 st.markdown(gal_raw_md)
         else:
             st.warning("Textbook passage markdown file could not be loaded.")
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 5. PATH C: ENGLISH TEXTBOOK & VOCABULARY BROWSER
-# ─────────────────────────────────────────────────────────────────────────────
-
-elif st.session_state["nav_view"] == "browser":
-
-    b_col1, b_col2 = st.columns([1.2, 2.5])
-    with b_col1:
-        if st.button("<- Return to Main Menu", use_container_width=True, key="btn_back_browser"):
-            st.session_state["nav_view"] = "home"
-            st.rerun()
-    with b_col2:
-        st.markdown(
-            """
-            <div style="text-align: right; padding-top: 0.2rem;">
-                <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
-                    <b>Utility:</b> Textbook & Vocabulary Browser
-                </span>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    st.divider()
-
-    b_c1, b_c2 = st.columns([1.2, 2.0])
-    with b_c1:
-        b_ch_idx = sorted_chapter_nums.index(selected_ch_num) if selected_ch_num in sorted_chapter_nums else 0
-        b_ch_num = st.selectbox(
-            "Textbook Chapter:",
-            options=sorted_chapter_nums,
-            index=b_ch_idx,
-            format_func=lambda n: f"Chapter {n:02d}: {chapters_map[n]['chapter_title']}",
-            key="browser_select_ch",
-        )
-    b_ch_secs = chapters_map[b_ch_num]["sections"]
-
-    with b_c2:
-        b_sec = st.selectbox(
-            "Section Spread to Inspect:",
-            options=b_ch_secs,
-            format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']})",
-            key=f"browser_select_sec_{b_ch_num}",
-        )
-
-    b_sec_code = str(b_sec["section_code"])
-    b_pdf_path = resolve_file_path(b_sec.get("pdf_file"))
-    b_md_path = resolve_file_path(b_sec.get("md_file"))
-    b_raw_md = b_md_path.read_text(encoding="utf-8") if b_md_path.exists() else ""
-
-    bt_tab1, bt_tab2, bt_tab3 = st.tabs([
-        "Original 2-Page Textbook PDF",
-        "Paragraph-Numbered Markdown ([¶1]..[¶N])",
-        "Official Content Vocabulary",
-    ])
-
-    with bt_tab1:
-        if b_pdf_path and b_pdf_path.exists():
-            st.download_button(
-                f"Download Original Textbook PDF (Sec {b_sec_code})",
-                data=b_pdf_path.read_bytes(),
-                file_name=f"Textbook_Chp{b_ch_num:02d}_Sec{b_sec_code}.pdf",
-                mime="application/pdf",
-                type="primary",
-            )
-            st.caption(f"Original publisher 2-page PDF file: `{b_pdf_path.name}`")
-        else:
-            st.warning("Original textbook PDF file not found on disk.")
-
-    with bt_tab2:
-        if b_raw_md:
-            with st.container(height=550):
-                st.markdown(b_raw_md)
-        else:
-            st.warning("Passage markdown file could not be loaded.")
-
-    with bt_tab3:
-        sec_vocab = b_sec.get("official_vocab", [])
-        if sec_vocab:
-            st.markdown(f"**Official Vocabulary Terms for Section {b_sec_code}:**")
-            for v in sec_vocab:
-                st.markdown(f"- **{v['word']}** (p. {v.get('page', '')}): *{v.get('definition', '')}*")
-        else:
-            st.info("No official textbook vocabulary callouts defined for this specific section.")

@@ -395,6 +395,13 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
 ]
 
 
+import re
+
+# Pre-clean all thumbnail HTML strings to prevent multiline indentation leaks in Markdown
+for _t in ALL_STRATEGY_TILES:
+    _t["thumbnail_svg"] = re.sub(r">\s*\n\s*<", "><", re.sub(r"\n\s*", " ", _t["thumbnail_svg"].strip()))
+
+
 def get_tile_by_code(code: str) -> Optional[Dict[str, Any]]:
     """Retrieves a strategy tile definition by code."""
     for t in ALL_STRATEGY_TILES:
