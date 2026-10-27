@@ -291,7 +291,7 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
     # ── 4. THE WRITING REVOLUTION (TWR) ──
     {
         "code": "twr_because_but_so",
-        "category": "Writing (TWR)",
+        "category": "The Writing Revolution",
         "category_badge": "ws-badge-amber",
         "name": "Because, But, So",
         "subtitle": "Cause, Contrast, and Effect Stems",
@@ -307,7 +307,7 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
     },
     {
         "code": "twr_subordinating",
-        "category": "Writing (TWR)",
+        "category": "The Writing Revolution",
         "category_badge": "ws-badge-amber",
         "name": "Subordinating Conjunctions",
         "subtitle": "Although / Since / Even Though",
@@ -323,7 +323,7 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
     },
     {
         "code": "twr_sentence_expansion",
-        "category": "Writing (TWR)",
+        "category": "The Writing Revolution",
         "category_badge": "ws-badge-amber",
         "name": "Sentence Expansion",
         "subtitle": "Kernel + Who, What, Where, Why",
@@ -339,7 +339,7 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
     },
     {
         "code": "twr_appositives",
-        "category": "Writing (TWR)",
+        "category": "The Writing Revolution",
         "category_badge": "ws-badge-amber",
         "name": "Appositive Phrases",
         "subtitle": "Historical Noun Renaming",

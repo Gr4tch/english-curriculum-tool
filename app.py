@@ -1330,20 +1330,30 @@ elif st.session_state["nav_view"] == "gallery":
     if "All" in category_filter:
         filtered_tiles = ALL_STRATEGY_TILES
     elif "Central Idea" in category_filter:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t["category"] == "Central Idea"]
+        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Central Idea"]
     elif "Anti-Copycat" in category_filter:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t["category"] == "Anti-Copycat"]
+        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Anti-Copycat"]
     elif "Active Reading" in category_filter:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t["category"] == "Active Reading"]
+        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Active Reading"]
     elif "Writing Revolution" in category_filter:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t["category"] == "The Writing Revolution"]
+        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["The Writing Revolution", "Writing (TWR)"]]
     else:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t["category"] in ["Vocabulary", "Assessment"]]
+        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["Vocabulary", "Assessment"]]
+
+    if "gal_prev_cat_filter" not in st.session_state:
+        st.session_state["gal_prev_cat_filter"] = category_filter
 
     if "gal_active_tile_code" not in st.session_state:
         st.session_state["gal_active_tile_code"] = "ci_01_subheading_gist"
 
     active_tile_code = st.session_state["gal_active_tile_code"]
+
+    # When teacher switches categories, smoothly switch active strategy if current one is outside this category
+    if st.session_state["gal_prev_cat_filter"] != category_filter:
+        st.session_state["gal_prev_cat_filter"] = category_filter
+        if filtered_tiles and active_tile_code not in [t["code"] for t in filtered_tiles]:
+            st.session_state["gal_active_tile_code"] = filtered_tiles[0]["code"]
+            active_tile_code = filtered_tiles[0]["code"]
 
     # Render responsive 3-column visual card grid
     grid_cols_per_row = 3
@@ -1391,6 +1401,7 @@ elif st.session_state["nav_view"] == "gallery":
         "Anti-Copycat": "anti_copycat",
         "Active Reading": "reading_organizer",
         "The Writing Revolution": "twr",
+        "Writing (TWR)": "twr",
         "Vocabulary": "vocab",
         "Assessment": "assessment",
     }
