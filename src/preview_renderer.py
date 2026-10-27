@@ -1309,7 +1309,7 @@ def _convert_markdown_blocks_and_inlines(page_content: str) -> str:
         # Handle bullet lists
         if re.match(r"^-\s+", stripped):
             b_text = re.sub(r"^-\s+", "", stripped)
-            processed_lines.append(f'<div style="margin: 0.25rem 0 0.25rem 0.5rem; line-height: 1.45;">• {b_text}</div>')
+            processed_lines.append(f'<div class="ws-bullet-prompt" style="margin: 0.25rem 0 0.25rem 0.5rem; line-height: 1.45;">• {b_text}</div>')
             continue
 
         # Handle numbered lists
@@ -1394,8 +1394,8 @@ def format_booklet_for_web(booklet_md: str) -> str:
         def _replace_grade_box(match):
             box_text = match.group(1).strip()
             return (
-                f'<div style="display: flex; justify-content: flex-end; margin: 1.15rem 0 0.35rem 0;">'
-                f'<div style="font-size: 0.88rem; font-weight: 700; color: #1e3a8a; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 4px; padding: 0.35rem 0.85rem; letter-spacing: 0.03em;">'
+                f'<div class="ws-grade-box-wrapper" style="display: flex; justify-content: flex-end; margin: 1.15rem 0 0.35rem 0;">'
+                f'<div class="ws-grade-box" style="font-size: 0.88rem; font-weight: 700; color: #1e3a8a; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 4px; padding: 0.35rem 0.85rem; letter-spacing: 0.03em;">'
                 f'{box_text}'
                 f'</div></div>'
             )
@@ -1502,8 +1502,8 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 pgs_formatted = f" <span style=\"font-size: 0.72rem; font-weight: 600; opacity: 0.9;\">{pgs_str}</span>" if pgs_str else ""
 
                 return (
-                    f'<div style="margin-bottom: 0.35rem;"><span class="ws-title-badge ws-badge-blue">Section {sec_id} Handout • {clean_title}{pgs_formatted}</span>{scaf_badge}</div>\n'
-                    f'<div style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
+                    f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge ws-badge-blue">Section {sec_id} Handout • {clean_title}{pgs_formatted}</span>{scaf_badge}</div>\n'
+                    f'<div class="ws-name-date-row" style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
                     f'<span><b>Name:</b> ___________________________</span><span><b>Date:</b> _____________</span><span><b>Class:</b> ________</span>\n'
                     f'</div>\n'
                 )
@@ -1519,7 +1519,7 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 focus_content = m.group(1).strip()
                 clean_focus = re.sub(r"\s*\([A-Z]{3,4}\s+[^)]+\)", "", focus_content).strip()
                 return (
-                    f'<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 6px; padding: 0.45rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.85rem; color: #1e3a8a;">'
+                    f'<div class="ws-strategy-focus" style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 6px; padding: 0.45rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.85rem; color: #1e3a8a;">'
                     f'<b>Strategy Focus:</b> {clean_focus}'
                     f'</div>'
                 )
@@ -1536,7 +1536,7 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 raw_txt = m.group(2).strip()
                 clean_txt = re.sub(r'^[\s*"\']+|[\s*"\']+$', '', raw_txt)
                 return (
-                    f'<div class="ws-callout" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #1e3a8a; margin: 0.75rem 0;">\n'
+                    f'<div class="ws-callout ws-pmi-callout" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #1e3a8a; margin: 0.75rem 0;">\n'
                     f'<div style="font-size: 0.75rem; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">Textbook Printed Main Idea (p. {pg})</div>\n'
                     f'<div style="font-style: italic; color: #1e293b; font-size: 0.90rem;">"{clean_txt}"</div>\n'
                     f'</div>'
@@ -1607,49 +1607,81 @@ HALF_SHEET_CSS = """
     flex-direction: column !important;
     justify-content: space-between !important;
     box-sizing: border-box !important;
-    padding: 0.60rem 0.90rem !important;
-    font-size: 0.83rem !important;
-    line-height: 1.35 !important;
+    padding: 0.35rem 0.65rem !important;
+    font-size: 0.80rem !important;
+    line-height: 1.30 !important;
     margin-bottom: 0 !important;
     box-shadow: none !important;
     border: 1.5px solid #cbd5e1 !important;
     border-radius: 6px !important;
 }
 .ws-half-sheet h2, .ws-half-sheet h3 {
-    margin: 0.12rem 0 !important;
-    font-size: 0.92rem !important;
+    margin: 0.10rem 0 !important;
+    font-size: 0.90rem !important;
 }
 .ws-half-sheet .ws-header-band {
-    margin-bottom: 0.20rem !important;
-    padding-bottom: 0.20rem !important;
+    margin-bottom: 0.15rem !important;
+    padding-bottom: 0.15rem !important;
+}
+.ws-half-sheet .ws-title-badge-wrapper {
+    margin-bottom: 0.08rem !important;
 }
 .ws-half-sheet .ws-title-badge {
-    margin-bottom: 0.12rem !important;
-    padding: 0.08rem 0.30rem !important;
-    font-size: 0.65rem !important;
+    margin-bottom: 0.06rem !important;
+    padding: 0.08rem 0.35rem !important;
+    font-size: 0.68rem !important;
+}
+.ws-half-sheet .ws-name-date-row {
+    margin-bottom: 0.18rem !important;
+    padding-bottom: 0.10rem !important;
+    font-size: 0.74rem !important;
+}
+.ws-half-sheet .ws-strategy-focus {
+    margin: 0.10rem 0 0.18rem 0 !important;
+    padding: 0.15rem 0.45rem !important;
+    font-size: 0.75rem !important;
+    line-height: 1.20 !important;
 }
 .ws-half-sheet .ws-callout {
-    margin: 0.20rem 0 !important;
-    padding: 0.25rem 0.55rem !important;
+    margin: 0.12rem 0 0.20rem 0 !important;
+    padding: 0.18rem 0.45rem !important;
+    font-size: 0.76rem !important;
+    line-height: 1.25 !important;
+}
+.ws-half-sheet .ws-bullet-prompt {
+    margin: 0.12rem 0 0.04rem 0.35rem !important;
     font-size: 0.78rem !important;
+    line-height: 1.25 !important;
 }
 .ws-half-sheet .ws-solid-line {
-    margin: 0.40rem 0 0.50rem 0 !important;
-    height: 1.5px !important;
+    height: 22px !important;
+    border-bottom: 1.5px solid #64748b !important;
+    margin: 2px 0 4px 0 !important;
 }
 .ws-half-sheet .ws-dotted-line {
-    margin: 0.40rem 0 0.50rem 0 !important;
+    height: 20px !important;
+    border-bottom: 1.5px dotted #94a3b8 !important;
+    margin: 2px 0 4px 0 !important;
 }
 .ws-half-sheet .ws-table {
-    margin: 0.25rem 0 !important;
+    margin: 0.15rem 0 0.20rem 0 !important;
 }
-.ws-half-sheet .ws-table th, .ws-half-sheet .ws-table td {
-    padding: 0.20rem 0.40rem !important;
-    font-size: 0.78rem !important;
+.ws-half-sheet .ws-table th {
+    padding: 0.15rem 0.35rem !important;
+    font-size: 0.74rem !important;
+}
+.ws-half-sheet .ws-table td {
+    padding: 0.20rem 0.35rem !important;
+    font-size: 0.76rem !important;
+    line-height: 1.25 !important;
+}
+.ws-half-sheet .ws-grade-box-wrapper {
+    margin: 0.08rem 0 0 0 !important;
 }
 .ws-half-sheet .ws-grade-box {
-    margin-top: 0.20rem !important;
-    padding: 0.12rem 0.40rem !important;
+    margin-top: 0 !important;
+    padding: 0.08rem 0.30rem !important;
+    font-size: 0.70rem !important;
 }
 .half-sheet-cut-divider {
     height: 0.22in;

@@ -818,6 +818,7 @@ def _render_reading_organizer_component(
                 lines.append(f"*Sentence Starter: In this part of the reading, {sh['gist'][:32]}* _________________________________________.")
             else:
                 lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
             keys.append(f"{idx}. {sh['name']}: {sh['gist']} {sh['citation']}")
         return "\n".join(lines), keys
 
@@ -872,7 +873,7 @@ def _render_central_idea_and_anti_copycat_component(
         elif is_scaffolded:
             box_prompt = f"**Central Idea Claim:** *{kb['scaffolded_central_idea_stem']}*"
         else:
-            box_prompt = f"**Central Idea Claim (State the main historical point of pp. {section_meta['printed_pages']}):**<br>{SOLID_LINE}"
+            box_prompt = f"**Central Idea Claim (State the main historical point of pp. {section_meta['printed_pages']}):**<br>{SOLID_LINE}<br>{SOLID_LINE}"
 
         lines.extend([
             "",
@@ -882,7 +883,7 @@ def _render_central_idea_and_anti_copycat_component(
             "",
         ])
         for idx, sh in enumerate(subs, start=1):
-            lines.append(f"- **Supporting Evidence {idx} from {sh['name']}:** {DOTTED_LINE}")
+            lines.append(f"- **Supporting Evidence {idx} from {sh['name']}:**\n{DOTTED_LINE}\n{DOTTED_LINE}")
             keys.append(f"Bullet {idx} Evidence ({sh['name']}): {sh['gist']} {sh['citation']}")
         keys.insert(0, f"Box & Bullets Central Idea Exemplar: {kb['exemplar_central_idea']}")
 
@@ -894,28 +895,53 @@ def _render_central_idea_and_anti_copycat_component(
             lines.append("- **REASONING (Why it mattered):** *This evidence proves the central idea because* _________________________________________________________.")
         else:
             lines.append(f"- **CLAIM (State the Central Idea in 1 complete sentence):**\n{SOLID_LINE}")
-            lines.append(f"- **EVIDENCE (Cite 1–2 specific facts or laws from pp. {section_meta['printed_pages']}):**\n{SOLID_LINE}")
-            lines.append(f"- **REASONING (Explain how your evidence supports the Central Idea):**\n{SOLID_LINE}")
+            lines.append(f"- **EVIDENCE (Cite 1–2 specific facts or laws from pp. {section_meta['printed_pages']}):**\n{SOLID_LINE}\n{SOLID_LINE}")
+            lines.append(f"- **REASONING (Explain how your evidence supports the Central Idea):**\n{SOLID_LINE}\n{SOLID_LINE}")
         keys.append(f"CER Claim Exemplar: {kb['exemplar_central_idea']}")
         keys.append(f"CER Evidence & Reasoning: {subs[0]['gist']} {subs[0]['citation']}; {subs[-1]['gist']} {subs[-1]['citation']}")
 
-    else:  # ci_03_what_so_what (or Upgrade It synthesis)
-        if pmi_code == "pmi_03_upgrade_it":
+    else:  # ci_03_what_so_what or Anti-Copycat synthesis modes
+        if pmi_code == "pmi_01_prove_it":
             lines.append(
-                f"**Directions:** Upgrade the textbook's basic Main Idea above into 1–2 detailed sentences that name the specific laws, historical figures, and consequences from pages {section_meta['printed_pages']}."
+                f"**Directions (Prove It!):** DO NOT copy the textbook statement above. Cite 1 specific historical fact or law from each subheading that proves the textbook's claim is true:"
             )
+            for idx, sh in enumerate(subs, start=1):
+                lines.append(f"- **Proof {idx} from {sh['name']}:**\n{DOTTED_LINE}\n{DOTTED_LINE}")
+                keys.append(f"Proof {idx} ({sh['name']}): {sh['gist']} {sh['citation']}")
+        elif pmi_code == "pmi_02_subheading_focus":
+            lines.append(
+                f"**Directions (Subheading Focus):** The textbook printed only 1 basic sentence for the whole section. State the central idea of each subheading in your own words, then combine them:"
+            )
+            for idx, sh in enumerate(subs, start=1):
+                lines.append(f"- **Central Idea for {sh['name']}:**\n{SOLID_LINE}\n{SOLID_LINE}")
+                keys.append(f"Subheading {idx} Central Idea ({sh['name']}): {sh['gist']} {sh['citation']}")
+            lines.append("**Whole-Section Connection:**")
+            lines.append(SOLID_LINE)
+            lines.append(SOLID_LINE)
+        elif pmi_code == "pmi_03_upgrade_it":
+            lines.append(
+                f"**Directions (Upgrade the Claim):** Upgrade the textbook's basic 5th-grade sentence above into a detailed 8th-grade historical claim that names the specific laws, historical figures, and consequences from pages {section_meta['printed_pages']}:"
+            )
+            if is_scaffolded:
+                if kb.get("word_bank"):
+                    lines.append(f"*Key Terms to Include:* **{', '.join(kb['word_bank'][:4])}**")
+                lines.append(f"*{kb['scaffolded_central_idea_stem']}*")
+            else:
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
         else:
             lines.append(
                 f"**Directions ('What Happened? + So What?'):** In 1–2 complete sentences, state the **Central Idea** of Section {section_meta['section_code']} by connecting *what happened* to *why it mattered historically*."
             )
-        if is_scaffolded:
-            if kb.get("word_bank"):
-                lines.append(f"*Key Terms to Include:* **{', '.join(kb['word_bank'][:4])}**")
-            lines.append(f"*{kb['scaffolded_central_idea_stem']}*")
-        else:
-            lines.append(SOLID_LINE)
-            lines.append(SOLID_LINE)
-            lines.append(SOLID_LINE)
+            if is_scaffolded:
+                if kb.get("word_bank"):
+                    lines.append(f"*Key Terms to Include:* **{', '.join(kb['word_bank'][:4])}**")
+                lines.append(f"*{kb['scaffolded_central_idea_stem']}*")
+            else:
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
         keys.append(f"Central Idea ('What + So What' / Upgraded Main Idea): {kb['exemplar_central_idea']}")
 
     return "\n".join(lines), keys
@@ -959,7 +985,7 @@ def _render_builtin_questions_and_optional_twr(
         stem_base = f"In Section {section_meta['section_code']} ({section_meta['title']}), tensions grew between Britain and the colonies"
         if twr_code == "twr_because_but_so":
             blocks.extend([
-                "**Optional Writing Extension (Because, But, So):** Complete each sentence using specific facts from the reading.",
+                "**Writing Extension (Because, But, So):** Complete each sentence using specific facts from the reading.",
                 f"1. {stem_base} **because** _________________________________________________________________.",
                 f"2. {stem_base}, **but** ____________________________________________________________________.",
                 f"3. {stem_base}, **so** _____________________________________________________________________.",
@@ -967,11 +993,34 @@ def _render_builtin_questions_and_optional_twr(
             keys.append(f"Optional TWR (Because/But/So): Verify causal, contrasting, and consequent facts from pp. {section_meta['printed_pages']}.")
         elif twr_code == "twr_subordinating":
             blocks.extend([
-                "**Optional Writing Extension (Subordinating Conjunctions):** Complete each complex sentence after the comma.",
-                f"1. **Although** {kb['subheadings'][0]['gist'][:45].lower()}..., _________________________________________________________.",
-                f"2. **When** {kb['subheadings'][-1]['gist'][:45].lower()}..., ___________________________________________________________.",
+                "**Writing Extension (Subordinating Conjunctions):** Complete each complex historical sentence using facts from pages " + str(section_meta['printed_pages']) + ".",
+                f"1. **Although** {kb['subheadings'][0]['gist'][:42].lower()}..., _________________________________________________________.",
+                f"2. **When** {kb['subheadings'][-1]['gist'][:42].lower()}..., ___________________________________________________________.",
             ])
             keys.append(f"Optional TWR (Subordinating Conjunctions): {kb['exemplar_central_idea']}")
+        elif twr_code == "twr_kernel_expansion":
+            k_subj = f"Colonists resisted British policies in Section {section_meta['section_code']}."
+            blocks.extend([
+                "**Writing Extension (Sentence Expansion):** Expand the short kernel sentence below by answering the guiding questions with facts from pages " + str(section_meta['printed_pages']) + ".",
+                f"**Kernel Sentence:** *{k_subj}*",
+                f"- **When?** {DOTTED_LINE}",
+                f"- **Where?** {DOTTED_LINE}",
+                f"- **Why?** {DOTTED_LINE}",
+                "**Expanded Historical Sentence (1–2 complete sentences):**",
+                SOLID_LINE,
+                SOLID_LINE,
+            ])
+            keys.append(f"Optional TWR (Sentence Expansion): {kb['exemplar_central_idea']}")
+        elif twr_code == "twr_appositives":
+            v_words = [v.get("word") for v in section_meta.get("official_vocab", []) if v.get("word")]
+            app_subj1 = v_words[0] if v_words else "King George III"
+            app_subj2 = v_words[1] if len(v_words) > 1 else "The American colonists"
+            blocks.extend([
+                "**Writing Extension (Appositive Phrases):** Insert a descriptive noun phrase between commas to define each historical term:",
+                f"1. **{app_subj1}**, ____________________________________________, influenced events across the colonies.",
+                f"2. **{app_subj2}**, ____________________________________________, shaped colonial resistance during this era.",
+            ])
+            keys.append(f"Optional TWR (Appositives): {kb['exemplar_central_idea']}")
 
     return "\n\n".join(blocks), keys
 
