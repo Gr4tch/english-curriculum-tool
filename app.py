@@ -202,12 +202,14 @@ st.markdown(
         color: #0f172a;
         margin-bottom: 0.45rem;
         line-height: 1.3;
+        display: block;
     }
     .hero-desc {
         font-size: 0.90rem;
         color: #475569;
         line-height: 1.45;
         margin-bottom: 0.75rem;
+        display: block;
     }
 
     /* Horizontal Page Tray Styling */
@@ -666,12 +668,10 @@ if st.session_state["nav_view"] == "home":
         render_clean_html(
             """
             <a href="?nav=packet&auth=ok" target="_self" class="hero-card hero-blue">
-                <div>
-                    <div class="hero-title" style="color: #1d4ed8;">1. Modular Curriculum Packet Builder</div>
-                    <div class="hero-desc">
-                        Assemble custom 2-page, 3-page, or chapter unit packets page-by-page. Dynamic Page Tray gives you complete modular control to mix active reading organizers, central idea synthesizers, writing extensions, vocabulary practice, or assessments. Exports directly to print-ready vector PDF.
-                    </div>
-                </div>
+                <span class="hero-title" style="color: #1d4ed8;">1. Modular Curriculum Packet Builder</span>
+                <span class="hero-desc">
+                    Assemble custom 2-page, 3-page, or chapter unit packets page-by-page. Dynamic Page Tray gives you complete modular control to mix active reading organizers, central idea synthesizers, writing extensions, vocabulary practice, or assessments. Exports directly to print-ready vector PDF.
+                </span>
             </a>
             """
         )
@@ -683,12 +683,10 @@ if st.session_state["nav_view"] == "home":
         render_clean_html(
             """
             <a href="?nav=gallery&auth=ok" target="_self" class="hero-card hero-indigo">
-                <div>
-                    <div class="hero-title" style="color: #4338ca;">2. Standalone Strategy Worksheet Gallery</div>
-                    <div class="hero-desc">
-                        Explore all 18 pedagogical strategy templates in an interactive visual thumbnail grid. Preview student worksheets with scaffolded support and authentic 8th-grade student exemplars grounded in any textbook section spread, then download vector PDFs or save directly to Google Drive.
-                    </div>
-                </div>
+                <span class="hero-title" style="color: #4338ca;">2. Standalone Strategy Worksheet Gallery</span>
+                <span class="hero-desc">
+                    Explore all 18 pedagogical strategy templates in an interactive visual thumbnail grid. Preview student worksheets with scaffolded support and authentic 8th-grade student exemplars grounded in any textbook section spread, then download vector PDFs or save directly to Google Drive.
+                </span>
             </a>
             """
         )
