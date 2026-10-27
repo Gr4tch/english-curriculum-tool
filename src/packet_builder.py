@@ -838,26 +838,19 @@ def _render_central_idea_and_anti_copycat_component(
     lines = []
     keys = []
 
-    # 1. Anti-Copycat Framing Header
+    # 1. Anti-Copycat Framing Header (callout only if mode requires textbook main idea)
     if pmi_code == "pmi_01_prove_it":
         lines.extend([
-            f"**Central Idea & Evidence Check ('Prove the Textbook's Main Idea'):**",
-            "",
             f"> **Textbook Printed Main Idea (p. {section_meta['start_page']}):** *\"{printed_mi}\"*",
             "",
         ])
     elif pmi_code == "pmi_03_upgrade_it":
         lines.extend([
-            f"**Central Idea Synthesis ('Upgrade the Textbook's Main Idea'):**",
-            "",
             f"> **Textbook Basic Main Idea (p. {section_meta['start_page']}):** *\"{printed_mi}\"*",
             "",
         ])
-    else:
-        lines.extend([
-            f"**Central Idea Synthesis (Section {section_meta['section_code']}: {section_meta['title']}):**",
-            "",
-        ])
+    # Note: Redundant section title heading ("**Central Idea Synthesis (Section X.X: ...):**")
+    # removed to maximize student writing response space; title already appears in the top badge.
 
     # 2. Render specific Central Idea template
     if ci_code == "ci_01_subheading_gist":
