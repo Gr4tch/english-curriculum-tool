@@ -438,6 +438,56 @@ st.markdown(
         border-color: #1e3a8a !important;
         box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.20) !important;
     }
+
+    /* Strategy Gallery Tiles: Interactive Card & Hover Zoom */
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) {
+        position: relative !important;
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        cursor: pointer !important;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]):hover {
+        transform: translateY(-4px) scale(1.025) !important;
+        z-index: 20 !important;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) div.strategy-tile-card {
+        transition: border-color 0.22s ease, box-shadow 0.22s ease !important;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]):hover div.strategy-tile-card {
+        border-color: #1e3a8a !important;
+        box-shadow: 0 12px 28px -4px rgba(30, 58, 138, 0.16), 0 6px 12px -4px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]):active {
+        transform: translateY(-1px) scale(0.99) !important;
+    }
+
+    /* Full Tile Invisible Button Overlay */
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) div[class*="st-key-btn_tile_"] {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 10 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) div[class*="st-key-btn_tile_"] div.stButton,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) div[class*="st-key-btn_tile_"] div.stButton button {
+        width: 100% !important;
+        height: 100% !important;
+        opacity: 0 !important;
+        cursor: pointer !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -503,7 +553,7 @@ def _render_strategy_card_grid(
     btn_label_selected: str = "Active Layout",
     btn_label_unselected: str = "Select This Layout",
 ) -> None:
-    """Renders a responsive 3-column card grid for strategy worksheet formats."""
+    """Renders a responsive 3-column card grid where the tiles themselves are the interactive buttons with hover zoom."""
     grid_cols_per_row = 3
     for row_start in range(0, len(tiles_list), grid_cols_per_row):
         row_tiles = tiles_list[row_start : row_start + grid_cols_per_row]
@@ -512,12 +562,13 @@ def _render_strategy_card_grid(
         for col_idx, tile in enumerate(row_tiles):
             with cols[col_idx]:
                 is_sel = (tile["code"] == active_code)
-                border_style = "border: 2.5px solid #1e3a8a; background: #f0f7ff;" if is_sel else "border: 1px solid #cbd5e1; background: #ffffff;"
+                border_style = "border: 2.5px solid #1e3a8a; background: #f0f7ff;" if is_sel else "border: 1.5px solid #cbd5e1; background: #ffffff;"
                 sel_badge_html = '<span style="font-size: 0.72rem; font-weight: 700; color: #1e3a8a;">Active</span>' if is_sel else ''
                 clean_thumb = re.sub(r">\s*\n\s*<", "><", re.sub(r"\n\s*", " ", tile["thumbnail_svg"].strip()))
 
                 card_html = (
-                    f'<div style="{border_style} border-radius: 10px; padding: 0.75rem; margin-bottom: 0.6rem; min-height: 255px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">'
+                    f'<div class="strategy-tile-card{" strategy-tile-active" if is_sel else ""}" '
+                    f'style="{border_style} border-radius: 10px; padding: 0.75rem; margin-bottom: 0.85rem; min-height: 255px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">'
                     f'<div>'
                     f'<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">'
                     f'<span class="badge-pill" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">{tile["category"]}</span>'
@@ -533,12 +584,12 @@ def _render_strategy_card_grid(
 
                 render_clean_html(card_html)
 
-                btn_type = "primary" if (active_code is None or is_sel) else "secondary"
+                # Invisible full-card overlay button: clicking anywhere on the tile selects that layout
+                btn_acc_label = f"{tile['name']} - Active" if is_sel else f"Select {tile['name']}"
                 if st.button(
-                    btn_label_selected if is_sel else btn_label_unselected,
+                    btn_acc_label,
                     key=f"btn_tile_{key_prefix}_{tile['code']}",
                     use_container_width=True,
-                    type=btn_type,
                 ):
                     st.session_state["gal_active_tile_code"] = tile["code"]
                     st.rerun()
@@ -1425,8 +1476,6 @@ elif st.session_state["nav_view"] == "gallery":
             tiles_list=filtered_tiles,
             active_code=None,
             key_prefix="open",
-            btn_label_selected="Select This Layout",
-            btn_label_unselected="Select This Layout",
         )
 
         st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
@@ -1516,8 +1565,6 @@ elif st.session_state["nav_view"] == "gallery":
                 tiles_list=min_filtered,
                 active_code=active_tile_code,
                 key_prefix="min",
-                btn_label_selected="Active Layout",
-                btn_label_unselected="Switch to This Layout",
             )
 
         # Build focused handout
