@@ -322,7 +322,7 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
         """,
     },
     {
-        "code": "twr_sentence_expansion",
+        "code": "twr_kernel_expansion",
         "category": "The Writing Revolution",
         "category_badge": "ws-badge-amber",
         "name": "Sentence Expansion",

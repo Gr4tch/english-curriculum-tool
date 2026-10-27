@@ -1197,6 +1197,8 @@ def build_standalone_strategy_handout(
         )
         keys = std_keys
     elif strategy_category == "twr":
+        if strategy_code == "twr_sentence_expansion":
+            strategy_code = "twr_kernel_expansion"
         s_obj = get_strategy_by_code(OPTIONAL_TWR_STRATEGIES, strategy_code)
         std_code = "CCSS WHST.6-8.2"
         dummy_bp = {"optional_twr_strategy": strategy_code}

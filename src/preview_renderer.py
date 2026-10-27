@@ -1262,6 +1262,94 @@ def _convert_md_table_to_html(md: str) -> str:
     return table_pattern.sub(_rep_table, md)
 
 
+def _convert_markdown_blocks_and_inlines(page_content: str) -> str:
+    """
+    Translates markdown blocks, lists, callouts, inline bold, and italics
+    into clean, styled HTML elements suitable for web rendering and vector PDF print.
+    Guarantees zero raw markdown syntax or formatting tokens leak into student or teacher layouts.
+    """
+    lines = page_content.split("\n")
+    processed_lines = []
+    in_callout = False
+    callout_lines = []
+
+    def flush_callout():
+        nonlocal in_callout, callout_lines, processed_lines
+        if callout_lines:
+            inner_content = "<br>".join(callout_lines)
+            processed_lines.append(
+                f'<div class="ws-callout" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #1e3a8a; margin: 0.65rem 0; padding: 0.55rem 0.85rem;">{inner_content}</div>'
+            )
+            callout_lines = []
+        in_callout = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        # Handle blockquotes
+        if stripped.startswith(">"):
+            in_callout = True
+            clean_q = re.sub(r"^>\s*", "", stripped)
+            callout_lines.append(clean_q)
+            continue
+        else:
+            if in_callout:
+                flush_callout()
+
+        # Handle headings
+        if stripped.startswith("####"):
+            h_text = stripped.lstrip("#").strip()
+            processed_lines.append(f'<div style="font-weight: 700; color: #1e3a8a; font-size: 0.90rem; margin: 0.65rem 0 0.25rem 0;">{h_text}</div>')
+            continue
+        elif stripped.startswith("###"):
+            h_text = stripped.lstrip("#").strip()
+            processed_lines.append(f'<div style="font-weight: 700; color: #0f172a; font-size: 0.95rem; margin: 0.75rem 0 0.30rem 0;">{h_text}</div>')
+            continue
+
+        # Handle bullet lists
+        if re.match(r"^-\s+", stripped):
+            b_text = re.sub(r"^-\s+", "", stripped)
+            processed_lines.append(f'<div style="margin: 0.25rem 0 0.25rem 0.5rem; line-height: 1.45;">• {b_text}</div>')
+            continue
+
+        # Handle numbered lists
+        num_m = re.match(r"^(\d+)\.\s+(.*)", stripped)
+        if num_m:
+            processed_lines.append(f'<div style="margin: 0.30rem 0; line-height: 1.45;"><b>{num_m.group(1)}.</b> {num_m.group(2)}</div>')
+            continue
+
+        processed_lines.append(line)
+
+    if in_callout:
+        flush_callout()
+
+    joined = "\n".join(processed_lines)
+
+    # Paragraph formatting: wrap standalone text lines that are separated by blank lines in divs
+    paragraphs = re.split(r"\n\s*\n", joined)
+    out_paras = []
+    for p in paragraphs:
+        p_strip = p.strip()
+        if not p_strip:
+            continue
+        if p_strip.startswith("<div") or p_strip.startswith("<table") or p_strip.startswith("<ul") or p_strip.startswith("<style"):
+            out_paras.append(p_strip)
+        else:
+            lines_in_p = [l.strip() for l in p_strip.split("\n") if l.strip()]
+            if len(lines_in_p) > 1:
+                inner = '<br style="margin-bottom: 0.35rem;">'.join(lines_in_p)
+                out_paras.append(f'<div style="margin-bottom: 0.50rem; line-height: 1.45;">{inner}</div>')
+            else:
+                out_paras.append(f'<div style="margin-bottom: 0.50rem; line-height: 1.45;">{p_strip}</div>')
+    joined = "\n".join(out_paras)
+
+    # Convert inline bold and italics
+    joined = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", joined)
+    joined = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"<i>\1</i>", joined)
+
+    return joined
+
+
 def format_booklet_for_web(booklet_md: str) -> str:
     """
     Transforms compiled booklet and standalone strategy markdown into spectacular,
@@ -1375,7 +1463,7 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 flags=re.MULTILINE,
             )
 
-            wrapped_page = f'<div class="ws-exemplar-container">\n{page.strip()}\n</div>'
+            wrapped_page = f'<div class="ws-exemplar-container">\n{_convert_markdown_blocks_and_inlines(page.strip())}\n</div>'
             formatted_pages.append(wrapped_page)
 
         # 6. Check if page is Cover Page
@@ -1394,7 +1482,7 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 page,
                 flags=re.MULTILINE,
             )
-            wrapped_page = f'<div class="ws-container" style="border: 2px solid #3b82f6; background: #ffffff;">\n{page.strip()}\n</div>'
+            wrapped_page = f'<div class="ws-container" style="border: 2px solid #3b82f6; background: #ffffff;">\n{_convert_markdown_blocks_and_inlines(page.strip())}\n</div>'
             formatted_pages.append(wrapped_page)
 
         # 7. Standard Student Section Handout
@@ -1470,11 +1558,11 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 flags=re.MULTILINE,
             )
 
-            wrapped_page = f'<div class="ws-container">\n{page.strip()}\n</div>'
+            wrapped_page = f'<div class="ws-container">\n{_convert_markdown_blocks_and_inlines(page.strip())}\n</div>'
             formatted_pages.append(wrapped_page)
 
         else:
-            formatted_pages.append(f'<div class="ws-container">\n{page.strip()}\n</div>')
+            formatted_pages.append(f'<div class="ws-container">\n{_convert_markdown_blocks_and_inlines(page.strip())}\n</div>')
 
     page_break_divider = (
         '\n\n<div style="margin: 2.5rem 0 2rem 0; border-top: 2px dashed #cbd5e1; text-align: center;">'
