@@ -73,6 +73,7 @@ from src.preview_renderer import (
     render_preview_cover,
     render_preview_footer,
     format_booklet_for_web,
+    format_half_sheet_2up,
 )
 
 logger = logging.getLogger(__name__)
@@ -1484,12 +1485,19 @@ elif st.session_state["nav_view"] == "gallery":
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         st.markdown(f"#### Step 2: Live Preview & Export — {active_tile['name']}")
 
-        ws_opt_c1, ws_opt_c2 = st.columns([1.5, 2.5])
+        ws_opt_c1, ws_opt_c2 = st.columns([1.5, 1.8])
         with ws_opt_c1:
             is_scaf_ws = st.checkbox(
                 "Generate Scaffolded Support Edition (sentence stems, word banks)",
                 value=st.session_state.get("gal_scaf_toggle", False),
                 key="gal_scaf_toggle",
+            )
+        with ws_opt_c2:
+            is_half_sheet = st.checkbox(
+                "Format as 2-Up Half-Sheets (2 copies per page — saves 50% paper)",
+                value=st.session_state.get("gal_half_sheet_toggle", False),
+                key="gal_half_sheet_toggle",
+                help="Formats two identical compact worksheets onto a single 8.5x11 letter page separated by a dashed cut line to cut photocopy usage in half.",
             )
 
         # Build focused handout
@@ -1509,12 +1517,21 @@ elif st.session_state["nav_view"] == "gallery":
         student_html = format_booklet_for_web(active_student_md)
         teacher_html = format_booklet_for_web(ex_md)
 
+        if is_half_sheet:
+            student_html = format_half_sheet_2up(student_html)
+            teacher_html = format_half_sheet_2up(teacher_html)
+
+        hs_suffix = "_2Up_HalfSheet" if is_half_sheet else ""
+        student_filename = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student{hs_suffix}.pdf"
+        teacher_filename = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar{hs_suffix}.pdf"
+        bundle_filename = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Bundle{hs_suffix}.zip"
+
         try:
-            student_pdf_bytes = compile_pdf_cached(student_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student")
-            teacher_pdf_bytes = compile_pdf_cached(teacher_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar")
+            student_pdf_bytes = compile_pdf_cached(student_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student{hs_suffix}")
+            teacher_pdf_bytes = compile_pdf_cached(teacher_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar{hs_suffix}")
             single_bundle_zip = create_pdf_bundle_zip({
-                f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf": student_pdf_bytes,
-                f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf": teacher_pdf_bytes,
+                student_filename: student_pdf_bytes,
+                teacher_filename: teacher_pdf_bytes,
             })
         except Exception as pdf_err:
             logger.warning(f"Could not compile standalone worksheet PDFs: {pdf_err}")
@@ -1529,7 +1546,7 @@ elif st.session_state["nav_view"] == "gallery":
                 st.download_button(
                     "Download Student PDF",
                     data=student_pdf_bytes,
-                    file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
+                    file_name=student_filename,
                     mime="application/pdf",
                     type="primary",
                     use_container_width=True,
@@ -1538,7 +1555,7 @@ elif st.session_state["nav_view"] == "gallery":
                 st.download_button(
                     "Download Exemplar PDF",
                     data=teacher_pdf_bytes,
-                    file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar.pdf",
+                    file_name=teacher_filename,
                     mime="application/pdf",
                     use_container_width=True,
                 )
@@ -1546,7 +1563,7 @@ elif st.session_state["nav_view"] == "gallery":
                 st.download_button(
                     "Download Both (.zip)",
                     data=single_bundle_zip,
-                    file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Bundle.zip",
+                    file_name=bundle_filename,
                     mime="application/zip",
                     use_container_width=True,
                 )
@@ -1569,9 +1586,9 @@ elif st.session_state["nav_view"] == "gallery":
                                 upload_res = upload_packet_bundle_to_google_drive(
                                     service=drive_service,
                                     student_pdf_bytes=student_pdf_bytes,
-                                    student_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
+                                    student_filename=student_filename,
                                     teacher_pdf_bytes=teacher_pdf_bytes,
-                                    teacher_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf",
+                                    teacher_filename=teacher_filename,
                                     parent_folder_id=target_f_id,
                                     folder_path_display=target_f_path,
                                 )
@@ -1591,10 +1608,13 @@ elif st.session_state["nav_view"] == "gallery":
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 
+        edition_desc = "Scaffolded" if is_scaf_ws else "Standard"
+        layout_desc = "2-Up Half-Sheet" if is_half_sheet else "Full Page"
+
         # Preview Tabs
         ws_tab1, ws_tab2, ws_tab3 = st.tabs([
-            f"Student Handout Preview ({'Scaffolded' if is_scaf_ws else 'Standard'})",
-            "Teacher Answer Key & Student Exemplar",
+            f"Student Handout Preview ({edition_desc} — {layout_desc})",
+            f"Teacher Answer Key & Student Exemplar ({layout_desc})",
             "Textbook Source Passage Grounding",
         ])
 
@@ -1602,10 +1622,16 @@ elif st.session_state["nav_view"] == "gallery":
             st.markdown(student_html, unsafe_allow_html=True)
             if not is_scaf_ws:
                 with st.expander("Compare with Scaffolded Support Edition"):
-                    st.markdown(format_booklet_for_web(scaf_md), unsafe_allow_html=True)
+                    alt_html = format_booklet_for_web(scaf_md)
+                    if is_half_sheet:
+                        alt_html = format_half_sheet_2up(alt_html)
+                    st.markdown(alt_html, unsafe_allow_html=True)
             else:
                 with st.expander("Compare with Standard Edition"):
-                    st.markdown(format_booklet_for_web(std_md), unsafe_allow_html=True)
+                    alt_html = format_booklet_for_web(std_md)
+                    if is_half_sheet:
+                        alt_html = format_half_sheet_2up(alt_html)
+                    st.markdown(alt_html, unsafe_allow_html=True)
 
         with ws_tab2:
             st.markdown(teacher_html, unsafe_allow_html=True)

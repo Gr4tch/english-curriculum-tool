@@ -1485,3 +1485,118 @@ def format_booklet_for_web(booklet_md: str) -> str:
 
     full_html = page_break_divider.join(formatted_pages)
     return f"{COMMON_CSS}\n{full_html}"
+
+
+HALF_SHEET_CSS = """
+<style>
+.ws-half-sheet {
+    padding: 0.50rem 0.85rem !important;
+    margin-bottom: 0.15rem !important;
+    font-size: 0.80rem !important;
+    line-height: 1.30 !important;
+    box-shadow: none !important;
+}
+.ws-half-sheet h2, .ws-half-sheet h3 {
+    margin: 0.15rem 0 !important;
+    font-size: 0.95rem !important;
+}
+.ws-half-sheet .ws-header-band {
+    margin-bottom: 0.20rem !important;
+    padding-bottom: 0.20rem !important;
+}
+.ws-half-sheet .ws-title-badge {
+    margin-bottom: 0.15rem !important;
+    padding: 0.10rem 0.35rem !important;
+    font-size: 0.65rem !important;
+}
+.ws-half-sheet .ws-callout {
+    margin: 0.20rem 0 !important;
+    padding: 0.25rem 0.50rem !important;
+    font-size: 0.78rem !important;
+}
+.ws-half-sheet .ws-solid-line {
+    margin-bottom: 0.50rem !important;
+    height: 1.5px !important;
+}
+.ws-half-sheet .ws-dotted-line {
+    margin-bottom: 0.45rem !important;
+}
+.ws-half-sheet .ws-table {
+    margin-bottom: 0.25rem !important;
+}
+.ws-half-sheet .ws-table th, .ws-half-sheet .ws-table td {
+    padding: 0.20rem 0.40rem !important;
+    font-size: 0.78rem !important;
+}
+.ws-half-sheet .ws-grade-box {
+    margin-top: 0.20rem !important;
+    padding: 0.12rem 0.40rem !important;
+}
+.half-sheet-page-wrapper {
+    width: 100%;
+}
+.half-sheet-cut-divider {
+    margin: 0.30rem 0 0.45rem 0;
+    border-top: 1.5px dashed #94a3b8;
+    text-align: center;
+    position: relative;
+    height: 10px;
+}
+.half-sheet-cut-badge {
+    background: #ffffff;
+    color: #64748b;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.10rem 0.55rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 9999px;
+    position: relative;
+    top: -9px;
+    display: inline-block;
+    text-transform: uppercase;
+}
+@media print {
+    .ws-half-sheet {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+    .half-sheet-cut-divider {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+}
+</style>
+"""
+
+
+def format_half_sheet_2up(handout_html: str) -> str:
+    """
+    Transforms a single-page strategy worksheet HTML into an eco-friendly,
+    2-Up Half-Sheet letter page (2 identical copies separated by a dashed cutting line).
+    Saves 50% paper when photocopying for class sets.
+    """
+    if not handout_html:
+        return ""
+
+    # Strip existing style block so half sheet styles take precedence cleanly
+    body = re.sub(r"^<style>.*?</style>\s*", "", handout_html, flags=re.DOTALL)
+
+    # Apply ws-half-sheet compact class
+    compact_body = body.replace('class="ws-container"', 'class="ws-container ws-half-sheet"')
+    compact_body = compact_body.replace('class="ws-exemplar-container"', 'class="ws-exemplar-container ws-half-sheet"')
+
+    return f"""{COMMON_CSS}
+{HALF_SHEET_CSS}
+<div class="half-sheet-page-wrapper">
+    <div class="half-sheet-item">
+        {compact_body}
+    </div>
+    <div class="half-sheet-cut-divider">
+        <span class="half-sheet-cut-badge">[CUT] Cut Along Dashed Line &bull; 2 Handouts per Sheet</span>
+    </div>
+    <div class="half-sheet-item">
+        {compact_body}
+    </div>
+</div>
+"""
