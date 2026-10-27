@@ -418,6 +418,26 @@ st.markdown(
     div[data-testid="stExpander"] li {
         color: #1e293b !important;
     }
+
+    /* Selectbox Dropdowns: Visible Border & Contrast */
+    div[data-testid="stSelectbox"] div[role="group"],
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+        border: 1.5px solid #94a3b8 !important;
+        border-radius: 8px !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+        transition: all 0.15s ease-in-out !important;
+    }
+    div[data-testid="stSelectbox"] div[role="group"]:hover,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:hover {
+        border-color: #1e3a8a !important;
+        box-shadow: 0 2px 4px rgba(30, 58, 138, 0.12) !important;
+    }
+    div[data-testid="stSelectbox"] div[role="group"]:focus-within,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:focus-within {
+        border-color: #1e3a8a !important;
+        box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.20) !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
