@@ -1243,10 +1243,10 @@ def build_standalone_strategy_handout(
 
     strategy_name = s_obj.get("short_name", s_obj.get("name", "Strategy"))
 
-    # Standard Handout
+    # Standard Handout (standards excluded from student materials)
     std_blocks = [
         f"## Section {sec_code}: {sec_title} (Textbook pp. {pp})",
-        f"> **Strategy Focus:** {s_obj.get('name', strategy_name)} ({std_code})",
+        f"> **Strategy Focus:** {s_obj.get('name', strategy_name)}",
         "",
         comp_md_std,
         "",
@@ -1256,10 +1256,10 @@ def build_standalone_strategy_handout(
         sanitize_aesthetics("\n\n".join(b for b in std_blocks if b.strip())), target_pages=1
     )
 
-    # Scaffolded Handout
+    # Scaffolded Handout (standards excluded from student materials)
     scaf_blocks = [
         f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) *(Scaffolded Support)*",
-        f"> **Strategy Focus:** {s_obj.get('name', strategy_name)} ({std_code})",
+        f"> **Strategy Focus:** {s_obj.get('name', strategy_name)}",
         "",
         comp_md_scaf,
         "",

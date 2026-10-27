@@ -1499,11 +1499,11 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 clean_title = re.sub(r'\*?\([^\)]*scaffolded[^\)]*\)\*?', '', clean_title, flags=re.IGNORECASE).strip()
 
                 scaf_badge = ' <span style="background: #fef3c7; color: #b45309; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; text-transform: uppercase; margin-left: 0.4rem;">Scaffolded Edition</span>' if is_scaf else ""
+                pgs_formatted = f" <span style=\"font-size: 0.72rem; font-weight: 600; opacity: 0.9;\">{pgs_str}</span>" if pgs_str else ""
 
                 return (
-                    f'<div class="ws-title-badge ws-badge-blue">Section {sec_id} Handout • {clean_title}</div>{scaf_badge}\n'
-                    f'<div style="font-size: 1.15rem; font-weight: 700; color: #0f172a; margin: 0.15rem 0 0.25rem 0;">Section {sec_id}: {clean_title} <span style="font-size: 0.85rem; font-weight: 500; color: #64748b;">{pgs_str}</span></div>\n'
-                    f'<div style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.35rem;">\n'
+                    f'<div style="margin-bottom: 0.35rem;"><span class="ws-title-badge ws-badge-blue">Section {sec_id} Handout • {clean_title}{pgs_formatted}</span>{scaf_badge}</div>\n'
+                    f'<div style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
                     f'<span><b>Name:</b> ___________________________</span><span><b>Date:</b> _____________</span><span><b>Class:</b> ________</span>\n'
                     f'</div>\n'
                 )
@@ -1514,12 +1514,18 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 flags=re.MULTILINE,
             )
 
-            # Style Strategy Focus badge
+            # Style Strategy Focus badge (stripping any CCSS / ELA standards from student text)
+            def _rep_strategy_focus(m):
+                focus_content = m.group(1).strip()
+                clean_focus = re.sub(r"\s*\([A-Z]{3,4}\s+[^)]+\)", "", focus_content).strip()
+                return (
+                    f'<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 6px; padding: 0.45rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.85rem; color: #1e3a8a;">'
+                    f'<b>Strategy Focus:</b> {clean_focus}'
+                    f'</div>'
+                )
             page = re.sub(
                 r"^>\s*\*\*Strategy Focus:\*\*\s*(.*?)(?=\n)",
-                r'<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 6px; padding: 0.45rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.85rem; color: #1e3a8a;">'
-                r'<b>Strategy Focus:</b> \1'
-                r'</div>',
+                _rep_strategy_focus,
                 page,
                 flags=re.MULTILINE,
             )
