@@ -1143,6 +1143,134 @@ def generate_section_packet(
     }
 
 
+def build_standalone_strategy_handout(
+    section_meta: Dict[str, Any],
+    strategy_category: str,
+    strategy_code: str,
+    markdown_text: str = "",
+    is_scaffolded: bool = False,
+) -> Dict[str, Any]:
+    """
+    Builds a focused, single-strategy standalone student worksheet and authentic student exemplar
+    strictly grounded in the selected section spread, free from surrounding packet clutter.
+    Categories: 'central_idea', 'reading_organizer', 'anti_copycat', 'twr'.
+    """
+    if not markdown_text and section_meta.get("md_file"):
+        md_p = Path(section_meta["md_file"])
+        if md_p.exists():
+            markdown_text = md_p.read_text(encoding="utf-8")
+
+    kb = build_dynamic_section_knowledge(section_meta, markdown_text)
+    ch_num = section_meta["chapter_num"]
+    sec_code = str(section_meta["section_code"])
+    sec_title = section_meta["title"]
+    pp = section_meta["printed_pages"]
+
+    if strategy_category == "central_idea":
+        s_obj = get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, strategy_code)
+        std_code = "CCSS RH.6-8.2"
+        comp_md_std, std_keys = _render_central_idea_and_anti_copycat_component(
+            section_meta, kb, strategy_code, "none", is_scaffolded=False
+        )
+        comp_md_scaf, _ = _render_central_idea_and_anti_copycat_component(
+            section_meta, kb, strategy_code, "none", is_scaffolded=True
+        )
+        keys = std_keys
+    elif strategy_category == "reading_organizer":
+        s_obj = get_strategy_by_code(READING_ORGANIZERS, strategy_code)
+        std_code = "CCSS RH.6-8.5"
+        comp_md_std, std_keys = _render_reading_organizer_component(
+            section_meta, kb, strategy_code, "mode_mixed_flexible", is_scaffolded=False
+        )
+        comp_md_scaf, _ = _render_reading_organizer_component(
+            section_meta, kb, strategy_code, "mode_mixed_flexible", is_scaffolded=True
+        )
+        keys = std_keys
+    elif strategy_category == "anti_copycat":
+        s_obj = get_strategy_by_code(PRINTED_MAIN_IDEA_MODES, strategy_code)
+        std_code = "CCSS RH.6-8.2"
+        comp_md_std, std_keys = _render_central_idea_and_anti_copycat_component(
+            section_meta, kb, "ci_03_what_so_what", strategy_code, is_scaffolded=False
+        )
+        comp_md_scaf, _ = _render_central_idea_and_anti_copycat_component(
+            section_meta, kb, "ci_03_what_so_what", strategy_code, is_scaffolded=True
+        )
+        keys = std_keys
+    elif strategy_category == "twr":
+        s_obj = get_strategy_by_code(OPTIONAL_TWR_STRATEGIES, strategy_code)
+        std_code = "CCSS WHST.6-8.2"
+        dummy_bp = {"optional_twr_strategy": strategy_code}
+        comp_md_std, std_keys = _render_builtin_questions_and_optional_twr(
+            section_meta, kb, dummy_bp, {}, is_scaffolded=False
+        )
+        comp_md_scaf, _ = _render_builtin_questions_and_optional_twr(
+            section_meta, kb, dummy_bp, {}, is_scaffolded=True
+        )
+        keys = std_keys
+    else:
+        s_obj = {"name": "Strategy Model", "short_name": "Strategy", "description": ""}
+        std_code = "CCSS ELA-History"
+        comp_md_std = ""
+        comp_md_scaf = ""
+        keys = []
+
+    strategy_name = s_obj.get("short_name", s_obj.get("name", "Strategy"))
+
+    # Standard Handout
+    std_blocks = [
+        f"## Section {sec_code}: {sec_title} (Textbook pp. {pp})",
+        f"> **Strategy Focus:** {s_obj.get('name', strategy_name)} ({std_code})",
+        "",
+        comp_md_std,
+        "",
+        f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+    ]
+    fitted_std, _ = enforce_page_budget_guardrail(
+        sanitize_aesthetics("\n\n".join(b for b in std_blocks if b.strip())), target_pages=1
+    )
+
+    # Scaffolded Handout
+    scaf_blocks = [
+        f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) *(Scaffolded Support)*",
+        f"> **Strategy Focus:** {s_obj.get('name', strategy_name)} ({std_code})",
+        "",
+        comp_md_scaf,
+        "",
+        f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+    ]
+    fitted_scaf, _ = enforce_page_budget_guardrail(
+        sanitize_aesthetics("\n\n".join(b for b in scaf_blocks if b.strip())), target_pages=1
+    )
+
+    # Authentic 8th-Grade Student Exemplar & Answer Key
+    exemplar_blocks = [
+        f"# Student Exemplar & Answer Key: Sec. {sec_code} — {strategy_name}",
+        f"**Textbook Reference:** pp. {pp}  |  **Target Standard:** {std_code}  |  **Score:** 100/100",
+        "",
+        "### Authentic 8th-Grade Student Model Response",
+        f"> *Student Response Sample for Section {sec_code}:*",
+        "",
+    ]
+    for k_item in keys:
+        exemplar_blocks.append(f"- **{k_item}**")
+
+    if kb.get("printed_main_idea"):
+        exemplar_blocks.append(f"\n*Textbook Source Grounding (p. {section_meta.get('start_page', '')}):* \"{kb['printed_main_idea']}\"")
+
+    exemplar_md = "\n\n".join(exemplar_blocks)
+
+    return {
+        "student_standard_md": fitted_std,
+        "student_scaffolded_md": fitted_scaf,
+        "exemplar_md": exemplar_md,
+        "strategy_name": strategy_name,
+        "standard_code": std_code,
+        "section_code": sec_code,
+        "chapter_num": ch_num,
+    }
+
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # CHAPTER-LEVEL STUDENT BOOKLET, COVER TRACKER & MASTER CLIPBOARD KEY BUILDERS
 # ─────────────────────────────────────────────────────────────────────────────

@@ -25,6 +25,7 @@ from src.blueprint_designer import (
 )
 from src.packet_builder import (
     generate_section_packet,
+    build_standalone_strategy_handout,
     build_chapter_student_booklet,
     build_chapter_master_teacher_plan,
     build_chapter_review_and_assessment,
@@ -2307,8 +2308,46 @@ elif st.session_state["nav_view"] == "gallery":
     with main_gal_tab2:
         st.markdown("### Interactive Worksheet Strategy & Template Models")
         st.caption(
-            "Browse concrete student handout formats, anti-copycat mechanics, and completed 8th-grade student exemplars based on **Chapter 5: The Road to Revolution**. "
-            "Use this gallery to see exactly what students will see and write on their printed worksheets before you generate your chapter package."
+            "Select any textbook Chapter and Section spread below to generate, preview, and print standalone 1-page strategy worksheets and authentic student exemplars grounded in that specific text."
+        )
+
+        g2_c_ch, g2_c_sec = st.columns([1.1, 1.9])
+        with g2_c_ch:
+            cur_g2_ch = st.session_state.get("gal_model_ch_num", selected_ch_num)
+            g2_ch_idx = sorted_chapter_nums.index(cur_g2_ch) if cur_g2_ch in sorted_chapter_nums else 0
+            gal_model_ch_num = st.selectbox(
+                "Select Chapter for Strategy Exemplars:",
+                options=sorted_chapter_nums,
+                index=g2_ch_idx,
+                format_func=lambda n: f"Chapter {n:02d}: {chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} spreads)",
+                key="gal_model_ch_select",
+            )
+            st.session_state["gal_model_ch_num"] = gal_model_ch_num
+
+        g2_ch_info = chapters_map[gal_model_ch_num]
+        g2_ch_sections = g2_ch_info["sections"]
+        g2_ch_bp = get_chapter_blueprint(gal_model_ch_num, g2_ch_info["chapter_title"])
+
+        with g2_c_sec:
+            gal_model_sec = st.selectbox(
+                "Select Section Spread for Strategy Exemplars:",
+                options=g2_ch_sections,
+                format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']}) — [{s.get('section_type', 'Core Narrative')}]",
+                key=f"gal_model_sec_select_{gal_model_ch_num}",
+            )
+
+        g2_sec_code = str(gal_model_sec["section_code"])
+        g2_md_path = resolve_file_path(gal_model_sec.get("md_file"))
+        g2_raw_passage_md = g2_md_path.read_text(encoding="utf-8") if g2_md_path.exists() else ""
+
+        st.markdown(
+            f"""
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid #16a34a; border-radius: 6px; padding: 0.65rem 1rem; margin-bottom: 0.85rem; font-size: 0.86rem; color: #166534;">
+                <b>Active Section Spread:</b> Chapter {gal_model_ch_num:02d}, Section {g2_sec_code} — <i>{gal_model_sec['title']}</i> (pp. {gal_model_sec['printed_pages']}).
+                All strategy handouts and student exemplars below are dynamically grounded in this section's text.
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
 
         gal_tab1, gal_tab2, gal_tab3, gal_tab4, gal_tab5 = st.tabs([
@@ -2324,12 +2363,15 @@ elif st.session_state["nav_view"] == "gallery":
             st.caption("Teach 8th graders to determine the central ideas of a historical text and formulate concise, evidence-based historical claims.")
 
             ci_choice = st.selectbox(
-                "Select Central Idea Template to Explore:",
+                "Select Central Idea Template to Explore & Print:",
                 options=[s["code"] for s in CENTRAL_IDEA_STRATEGIES],
                 format_func=lambda c: get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, c)["name"],
-                key="gal_ci_select",
+                key=f"gal_ci_select_{gal_model_ch_num}_{g2_sec_code}",
             )
             ci_curr = get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, ci_choice)
+            ci_handout = build_standalone_strategy_handout(
+                gal_model_sec, "central_idea", ci_choice, g2_raw_passage_md
+            )
 
             c_info_c1, c_info_c2 = st.columns([1.5, 1.0])
             with c_info_c1:
@@ -2337,131 +2379,288 @@ elif st.session_state["nav_view"] == "gallery":
                 st.markdown(f"**Best For:** {ci_curr['best_for']}")
                 st.markdown(f"**How It Works:** {ci_curr['description']}")
             with c_info_c2:
-                if st.button(f"Apply '{ci_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ci_{selected_ch_num}"):
-                    ch_blueprint["central_idea_strategy"] = ci_choice
-                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                    st.success(f"Saved! '{ci_curr['short_name']}' is now set as the active Central Idea strategy for Chapter {selected_ch_num} in the Packet Co-Designer.")
-                st.caption(f"Applies this strategy directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+                if st.button(f"Apply '{ci_curr['short_name']}' to Chapter {gal_model_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ci_{gal_model_ch_num}_{g2_sec_code}_{ci_choice}"):
+                    g2_ch_bp["central_idea_strategy"] = ci_choice
+                    save_chapter_blueprint(gal_model_ch_num, g2_ch_bp)
+                    st.success(f"Saved! '{ci_curr['short_name']}' is now set as the active Central Idea strategy for Chapter {gal_model_ch_num}.")
+                st.caption(f"Applies this strategy directly to Chapter {gal_model_ch_num} in the Packet Co-Designer.")
+
+            st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
+            d_ci1, d_ci2, d_ci3 = st.columns([1.2, 1.2, 1.3])
+            with d_ci1:
+                std_ci_bytes = get_docx_bytes(
+                    ci_handout["student_standard_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ci_choice}_Standard",
+                    is_student_handout=True,
+                )
+                st.download_button(
+                    "Download Focused Handout (.docx)",
+                    data=std_ci_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ci_choice}_Standard.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_ci_std_{gal_model_ch_num}_{g2_sec_code}_{ci_choice}",
+                )
+            with d_ci2:
+                scaf_ci_bytes = get_docx_bytes(
+                    ci_handout["student_scaffolded_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ci_choice}_Scaffolded",
+                    is_student_handout=True,
+                )
+                st.download_button(
+                    "Download Scaffolded (.docx)",
+                    data=scaf_ci_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ci_choice}_Scaffolded.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_ci_scaf_{gal_model_ch_num}_{g2_sec_code}_{ci_choice}",
+                )
+            with d_ci3:
+                ex_ci_bytes = get_docx_bytes(
+                    ci_handout["exemplar_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ci_choice}_Exemplar",
+                    is_student_handout=False,
+                    include_top_student_header=False,
+                )
+                st.download_button(
+                    "Download Student Exemplar (.docx)",
+                    data=ex_ci_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ci_choice}_Exemplar.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_ci_ex_{gal_model_ch_num}_{g2_sec_code}_{ci_choice}",
+                )
 
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             ci_view1, ci_view2 = st.columns(2)
             with ci_view1:
-                st.markdown("##### Printed Student Handout Format")
-                st.markdown(render_preview_handout(ci_choice), unsafe_allow_html=True)
-                if ci_curr.get("scaffolded_md"):
-                    st.markdown(render_preview_scaffold(ci_curr["scaffolded_md"]), unsafe_allow_html=True)
+                st.markdown(f"##### Printed Student Handout (Sec. {g2_sec_code})")
+                st.markdown(format_booklet_for_web(ci_handout["student_standard_md"]), unsafe_allow_html=True)
+                with st.expander("View Generic Template Model"):
+                    st.markdown(render_preview_handout(ci_choice), unsafe_allow_html=True)
+                    if ci_curr.get("scaffolded_md"):
+                        st.markdown(render_preview_scaffold(ci_curr["scaffolded_md"]), unsafe_allow_html=True)
 
             with ci_view2:
-                st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
-                st.markdown(render_preview_exemplar(ci_choice), unsafe_allow_html=True)
+                st.markdown(f"##### Authentic 8th-Grade Student Exemplar (Sec. {g2_sec_code})")
+                st.markdown(format_booklet_for_web(ci_handout["exemplar_md"]), unsafe_allow_html=True)
+                with st.expander("View Chapter 5 Generic Exemplar"):
+                    st.markdown(render_preview_exemplar(ci_choice), unsafe_allow_html=True)
 
         with gal_tab2:
             st.markdown("#### Anti-Copycat Modes for Textbook's Printed MAIN IDEA Box")
             st.caption("Guarantees students cannot blindly copy the textbook's printed 1-sentence Main Idea box as their own answer.")
 
             pmi_choice = st.selectbox(
-                "Select Anti-Copycat Mode to Explore:",
+                "Select Anti-Copycat Mode to Explore & Print:",
                 options=[m["code"] for m in PRINTED_MAIN_IDEA_MODES],
                 format_func=lambda c: get_strategy_by_code(PRINTED_MAIN_IDEA_MODES, c)["name"],
-                key="gal_pmi_select",
+                key=f"gal_pmi_select_{gal_model_ch_num}_{g2_sec_code}",
             )
             pmi_curr = get_strategy_by_code(PRINTED_MAIN_IDEA_MODES, pmi_choice)
+            pmi_handout = build_standalone_strategy_handout(
+                gal_model_sec, "anti_copycat", pmi_choice, g2_raw_passage_md
+            )
 
             p_info_c1, p_info_c2 = st.columns([1.5, 1.0])
             with p_info_c1:
+                st.markdown(f"**Target Standard:** `CCSS RH.6-8.2` (Evidence-Based Synthesis)")
                 st.markdown(f"**Pedagogical Mechanic:** {pmi_curr['description']}")
             with p_info_c2:
-                if st.button(f"Apply '{pmi_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_pmi_{selected_ch_num}"):
-                    ch_blueprint["printed_main_idea_mode"] = pmi_choice
-                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                    st.success(f"Saved! '{pmi_curr['short_name']}' is now set as the active anti-copycat mechanic for Chapter {selected_ch_num} in the Packet Co-Designer.")
-                st.caption(f"Applies this mechanic directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+                if st.button(f"Apply '{pmi_curr['short_name']}' to Chapter {gal_model_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_pmi_{gal_model_ch_num}_{g2_sec_code}_{pmi_choice}"):
+                    g2_ch_bp["printed_main_idea_mode"] = pmi_choice
+                    save_chapter_blueprint(gal_model_ch_num, g2_ch_bp)
+                    st.success(f"Saved! '{pmi_curr['short_name']}' is now set as the active anti-copycat mechanic for Chapter {gal_model_ch_num}.")
+                st.caption(f"Applies this mechanic directly to Chapter {gal_model_ch_num} in the Packet Co-Designer.")
+
+            st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
+            d_pmi1, d_pmi2, d_pmi3 = st.columns([1.2, 1.2, 1.3])
+            with d_pmi1:
+                std_pmi_bytes = get_docx_bytes(
+                    pmi_handout["student_standard_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{pmi_choice}_Standard",
+                    is_student_handout=True,
+                )
+                st.download_button(
+                    "Download Focused Handout (.docx)",
+                    data=std_pmi_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{pmi_choice}_Standard.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_pmi_std_{gal_model_ch_num}_{g2_sec_code}_{pmi_choice}",
+                )
+            with d_pmi2:
+                scaf_pmi_bytes = get_docx_bytes(
+                    pmi_handout["student_scaffolded_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{pmi_choice}_Scaffolded",
+                    is_student_handout=True,
+                )
+                st.download_button(
+                    "Download Scaffolded (.docx)",
+                    data=scaf_pmi_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{pmi_choice}_Scaffolded.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_pmi_scaf_{gal_model_ch_num}_{g2_sec_code}_{pmi_choice}",
+                )
+            with d_pmi3:
+                ex_pmi_bytes = get_docx_bytes(
+                    pmi_handout["exemplar_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{pmi_choice}_Exemplar",
+                    is_student_handout=False,
+                    include_top_student_header=False,
+                )
+                st.download_button(
+                    "Download Student Exemplar (.docx)",
+                    data=ex_pmi_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{pmi_choice}_Exemplar.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_pmi_ex_{gal_model_ch_num}_{g2_sec_code}_{pmi_choice}",
+                )
 
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             pmi_view1, pmi_view2 = st.columns(2)
             with pmi_view1:
-                st.markdown("##### Printed Student Handout Format")
-                st.markdown(render_preview_handout(pmi_choice), unsafe_allow_html=True)
-                if pmi_curr.get("scaffolded_md"):
-                    st.markdown(render_preview_scaffold(pmi_curr["scaffolded_md"]), unsafe_allow_html=True)
+                st.markdown(f"##### Printed Student Handout (Sec. {g2_sec_code})")
+                st.markdown(format_booklet_for_web(pmi_handout["student_standard_md"]), unsafe_allow_html=True)
+                with st.expander("View Generic Template Model"):
+                    st.markdown(render_preview_handout(pmi_choice), unsafe_allow_html=True)
+                    if pmi_curr.get("scaffolded_md"):
+                        st.markdown(render_preview_scaffold(pmi_curr["scaffolded_md"]), unsafe_allow_html=True)
 
             with pmi_view2:
-                st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
-                st.markdown(render_preview_exemplar(pmi_choice), unsafe_allow_html=True)
+                st.markdown(f"##### Authentic 8th-Grade Student Exemplar (Sec. {g2_sec_code})")
+                st.markdown(format_booklet_for_web(pmi_handout["exemplar_md"]), unsafe_allow_html=True)
+                with st.expander("View Chapter 5 Generic Exemplar"):
+                    st.markdown(render_preview_exemplar(pmi_choice), unsafe_allow_html=True)
 
         with gal_tab3:
             st.markdown("#### Active Reading & Text Structure Organizers (CCSS RH.6-8.5)")
             st.caption("Active reading organizers guide students through each 2-page spread according to its specific historical text structure.")
 
             ro_choice = st.selectbox(
-                "Select Active Reading Organizer to Explore:",
+                "Select Active Reading Organizer to Explore & Print:",
                 options=[r["code"] for r in READING_ORGANIZERS],
                 format_func=lambda c: get_strategy_by_code(READING_ORGANIZERS, c)["name"],
-                key="gal_ro_select",
+                key=f"gal_ro_select_{gal_model_ch_num}_{g2_sec_code}",
             )
             ro_curr = get_strategy_by_code(READING_ORGANIZERS, ro_choice)
+            ro_handout = build_standalone_strategy_handout(
+                gal_model_sec, "reading_organizer", ro_choice, g2_raw_passage_md
+            )
 
             r_info_c1, r_info_c2 = st.columns([1.5, 1.0])
             with r_info_c1:
                 st.markdown(f"**Target ELA Standard:** `CCSS RH.6-8.5` (Analyze Text Structure)")
                 st.markdown(f"**Text Structure Focus:** {ro_curr['description']}")
             with r_info_c2:
-                if st.button(f"Apply '{ro_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ro_{selected_ch_num}"):
-                    ch_blueprint["reading_organizer"] = ro_choice
-                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                    st.success(f"Saved! '{ro_curr['short_name']}' is now set as the active graphic organizer for Chapter {selected_ch_num} in the Packet Co-Designer.")
-                st.caption(f"Applies this structure directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+                if st.button(f"Apply '{ro_curr['short_name']}' to Chapter {gal_model_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_ro_{gal_model_ch_num}_{g2_sec_code}_{ro_choice}"):
+                    g2_ch_bp["reading_organizer"] = ro_choice
+                    save_chapter_blueprint(gal_model_ch_num, g2_ch_bp)
+                    st.success(f"Saved! '{ro_curr['short_name']}' is now set as the active graphic organizer for Chapter {gal_model_ch_num}.")
+                st.caption(f"Applies this structure directly to Chapter {gal_model_ch_num} in the Packet Co-Designer.")
+
+            st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
+            d_ro1, d_ro2, d_ro3 = st.columns([1.2, 1.2, 1.3])
+            with d_ro1:
+                std_ro_bytes = get_docx_bytes(
+                    ro_handout["student_standard_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ro_choice}_Standard",
+                    is_student_handout=True,
+                )
+                st.download_button(
+                    "Download Focused Handout (.docx)",
+                    data=std_ro_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ro_choice}_Standard.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_ro_std_{gal_model_ch_num}_{g2_sec_code}_{ro_choice}",
+                )
+            with d_ro2:
+                scaf_ro_bytes = get_docx_bytes(
+                    ro_handout["student_scaffolded_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ro_choice}_Scaffolded",
+                    is_student_handout=True,
+                )
+                st.download_button(
+                    "Download Scaffolded (.docx)",
+                    data=scaf_ro_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ro_choice}_Scaffolded.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_ro_scaf_{gal_model_ch_num}_{g2_sec_code}_{ro_choice}",
+                )
+            with d_ro3:
+                ex_ro_bytes = get_docx_bytes(
+                    ro_handout["exemplar_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ro_choice}_Exemplar",
+                    is_student_handout=False,
+                    include_top_student_header=False,
+                )
+                st.download_button(
+                    "Download Student Exemplar (.docx)",
+                    data=ex_ro_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{ro_choice}_Exemplar.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_ro_ex_{gal_model_ch_num}_{g2_sec_code}_{ro_choice}",
+                )
 
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             ro_view1, ro_view2 = st.columns(2)
             with ro_view1:
-                st.markdown("##### Printed Student Handout Format")
-                st.markdown(render_preview_handout(ro_choice), unsafe_allow_html=True)
-                if ro_curr.get("scaffolded_md"):
-                    st.markdown(render_preview_scaffold(ro_curr["scaffolded_md"]), unsafe_allow_html=True)
+                st.markdown(f"##### Printed Student Handout (Sec. {g2_sec_code})")
+                st.markdown(format_booklet_for_web(ro_handout["student_standard_md"]), unsafe_allow_html=True)
+                with st.expander("View Generic Template Model"):
+                    st.markdown(render_preview_handout(ro_choice), unsafe_allow_html=True)
+                    if ro_curr.get("scaffolded_md"):
+                        st.markdown(render_preview_scaffold(ro_curr["scaffolded_md"]), unsafe_allow_html=True)
 
             with ro_view2:
-                st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
-                st.markdown(render_preview_exemplar(ro_choice), unsafe_allow_html=True)
+                st.markdown(f"##### Authentic 8th-Grade Student Exemplar (Sec. {g2_sec_code})")
+                st.markdown(format_booklet_for_web(ro_handout["exemplar_md"]), unsafe_allow_html=True)
+                with st.expander("View Chapter 5 Generic Exemplar"):
+                    st.markdown(render_preview_exemplar(ro_choice), unsafe_allow_html=True)
 
         with gal_tab4:
             st.markdown("#### Booklet Front Cover Pages & Page Footer Check Boxes")
-            st.caption("Inspect how the cumulative front cover study guide and daily footer check boxes look when printed.")
+            st.caption(f"Inspect and download cumulative front cover study guides and page score footers configured for Chapter {gal_model_ch_num:02d}.")
 
             cov_c1, cov_c2 = st.columns(2)
             with cov_c1:
-                st.markdown("##### Booklet Front Cover Options")
+                st.markdown(f"##### Chapter {gal_model_ch_num:02d} Front Cover Options")
                 gal_cov_choice = st.selectbox(
                     "Choose Cover Format to Preview:",
                     options=[c["code"] for c in COVER_PAGE_MODES],
                     format_func=lambda c: get_strategy_by_code(COVER_PAGE_MODES, c)["name"],
-                    key="gal_cov_select_box",
+                    key=f"gal_cov_select_box_{gal_model_ch_num}",
                 )
                 g_cov_item = get_strategy_by_code(COVER_PAGE_MODES, gal_cov_choice)
                 st.markdown(f"**How It Functions:** {g_cov_item['description']}")
                 st.markdown(render_preview_cover(gal_cov_choice), unsafe_allow_html=True)
-                if st.button(f"Apply '{g_cov_item['short_name']}' to Chapter {selected_ch_num}", key="btn_apply_cov"):
-                    ch_blueprint["cover_page_mode"] = gal_cov_choice
-                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                    st.success(f"Saved! '{g_cov_item['short_name']}' is now set as the active cover page for Chapter {selected_ch_num} in the Packet Co-Designer.")
-                st.caption(f"Applies this cover style directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+                if st.button(f"Apply '{g_cov_item['short_name']}' to Chapter {gal_model_ch_num}", key=f"btn_apply_cov_{gal_model_ch_num}_{gal_cov_choice}"):
+                    g2_ch_bp["cover_page_mode"] = gal_cov_choice
+                    save_chapter_blueprint(gal_model_ch_num, g2_ch_bp)
+                    st.success(f"Saved! '{g_cov_item['short_name']}' is now set as the active cover page for Chapter {gal_model_ch_num}.")
+                st.caption(f"Applies this cover style directly to Chapter {gal_model_ch_num} in the Packet Co-Designer.")
 
             with cov_c2:
-                st.markdown("##### Page Footer Check Box Options")
+                st.markdown(f"##### Section {g2_sec_code} Page Footer Check Box")
                 gal_gb_choice = st.selectbox(
                     "Choose Footer Check Box Layout to Preview:",
                     options=[g["code"] for g in GRADE_BOX_MODES],
                     format_func=lambda c: get_strategy_by_code(GRADE_BOX_MODES, c)["name"],
-                    key="gal_gb_select_box",
+                    key=f"gal_gb_select_box_{gal_model_ch_num}",
                 )
                 g_gb_item = get_strategy_by_code(GRADE_BOX_MODES, gal_gb_choice)
                 st.markdown(f"**Grading Use:** {g_gb_item['description']}")
                 st.markdown(render_preview_footer(gal_gb_choice), unsafe_allow_html=True)
-                if st.button(f"Apply '{g_gb_item['short_name']}' to Chapter {selected_ch_num}", key="btn_apply_gb"):
-                    ch_blueprint["grade_box_mode"] = gal_gb_choice
-                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                    st.success(f"Saved! '{g_gb_item['short_name']}' is now set as the active footer layout for Chapter {selected_ch_num} in the Packet Co-Designer.")
-                st.caption(f"Applies this footer layout directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+                if st.button(f"Apply '{g_gb_item['short_name']}' to Chapter {gal_model_ch_num}", key=f"btn_apply_gb_{gal_model_ch_num}_{gal_gb_choice}"):
+                    g2_ch_bp["grade_box_mode"] = gal_gb_choice
+                    save_chapter_blueprint(gal_model_ch_num, g2_ch_bp)
+                    st.success(f"Saved! '{g_gb_item['short_name']}' is now set as the active footer layout for Chapter {gal_model_ch_num}.")
+                st.caption(f"Applies this footer layout directly to Chapter {gal_model_ch_num} in the Packet Co-Designer.")
 
         with gal_tab5:
             st.markdown("#### Optional Writing Extensions (The Writing Revolution)")
@@ -2469,29 +2668,82 @@ elif st.session_state["nav_view"] == "gallery":
 
             twr_active = [t for t in OPTIONAL_TWR_STRATEGIES if t["code"] != "twr_none"]
             twr_choice = st.selectbox(
-                "Select Writing Extension to Explore:",
+                "Select Writing Extension to Explore & Print:",
                 options=[t["code"] for t in twr_active],
                 format_func=lambda c: get_strategy_by_code(twr_active, c)["name"],
-                key="gal_twr_select",
+                key=f"gal_twr_select_{gal_model_ch_num}_{g2_sec_code}",
             )
             twr_curr = get_strategy_by_code(twr_active, twr_choice)
+            twr_handout = build_standalone_strategy_handout(
+                gal_model_sec, "twr", twr_choice, g2_raw_passage_md
+            )
 
             w_info_c1, w_info_c2 = st.columns([1.5, 1.0])
             with w_info_c1:
                 st.markdown(f"**Target Standard:** `CCSS WHST.6-8.2` (Informative Historical Writing)")
                 st.markdown(f"**Writing Objective:** {twr_curr['description']}")
             with w_info_c2:
-                if st.button(f"Apply '{twr_curr['short_name']}' to Chapter {selected_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_twr_{selected_ch_num}"):
-                    ch_blueprint["optional_twr_strategy"] = twr_choice
-                    save_chapter_blueprint(selected_ch_num, ch_blueprint)
-                    st.success(f"Saved! '{twr_curr['short_name']}' is now set as the active writing extension for Chapter {selected_ch_num} in the Packet Co-Designer.")
-                st.caption(f"Applies this writing extension directly to Chapter {selected_ch_num} in Step 2 of the Packet Co-Designer.")
+                if st.button(f"Apply '{twr_curr['short_name']}' to Chapter {gal_model_ch_num} Blueprint", use_container_width=True, key=f"btn_apply_twr_{gal_model_ch_num}_{g2_sec_code}_{twr_choice}"):
+                    g2_ch_bp["optional_twr_strategy"] = twr_choice
+                    save_chapter_blueprint(gal_model_ch_num, g2_ch_bp)
+                    st.success(f"Saved! '{twr_curr['short_name']}' is now set as the active writing extension for Chapter {gal_model_ch_num}.")
+                st.caption(f"Applies this writing extension directly to Chapter {gal_model_ch_num} in the Packet Co-Designer.")
+
+            st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
+            d_twr1, d_twr2, d_twr3 = st.columns([1.2, 1.2, 1.3])
+            with d_twr1:
+                std_twr_bytes = get_docx_bytes(
+                    twr_handout["student_standard_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{twr_choice}_Standard",
+                    is_student_handout=True,
+                )
+                st.download_button(
+                    "Download Focused Handout (.docx)",
+                    data=std_twr_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{twr_choice}_Standard.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_twr_std_{gal_model_ch_num}_{g2_sec_code}_{twr_choice}",
+                )
+            with d_twr2:
+                scaf_twr_bytes = get_docx_bytes(
+                    twr_handout["student_scaffolded_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{twr_choice}_Scaffolded",
+                    is_student_handout=True,
+                )
+                st.download_button(
+                    "Download Scaffolded (.docx)",
+                    data=scaf_twr_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{twr_choice}_Scaffolded.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_twr_scaf_{gal_model_ch_num}_{g2_sec_code}_{twr_choice}",
+                )
+            with d_twr3:
+                ex_twr_bytes = get_docx_bytes(
+                    twr_handout["exemplar_md"],
+                    f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{twr_choice}_Exemplar",
+                    is_student_handout=False,
+                    include_top_student_header=False,
+                )
+                st.download_button(
+                    "Download Student Exemplar (.docx)",
+                    data=ex_twr_bytes,
+                    file_name=f"Chp_{gal_model_ch_num:02d}_Sec_{g2_sec_code}_{twr_choice}_Exemplar.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"dl_twr_ex_{gal_model_ch_num}_{g2_sec_code}_{twr_choice}",
+                )
 
             st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
             twr_view1, twr_view2 = st.columns(2)
             with twr_view1:
-                st.markdown("##### Printed Student Handout Format")
-                st.markdown(render_preview_handout(twr_choice), unsafe_allow_html=True)
+                st.markdown(f"##### Printed Student Handout (Sec. {g2_sec_code})")
+                st.markdown(format_booklet_for_web(twr_handout["student_standard_md"]), unsafe_allow_html=True)
+                with st.expander("View Generic Template Model"):
+                    st.markdown(render_preview_handout(twr_choice), unsafe_allow_html=True)
             with twr_view2:
-                st.markdown("##### Authentic 8th-Grade Student Exemplar (Ch. 5)")
-                st.markdown(render_preview_exemplar(twr_choice), unsafe_allow_html=True)
+                st.markdown(f"##### Authentic 8th-Grade Student Exemplar (Sec. {g2_sec_code})")
+                st.markdown(format_booklet_for_web(twr_handout["exemplar_md"]), unsafe_allow_html=True)
+                with st.expander("View Chapter 5 Generic Exemplar"):
+                    st.markdown(render_preview_exemplar(twr_choice), unsafe_allow_html=True)
