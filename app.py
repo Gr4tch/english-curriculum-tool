@@ -475,6 +475,54 @@ def render_clean_html(html_str: str) -> None:
     st.markdown(clean, unsafe_allow_html=True)
 
 
+def _render_strategy_card_grid(
+    tiles_list: List[Dict[str, Any]],
+    active_code: Optional[str],
+    key_prefix: str,
+    btn_label_selected: str = "Active Layout",
+    btn_label_unselected: str = "Select This Layout",
+) -> None:
+    """Renders a responsive 3-column card grid for strategy worksheet formats."""
+    grid_cols_per_row = 3
+    for row_start in range(0, len(tiles_list), grid_cols_per_row):
+        row_tiles = tiles_list[row_start : row_start + grid_cols_per_row]
+        cols = st.columns(grid_cols_per_row)
+
+        for col_idx, tile in enumerate(row_tiles):
+            with cols[col_idx]:
+                is_sel = (tile["code"] == active_code)
+                border_style = "border: 2.5px solid #1e3a8a; background: #f0f7ff;" if is_sel else "border: 1px solid #cbd5e1; background: #ffffff;"
+                sel_badge_html = '<span style="font-size: 0.72rem; font-weight: 700; color: #1e3a8a;">Active</span>' if is_sel else ''
+                clean_thumb = re.sub(r">\s*\n\s*<", "><", re.sub(r"\n\s*", " ", tile["thumbnail_svg"].strip()))
+
+                card_html = (
+                    f'<div style="{border_style} border-radius: 10px; padding: 0.75rem; margin-bottom: 0.6rem; min-height: 255px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">'
+                    f'<div>'
+                    f'<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">'
+                    f'<span class="badge-pill" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">{tile["category"]}</span>'
+                    f'{sel_badge_html}'
+                    f'</div>'
+                    f'<div style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">{tile["name"]}</div>'
+                    f'<div style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.5rem;">{tile["subtitle"]}</div>'
+                    f'<div style="margin-bottom: 0.5rem;">{clean_thumb}</div>'
+                    f'</div>'
+                    f'<div style="font-size: 0.76rem; color: #334155; margin-top: 0.35rem; line-height: 1.35;"><b>Target:</b> {tile["best_for"]}</div>'
+                    f'</div>'
+                )
+
+                render_clean_html(card_html)
+
+                btn_type = "primary" if (active_code is None or is_sel) else "secondary"
+                if st.button(
+                    btn_label_selected if is_sel else btn_label_unselected,
+                    key=f"btn_tile_{key_prefix}_{tile['code']}",
+                    use_container_width=True,
+                    type=btn_type,
+                ):
+                    st.session_state["gal_active_tile_code"] = tile["code"]
+                    st.rerun()
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # CLOUD SECRETS & PASSCODE AUTHENTICATION GATE
 # ─────────────────────────────────────────────────────────────────────────────
@@ -713,6 +761,7 @@ if st.session_state["nav_view"] == "home":
         )
         if st.button("Open Worksheet Gallery ->", use_container_width=True, key="btn_hero_gallery", type="primary"):
             st.session_state["nav_view"] = "gallery"
+            st.session_state["gal_active_tile_code"] = None
             st.rerun()
 
 
@@ -1239,6 +1288,7 @@ elif st.session_state["nav_view"] == "gallery":
     with b_col1:
         if st.button("<- Return to Main Menu", use_container_width=True, key="btn_back_gallery"):
             st.session_state["nav_view"] = "home"
+            st.session_state["gal_active_tile_code"] = None
             st.rerun()
     with b_col2:
         render_clean_html(
@@ -1309,236 +1359,260 @@ elif st.session_state["nav_view"] == "gallery":
         """
     )
 
-    # ── Step 2: All-in-One Visual Strategy Grid ──
-    st.markdown("#### Step 2: All-in-One Visual Strategy Grid — Choose a Worksheet Layout")
-    st.caption("Select any template card below to generate a focused 1-page worksheet and authentic student exemplar grounded in this section:")
+    active_tile_code = st.session_state.get("gal_active_tile_code", None)
 
-    category_filter = st.radio(
-        "Filter by Pedagogical Category:",
-        options=[
-            "All Strategies (18)",
-            "Central Idea (4)",
-            "Anti-Copycat (3)",
-            "Active Reading (5)",
-            "The Writing Revolution (4)",
-            "Vocabulary & Assessment (2)",
-        ],
-        horizontal=True,
-        key="gal_cat_filter_radio",
-    )
+    if not active_tile_code:
+        # ── Step 2: All-in-One Visual Strategy Grid (Open Browsing Mode) ──
+        st.markdown("#### Step 2: All-in-One Visual Strategy Grid — Choose a Worksheet Layout")
+        st.caption("Select any template card below to generate a focused 1-page worksheet and authentic student exemplar grounded in this section:")
 
-    if "All" in category_filter:
-        filtered_tiles = ALL_STRATEGY_TILES
-    elif "Central Idea" in category_filter:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Central Idea"]
-    elif "Anti-Copycat" in category_filter:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Anti-Copycat"]
-    elif "Active Reading" in category_filter:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Active Reading"]
-    elif "Writing Revolution" in category_filter:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["The Writing Revolution", "Writing (TWR)"]]
-    else:
-        filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["Vocabulary", "Assessment"]]
-
-    if "gal_prev_cat_filter" not in st.session_state:
-        st.session_state["gal_prev_cat_filter"] = category_filter
-
-    if "gal_active_tile_code" not in st.session_state:
-        st.session_state["gal_active_tile_code"] = "ci_01_subheading_gist"
-
-    active_tile_code = st.session_state["gal_active_tile_code"]
-
-    # When teacher switches categories, smoothly switch active strategy if current one is outside this category
-    if st.session_state["gal_prev_cat_filter"] != category_filter:
-        st.session_state["gal_prev_cat_filter"] = category_filter
-        if filtered_tiles and active_tile_code not in [t["code"] for t in filtered_tiles]:
-            st.session_state["gal_active_tile_code"] = filtered_tiles[0]["code"]
-            active_tile_code = filtered_tiles[0]["code"]
-
-    # Render responsive 3-column visual card grid
-    grid_cols_per_row = 3
-    for row_start in range(0, len(filtered_tiles), grid_cols_per_row):
-        row_tiles = filtered_tiles[row_start : row_start + grid_cols_per_row]
-        cols = st.columns(grid_cols_per_row)
-
-        for col_idx, tile in enumerate(row_tiles):
-            with cols[col_idx]:
-                is_sel = (tile["code"] == active_tile_code)
-                border_style = "border: 2.5px solid #1e3a8a; background: #f0f7ff;" if is_sel else "border: 1px solid #cbd5e1; background: #ffffff;"
-                sel_badge_html = '<span style="font-size: 0.72rem; font-weight: 700; color: #1e3a8a;">Selected</span>' if is_sel else ''
-                clean_thumb = re.sub(r">\s*\n\s*<", "><", re.sub(r"\n\s*", " ", tile["thumbnail_svg"].strip()))
-
-                card_html = (
-                    f'<div style="{border_style} border-radius: 10px; padding: 0.75rem; margin-bottom: 0.6rem; min-height: 255px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">'
-                    f'<div>'
-                    f'<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">'
-                    f'<span class="badge-pill" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">{tile["category"]}</span>'
-                    f'{sel_badge_html}'
-                    f'</div>'
-                    f'<div style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">{tile["name"]}</div>'
-                    f'<div style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.5rem;">{tile["subtitle"]}</div>'
-                    f'<div style="margin-bottom: 0.5rem;">{clean_thumb}</div>'
-                    f'</div>'
-                    f'<div style="font-size: 0.76rem; color: #334155; margin-top: 0.35rem; line-height: 1.35;"><b>Target:</b> {tile["best_for"]}</div>'
-                    f'</div>'
-                )
-
-                render_clean_html(card_html)
-
-                if st.button(
-                    "Selected Layout" if is_sel else "Select This Layout",
-                    key=f"btn_tile_{tile['code']}",
-                    use_container_width=True,
-                    type="primary" if is_sel else "secondary",
-                ):
-                    st.session_state["gal_active_tile_code"] = tile["code"]
-                    st.rerun()
-
-    # ── Step 3: Worksheet Settings & Live Side-by-Side Review ──
-    active_tile = get_tile_by_code(active_tile_code) or ALL_STRATEGY_TILES[0]
-    cat_lookup = {
-        "Central Idea": "central_idea",
-        "Anti-Copycat": "anti_copycat",
-        "Active Reading": "reading_organizer",
-        "The Writing Revolution": "twr",
-        "Writing (TWR)": "twr",
-        "Vocabulary": "vocab",
-        "Assessment": "assessment",
-    }
-    active_cat_key = cat_lookup.get(active_tile["category"], "central_idea")
-
-    st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
-    st.markdown(f"#### Step 3: Live Preview & Export — {active_tile['name']}")
-
-    ws_opt_c1, ws_opt_c2 = st.columns([1.5, 2.5])
-    with ws_opt_c1:
-        is_scaf_ws = st.checkbox(
-            "Generate Scaffolded Support Edition (sentence stems, word banks)",
-            value=st.session_state.get("gal_scaf_toggle", False),
-            key="gal_scaf_toggle",
+        category_filter = st.radio(
+            "Filter by Pedagogical Category:",
+            options=[
+                "All Strategies (18)",
+                "Central Idea (4)",
+                "Anti-Copycat (3)",
+                "Active Reading (5)",
+                "The Writing Revolution (4)",
+                "Vocabulary & Assessment (2)",
+            ],
+            horizontal=True,
+            key="gal_cat_filter_radio",
         )
 
-    # Build focused handout
-    handout_data = build_standalone_strategy_handout(
-        section_meta=gal_selected_sec,
-        strategy_category=active_cat_key,
-        strategy_code=active_tile_code,
-        markdown_text=gal_raw_md,
-        is_scaffolded=is_scaf_ws,
-    )
+        if "All" in category_filter:
+            filtered_tiles = ALL_STRATEGY_TILES
+        elif "Central Idea" in category_filter:
+            filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Central Idea"]
+        elif "Anti-Copycat" in category_filter:
+            filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Anti-Copycat"]
+        elif "Active Reading" in category_filter:
+            filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Active Reading"]
+        elif "Writing Revolution" in category_filter:
+            filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["The Writing Revolution", "Writing (TWR)"]]
+        else:
+            filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["Vocabulary", "Assessment"]]
 
-    std_md = handout_data["student_standard_md"]
-    scaf_md = handout_data["student_scaffolded_md"]
-    ex_md = handout_data["exemplar_md"]
+        _render_strategy_card_grid(
+            tiles_list=filtered_tiles,
+            active_code=None,
+            key_prefix="open",
+            btn_label_selected="Select This Layout",
+            btn_label_unselected="Select This Layout",
+        )
 
-    active_student_md = scaf_md if is_scaf_ws else std_md
-    student_html = format_booklet_for_web(active_student_md)
-    teacher_html = format_booklet_for_web(ex_md)
+        st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+        st.info("Select any template card above to generate and preview your 1-page student worksheet, exemplar key, and PDF downloads.")
 
-    try:
-        student_pdf_bytes = compile_pdf_cached(student_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student")
-        teacher_pdf_bytes = compile_pdf_cached(teacher_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar")
-        single_bundle_zip = create_pdf_bundle_zip({
-            f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf": student_pdf_bytes,
-            f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf": teacher_pdf_bytes,
-        })
-    except Exception as pdf_err:
-        logger.warning(f"Could not compile standalone worksheet PDFs: {pdf_err}")
-        student_pdf_bytes = b""
-        teacher_pdf_bytes = b""
-        single_bundle_zip = b""
-
-    # Download & Google Drive Action Bar
-    if student_pdf_bytes and teacher_pdf_bytes and single_bundle_zip:
-        w_dl1, w_dl2, w_dl3, w_dl4 = st.columns([1.3, 1.3, 1.3, 1.6])
-        with w_dl1:
-            st.download_button(
-                "Download Student PDF",
-                data=student_pdf_bytes,
-                file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
-                mime="application/pdf",
-                type="primary",
-                use_container_width=True,
-            )
-        with w_dl2:
-            st.download_button(
-                "Download Exemplar PDF",
-                data=teacher_pdf_bytes,
-                file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar.pdf",
-                mime="application/pdf",
-                use_container_width=True,
-            )
-        with w_dl3:
-            st.download_button(
-                "Download Both (.zip)",
-                data=single_bundle_zip,
-                file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Bundle.zip",
-                mime="application/zip",
-                use_container_width=True,
-            )
-        with w_dl4:
-            if st.button("Save to Google Drive (PDFs)", use_container_width=True, key="btn_gdrive_gallery"):
-                with st.spinner("Uploading worksheet & exemplar to Google Drive..."):
-                    try:
-                        drive_service = get_gdrive_service()
-                        if not drive_service:
-                            st.error("Google Drive API service could not be initialized.")
-                        else:
-                            ch_title = chapters_map[gal_ch_num]["chapter_title"]
-                            target_f_id, target_f_path, _ = get_target_section_folder(
-                                drive_service,
-                                chapter_num=gal_ch_num,
-                                chapter_title=ch_title,
-                                section_code=gal_sec_code,
-                                section_title=gal_selected_sec["title"],
-                            )
-                            upload_res = upload_packet_bundle_to_google_drive(
-                                service=drive_service,
-                                student_pdf_bytes=student_pdf_bytes,
-                                student_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
-                                teacher_pdf_bytes=teacher_pdf_bytes,
-                                teacher_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf",
-                                parent_folder_id=target_f_id,
-                                folder_path_display=target_f_path,
-                            )
-                            s_link = upload_res["student"]["link"]
-                            t_link = upload_res["teacher"]["link"]
-                            st.success(
-                                f"**Saved to Google Drive!**\n\n"
-                                f"- Destination: `{target_f_path}`\n"
-                                f"- Student Handout: [View PDF in Drive]({s_link})\n"
-                                f"- Teacher Answer Key: [View PDF in Drive]({t_link})"
-                            )
-                    except Exception as ex:
-                        logger.error(f"Google Drive upload error: {ex}", exc_info=True)
-                        st.error(f"Google Drive synchronization encountered an issue: {ex}")
     else:
-        st.info("PDF compilation is initializing. You can review the complete interactive previews below immediately or print directly via your browser (Ctrl+P / Cmd+P).")
+        # ── Strategy Selected: Minimized Gallery Bar + Immediate Full-Sized Preview ──
+        active_tile = get_tile_by_code(active_tile_code) or ALL_STRATEGY_TILES[0]
 
-    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        # Minimized Strategy Header Bar
+        bar_col1, bar_col2 = st.columns([3.2, 1.2])
+        with bar_col1:
+            render_clean_html(
+                f"""
+                <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 0.65rem 1rem; margin-bottom: 0.35rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem;">
+                        <div>
+                            <span style="font-size: 0.72rem; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.05em;">Active Worksheet Layout</span>
+                            <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">{active_tile['name']}</div>
+                        </div>
+                        <span class="badge-pill" style="font-size: 0.8rem; padding: 0.2rem 0.65rem; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;">{active_tile['category']}</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: #334155; margin-top: 0.25rem;">
+                        <b>Focus:</b> {active_tile['subtitle']} &bull; <i>{active_tile['best_for']}</i>
+                    </div>
+                </div>
+                """
+            )
+        with bar_col2:
+            if st.button("Browse All Strategies", use_container_width=True, key="btn_clear_active_tile"):
+                st.session_state["gal_active_tile_code"] = None
+                st.rerun()
 
-    # Preview Tabs
-    ws_tab1, ws_tab2, ws_tab3 = st.tabs([
-        f"Student Handout Preview ({'Scaffolded' if is_scaf_ws else 'Standard'})",
-        "Teacher Answer Key & Student Exemplar",
-        "Textbook Source Passage Grounding",
-    ])
+        # Minimized Expander for Quick Layout Switching
+        with st.expander(f"Change Worksheet Layout (Currently: {active_tile['name']})", expanded=False):
+            min_cat_filter = st.radio(
+                "Filter by Pedagogical Category:",
+                options=[
+                    "All Strategies (18)",
+                    "Central Idea (4)",
+                    "Anti-Copycat (3)",
+                    "Active Reading (5)",
+                    "The Writing Revolution (4)",
+                    "Vocabulary & Assessment (2)",
+                ],
+                horizontal=True,
+                key="gal_cat_filter_radio_min",
+            )
 
-    with ws_tab1:
-        st.markdown(student_html, unsafe_allow_html=True)
-        if not is_scaf_ws:
-            with st.expander("Compare with Scaffolded Support Edition"):
-                st.markdown(format_booklet_for_web(scaf_md), unsafe_allow_html=True)
+            if "All" in min_cat_filter:
+                min_filtered = ALL_STRATEGY_TILES
+            elif "Central Idea" in min_cat_filter:
+                min_filtered = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Central Idea"]
+            elif "Anti-Copycat" in min_cat_filter:
+                min_filtered = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Anti-Copycat"]
+            elif "Active Reading" in min_cat_filter:
+                min_filtered = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Active Reading"]
+            elif "Writing Revolution" in min_cat_filter:
+                min_filtered = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["The Writing Revolution", "Writing (TWR)"]]
+            else:
+                min_filtered = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["Vocabulary", "Assessment"]]
+
+            _render_strategy_card_grid(
+                tiles_list=min_filtered,
+                active_code=active_tile_code,
+                key_prefix="min",
+                btn_label_selected="Active Layout",
+                btn_label_unselected="Switch to This Layout",
+            )
+
+        # ── Step 3: Full-Sized Preview & Export ──
+        cat_lookup = {
+            "Central Idea": "central_idea",
+            "Anti-Copycat": "anti_copycat",
+            "Active Reading": "reading_organizer",
+            "The Writing Revolution": "twr",
+            "Writing (TWR)": "twr",
+            "Vocabulary": "vocab",
+            "Assessment": "assessment",
+        }
+        active_cat_key = cat_lookup.get(active_tile["category"], "central_idea")
+
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        st.markdown(f"#### Step 2: Live Preview & Export — {active_tile['name']}")
+
+        ws_opt_c1, ws_opt_c2 = st.columns([1.5, 2.5])
+        with ws_opt_c1:
+            is_scaf_ws = st.checkbox(
+                "Generate Scaffolded Support Edition (sentence stems, word banks)",
+                value=st.session_state.get("gal_scaf_toggle", False),
+                key="gal_scaf_toggle",
+            )
+
+        # Build focused handout
+        handout_data = build_standalone_strategy_handout(
+            section_meta=gal_selected_sec,
+            strategy_category=active_cat_key,
+            strategy_code=active_tile_code,
+            markdown_text=gal_raw_md,
+            is_scaffolded=is_scaf_ws,
+        )
+
+        std_md = handout_data["student_standard_md"]
+        scaf_md = handout_data["student_scaffolded_md"]
+        ex_md = handout_data["exemplar_md"]
+
+        active_student_md = scaf_md if is_scaf_ws else std_md
+        student_html = format_booklet_for_web(active_student_md)
+        teacher_html = format_booklet_for_web(ex_md)
+
+        try:
+            student_pdf_bytes = compile_pdf_cached(student_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student")
+            teacher_pdf_bytes = compile_pdf_cached(teacher_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar")
+            single_bundle_zip = create_pdf_bundle_zip({
+                f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf": student_pdf_bytes,
+                f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf": teacher_pdf_bytes,
+            })
+        except Exception as pdf_err:
+            logger.warning(f"Could not compile standalone worksheet PDFs: {pdf_err}")
+            student_pdf_bytes = b""
+            teacher_pdf_bytes = b""
+            single_bundle_zip = b""
+
+        # Download & Google Drive Action Bar
+        if student_pdf_bytes and teacher_pdf_bytes and single_bundle_zip:
+            w_dl1, w_dl2, w_dl3, w_dl4 = st.columns([1.3, 1.3, 1.3, 1.6])
+            with w_dl1:
+                st.download_button(
+                    "Download Student PDF",
+                    data=student_pdf_bytes,
+                    file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
+                    mime="application/pdf",
+                    type="primary",
+                    use_container_width=True,
+                )
+            with w_dl2:
+                st.download_button(
+                    "Download Exemplar PDF",
+                    data=teacher_pdf_bytes,
+                    file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar.pdf",
+                    mime="application/pdf",
+                    use_container_width=True,
+                )
+            with w_dl3:
+                st.download_button(
+                    "Download Both (.zip)",
+                    data=single_bundle_zip,
+                    file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Bundle.zip",
+                    mime="application/zip",
+                    use_container_width=True,
+                )
+            with w_dl4:
+                if st.button("Save to Google Drive (PDFs)", use_container_width=True, key="btn_gdrive_gallery"):
+                    with st.spinner("Uploading worksheet & exemplar to Google Drive..."):
+                        try:
+                            drive_service = get_gdrive_service()
+                            if not drive_service:
+                                st.error("Google Drive API service could not be initialized.")
+                            else:
+                                ch_title = chapters_map[gal_ch_num]["chapter_title"]
+                                target_f_id, target_f_path, _ = get_target_section_folder(
+                                    drive_service,
+                                    chapter_num=gal_ch_num,
+                                    chapter_title=ch_title,
+                                    section_code=gal_sec_code,
+                                    section_title=gal_selected_sec["title"],
+                                )
+                                upload_res = upload_packet_bundle_to_google_drive(
+                                    service=drive_service,
+                                    student_pdf_bytes=student_pdf_bytes,
+                                    student_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
+                                    teacher_pdf_bytes=teacher_pdf_bytes,
+                                    teacher_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf",
+                                    parent_folder_id=target_f_id,
+                                    folder_path_display=target_f_path,
+                                )
+                                s_link = upload_res["student"]["link"]
+                                t_link = upload_res["teacher"]["link"]
+                                st.success(
+                                    f"**Saved to Google Drive!**\n\n"
+                                    f"- Destination: `{target_f_path}`\n"
+                                    f"- Student Handout: [View PDF in Drive]({s_link})\n"
+                                    f"- Teacher Answer Key: [View PDF in Drive]({t_link})"
+                                )
+                        except Exception as ex:
+                            logger.error(f"Google Drive upload error: {ex}", exc_info=True)
+                            st.error(f"Google Drive synchronization encountered an issue: {ex}")
         else:
-            with st.expander("Compare with Standard Edition"):
-                st.markdown(format_booklet_for_web(std_md), unsafe_allow_html=True)
+            st.info("PDF compilation is initializing. You can review the complete interactive previews below immediately or print directly via your browser (Ctrl+P / Cmd+P).")
 
-    with ws_tab2:
-        st.markdown(teacher_html, unsafe_allow_html=True)
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 
-    with ws_tab3:
-        if gal_raw_md:
-            with st.container(height=520):
-                st.markdown(gal_raw_md)
-        else:
-            st.warning("Textbook passage markdown file could not be loaded.")
+        # Preview Tabs
+        ws_tab1, ws_tab2, ws_tab3 = st.tabs([
+            f"Student Handout Preview ({'Scaffolded' if is_scaf_ws else 'Standard'})",
+            "Teacher Answer Key & Student Exemplar",
+            "Textbook Source Passage Grounding",
+        ])
+
+        with ws_tab1:
+            st.markdown(student_html, unsafe_allow_html=True)
+            if not is_scaf_ws:
+                with st.expander("Compare with Scaffolded Support Edition"):
+                    st.markdown(format_booklet_for_web(scaf_md), unsafe_allow_html=True)
+            else:
+                with st.expander("Compare with Standard Edition"):
+                    st.markdown(format_booklet_for_web(std_md), unsafe_allow_html=True)
+
+        with ws_tab2:
+            st.markdown(teacher_html, unsafe_allow_html=True)
+
+        with ws_tab3:
+            if gal_raw_md:
+                with st.container(height=520):
+                    st.markdown(gal_raw_md)
+            else:
+                st.warning("Textbook passage markdown file could not be loaded.")
