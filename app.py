@@ -486,6 +486,27 @@ except Exception:
     pass
 
 
+@st.cache_resource(show_spinner=False)
+def ensure_playwright_ready():
+    """Installs Playwright Chromium browser binaries on cloud startup."""
+    import subprocess
+    import sys
+    try:
+        subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=False)
+    except Exception as e:
+        logger.info(f"Playwright cloud startup check: {e}")
+    return True
+
+
+ensure_playwright_ready()
+
+
+@st.cache_data(show_spinner=False)
+def compile_pdf_cached(html_content: str, title: str) -> bytes:
+    """Caches compiled vector PDF bytes by HTML content hash to maximize performance and avoid redundant renders."""
+    return html_to_pdf_bytes(html_content, title=title)
+
+
 def verify_access() -> bool:
     """Passcode protection gate for secure multi-user and cloud access."""
     if st.session_state.get("authenticated", False):
@@ -1104,89 +1125,92 @@ elif st.session_state["nav_view"] == "packet":
     st.markdown("#### Step 3: Print, Download & Google Drive Export")
     st.caption("Download letter-size vector PDFs or synchronize both copies directly to Google Drive:")
 
-    dl_c1, dl_c2, dl_c3, dl_c4 = st.columns([1.5, 1.2, 1.2, 1.6])
+    if student_pdf and teacher_pdf and bundle_zip:
+        dl_c1, dl_c2, dl_c3, dl_c4 = st.columns([1.5, 1.2, 1.2, 1.6])
 
-    with dl_c1:
-        st.download_button(
-            "Download Complete Bundle (.zip)",
-            data=bundle_zip,
-            file_name=f"{base_name}_Complete_Bundle.zip",
-            mime="application/zip",
-            type="primary",
-            use_container_width=True,
-            help="Contains both the Student Packet PDF and the matching Teacher Answer Key PDF in a single file.",
-        )
+        with dl_c1:
+            st.download_button(
+                "Download Complete Bundle (.zip)",
+                data=bundle_zip,
+                file_name=f"{base_name}_Complete_Bundle.zip",
+                mime="application/zip",
+                type="primary",
+                use_container_width=True,
+                help="Contains both the Student Packet PDF and the matching Teacher Answer Key PDF in a single file.",
+            )
 
-    with dl_c2:
-        st.download_button(
-            "Download Student PDF",
-            data=student_pdf,
-            file_name=f"{base_name}_Student.pdf",
-            mime="application/pdf",
-            use_container_width=True,
-        )
+        with dl_c2:
+            st.download_button(
+                "Download Student PDF",
+                data=student_pdf,
+                file_name=f"{base_name}_Student.pdf",
+                mime="application/pdf",
+                use_container_width=True,
+            )
 
-    with dl_c3:
-        st.download_button(
-            "Download Teacher Key PDF",
-            data=teacher_pdf,
-            file_name=f"{base_name}_Teacher_Key.pdf",
-            mime="application/pdf",
-            use_container_width=True,
-        )
+        with dl_c3:
+            st.download_button(
+                "Download Teacher Key PDF",
+                data=teacher_pdf,
+                file_name=f"{base_name}_Teacher_Key.pdf",
+                mime="application/pdf",
+                use_container_width=True,
+            )
 
-    with dl_c4:
-        if st.button("Save Both to Google Drive (PDFs)", use_container_width=True, key="btn_gdrive_packet"):
-            with st.spinner("Connecting to Google Drive and uploading packet bundle..."):
-                try:
-                    drive_service = get_gdrive_service()
-                    if not drive_service:
-                        st.error("Google Drive API service could not be initialized. Please check credentials or token.")
-                    else:
-                        is_single = modular_result["is_single_section"]
-                        p_ch_num = modular_result["primary_chapter_num"]
-                        p_ch_title = modular_result["primary_chapter_title"]
-                        p_sec_code = modular_result["primary_section_code"]
-                        p_sec_title = modular_result["primary_section_title"]
-
-                        if is_single:
-                            target_f_id, target_f_path, _ = get_target_section_folder(
-                                drive_service,
-                                chapter_num=p_ch_num,
-                                chapter_title=p_ch_title,
-                                section_code=p_sec_code,
-                                section_title=p_sec_title,
-                            )
-                        elif len(set(p["section_meta"].get("chapter_num") for p in tray_pages)) == 1:
-                            target_f_id, target_f_path, _ = get_target_multi_section_folder(
-                                drive_service,
-                                chapter_num=p_ch_num,
-                                chapter_title=p_ch_title,
-                            )
+        with dl_c4:
+            if st.button("Save Both to Google Drive (PDFs)", use_container_width=True, key="btn_gdrive_packet"):
+                with st.spinner("Connecting to Google Drive and uploading packet bundle..."):
+                    try:
+                        drive_service = get_gdrive_service()
+                        if not drive_service:
+                            st.error("Google Drive API service could not be initialized. Please check credentials or token.")
                         else:
-                            target_f_id, target_f_path, _ = get_target_custom_units_folder(drive_service)
+                            is_single = modular_result["is_single_section"]
+                            p_ch_num = modular_result["primary_chapter_num"]
+                            p_ch_title = modular_result["primary_chapter_title"]
+                            p_sec_code = modular_result["primary_section_code"]
+                            p_sec_title = modular_result["primary_section_title"]
 
-                        upload_res = upload_packet_bundle_to_google_drive(
-                            service=drive_service,
-                            student_pdf_bytes=student_pdf,
-                            student_filename=f"{base_name}_Student.pdf",
-                            teacher_pdf_bytes=teacher_pdf,
-                            teacher_filename=f"{base_name}_Teacher_Answer_Key.pdf",
-                            parent_folder_id=target_f_id,
-                            folder_path_display=target_f_path,
-                        )
+                            if is_single:
+                                target_f_id, target_f_path, _ = get_target_section_folder(
+                                    drive_service,
+                                    chapter_num=p_ch_num,
+                                    chapter_title=p_ch_title,
+                                    section_code=p_sec_code,
+                                    section_title=p_sec_title,
+                                )
+                            elif len(set(p["section_meta"].get("chapter_num") for p in tray_pages)) == 1:
+                                target_f_id, target_f_path, _ = get_target_multi_section_folder(
+                                    drive_service,
+                                    chapter_num=p_ch_num,
+                                    chapter_title=p_ch_title,
+                                )
+                            else:
+                                target_f_id, target_f_path, _ = get_target_custom_units_folder(drive_service)
 
-                        s_link = upload_res["student"]["link"]
-                        t_link = upload_res["teacher"]["link"]
-                        st.success(
-                            f"**Uploaded successfully to Google Drive!**\n\n"
-                            f"- Destination Folder: `{target_f_path}`\n"
-                            f"- Student Packet: [View PDF in Google Drive]({s_link})\n"
-                            f"- Teacher Answer Key: [View PDF in Google Drive]({t_link})"
-                        )
-                except Exception as ex:
-                    logger.error(f"Google Drive upload error: {ex}", exc_info=True)
-                    st.error(f"Google Drive synchronization encountered an issue: {ex}")
+                            upload_res = upload_packet_bundle_to_google_drive(
+                                service=drive_service,
+                                student_pdf_bytes=student_pdf,
+                                student_filename=f"{base_name}_Student.pdf",
+                                teacher_pdf_bytes=teacher_pdf,
+                                teacher_filename=f"{base_name}_Teacher_Answer_Key.pdf",
+                                parent_folder_id=target_f_id,
+                                folder_path_display=target_f_path,
+                            )
+
+                            s_link = upload_res["student"]["link"]
+                            t_link = upload_res["teacher"]["link"]
+                            st.success(
+                                f"**Uploaded successfully to Google Drive!**\n\n"
+                                f"- Destination Folder: `{target_f_path}`\n"
+                                f"- Student Packet: [View PDF in Google Drive]({s_link})\n"
+                                f"- Teacher Answer Key: [View PDF in Google Drive]({t_link})"
+                            )
+                    except Exception as ex:
+                        logger.error(f"Google Drive upload error: {ex}", exc_info=True)
+                        st.error(f"Google Drive synchronization encountered an issue: {ex}")
+    else:
+        st.info("PDF compilation is initializing. You can review the complete interactive previews below immediately or print directly via your browser (Ctrl+P / Cmd+P).")
 
     # ── Step 6: Live Multi-Page Preview ──
     st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
@@ -1400,77 +1424,85 @@ elif st.session_state["nav_view"] == "gallery":
     student_html = format_booklet_for_web(active_student_md)
     teacher_html = format_booklet_for_web(ex_md)
 
-    student_pdf_bytes = html_to_pdf_bytes(student_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student")
-    teacher_pdf_bytes = html_to_pdf_bytes(teacher_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar")
-
-    single_bundle_zip = create_pdf_bundle_zip({
-        f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf": student_pdf_bytes,
-        f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf": teacher_pdf_bytes,
-    })
+    try:
+        student_pdf_bytes = compile_pdf_cached(student_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student")
+        teacher_pdf_bytes = compile_pdf_cached(teacher_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar")
+        single_bundle_zip = create_pdf_bundle_zip({
+            f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf": student_pdf_bytes,
+            f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf": teacher_pdf_bytes,
+        })
+    except Exception as pdf_err:
+        logger.warning(f"Could not compile standalone worksheet PDFs: {pdf_err}")
+        student_pdf_bytes = b""
+        teacher_pdf_bytes = b""
+        single_bundle_zip = b""
 
     # Download & Google Drive Action Bar
-    w_dl1, w_dl2, w_dl3, w_dl4 = st.columns([1.3, 1.3, 1.3, 1.6])
-    with w_dl1:
-        st.download_button(
-            "Download Student PDF",
-            data=student_pdf_bytes,
-            file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
-            mime="application/pdf",
-            type="primary",
-            use_container_width=True,
-        )
-    with w_dl2:
-        st.download_button(
-            "Download Exemplar PDF",
-            data=teacher_pdf_bytes,
-            file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar.pdf",
-            mime="application/pdf",
-            use_container_width=True,
-        )
-    with w_dl3:
-        st.download_button(
-            "Download Both (.zip)",
-            data=single_bundle_zip,
-            file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Bundle.zip",
-            mime="application/zip",
-            use_container_width=True,
-        )
-    with w_dl4:
-        if st.button("Save to Google Drive (PDFs)", use_container_width=True, key="btn_gdrive_gallery"):
-            with st.spinner("Uploading worksheet & exemplar to Google Drive..."):
-                try:
-                    drive_service = get_gdrive_service()
-                    if not drive_service:
-                        st.error("Google Drive API service could not be initialized.")
-                    else:
-                        ch_title = chapters_map[gal_ch_num]["chapter_title"]
-                        target_f_id, target_f_path, _ = get_target_section_folder(
-                            drive_service,
-                            chapter_num=gal_ch_num,
-                            chapter_title=ch_title,
-                            section_code=gal_sec_code,
-                            section_title=gal_selected_sec["title"],
-                        )
-                        upload_res = upload_packet_bundle_to_google_drive(
-                            service=drive_service,
-                            student_pdf_bytes=student_pdf_bytes,
-                            student_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
-                            teacher_pdf_bytes=teacher_pdf_bytes,
-                            teacher_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf",
-                            parent_folder_id=target_f_id,
-                            folder_path_display=target_f_path,
-                        )
-                        s_link = upload_res["student"]["link"]
-                        t_link = upload_res["teacher"]["link"]
-                        st.success(
-                            f"**Saved to Google Drive!**\n\n"
-                            f"- Destination: `{target_f_path}`\n"
-                            f"- Student Handout: [View PDF in Drive]({s_link})\n"
-                            f"- Teacher Answer Key: [View PDF in Drive]({t_link})"
-                        )
-                except Exception as ex:
-                    logger.error(f"Google Drive upload error: {ex}", exc_info=True)
-                    st.error(f"Google Drive synchronization encountered an issue: {ex}")
+    if student_pdf_bytes and teacher_pdf_bytes and single_bundle_zip:
+        w_dl1, w_dl2, w_dl3, w_dl4 = st.columns([1.3, 1.3, 1.3, 1.6])
+        with w_dl1:
+            st.download_button(
+                "Download Student PDF",
+                data=student_pdf_bytes,
+                file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
+                mime="application/pdf",
+                type="primary",
+                use_container_width=True,
+            )
+        with w_dl2:
+            st.download_button(
+                "Download Exemplar PDF",
+                data=teacher_pdf_bytes,
+                file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar.pdf",
+                mime="application/pdf",
+                use_container_width=True,
+            )
+        with w_dl3:
+            st.download_button(
+                "Download Both (.zip)",
+                data=single_bundle_zip,
+                file_name=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Bundle.zip",
+                mime="application/zip",
+                use_container_width=True,
+            )
+        with w_dl4:
+            if st.button("Save to Google Drive (PDFs)", use_container_width=True, key="btn_gdrive_gallery"):
+                with st.spinner("Uploading worksheet & exemplar to Google Drive..."):
+                    try:
+                        drive_service = get_gdrive_service()
+                        if not drive_service:
+                            st.error("Google Drive API service could not be initialized.")
+                        else:
+                            ch_title = chapters_map[gal_ch_num]["chapter_title"]
+                            target_f_id, target_f_path, _ = get_target_section_folder(
+                                drive_service,
+                                chapter_num=gal_ch_num,
+                                chapter_title=ch_title,
+                                section_code=gal_sec_code,
+                                section_title=gal_selected_sec["title"],
+                            )
+                            upload_res = upload_packet_bundle_to_google_drive(
+                                service=drive_service,
+                                student_pdf_bytes=student_pdf_bytes,
+                                student_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student.pdf",
+                                teacher_pdf_bytes=teacher_pdf_bytes,
+                                teacher_filename=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Teacher_Key.pdf",
+                                parent_folder_id=target_f_id,
+                                folder_path_display=target_f_path,
+                            )
+                            s_link = upload_res["student"]["link"]
+                            t_link = upload_res["teacher"]["link"]
+                            st.success(
+                                f"**Saved to Google Drive!**\n\n"
+                                f"- Destination: `{target_f_path}`\n"
+                                f"- Student Handout: [View PDF in Drive]({s_link})\n"
+                                f"- Teacher Answer Key: [View PDF in Drive]({t_link})"
+                            )
+                    except Exception as ex:
+                        logger.error(f"Google Drive upload error: {ex}", exc_info=True)
+                        st.error(f"Google Drive synchronization encountered an issue: {ex}")
+    else:
+        st.info("PDF compilation is initializing. You can review the complete interactive previews below immediately or print directly via your browser (Ctrl+P / Cmd+P).")
 
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 

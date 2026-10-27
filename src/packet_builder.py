@@ -1628,7 +1628,12 @@ def build_custom_modular_packet(
     if not pages_config:
         empty_md = "## Empty Packet\n\nNo pages currently in packet. Add a page to begin."
         empty_html = format_booklet_for_web(empty_md)
-        empty_pdf = html_to_pdf_bytes(empty_html, "Empty Packet")
+        try:
+            empty_pdf = html_to_pdf_bytes(empty_html, "Empty Packet")
+            empty_zip = create_pdf_bundle_zip({"Student_Packet.pdf": empty_pdf})
+        except Exception:
+            empty_pdf = b""
+            empty_zip = b""
         return {
             "student_packet_md": empty_md,
             "student_packet_html": empty_html,
@@ -1636,7 +1641,7 @@ def build_custom_modular_packet(
             "teacher_key_html": empty_html,
             "student_pdf_bytes": empty_pdf,
             "teacher_pdf_bytes": empty_pdf,
-            "bundle_zip_bytes": create_pdf_bundle_zip({"Student_Packet.pdf": empty_pdf}),
+            "bundle_zip_bytes": empty_zip,
             "total_pages": 0,
             "base_filename": "Empty_Packet",
             "is_single_section": True,
@@ -1701,13 +1706,18 @@ def build_custom_modular_packet(
     full_student_html = format_booklet_for_web(full_student_md)
     full_teacher_html = format_booklet_for_web(full_teacher_md)
 
-    student_pdf = html_to_pdf_bytes(full_student_html, title=f"{base_filename} - Student Packet")
-    teacher_pdf = html_to_pdf_bytes(full_teacher_html, title=f"{base_filename} - Teacher Answer Key")
-
-    bundle_zip = create_pdf_bundle_zip({
-        f"{base_filename}_Student_Packet.pdf": student_pdf,
-        f"{base_filename}_Teacher_Answer_Key.pdf": teacher_pdf,
-    })
+    try:
+        student_pdf = html_to_pdf_bytes(full_student_html, title=f"{base_filename} - Student Packet")
+        teacher_pdf = html_to_pdf_bytes(full_teacher_html, title=f"{base_filename} - Teacher Answer Key")
+        bundle_zip = create_pdf_bundle_zip({
+            f"{base_filename}_Student_Packet.pdf": student_pdf,
+            f"{base_filename}_Teacher_Answer_Key.pdf": teacher_pdf,
+        })
+    except Exception as pdf_err:
+        logger.warning(f"Could not compile modular packet PDFs: {pdf_err}")
+        student_pdf = b""
+        teacher_pdf = b""
+        bundle_zip = b""
 
     return {
         "student_packet_md": full_student_md,

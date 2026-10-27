@@ -94,24 +94,59 @@ def _wrap_in_full_html_doc(html_fragment: str, title: str = "Curriculum Document
 </html>"""
 
 
+CHROMIUM_ARGS = [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+    "--no-zygote",
+]
+
+
 def html_to_pdf_bytes(html_content: str, title: str = "Curriculum Document") -> bytes:
     """
     Compiles styled HTML/CSS into a letter-size, print-ready PDF binary using Playwright Chromium.
     Preserves exact font typography, border colors, badges, dotted handwriting lines, and answer pills.
     """
+    import shutil
+    import subprocess
+    import sys
     from playwright.sync_api import sync_playwright
 
     full_html = _wrap_in_full_html_doc(html_content, title=title)
 
     with sync_playwright() as p:
+        browser = None
+        launch_err = None
+
+        # 1. Try launching default Chromium with container sandbox arguments
         try:
-            browser = p.chromium.launch()
+            browser = p.chromium.launch(args=CHROMIUM_ARGS, headless=True)
         except Exception as e:
-            logger.info(f"Playwright chromium binary not detected ({e}). Attempting auto-installation...")
-            import subprocess
-            import sys
-            subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
-            browser = p.chromium.launch()
+            launch_err = e
+            logger.info(f"Playwright default chromium launch failed: {e}")
+
+        # 2. If launch failed, try auto-installing browser binaries
+        if browser is None:
+            try:
+                subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=False)
+                browser = p.chromium.launch(args=CHROMIUM_ARGS, headless=True)
+            except Exception as e2:
+                launch_err = e2
+                logger.info(f"Playwright install and launch attempt failed: {e2}")
+
+        # 3. If still failed, check for system-installed Chromium binary (from packages.txt)
+        if browser is None:
+            sys_chrome = shutil.which("chromium") or shutil.which("chromium-browser") or shutil.which("google-chrome")
+            if sys_chrome:
+                try:
+                    browser = p.chromium.launch(executable_path=sys_chrome, args=CHROMIUM_ARGS, headless=True)
+                except Exception as e3:
+                    launch_err = e3
+                    logger.info(f"System chromium launch failed: {e3}")
+
+        if browser is None:
+            raise RuntimeError(f"Could not launch Chromium for PDF generation on this host: {launch_err}")
 
         page = browser.new_page()
         page.set_content(full_html, wait_until="networkidle")
