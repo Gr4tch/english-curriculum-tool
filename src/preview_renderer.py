@@ -1577,40 +1577,65 @@ def format_booklet_for_web(booklet_md: str) -> str:
 
 HALF_SHEET_CSS = """
 <style>
+.half-sheet-page-wrapper {
+    width: 100%;
+    height: 10.10in;
+    min-height: 10.10in;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+.half-sheet-item {
+    height: 4.88in;
+    max-height: 4.92in;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+}
 .ws-half-sheet {
-    padding: 0.50rem 0.85rem !important;
-    margin-bottom: 0.15rem !important;
-    font-size: 0.80rem !important;
-    line-height: 1.30 !important;
+    flex: 1 !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    padding: 0.60rem 0.90rem !important;
+    font-size: 0.83rem !important;
+    line-height: 1.35 !important;
+    margin-bottom: 0 !important;
     box-shadow: none !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 6px !important;
 }
 .ws-half-sheet h2, .ws-half-sheet h3 {
-    margin: 0.15rem 0 !important;
-    font-size: 0.95rem !important;
+    margin: 0.12rem 0 !important;
+    font-size: 0.92rem !important;
 }
 .ws-half-sheet .ws-header-band {
     margin-bottom: 0.20rem !important;
     padding-bottom: 0.20rem !important;
 }
 .ws-half-sheet .ws-title-badge {
-    margin-bottom: 0.15rem !important;
-    padding: 0.10rem 0.35rem !important;
+    margin-bottom: 0.12rem !important;
+    padding: 0.08rem 0.30rem !important;
     font-size: 0.65rem !important;
 }
 .ws-half-sheet .ws-callout {
     margin: 0.20rem 0 !important;
-    padding: 0.25rem 0.50rem !important;
+    padding: 0.25rem 0.55rem !important;
     font-size: 0.78rem !important;
 }
 .ws-half-sheet .ws-solid-line {
-    margin-bottom: 0.50rem !important;
+    margin: 0.40rem 0 0.50rem 0 !important;
     height: 1.5px !important;
 }
 .ws-half-sheet .ws-dotted-line {
-    margin-bottom: 0.45rem !important;
+    margin: 0.40rem 0 0.50rem 0 !important;
 }
 .ws-half-sheet .ws-table {
-    margin-bottom: 0.25rem !important;
+    margin: 0.25rem 0 !important;
 }
 .ws-half-sheet .ws-table th, .ws-half-sheet .ws-table td {
     padding: 0.20rem 0.40rem !important;
@@ -1620,32 +1645,39 @@ HALF_SHEET_CSS = """
     margin-top: 0.20rem !important;
     padding: 0.12rem 0.40rem !important;
 }
-.half-sheet-page-wrapper {
-    width: 100%;
-}
 .half-sheet-cut-divider {
-    margin: 0.30rem 0 0.45rem 0;
-    border-top: 1.5px dashed #94a3b8;
+    height: 0.22in;
+    border-top: 2px dashed #94a3b8;
     text-align: center;
     position: relative;
-    height: 10px;
+    box-sizing: border-box;
+    margin: 0.04in 0;
 }
 .half-sheet-cut-badge {
     background: #ffffff;
-    color: #64748b;
+    color: #475569;
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.05em;
-    padding: 0.10rem 0.55rem;
-    border: 1px solid #cbd5e1;
+    padding: 0.10rem 0.60rem;
+    border: 1.5px solid #cbd5e1;
     border-radius: 9999px;
     position: relative;
-    top: -9px;
+    top: -10px;
     display: inline-block;
     text-transform: uppercase;
 }
 @media print {
-    .ws-half-sheet {
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .half-sheet-page-wrapper {
+        height: 10.10in !important;
+        min-height: 10.10in !important;
+    }
+    .half-sheet-item {
+        height: 4.88in !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
