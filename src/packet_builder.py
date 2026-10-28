@@ -1717,10 +1717,12 @@ def build_custom_modular_packet(
     teacher_pages_md = []
 
     # Optional Cover Page
-    if include_cover and len(pages_config) >= 2 and cover_mode != "none":
+    has_cover = bool(include_cover and len(pages_config) >= 2 and cover_mode != "none")
+    if has_cover:
         cov_md = _render_front_cover_page(ch_num, ch_title, pages_config, cover_mode)
         if cov_md:
             student_pages_md.append(cov_md)
+            teacher_pages_md.append(cov_md)
 
     # Render each page
     for idx, p_cfg in enumerate(pages_config, 1):
@@ -1768,10 +1770,13 @@ def build_custom_modular_packet(
         "student_packet_html": full_student_html,
         "teacher_key_md": full_teacher_md,
         "teacher_key_html": full_teacher_html,
+        "student_pages_md": student_pages_md,
+        "teacher_pages_md": teacher_pages_md,
+        "has_cover": has_cover,
         "student_pdf_bytes": student_pdf,
         "teacher_pdf_bytes": teacher_pdf,
         "bundle_zip_bytes": bundle_zip,
-        "total_pages": len(pages_config) + (1 if (include_cover and len(pages_config) >= 2) else 0),
+        "total_pages": len(student_pages_md),
         "base_filename": base_filename,
         "is_single_section": is_single_sec,
         "primary_chapter_num": ch_num,

@@ -642,6 +642,86 @@ st.markdown(
         border-color: #1e3a8a !important;
         background: #eff6ff !important;
     }
+
+    /* ── Horizontal Page Inspector Navigation ── */
+    .inspector-tile {
+        border-radius: 8px;
+        padding: 0.5rem 0.6rem;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        text-align: center;
+        height: 75px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0.35rem;
+    }
+    .inspector-tile-active {
+        border: 2.5px solid #1e3a8a !important;
+        background: #eff6ff !important;
+        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.12) !important;
+    }
+    .inspector-tile-inactive {
+        border: 1.5px solid #cbd5e1 !important;
+        background: #ffffff !important;
+    }
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_insp_page_"]):hover .inspector-tile-inactive {
+        border-color: #1e3a8a !important;
+        background: #f8fafc !important;
+        transform: translateY(-2px);
+    }
+
+    /* Invisible overlay button on inspector tiles */
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_insp_page_"]) {
+        position: relative !important;
+        cursor: pointer !important;
+    }
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_insp_page_"]) div[class*="st-key-btn_insp_page_"] {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 10 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_insp_page_"]) div[class*="st-key-btn_insp_page_"] div.stButton,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_insp_page_"]) div[class*="st-key-btn_insp_page_"] div.stButton button {
+        width: 100% !important;
+        height: 100% !important;
+        opacity: 0 !important;
+        cursor: pointer !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* Arrow buttons in-line with inspector tiles */
+    div[class*="st-key-btn_prev_page"] div.stButton button,
+    div[class*="st-key-btn_next_page"] div.stButton button {
+        height: 75px !important;
+        min-height: 75px !important;
+        max-height: 75px !important;
+        font-size: 1.3rem !important;
+        font-weight: 700 !important;
+        border-radius: 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #f1f5f9 !important;
+        border: 1.5px solid #cbd5e1 !important;
+        color: #1e293b !important;
+    }
+    div[class*="st-key-btn_prev_page"] div.stButton button:hover,
+    div[class*="st-key-btn_next_page"] div.stButton button:hover {
+        background: #e2e8f0 !important;
+        border-color: #1e3a8a !important;
+        color: #1e3a8a !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -919,7 +999,7 @@ if "selected_ch_num" not in st.session_state:
 # Direct navigation via query parameters
 if "nav" in st.query_params:
     target_nav = str(st.query_params["nav"]).strip().lower()
-    if target_nav in ["packet", "gallery", "home"]:
+    if target_nav in ["packet", "packet_export", "gallery", "home"]:
         st.session_state["nav_view"] = target_nav
     has_auth = st.query_params.get("auth") == "ok" or st.session_state.get("authenticated", False)
     try:
@@ -1472,22 +1552,96 @@ elif st.session_state["nav_view"] == "packet":
                 key="footer_style_select",
             )
 
-    # ── Step 4: Real-Time Packet Compilation ──
-    with st.spinner("Compiling modular packet and rendering letter-size vector PDFs..."):
-        modular_result = build_custom_modular_packet(
-            pages_config=tray_pages,
-            include_cover=st.session_state.get("include_cover_toggle", False),
-            cover_mode=st.session_state.get("cover_style_select", "central_idea_tracker"),
-            footer_mode=st.session_state.get("footer_style_select", "gb_01_points_stamp"),
+    # ── Final Step Navigation Button ──
+    st.markdown("<div style='height: 18px;'></div>", unsafe_allow_html=True)
+    if not tray_pages:
+        st.warning("Your dynamic page tray is currently empty. Add at least 1 page above to review and export.")
+    else:
+        if st.button(
+            "Final Step: Review & Export Packet →",
+            key="btn_goto_packet_export",
+            type="primary",
+            use_container_width=True,
+            help="Proceed to final packet review, page-by-page inspector, and PDF / Google Drive exports.",
+        ):
+            st.session_state["nav_view"] = "packet_export"
+            st.session_state["export_preview_idx"] = 0
+            st.rerun()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 3B. PATH A (PART 2): FINAL STEP - REVIEW & EXPORT SCREEN
+# ─────────────────────────────────────────────────────────────────────────────
+
+elif st.session_state["nav_view"] == "packet_export":
+
+    # Guard: Ensure tray_pages exists
+    if "tray_pages" not in st.session_state or not st.session_state["tray_pages"]:
+        st.warning("No pages found in your packet. Returning to Packet Editor...")
+        st.session_state["nav_view"] = "packet"
+        st.rerun()
+
+    tray_pages = st.session_state["tray_pages"]
+
+    # Breadcrumb Header
+    b_col1, b_col2, b_col3, b_col4 = st.columns([1.2, 2.4, 0.8, 0.7])
+    with b_col1:
+        if st.button("← Back to Packet Editor", use_container_width=True, key="btn_back_packet_export"):
+            st.session_state["nav_view"] = "packet"
+            st.rerun()
+    with b_col2:
+        render_clean_html(
+            f"""
+            <div style="padding-top: 0.2rem;">
+                <span class="badge-pill" style="font-size: 0.86rem; padding: 0.30rem 0.75rem;">
+                    <b>Final Step:</b> Review & Export Packet &bull; Chapter {selected_ch_num:02d} ({len(tray_pages)} Pages)
+                </span>
+            </div>
+            """
         )
+    with b_col3:
+        with st.popover("Context"):
+            st.markdown(f"**Curriculum Unit:** {display_unit}")
+            st.markdown(f"**Essential Question:** *\"{eq_text}\"*")
+            st.markdown(f"**Google Drive Folder:** `{ROOT_FOLDER_NAME}`")
+    with b_col4:
+        if st.button("Log Out", key="packet_export_logout_btn", use_container_width=True):
+            st.session_state["authenticated"] = False
+            st.rerun()
+
+    # Real-Time Packet Compilation
+    include_cov = st.session_state.get("include_cover_toggle", False)
+    cov_mode = st.session_state.get("cover_style_select", "central_idea_tracker")
+    foot_mode = st.session_state.get("footer_style_select", "gb_01_points_stamp")
+
+    # Cache compiled packet bundle so navigating between pages in the inspector is instant
+    pkt_cache_key = (
+        str([(p.get("section_meta", {}).get("section_code"), p.get("strategy_code"), p.get("is_scaffolded")) for p in tray_pages])
+        + f"_{include_cov}_{cov_mode}_{foot_mode}"
+    )
+    if "cached_modular_result" not in st.session_state or st.session_state.get("cached_pkt_key") != pkt_cache_key:
+        with st.spinner("Compiling modular packet and rendering letter-size vector PDFs..."):
+            modular_result = build_custom_modular_packet(
+                pages_config=tray_pages,
+                include_cover=include_cov,
+                cover_mode=cov_mode,
+                footer_mode=foot_mode,
+            )
+            st.session_state["cached_modular_result"] = modular_result
+            st.session_state["cached_pkt_key"] = pkt_cache_key
+    else:
+        modular_result = st.session_state["cached_modular_result"]
 
     base_name = modular_result["base_filename"]
     student_pdf = modular_result["student_pdf_bytes"]
     teacher_pdf = modular_result["teacher_pdf_bytes"]
     bundle_zip = modular_result["bundle_zip_bytes"]
     total_pkt_pages = modular_result["total_pages"]
+    student_pages_md = modular_result.get("student_pages_md", [])
+    teacher_pages_md = modular_result.get("teacher_pages_md", [])
+    has_cover = modular_result.get("has_cover", False)
 
-    # ── Step 5: 1-Click Exports & Google Drive Synchronization ──
+    # Step 3: Print, Download & Google Drive Export
     st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
     st.markdown("#### Step 3: Print, Download & Google Drive Export")
     st.caption("Download letter-size vector PDFs or synchronize both copies directly to Google Drive:")
@@ -1579,19 +1733,91 @@ elif st.session_state["nav_view"] == "packet":
     else:
         st.info("PDF compilation is initializing. You can review the complete interactive previews below immediately or print directly via your browser (Ctrl+P / Cmd+P).")
 
-    # ── Step 4: Live Multi-Page Continuous Scroll Preview ──
-    st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
-    with st.expander(f"Complete Packet Continuous Scroll Preview ({total_pkt_pages} Pages)", expanded=False):
-        preview_tab1, preview_tab2 = st.tabs([
-            f"Student Packet Preview ({total_pkt_pages} Pages)",
-            "Teacher Answer Key Preview",
-        ])
+    # Horizontal Page Inspector Expander
+    st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
+    insp_pages_count = len(student_pages_md)
+    if "export_preview_idx" not in st.session_state:
+        st.session_state["export_preview_idx"] = 0
+    preview_idx = max(0, min(st.session_state["export_preview_idx"], insp_pages_count - 1))
 
+    with st.expander(f"Complete Packet Page-by-Page Inspector ({insp_pages_count} Pages)", expanded=True):
+        # In-line navigation bar
+        nav_cols = st.columns([0.8] + [1.8] * insp_pages_count + [0.8])
+
+        # Left Arrow
+        with nav_cols[0]:
+            if st.button("←", key="btn_prev_page", disabled=(preview_idx == 0), use_container_width=True, help="Previous Page"):
+                st.session_state["export_preview_idx"] = preview_idx - 1
+                st.rerun()
+
+        # Page Tiles
+        for i in range(insp_pages_count):
+            with nav_cols[i + 1]:
+                is_active = (i == preview_idx)
+                active_cls = "inspector-tile-active" if is_active else "inspector-tile-inactive"
+
+                if has_cover and i == 0:
+                    tile_title = "Cover Page"
+                    tile_sub = "Packet Cover"
+                else:
+                    p_idx = (i - 1) if has_cover else i
+                    p_data = tray_pages[p_idx]
+                    s_code = p_data.get("section_meta", {}).get("section_code", "?")
+                    s_strat = p_data.get("strategy_code", "")
+                    tile_match = get_tile_by_code(s_strat)
+                    tile_sub = tile_match["name"] if tile_match else s_strat.replace("_", " ").title()
+                    page_label_num = p_idx + 1
+                    tile_title = f"Page {page_label_num}: Sec {s_code}"
+
+                render_clean_html(
+                    f"""
+                    <div class="inspector-tile {active_cls}">
+                        <div style="font-size: 0.82rem; font-weight: 700; color: {'#1e3a8a' if is_active else '#0f172a'};">
+                            {tile_title}
+                        </div>
+                        <div style="font-size: 0.72rem; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">
+                            {tile_sub}
+                        </div>
+                        <div style="font-size: 0.65rem; color: {'#2563eb' if is_active else '#94a3b8'}; font-weight: 600; margin-top: 2px;">
+                            {'Viewing' if is_active else 'Click to View'}
+                        </div>
+                    </div>
+                    """
+                )
+                if st.button(f"View Page {i+1}", key=f"btn_insp_page_{i}", use_container_width=True):
+                    st.session_state["export_preview_idx"] = i
+                    st.rerun()
+
+        # Right Arrow
+        with nav_cols[-1]:
+            if st.button("→", key="btn_next_page", disabled=(preview_idx == insp_pages_count - 1), use_container_width=True, help="Next Page"):
+                st.session_state["export_preview_idx"] = preview_idx + 1
+                st.rerun()
+
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+
+        # Render selected page
+        std_page_md = student_pages_md[preview_idx] if preview_idx < len(student_pages_md) else ""
+        tch_page_md = teacher_pages_md[preview_idx] if preview_idx < len(teacher_pages_md) else ""
+
+        std_page_html = format_booklet_for_web(std_page_md)
+        tch_page_html = format_booklet_for_web(tch_page_md)
+
+        if has_cover and preview_idx == 0:
+            tab_title_std = "Student Cover Page"
+            tab_title_tch = "Teacher Packet Cover"
+        else:
+            p_idx = (preview_idx - 1) if has_cover else preview_idx
+            p_is_scaf = tray_pages[p_idx].get("is_scaffolded", False) if p_idx < len(tray_pages) else False
+            edition_lbl = "Scaffolded Edition" if p_is_scaf else "Standard Edition"
+            tab_title_std = f"Student Handout ({edition_lbl})"
+            tab_title_tch = "Teacher Answer Key & Exemplar"
+
+        preview_tab1, preview_tab2 = st.tabs([tab_title_std, tab_title_tch])
         with preview_tab1:
-            st.markdown(modular_result["student_packet_html"], unsafe_allow_html=True)
-
+            st.markdown(std_page_html, unsafe_allow_html=True)
         with preview_tab2:
-            st.markdown(modular_result["teacher_key_html"], unsafe_allow_html=True)
+            st.markdown(tch_page_html, unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
