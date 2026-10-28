@@ -1239,6 +1239,8 @@ elif st.session_state["nav_view"] == "packet":
 
     if "active_tray_idx" not in st.session_state:
         st.session_state["active_tray_idx"] = 0
+    if "include_cover_toggle" not in st.session_state:
+        st.session_state["include_cover_toggle"] = False
 
     tray_pages = st.session_state["tray_pages"]
     if st.session_state["active_tray_idx"] >= len(tray_pages):
@@ -1248,7 +1250,13 @@ elif st.session_state["nav_view"] == "packet":
     # ── Step 1: Packet Scope & Mode Presets ──
     st.markdown("#### Step 1: Packet Scope & Mode Presets")
 
+    def _clear_editor_widget_states():
+        for k in list(st.session_state.keys()):
+            if k.startswith("ed_page_"):
+                del st.session_state[k]
+
     def _apply_packet_scope(scope_name: str):
+        _clear_editor_widget_states()
         if scope_name == "Chapter Packet (Unit Booklet)":
             new_pages = []
             for s in ch_sections:
@@ -1323,10 +1331,12 @@ elif st.session_state["nav_view"] == "packet":
         )
 
     def on_click_preset_2page():
+        _clear_editor_widget_states()
         st.session_state["packet_scope_radio"] = "Section Packet (Single Spread Focus)"
         _apply_packet_scope("Section Packet (Single Spread Focus)")
 
     def on_click_preset_3page():
+        _clear_editor_widget_states()
         sec_target = ch_sections[0] if ch_sections else None
         if sec_target:
             sec_p = resolve_file_path(sec_target.get("md_file"))
@@ -1359,8 +1369,79 @@ elif st.session_state["nav_view"] == "packet":
         st.session_state["packet_scope_radio"] = "Section Packet (Single Spread Focus)"
 
     def on_click_preset_full_unit():
+        _clear_editor_widget_states()
         st.session_state["packet_scope_radio"] = "Chapter Packet (Unit Booklet)"
         _apply_packet_scope("Chapter Packet (Unit Booklet)")
+
+    # Category and strategy mapping helpers
+    CAT_OPTIONS = [
+        ("Active Reading Graphic Organizer", "reading_organizer"),
+        ("Central Idea Synthesis", "central_idea"),
+        ("Anti-Copycat (Textbook Main Idea)", "anti_copycat"),
+        ("Writing Extension (The Writing Revolution)", "twr"),
+        ("Vocabulary Practice", "vocab"),
+        ("Section Assessment & Reading Checks", "assessment"),
+    ]
+    CAT_LABELS = [c[0] for c in CAT_OPTIONS]
+    CAT_VALUES = [c[1] for c in CAT_OPTIONS]
+    CAT_LABEL_TO_CODE = dict(CAT_OPTIONS)
+    CAT_CODE_TO_LABEL = {v: k for k, v in CAT_OPTIONS}
+
+    def get_default_strategy_for_category(cat_code: str) -> str:
+        if cat_code == "reading_organizer":
+            return READING_ORGANIZERS[0]["code"]
+        elif cat_code == "central_idea":
+            return CENTRAL_IDEA_STRATEGIES[0]["code"]
+        elif cat_code == "anti_copycat":
+            return PRINTED_MAIN_IDEA_MODES[0]["code"]
+        elif cat_code == "twr":
+            twr_sub = [t for t in OPTIONAL_TWR_STRATEGIES if t["code"] != "twr_none"]
+            return twr_sub[0]["code"] if twr_sub else "twr_because_but_so"
+        elif cat_code == "vocab":
+            return "vocab_deep_dive"
+        elif cat_code == "assessment":
+            return "section_assessment"
+        return "ci_01_subheading_gist"
+
+    # Callbacks for instant, zero-lag synchronization between editor widgets and tray state
+    def on_editor_ch_change(idx: int):
+        ch_num = st.session_state.get(f"ed_page_ch_{idx}")
+        if ch_num in chapters_map and chapters_map[ch_num]["sections"]:
+            first_sec = chapters_map[ch_num]["sections"][0]
+            if "tray_pages" in st.session_state and 0 <= idx < len(st.session_state["tray_pages"]):
+                p = st.session_state["tray_pages"][idx]
+                p["section_meta"] = first_sec
+                sec_p = resolve_file_path(first_sec.get("md_file"))
+                p["raw_passage_md"] = sec_p.read_text(encoding="utf-8") if sec_p.exists() else ""
+                st.session_state[f"ed_page_sec_{idx}"] = first_sec
+
+    def on_editor_sec_change(idx: int):
+        sec_obj = st.session_state.get(f"ed_page_sec_{idx}")
+        if sec_obj and "tray_pages" in st.session_state and 0 <= idx < len(st.session_state["tray_pages"]):
+            p = st.session_state["tray_pages"][idx]
+            p["section_meta"] = sec_obj
+            sec_p = resolve_file_path(sec_obj.get("md_file"))
+            p["raw_passage_md"] = sec_p.read_text(encoding="utf-8") if sec_p.exists() else ""
+
+    def on_editor_cat_change(idx: int):
+        cat_label = st.session_state.get(f"ed_page_cat_{idx}")
+        cat_code = CAT_LABEL_TO_CODE.get(cat_label, "central_idea")
+        if "tray_pages" in st.session_state and 0 <= idx < len(st.session_state["tray_pages"]):
+            p = st.session_state["tray_pages"][idx]
+            p["strategy_type"] = cat_code
+            default_strat = get_default_strategy_for_category(cat_code)
+            p["strategy_code"] = default_strat
+            st.session_state[f"ed_page_strat_{idx}"] = default_strat
+
+    def on_editor_strat_change(idx: int):
+        strat_code = st.session_state.get(f"ed_page_strat_{idx}")
+        if strat_code and "tray_pages" in st.session_state and 0 <= idx < len(st.session_state["tray_pages"]):
+            st.session_state["tray_pages"][idx]["strategy_code"] = strat_code
+
+    def on_editor_scaf_change(idx: int):
+        scaf = st.session_state.get(f"ed_page_scaf_{idx}", False)
+        if "tray_pages" in st.session_state and 0 <= idx < len(st.session_state["tray_pages"]):
+            st.session_state["tray_pages"][idx]["is_scaffolded"] = bool(scaf)
 
     # If Pre-Built Presets is selected, offer 1-click preset buttons
     if creation_mode == "Pre-Built Presets (Recommended)":
@@ -1390,6 +1471,31 @@ elif st.session_state["nav_view"] == "packet":
                 key="preset_full_unit",
                 on_click=on_click_preset_full_unit,
             )
+
+    # ── Zero-Lag Pre-Render Synchronization ──
+    # Ensure active page in tray_pages reflects any updated editor widget values BEFORE rendering tray tiles
+    if tray_pages and 0 <= active_idx < len(tray_pages):
+        cur_p = tray_pages[active_idx]
+        if f"ed_page_sec_{active_idx}" in st.session_state:
+            w_sec = st.session_state[f"ed_page_sec_{active_idx}"]
+            if w_sec and w_sec != cur_p.get("section_meta"):
+                cur_p["section_meta"] = w_sec
+                sec_p = resolve_file_path(w_sec.get("md_file"))
+                cur_p["raw_passage_md"] = sec_p.read_text(encoding="utf-8") if sec_p.exists() else ""
+        if f"ed_page_cat_{active_idx}" in st.session_state:
+            w_cat_lbl = st.session_state[f"ed_page_cat_{active_idx}"]
+            w_cat_cd = CAT_LABEL_TO_CODE.get(w_cat_lbl)
+            if w_cat_cd and w_cat_cd != cur_p.get("strategy_type"):
+                cur_p["strategy_type"] = w_cat_cd
+                def_st = get_default_strategy_for_category(w_cat_cd)
+                cur_p["strategy_code"] = def_st
+                st.session_state[f"ed_page_strat_{active_idx}"] = def_st
+        if f"ed_page_strat_{active_idx}" in st.session_state:
+            w_strat = st.session_state[f"ed_page_strat_{active_idx}"]
+            if w_strat and w_strat != cur_p.get("strategy_code"):
+                cur_p["strategy_code"] = w_strat
+        if f"ed_page_scaf_{active_idx}" in st.session_state:
+            cur_p["is_scaffolded"] = bool(st.session_state[f"ed_page_scaf_{active_idx}"])
 
     # ── Step 2: Dynamic Horizontal Page Tray with Live Preview Tiles ──
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
@@ -1485,6 +1591,7 @@ elif st.session_state["nav_view"] == "packet":
             # 2. Delete 'X' button on the tile (only if total_pages > 1)
             if len(tray_pages) > 1:
                 if st.button("✕", key=f"btn_tray_del_{i}", help=f"Remove Page {i+1} from packet"):
+                    _clear_editor_widget_states()
                     tray_pages.pop(i)
                     st.session_state["active_tray_idx"] = max(0, min(active_idx, len(tray_pages) - 1))
                     st.rerun()
@@ -1500,6 +1607,7 @@ elif st.session_state["nav_view"] == "packet":
         """
         render_clean_html(add_card_html)
         if st.button("+ Add Page", key="btn_add_tray_page", use_container_width=True):
+            _clear_editor_widget_states()
             fallback_sec = ch_sections[0] if ch_sections else {}
             sec_target = tray_pages[-1]["section_meta"] if tray_pages else fallback_sec
             sec_p = resolve_file_path(sec_target.get("md_file"))
@@ -1543,6 +1651,8 @@ elif st.session_state["nav_view"] == "packet":
                     index=sorted_chapter_nums.index(cur_page_ch) if cur_page_ch in sorted_chapter_nums else 0,
                     format_func=lambda n: f"Chapter {n:02d}: {chapters_map[n]['chapter_title']}",
                     key=f"ed_page_ch_{active_idx}",
+                    on_change=on_editor_ch_change,
+                    args=(active_idx,),
                 )
                 avail_secs = chapters_map[ch_choice]["sections"]
                 cur_sec_code = str(active_p["section_meta"].get("section_code", ""))
@@ -1555,6 +1665,8 @@ elif st.session_state["nav_view"] == "packet":
                     index=sec_default_idx,
                     format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']})",
                     key=f"ed_page_sec_{active_idx}",
+                    on_change=on_editor_sec_change,
+                    args=(active_idx,),
                 )
                 active_p["section_meta"] = sec_choice
                 sec_p = resolve_file_path(sec_choice.get("md_file"))
@@ -1562,26 +1674,18 @@ elif st.session_state["nav_view"] == "packet":
 
             with ed_c2:
                 st.markdown("##### 2. Strategy & Text Structure")
-                cat_options = [
-                    ("Active Reading Graphic Organizer", "reading_organizer"),
-                    ("Central Idea Synthesis", "central_idea"),
-                    ("Anti-Copycat (Textbook Main Idea)", "anti_copycat"),
-                    ("Writing Extension (The Writing Revolution)", "twr"),
-                    ("Vocabulary Practice", "vocab"),
-                    ("Section Assessment & Reading Checks", "assessment"),
-                ]
-                cat_labels = [c[0] for c in cat_options]
-                cat_values = [c[1] for c in cat_options]
                 cur_cat = active_p.get("strategy_type", "central_idea")
-                cat_idx = cat_values.index(cur_cat) if cur_cat in cat_values else 0
+                cat_idx = CAT_VALUES.index(cur_cat) if cur_cat in CAT_VALUES else 0
 
                 sel_cat_label = st.selectbox(
                     "Strategy Category:",
-                    options=cat_labels,
+                    options=CAT_LABELS,
                     index=cat_idx,
                     key=f"ed_page_cat_{active_idx}",
+                    on_change=on_editor_cat_change,
+                    args=(active_idx,),
                 )
-                sel_cat = cat_values[cat_labels.index(sel_cat_label)]
+                sel_cat = CAT_VALUES[CAT_LABELS.index(sel_cat_label)]
                 active_p["strategy_type"] = sel_cat
 
                 # Select strategy within category
@@ -1613,6 +1717,8 @@ elif st.session_state["nav_view"] == "packet":
                     index=strat_idx,
                     format_func=lambda c: strat_names.get(c, c),
                     key=f"ed_page_strat_{active_idx}",
+                    on_change=on_editor_strat_change,
+                    args=(active_idx,),
                 )
                 active_p["strategy_code"] = sel_strat
 
@@ -1621,6 +1727,8 @@ elif st.session_state["nav_view"] == "packet":
                 "Scaffolded Support Edition for this page (sentence starters, word banks, paragraph frames)",
                 value=active_p.get("is_scaffolded", False),
                 key=f"ed_page_scaf_{active_idx}",
+                on_change=on_editor_scaf_change,
+                args=(active_idx,),
             )
             active_p["is_scaffolded"] = scaf_checked
 
@@ -1630,7 +1738,6 @@ elif st.session_state["nav_view"] == "packet":
         with opt_c1:
             include_cov = st.checkbox(
                 "Include Front Cover Page (Cumulative Unit Study Guide)",
-                value=st.session_state.get("include_cover_toggle", False),
                 key="include_cover_toggle",
             )
             cover_style_opts = [
