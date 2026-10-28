@@ -497,9 +497,43 @@ st.markdown(
         border-top: 6px solid #4f46e5 !important;
     }
 
-    /* Dynamic Page Tray Column & Tile Button Styling */
+    /* Dynamic Page Tray Horizontal Scrolling Container */
+    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-btn_tray_tile_"]) {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        flex-wrap: nowrap !important;
+        display: flex !important;
+        align-items: stretch !important;
+        gap: 14px !important;
+        padding: 0.6rem 0.4rem 1.1rem 0.4rem !important;
+        scrollbar-width: thin !important;
+        scrollbar-color: #3b82f6 #f1f5f9 !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-btn_tray_tile_"])::-webkit-scrollbar {
+        height: 10px !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-btn_tray_tile_"])::-webkit-scrollbar-track {
+        background: #f1f5f9 !important;
+        border-radius: 6px !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-btn_tray_tile_"])::-webkit-scrollbar-thumb {
+        background: #cbd5e1 !important;
+        border-radius: 6px !important;
+        border: 2px solid #f1f5f9 !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-btn_tray_tile_"])::-webkit-scrollbar-thumb:hover {
+        background: #1e3a8a !important;
+    }
+
+    /* Fixed Card Dimensions for Tray Tiles (Prevents Squishing on Many Pages) */
     div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_tile_"]),
     div[data-testid="stColumn"]:has(div[class*="st-key-btn_add_tray_page"]) {
+        flex: 0 0 185px !important;
+        min-width: 185px !important;
+        max-width: 185px !important;
+        width: 185px !important;
         position: relative !important;
         transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
         cursor: pointer !important;
@@ -1213,6 +1247,64 @@ elif st.session_state["nav_view"] == "packet":
 
     # ── Step 1: Packet Scope & Mode Presets ──
     st.markdown("#### Step 1: Packet Scope & Mode Presets")
+
+    def _apply_packet_scope(scope_name: str):
+        if scope_name == "Chapter Packet (Unit Booklet)":
+            new_pages = []
+            for s in ch_sections:
+                sec_p = resolve_file_path(s.get("md_file"))
+                sec_md = sec_p.read_text(encoding="utf-8") if sec_p.exists() else ""
+                new_pages.append({
+                    "section_meta": s,
+                    "strategy_type": "reading_organizer",
+                    "strategy_code": "read_01_cause_effect",
+                    "is_scaffolded": False,
+                    "raw_passage_md": sec_md,
+                })
+                new_pages.append({
+                    "section_meta": s,
+                    "strategy_type": "central_idea",
+                    "strategy_code": "ci_01_subheading_gist",
+                    "is_scaffolded": False,
+                    "raw_passage_md": sec_md,
+                })
+            st.session_state["tray_pages"] = new_pages
+            st.session_state["active_tray_idx"] = 0
+            st.session_state["include_cover_toggle"] = True
+        else:
+            # Section Packet (Single Spread Focus)
+            cur_active_sec = None
+            if tray_pages and 0 <= active_idx < len(tray_pages):
+                cur_active_sec = tray_pages[active_idx].get("section_meta")
+            sec_target = cur_active_sec or (ch_sections[0] if ch_sections else None)
+            if sec_target:
+                sec_p = resolve_file_path(sec_target.get("md_file"))
+                sec_md = sec_p.read_text(encoding="utf-8") if sec_p.exists() else ""
+                st.session_state["tray_pages"] = [
+                    {
+                        "section_meta": sec_target,
+                        "strategy_type": "reading_organizer",
+                        "strategy_code": "read_01_cause_effect",
+                        "is_scaffolded": False,
+                        "raw_passage_md": sec_md,
+                    },
+                    {
+                        "section_meta": sec_target,
+                        "strategy_type": "central_idea",
+                        "strategy_code": "ci_01_subheading_gist",
+                        "is_scaffolded": False,
+                        "raw_passage_md": sec_md,
+                    },
+                ]
+            else:
+                st.session_state["tray_pages"] = []
+            st.session_state["active_tray_idx"] = 0
+            st.session_state["include_cover_toggle"] = False
+
+    def on_packet_scope_change():
+        scope = st.session_state.get("packet_scope_radio")
+        _apply_packet_scope(scope)
+
     sc_c1, sc_c2 = st.columns(2)
     with sc_c1:
         packet_scope = st.radio(
@@ -1220,6 +1312,7 @@ elif st.session_state["nav_view"] == "packet":
             options=["Section Packet (Single Spread Focus)", "Chapter Packet (Unit Booklet)"],
             horizontal=True,
             key="packet_scope_radio",
+            on_change=on_packet_scope_change,
         )
     with sc_c2:
         creation_mode = st.radio(
@@ -1229,99 +1322,108 @@ elif st.session_state["nav_view"] == "packet":
             key="packet_mode_radio",
         )
 
+    def on_click_preset_2page():
+        st.session_state["packet_scope_radio"] = "Section Packet (Single Spread Focus)"
+        _apply_packet_scope("Section Packet (Single Spread Focus)")
+
+    def on_click_preset_3page():
+        sec_target = ch_sections[0] if ch_sections else None
+        if sec_target:
+            sec_p = resolve_file_path(sec_target.get("md_file"))
+            sec_md = sec_p.read_text(encoding="utf-8") if sec_p.exists() else ""
+            st.session_state["tray_pages"] = [
+                {
+                    "section_meta": sec_target,
+                    "strategy_type": "reading_organizer",
+                    "strategy_code": "read_01_cause_effect",
+                    "is_scaffolded": False,
+                    "raw_passage_md": sec_md,
+                },
+                {
+                    "section_meta": sec_target,
+                    "strategy_type": "central_idea",
+                    "strategy_code": "ci_01_subheading_gist",
+                    "is_scaffolded": False,
+                    "raw_passage_md": sec_md,
+                },
+                {
+                    "section_meta": sec_target,
+                    "strategy_type": "twr",
+                    "strategy_code": "twr_because_but_so",
+                    "is_scaffolded": False,
+                    "raw_passage_md": sec_md,
+                },
+            ]
+        st.session_state["active_tray_idx"] = 0
+        st.session_state["include_cover_toggle"] = False
+        st.session_state["packet_scope_radio"] = "Section Packet (Single Spread Focus)"
+
+    def on_click_preset_full_unit():
+        st.session_state["packet_scope_radio"] = "Chapter Packet (Unit Booklet)"
+        _apply_packet_scope("Chapter Packet (Unit Booklet)")
+
     # If Pre-Built Presets is selected, offer 1-click preset buttons
     if creation_mode == "Pre-Built Presets (Recommended)":
         st.caption("Apply a pre-configured pedagogical structure to your dynamic page tray:")
         p_c1, p_c2, p_c3 = st.columns(3)
 
         with p_c1:
-            if st.button("Quick 2-Page Section Spread", use_container_width=True, key="preset_2page"):
-                sec_target = ch_sections[0] if ch_sections else None
-                if sec_target:
-                    sec_p = resolve_file_path(sec_target.get("md_file"))
-                    sec_md = sec_p.read_text(encoding="utf-8") if sec_p.exists() else ""
-                    st.session_state["tray_pages"] = [
-                        {
-                            "section_meta": sec_target,
-                            "strategy_type": "reading_organizer",
-                            "strategy_code": "read_01_cause_effect",
-                            "is_scaffolded": False,
-                            "raw_passage_md": sec_md,
-                        },
-                        {
-                            "section_meta": sec_target,
-                            "strategy_type": "central_idea",
-                            "strategy_code": "ci_01_subheading_gist",
-                            "is_scaffolded": False,
-                            "raw_passage_md": sec_md,
-                        },
-                    ]
-                    st.session_state["active_tray_idx"] = 0
-                    st.session_state["include_cover_toggle"] = False
-                    st.rerun()
+            st.button(
+                "Quick 2-Page Section Spread",
+                use_container_width=True,
+                key="preset_2page",
+                on_click=on_click_preset_2page,
+            )
 
         with p_c2:
-            if st.button("3-Page Complete Lesson", use_container_width=True, key="preset_3page"):
-                sec_target = ch_sections[0] if ch_sections else None
-                if sec_target:
-                    sec_p = resolve_file_path(sec_target.get("md_file"))
-                    sec_md = sec_p.read_text(encoding="utf-8") if sec_p.exists() else ""
-                    st.session_state["tray_pages"] = [
-                        {
-                            "section_meta": sec_target,
-                            "strategy_type": "reading_organizer",
-                            "strategy_code": "read_01_cause_effect",
-                            "is_scaffolded": False,
-                            "raw_passage_md": sec_md,
-                        },
-                        {
-                            "section_meta": sec_target,
-                            "strategy_type": "central_idea",
-                            "strategy_code": "ci_01_subheading_gist",
-                            "is_scaffolded": False,
-                            "raw_passage_md": sec_md,
-                        },
-                        {
-                            "section_meta": sec_target,
-                            "strategy_type": "twr",
-                            "strategy_code": "twr_01_because_but_so",
-                            "is_scaffolded": False,
-                            "raw_passage_md": sec_md,
-                        },
-                    ]
-                    st.session_state["active_tray_idx"] = 0
-                    st.session_state["include_cover_toggle"] = False
-                    st.rerun()
+            st.button(
+                "3-Page Complete Lesson",
+                use_container_width=True,
+                key="preset_3page",
+                on_click=on_click_preset_3page,
+            )
 
         with p_c3:
-            if st.button("Full Chapter Unit Booklet", use_container_width=True, key="preset_full_unit"):
-                new_pages = []
-                for s in ch_sections:
-                    sec_p = resolve_file_path(s.get("md_file"))
-                    sec_md = sec_p.read_text(encoding="utf-8") if sec_p.exists() else ""
-                    new_pages.append({
-                        "section_meta": s,
-                        "strategy_type": "reading_organizer",
-                        "strategy_code": "read_01_cause_effect",
-                        "is_scaffolded": False,
-                        "raw_passage_md": sec_md,
-                    })
-                    new_pages.append({
-                        "section_meta": s,
-                        "strategy_type": "central_idea",
-                        "strategy_code": "ci_01_subheading_gist",
-                        "is_scaffolded": False,
-                        "raw_passage_md": sec_md,
-                    })
-                st.session_state["tray_pages"] = new_pages
-                st.session_state["active_tray_idx"] = 0
-                st.session_state["include_cover_toggle"] = True
-                st.rerun()
+            st.button(
+                "Full Chapter Unit Booklet",
+                use_container_width=True,
+                key="preset_full_unit",
+                on_click=on_click_preset_full_unit,
+            )
 
     # ── Step 2: Dynamic Horizontal Page Tray with Live Preview Tiles ──
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-    st.markdown("#### Step 2: Dynamic Page Tray — Live Preview & Configure Every Page")
-    st.caption("Click any page tile below to edit its section spread and strategy. If a page is already active, clicking it again opens the full-size preview modal.")
+    total_pages = len(tray_pages)
+    total_sheets = (total_pages + 1) // 2
+
+    t_head_c1, t_head_c2 = st.columns([2.3, 1.7])
+    with t_head_c1:
+        st.markdown("#### Step 2: Dynamic Page Tray — Live Preview & Configure Every Page")
+        st.caption("Click any page tile below to edit its section spread and strategy. If a page is already active, clicking it again opens the full-size preview modal.")
+    with t_head_c2:
+        if total_pages > 4:
+            jp_prev, jp_sel, jp_next = st.columns([0.6, 2.2, 0.6])
+            with jp_prev:
+                if st.button("◀", key="btn_tray_prev_quick", help="Previous Page", disabled=(active_idx == 0), use_container_width=True):
+                    st.session_state["active_tray_idx"] = max(0, active_idx - 1)
+                    st.rerun()
+            with jp_sel:
+                def on_tray_jump_change():
+                    st.session_state["active_tray_idx"] = st.session_state["tray_jump_selector"]
+
+                st.selectbox(
+                    "Quick Jump:",
+                    options=list(range(total_pages)),
+                    index=active_idx,
+                    format_func=lambda idx: f"Page {idx+1}: Sec {tray_pages[idx]['section_meta'].get('section_code', '?')} ({tray_pages[idx].get('strategy_code', '').replace('_', ' ').title()[:16]})",
+                    key="tray_jump_selector",
+                    on_change=on_tray_jump_change,
+                    label_visibility="collapsed",
+                )
+            with jp_next:
+                if st.button("▶", key="btn_tray_next_quick", help="Next Page", disabled=(active_idx >= total_pages - 1), use_container_width=True):
+                    st.session_state["active_tray_idx"] = min(total_pages - 1, active_idx + 1)
+                    st.rerun()
 
     total_pages = len(tray_pages)
     total_sheets = (total_pages + 1) // 2
@@ -1419,21 +1521,16 @@ elif st.session_state["nav_view"] == "packet":
         active_p = tray_pages[active_idx]
 
         with st.container(border=True):
-            ed_head_c1, ed_head_c2 = st.columns([2.5, 1.2])
-            with ed_head_c1:
-                render_clean_html(
-                    f"""
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                        <span style="font-size: 1.05rem; font-weight: 700; color: #1e3a8a;">
-                            Editing Page {active_idx + 1} of {total_pages}
-                        </span>
-                        <span class="badge-pill badge-gray">Total Packet: {total_pages} pgs ({total_sheets} sheets)</span>
-                    </div>
-                    """
-                )
-            with ed_head_c2:
-                if st.button("Preview This Page", key="btn_editor_modal_preview", use_container_width=True, help="Open full-size live preview of this page in a modal dialog"):
-                    show_page_preview_modal(active_p, active_idx + 1)
+            render_clean_html(
+                f"""
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.65rem;">
+                    <span style="font-size: 1.05rem; font-weight: 700; color: #1e3a8a;">
+                        Editing Page {active_idx + 1} of {total_pages}
+                    </span>
+                    <span class="badge-pill badge-gray">Total Packet: {total_pages} pgs ({total_sheets} sheets)</span>
+                </div>
+                """
+            )
 
             ed_c1, ed_c2 = st.columns(2)
 
