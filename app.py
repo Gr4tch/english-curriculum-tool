@@ -489,30 +489,150 @@ st.markdown(
         box-shadow: none !important;
     }
 
-    /* Dynamic Page Tray Live Preview Tiles & Hover Zoom */
-    .tray-preview-card {
-        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease !important;
+    /* Dynamic Page Tray Column & Tile Button Styling */
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_tile_"]),
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_add_tray_page"]) {
+        position: relative !important;
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
         cursor: pointer !important;
     }
-    .tray-preview-card:hover {
-        transform: translateY(-4px) scale(1.02) !important;
-        border-color: #1e3a8a !important;
-        box-shadow: 0 10px 24px -4px rgba(30, 58, 138, 0.16) !important;
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_tile_"]):hover,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_add_tray_page"]):hover {
+        transform: translateY(-4px) scale(1.025) !important;
+        z-index: 15 !important;
     }
+
+    .tray-preview-card {
+        transition: border-color 0.22s ease, box-shadow 0.22s ease !important;
+        border-radius: 10px;
+        padding: 0.75rem;
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        position: relative;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_tile_"]):hover .tray-preview-card {
+        border-color: #1e3a8a !important;
+        box-shadow: 0 12px 28px -4px rgba(30, 58, 138, 0.16), 0 6px 12px -4px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_tile_"]):active .tray-preview-card,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_add_tray_page"]):active .tray-add-card {
+        transform: translateY(-1px) scale(0.99) !important;
+    }
+
+    /* Invisible overlay button that turns the whole tile into a button */
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_tile_"]) div[class*="st-key-btn_tray_tile_"],
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_add_tray_page"]) div[class*="st-key-btn_add_tray_page"] {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 10 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_tile_"]) div[class*="st-key-btn_tray_tile_"] div.stButton,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_tile_"]) div[class*="st-key-btn_tray_tile_"] div.stButton button,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_add_tray_page"]) div[class*="st-key-btn_add_tray_page"] div.stButton,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_add_tray_page"]) div[class*="st-key-btn_add_tray_page"] div.stButton button {
+        width: 100% !important;
+        height: 100% !important;
+        opacity: 0 !important;
+        cursor: pointer !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* Small, visible 'X' Delete Button on the Tile */
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_del_"]) div[class*="st-key-btn_tray_del_"] {
+        position: absolute !important;
+        top: 8px !important;
+        right: 10px !important;
+        z-index: 25 !important;
+        width: 24px !important;
+        height: 24px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_del_"]) div[class*="st-key-btn_tray_del_"] div.stButton,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_del_"]) div[class*="st-key-btn_tray_del_"] div.stButton button {
+        width: 24px !important;
+        height: 24px !important;
+        min-height: 24px !important;
+        max-height: 24px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 0.70rem !important;
+        font-weight: 700 !important;
+        line-height: 1 !important;
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #64748b !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.08) !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+        opacity: 1 !important;
+    }
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_del_"]) div[class*="st-key-btn_tray_del_"] div.stButton button:hover {
+        background: #fee2e2 !important;
+        border-color: #ef4444 !important;
+        color: #b91c1c !important;
+        transform: scale(1.15) !important;
+    }
+
     .tray-sheet-mockup {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0.45rem;
+        height: 110px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        margin: 0.35rem 0;
         transition: transform 0.2s ease, box-shadow 0.2s ease !important;
     }
-    .tray-preview-card:hover .tray-sheet-mockup {
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tray_tile_"]):hover .tray-sheet-mockup {
         transform: scale(1.03) !important;
         box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
     }
+
     .tray-add-card {
+        border: 2px dashed #94a3b8;
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 0.75rem;
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 0.5rem;
         transition: all 0.22s ease !important;
     }
-    .tray-add-card:hover {
+
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_add_tray_page"]):hover .tray-add-card {
         border-color: #1e3a8a !important;
         background: #eff6ff !important;
-        transform: translateY(-3px) !important;
     }
     </style>
     """,
@@ -1091,7 +1211,7 @@ elif st.session_state["nav_view"] == "packet":
     # ── Step 2: Dynamic Horizontal Page Tray with Live Preview Tiles ──
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
     st.markdown("#### Step 2: Dynamic Page Tray — Live Preview & Configure Every Page")
-    st.caption("Each tile below displays a live structural preview of that page. Click **Edit Page** to customize its section spread or strategy below, or click **View Full Size** to inspect the live printable sheet in a full-screen modal:")
+    st.caption("Click any page tile below to edit its section spread and strategy. If a page is already active, clicking it again opens the full-size preview modal.")
 
     total_pages = len(tray_pages)
     total_sheets = (total_pages + 1) // 2
@@ -1111,48 +1231,56 @@ elif st.session_state["nav_view"] == "packet":
             scaf_badge = '<span class="badge-pill badge-scaf" style="font-size: 0.65rem; padding: 1px 5px; margin-left: 0.25rem;">Scaffolded</span>' if is_scaf else ''
             clean_thumb = re.sub(r">\s*\n\s*<", "><", re.sub(r"\n\s*", " ", tile_match["thumbnail_svg"].strip())) if tile_match else ""
 
-            active_pill = (
-                '<span class="badge-pill" style="font-size: 0.68rem; padding: 2px 7px; background: #1e3a8a; color: #ffffff;">Editing</span>'
-                if is_active
-                else f'<span class="badge-pill badge-gray" style="font-size: 0.68rem; padding: 2px 7px;">Page {i+1}</span>'
-            )
+            if is_active:
+                status_pill = '<span class="badge-pill" style="font-size: 0.68rem; padding: 2px 7px; background: #1e3a8a; color: #ffffff; font-weight: 700;">Editing • Zoom</span>'
+            else:
+                status_pill = f'<span class="badge-pill badge-gray" style="font-size: 0.68rem; padding: 2px 7px;">Page {i+1}</span>'
 
             card_border = "border: 2.5px solid #1e3a8a; background: #f0f7ff;" if is_active else "border: 1.5px solid #cbd5e1; background: #ffffff;"
             card_shadow = "box-shadow: 0 4px 12px rgba(30, 58, 138, 0.12);" if is_active else "box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+            header_pr = "28px" if len(tray_pages) > 1 else "0px"
 
             tile_html = f"""
-            <div class="tray-preview-card {'tray-preview-active' if is_active else ''}" style="{card_border} {card_shadow} border-radius: 10px; padding: 0.75rem; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0.45rem;">
+            <div class="tray-preview-card {'tray-preview-active' if is_active else ''}" style="{card_border} {card_shadow}">
                 <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; padding-right: {header_pr};">
                         <span style="font-size: 0.88rem; font-weight: 700; color: #0f172a;">Page {i+1}: Sec {s_code}</span>
-                        {active_pill}
+                        {status_pill}
                     </div>
                     <div style="font-size: 0.78rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                         {s_name} {scaf_badge}
                     </div>
-                    <div class="tray-sheet-mockup" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.45rem; height: 110px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div class="tray-sheet-mockup">
                         {clean_thumb}
                     </div>
+                </div>
+                <div style="font-size: 0.70rem; color: #64748b; text-align: center; margin-top: 0.2rem;">
+                    {'Click again to open full preview' if is_active else 'Click to edit this page'}
                 </div>
             </div>
             """
             render_clean_html(tile_html)
 
-            btn_c1, btn_c2 = st.columns(2)
-            with btn_c1:
-                btn_label = "Editing" if is_active else "Edit Page"
-                if st.button(btn_label, key=f"tray_chip_btn_{i}", use_container_width=True, type="primary" if is_active else "secondary"):
+            # 1. Full-tile button overlay (two-state click)
+            tile_acc_label = f"Page {i+1}: {s_name} ({'Active - Click to Zoom' if is_active else 'Click to Edit'})"
+            if st.button(tile_acc_label, key=f"btn_tray_tile_{i}", use_container_width=True):
+                if i != active_idx:
                     st.session_state["active_tray_idx"] = i
                     st.rerun()
-            with btn_c2:
-                if st.button("View Full Size", key=f"tray_zoom_btn_{i}", use_container_width=True, help=f"Open full-size live preview of Page {i+1} in a modal dialog"):
-                    st.session_state["active_tray_idx"] = i
+                else:
                     show_page_preview_modal(p, i + 1)
+
+            # 2. Delete 'X' button on the tile (only if total_pages > 1)
+            if len(tray_pages) > 1:
+                if st.button("✕", key=f"btn_tray_del_{i}", help=f"Remove Page {i+1} from packet"):
+                    tray_pages.pop(i)
+                    st.session_state["active_tray_idx"] = max(0, min(active_idx, len(tray_pages) - 1))
+                    st.rerun()
 
     # "+ Add Page" Slot
     with tray_cols[-1 if total_pages > 0 else 0]:
         add_card_html = """
-        <div class="tray-add-card" style="border: 2px dashed #94a3b8; background: #f8fafc; border-radius: 10px; padding: 0.75rem; min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 0.45rem;">
+        <div class="tray-add-card">
             <div style="font-size: 1.6rem; font-weight: 700; color: #1e3a8a; line-height: 1; margin-bottom: 0.35rem;">+</div>
             <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Add New Page</div>
             <div style="font-size: 0.74rem; color: #64748b; line-height: 1.35;">Append another section spread to packet</div>
@@ -1288,27 +1416,6 @@ elif st.session_state["nav_view"] == "packet":
                 key=f"ed_page_scaf_{active_idx}",
             )
             active_p["is_scaffolded"] = scaf_checked
-
-            # Page management buttons
-            ctrl_c1, ctrl_c2, ctrl_c3, ctrl_c4 = st.columns([1, 1, 1, 1.5])
-            with ctrl_c1:
-                if active_idx > 0:
-                    if st.button("<- Move Left", use_container_width=True, key=f"btn_left_{active_idx}"):
-                        tray_pages[active_idx - 1], tray_pages[active_idx] = tray_pages[active_idx], tray_pages[active_idx - 1]
-                        st.session_state["active_tray_idx"] = active_idx - 1
-                        st.rerun()
-            with ctrl_c2:
-                if active_idx < len(tray_pages) - 1:
-                    if st.button("Move Right ->", use_container_width=True, key=f"btn_right_{active_idx}"):
-                        tray_pages[active_idx + 1], tray_pages[active_idx] = tray_pages[active_idx], tray_pages[active_idx + 1]
-                        st.session_state["active_tray_idx"] = active_idx + 1
-                        st.rerun()
-            with ctrl_c3:
-                if len(tray_pages) > 1:
-                    if st.button("Delete Page", use_container_width=True, key=f"btn_del_{active_idx}"):
-                        tray_pages.pop(active_idx)
-                        st.session_state["active_tray_idx"] = max(0, active_idx - 1)
-                        st.rerun()
 
     # ── Step 3: Packet-Level Options (Cover & Footer) ──
     with st.expander("Packet-Level Options: Cover Page & Footer Style (Optional)", expanded=False):
