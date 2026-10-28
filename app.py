@@ -1061,20 +1061,20 @@ if st.session_state["nav_view"] == "home":
                 st.rerun()
 
     banner_html = (
-        '<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1.15rem; margin-bottom: 1.0rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">'
-        '<div style="flex: 1.2; min-width: 200px;">'
+        '<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1.15rem; margin-bottom: 1.0rem; display: grid; grid-template-columns: 1fr auto 2fr auto 1fr; align-items: center; gap: 1.25rem;">'
+        '<div style="text-align: left;">'
         '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Curriculum Unit</div>'
         f'<div style="font-size: 0.95rem; font-weight: 600; color: #0f172a; line-height: 1.35;">{display_unit}</div>'
         '</div>'
         '<div style="width: 1.5px; height: 38px; background: #cbd5e1;"></div>'
-        '<div style="flex: 2; min-width: 260px;">'
+        '<div style="text-align: center; padding: 0 0.5rem;">'
         '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Essential Question</div>'
         f'<div style="font-size: 0.88rem; font-style: italic; color: #1e293b; line-height: 1.4;">"{eq_text}"</div>'
         '</div>'
         '<div style="width: 1.5px; height: 38px; background: #cbd5e1;"></div>'
-        '<div style="flex-shrink: 0;">'
+        '<div style="text-align: right;">'
         '<div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.2rem;">Google Drive Folder</div>'
-        f'<div style="font-size: 0.82rem; background: #e2e8f0; padding: 0.35rem 0.75rem; border-radius: 6px; color: #0f172a; font-family: monospace; font-weight: 600; white-space: nowrap;">{ROOT_FOLDER_NAME}</div>'
+        f'<div style="font-size: 0.82rem; background: #e2e8f0; padding: 0.35rem 0.75rem; border-radius: 6px; color: #0f172a; font-family: monospace; font-weight: 600; white-space: nowrap; display: inline-block;">{ROOT_FOLDER_NAME}</div>'
         '</div>'
         '</div>'
     )
