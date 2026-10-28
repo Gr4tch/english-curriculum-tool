@@ -488,6 +488,32 @@ st.markdown(
         margin: 0 !important;
         box-shadow: none !important;
     }
+
+    /* Dynamic Page Tray Live Preview Tiles & Hover Zoom */
+    .tray-preview-card {
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease !important;
+        cursor: pointer !important;
+    }
+    .tray-preview-card:hover {
+        transform: translateY(-4px) scale(1.02) !important;
+        border-color: #1e3a8a !important;
+        box-shadow: 0 10px 24px -4px rgba(30, 58, 138, 0.16) !important;
+    }
+    .tray-sheet-mockup {
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    .tray-preview-card:hover .tray-sheet-mockup {
+        transform: scale(1.03) !important;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+    }
+    .tray-add-card {
+        transition: all 0.22s ease !important;
+    }
+    .tray-add-card:hover {
+        border-color: #1e3a8a !important;
+        background: #eff6ff !important;
+        transform: translateY(-3px) !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -593,6 +619,57 @@ def _render_strategy_card_grid(
                 ):
                     st.session_state["gal_active_tile_code"] = tile["code"]
                     st.rerun()
+
+
+@st.dialog("Full-Size Page Preview", width="large")
+def show_page_preview_modal(p_cfg: Dict[str, Any], page_num: int):
+    """Renders a responsive, full-size modal dialog for inspecting an individual page from the Dynamic Page Tray."""
+    s_meta = p_cfg.get("section_meta", {})
+    s_code = s_meta.get("section_code", "?")
+    s_type = p_cfg.get("strategy_type", "central_idea")
+    s_strat = p_cfg.get("strategy_code", "ci_01_subheading_gist")
+    is_scaf = bool(p_cfg.get("is_scaffolded", False))
+    raw_md = p_cfg.get("raw_passage_md", "")
+
+    tile = get_tile_by_code(s_strat)
+    strat_name = tile["name"] if tile else s_strat.replace("_", " ").title()
+
+    render_clean_html(
+        f"""
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; padding-bottom: 0.45rem; border-bottom: 1.5px solid #e2e8f0;">
+            <div>
+                <span class="badge-pill" style="font-size: 0.85rem; padding: 0.22rem 0.65rem; background: #dbeafe; color: #1e3a8a;">Page {page_num}: Sec {s_code}</span>
+                <span style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-left: 0.4rem;">{strat_name}</span>
+            </div>
+            <div>
+                {'<span class="badge-pill badge-scaf">Scaffolded Edition</span>' if is_scaf else '<span class="badge-pill badge-gray">Standard Edition</span>'}
+            </div>
+        </div>
+        """
+    )
+
+    handout = build_standalone_strategy_handout(
+        section_meta=s_meta,
+        strategy_category=s_type,
+        strategy_code=s_strat,
+        markdown_text=raw_md,
+        is_scaffolded=is_scaf,
+    )
+
+    std_md = handout["student_scaffolded_md" if is_scaf else "student_standard_md"]
+    ex_md = handout["exemplar_md"]
+
+    std_html = format_booklet_for_web(std_md)
+    ex_html = format_booklet_for_web(ex_md)
+
+    tab_std, tab_ex = st.tabs([
+        f"Student Handout ({'Scaffolded' if is_scaf else 'Standard'})",
+        "Teacher Answer Key & Exemplar",
+    ])
+    with tab_std:
+        st.markdown(std_html, unsafe_allow_html=True)
+    with tab_ex:
+        st.markdown(ex_html, unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1011,49 +1088,78 @@ elif st.session_state["nav_view"] == "packet":
                 st.session_state["include_cover_toggle"] = True
                 st.rerun()
 
-    # ── Step 2: Dynamic Horizontal Page Tray ──
+    # ── Step 2: Dynamic Horizontal Page Tray with Live Preview Tiles ──
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-    st.markdown("#### Step 2: Dynamic Page Tray — Configure Every Page")
+    st.markdown("#### Step 2: Dynamic Page Tray — Live Preview & Configure Every Page")
+    st.caption("Each tile below displays a live structural preview of that page. Click **Edit Page** to customize its section spread or strategy below, or click **View Full Size** to inspect the live printable sheet in a full-screen modal:")
 
     total_pages = len(tray_pages)
     total_sheets = (total_pages + 1) // 2
 
-    # Render horizontal sequence
+    # Render horizontal sequence of live preview tiles
     tray_cols = st.columns(total_pages + 1 if total_pages > 0 else 1)
 
     for i, p in enumerate(tray_pages):
         with tray_cols[i]:
             is_active = (i == active_idx)
-            card_class = "page-chip-box page-chip-active" if is_active else "page-chip-box"
             s_meta = p.get("section_meta", {})
             s_code = s_meta.get("section_code", "?")
             s_strat = p.get("strategy_code", "")
             tile_match = get_tile_by_code(s_strat)
             s_name = tile_match["name"] if tile_match else s_strat.replace("_", " ").title()
-            scaf_badge = '<span class="badge-pill badge-scaf" style="font-size:0.65rem; padding:1px 4px;">Scaffolded</span>' if p.get("is_scaffolded") else ''
+            is_scaf = p.get("is_scaffolded", False)
+            scaf_badge = '<span class="badge-pill badge-scaf" style="font-size: 0.65rem; padding: 1px 5px; margin-left: 0.25rem;">Scaffolded</span>' if is_scaf else ''
+            clean_thumb = re.sub(r">\s*\n\s*<", "><", re.sub(r"\n\s*", " ", tile_match["thumbnail_svg"].strip())) if tile_match else ""
 
-            btn_label = f"Page {i+1}: Sec {s_code}"
-            if st.button(
-                btn_label,
-                key=f"tray_chip_btn_{i}",
-                use_container_width=True,
-                type="primary" if is_active else "secondary",
-            ):
-                st.session_state["active_tray_idx"] = i
-                st.rerun()
-
-            render_clean_html(
-                f"""
-                <div style="font-size: 0.76rem; text-align: center; color: #475569; margin-top: -0.3rem;">
-                    <b>{s_name}</b> {scaf_badge}
-                </div>
-                """
+            active_pill = (
+                '<span class="badge-pill" style="font-size: 0.68rem; padding: 2px 7px; background: #1e3a8a; color: #ffffff;">Editing</span>'
+                if is_active
+                else f'<span class="badge-pill badge-gray" style="font-size: 0.68rem; padding: 2px 7px;">Page {i+1}</span>'
             )
+
+            card_border = "border: 2.5px solid #1e3a8a; background: #f0f7ff;" if is_active else "border: 1.5px solid #cbd5e1; background: #ffffff;"
+            card_shadow = "box-shadow: 0 4px 12px rgba(30, 58, 138, 0.12);" if is_active else "box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+
+            tile_html = f"""
+            <div class="tray-preview-card {'tray-preview-active' if is_active else ''}" style="{card_border} {card_shadow} border-radius: 10px; padding: 0.75rem; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0.45rem;">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                        <span style="font-size: 0.88rem; font-weight: 700; color: #0f172a;">Page {i+1}: Sec {s_code}</span>
+                        {active_pill}
+                    </div>
+                    <div style="font-size: 0.78rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {s_name} {scaf_badge}
+                    </div>
+                    <div class="tray-sheet-mockup" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.45rem; height: 110px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                        {clean_thumb}
+                    </div>
+                </div>
+            </div>
+            """
+            render_clean_html(tile_html)
+
+            btn_c1, btn_c2 = st.columns(2)
+            with btn_c1:
+                btn_label = "Editing" if is_active else "Edit Page"
+                if st.button(btn_label, key=f"tray_chip_btn_{i}", use_container_width=True, type="primary" if is_active else "secondary"):
+                    st.session_state["active_tray_idx"] = i
+                    st.rerun()
+            with btn_c2:
+                if st.button("View Full Size", key=f"tray_zoom_btn_{i}", use_container_width=True, help=f"Open full-size live preview of Page {i+1} in a modal dialog"):
+                    st.session_state["active_tray_idx"] = i
+                    show_page_preview_modal(p, i + 1)
 
     # "+ Add Page" Slot
     with tray_cols[-1 if total_pages > 0 else 0]:
+        add_card_html = """
+        <div class="tray-add-card" style="border: 2px dashed #94a3b8; background: #f8fafc; border-radius: 10px; padding: 0.75rem; min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 0.45rem;">
+            <div style="font-size: 1.6rem; font-weight: 700; color: #1e3a8a; line-height: 1; margin-bottom: 0.35rem;">+</div>
+            <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Add New Page</div>
+            <div style="font-size: 0.74rem; color: #64748b; line-height: 1.35;">Append another section spread to packet</div>
+        </div>
+        """
+        render_clean_html(add_card_html)
         if st.button("+ Add Page", key="btn_add_tray_page", use_container_width=True):
-            # Append copy of last page or default to current chapter's section
             fallback_sec = ch_sections[0] if ch_sections else {}
             sec_target = tray_pages[-1]["section_meta"] if tray_pages else fallback_sec
             sec_p = resolve_file_path(sec_target.get("md_file"))
@@ -1075,18 +1181,21 @@ elif st.session_state["nav_view"] == "packet":
         active_p = tray_pages[active_idx]
 
         with st.container(border=True):
-            render_clean_html(
-                f"""
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <div style="font-size: 1.05rem; font-weight: 700; color: #1e3a8a;">
-                        Editing Page {active_idx + 1} of {total_pages}
-                    </div>
-                    <div>
+            ed_head_c1, ed_head_c2 = st.columns([2.5, 1.2])
+            with ed_head_c1:
+                render_clean_html(
+                    f"""
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <span style="font-size: 1.05rem; font-weight: 700; color: #1e3a8a;">
+                            Editing Page {active_idx + 1} of {total_pages}
+                        </span>
                         <span class="badge-pill badge-gray">Total Packet: {total_pages} pgs ({total_sheets} sheets)</span>
                     </div>
-                </div>
-                """
-            )
+                    """
+                )
+            with ed_head_c2:
+                if st.button("Preview This Page", key="btn_editor_modal_preview", use_container_width=True, help="Open full-size live preview of this page in a modal dialog"):
+                    show_page_preview_modal(active_p, active_idx + 1)
 
             ed_c1, ed_c2 = st.columns(2)
 
@@ -1341,20 +1450,19 @@ elif st.session_state["nav_view"] == "packet":
     else:
         st.info("PDF compilation is initializing. You can review the complete interactive previews below immediately or print directly via your browser (Ctrl+P / Cmd+P).")
 
-    # ── Step 6: Live Multi-Page Preview ──
+    # ── Step 4: Live Multi-Page Continuous Scroll Preview ──
     st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
-    st.markdown("#### Step 4: Live Multi-Page Preview")
+    with st.expander(f"Complete Packet Continuous Scroll Preview ({total_pkt_pages} Pages)", expanded=False):
+        preview_tab1, preview_tab2 = st.tabs([
+            f"Student Packet Preview ({total_pkt_pages} Pages)",
+            "Teacher Answer Key Preview",
+        ])
 
-    preview_tab1, preview_tab2 = st.tabs([
-        f"Student Packet Preview ({total_pkt_pages} Pages)",
-        "Teacher Answer Key Preview",
-    ])
+        with preview_tab1:
+            st.markdown(modular_result["student_packet_html"], unsafe_allow_html=True)
 
-    with preview_tab1:
-        st.markdown(modular_result["student_packet_html"], unsafe_allow_html=True)
-
-    with preview_tab2:
-        st.markdown(modular_result["teacher_key_html"], unsafe_allow_html=True)
+        with preview_tab2:
+            st.markdown(modular_result["teacher_key_html"], unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
