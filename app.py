@@ -1876,31 +1876,6 @@ elif st.session_state["nav_view"] == "gallery":
     gal_md_path = resolve_file_path(gal_selected_sec.get("md_file"))
     gal_raw_md = gal_md_path.read_text(encoding="utf-8") if gal_md_path.exists() else ""
 
-    sec_vocab = gal_selected_sec.get("official_vocab", [])
-    vocab_summary = ", ".join([v["word"] for v in sec_vocab[:4]]) if sec_vocab else "None listed"
-    if len(sec_vocab) > 4:
-        vocab_summary += f" (+{len(sec_vocab) - 4} more)"
-
-    mi_str = gal_selected_sec.get('printed_main_idea', '')
-    if len(mi_str) > 85:
-        mi_str = mi_str[:82] + "..."
-
-    # ── Tier 2: Context Micro-Bar (~24px) ──
-    render_clean_html(
-        f"""
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.28rem 0.70rem; margin: 0.25rem 0 0.50rem 0; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: #475569; flex-wrap: wrap; gap: 0.4rem;">
-            <div>
-                <span class="badge-pill" style="font-size: 0.70rem; padding: 0.10rem 0.45rem;">{gal_selected_sec.get('section_type', 'Core Narrative')}</span>
-                <span style="font-weight: 600; color: #1e293b;">{gal_selected_sec.get('word_count', 0)} words</span>
-                &bull; <i>"{mi_str}"</i>
-            </div>
-            <div>
-                <b>Vocab:</b> <span style="color: #1e3a8a; font-weight: 600;">{vocab_summary}</span>
-            </div>
-        </div>
-        """
-    )
-
     active_tile_code = st.session_state.get("gal_active_tile_code", None)
 
     if not active_tile_code:
