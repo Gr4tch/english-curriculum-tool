@@ -114,11 +114,24 @@ def audit_vocabulary_practice_generation() -> int:
         if re.search(r'__+\s*:\s*(?:\n|$)', std_md) or re.search(r'__+\s*:\s*(?:\n|$)', scaf_md):
             errors.append(f"Sec {sec_code}: Found empty clue line ending with colon!")
 
-        # Check 4: Scaffolded edition should have first-letter hints on blanks
-        if not re.search(r'\d+\.\s+[A-Za-z]_+', scaf_md):
-            errors.append(f"Sec {sec_code}: Scaffolded edition missing first-letter cues on blanks")
+        # Check 4: Neither standard nor scaffolded edition should have first-letter giveaways
+        if re.search(r'\d+\.\s+[A-Za-z]_+', scaf_md):
+            errors.append(f"Sec {sec_code}: Scaffolded edition contains first-letter giveaway on blanks")
+        if re.search(r'\d+\.\s+[A-Za-z]_+', std_md):
+            errors.append(f"Sec {sec_code}: Standard edition contains first-letter giveaway on blanks")
 
-        # Check 5: Badge styling in rendered HTML
+        # Check 5: Both editions must have clean, unassisted fill-in blanks
+        if not re.search(r'\d+\.\s+_{10,}\s*:\s*\S+', scaf_md):
+            errors.append(f"Sec {sec_code}: Scaffolded edition missing clean blank lines")
+        if not re.search(r'\d+\.\s+_{10,}\s*:\s*\S+', std_md):
+            errors.append(f"Sec {sec_code}: Standard edition missing clean blank lines")
+
+        # Check 6: Zero fallback or generic placeholder definitions
+        for placeholder in ["Key historical concept", "defined in context", "defined in section reading"]:
+            if placeholder.lower() in scaf_md.lower() or placeholder.lower() in std_md.lower():
+                errors.append(f"Sec {sec_code}: Found placeholder text '{placeholder}' in vocabulary handout!")
+
+        # Check 7: Badge styling in rendered HTML
         std_html = format_booklet_for_web(std_md)
         scaf_html = format_booklet_for_web(scaf_md)
 
@@ -128,6 +141,15 @@ def audit_vocabulary_practice_generation() -> int:
             errors.append(f"Sec {sec_code}: Scaffolded edition HTML missing ws-badge-amber")
         if "Scaffolded Edition</span>" in scaf_html:
             errors.append(f"Sec {sec_code}: Scaffolded edition contains redundant rectangular badge")
+
+    # Specific check for Proclamation of 1763 in Section 5.1
+    sec_51 = next((s for s in cat if str(s.get("section_code")) in ("5.1", "5.1.1", "1.1") and s.get("chapter_num") == 5), None)
+    if sec_51:
+        h51 = build_standalone_strategy_handout(sec_51, "vocab", "vocab_deep_dive")
+        if "forbidding American colonists from settling west" not in h51["student_standard_md"]:
+            errors.append("Section 5.1: Standard vocabulary handout missing authentic Proclamation of 1763 definition!")
+        if "forbidding American colonists from settling west" not in h51["student_scaffolded_md"]:
+            errors.append("Section 5.1: Scaffolded vocabulary handout missing authentic Proclamation of 1763 definition!")
 
     if errors:
         print(f"[FAIL] Vocabulary Generation Audit: Found {len(errors)} defects:")

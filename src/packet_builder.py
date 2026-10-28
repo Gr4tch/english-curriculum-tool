@@ -1185,6 +1185,57 @@ def generate_section_packet(
     }
 
 
+CANONICAL_VOCAB_DEFINITIONS: Dict[str, str] = {
+    "kayak": "a small, narrow Inuit boat propelled by a double-bladed paddle, covered with watertight sealskin",
+    "vassal": "a person granted the use of land by a feudal lord in exchange for homage, fealty, and military service",
+    "oasis": "a fertile, isolated area in an arid desert where freshwater allows vegetation and human settlement",
+    "trans-Siberian": "trade routes traversing the Sahara Desert between West Africa and the Mediterranean world",
+    "mission": "a Spanish religious settlement established by Catholic priests to convert indigenous peoples to Christianity",
+    "Fundamental Orders of Connecticut": "an early colonial charter and written constitution adopted in 1639 establishing representative government in Connecticut",
+    "provisions": "supplies of food, water, and other necessary goods needed for a voyage or military campaign",
+    "backcountry": "the rural, sparsely populated frontier region inland from the Atlantic coastal plains",
+    "salutary neglect": "an unofficial British policy of loosely enforcing trade regulations in the American colonies as long as they remained economically profitable",
+    "Proclamation of 1763": "a British law forbidding American colonists from settling west of the Appalachian Mountains",
+    "minutemen": "companies of handpicked, specially trained colonial militia members ready to fight at a minute's notice",
+    "earthwork": "a temporary fortification constructed from earth and soil to provide cover for soldiers in battle",
+    "Hessian": "German soldier hired by the British to fight against the American colonists in the Revolutionary War",
+    "Declaration of Independence": "the 1776 document written primarily by Thomas Jefferson declaring the American colonies free and independent from Great Britain",
+    "unalienable right": "a basic human right that cannot be taken away by any government",
+    "pacifist": "a person who stands against war, combat, and violence",
+    "Treaty of Paris of 1783": "the peace agreement signed by Britain and the United States officially ending the Revolutionary War and recognizing American independence",
+    "sovereign": "possessing supreme, independent political authority; self-governing",
+    "Northwest Ordinance of 1787": "a law passed by Congress establishing a framework for governing the Northwest Territory and admitting new states on equal footing",
+    "Ordinance of 1785": "a law that set up a standardized system for surveying, subdividing, and selling public land in the Northwest Territory",
+    "Cabinet": "an advisory body made up of the heads of the executive departments who advise the president",
+    "inauguration": "an official ceremony marking the formal beginning of a president's term of office",
+    "national debt": "the total amount of money owed by a nation's government to its creditors and lenders",
+    "tariff": "a tax or customs duty placed on imported goods coming into a country",
+    "XYZ Affair": "a 1797 incident in which French agents demanded bribes from American diplomats, creating hostility between the nations",
+    "Judiciary Act of 1801": "a federal law passed by Federalists to reorganize the federal court system and appoint midnight judges before Thomas Jefferson took office",
+    "yellow fever": "an infectious, often-fatal tropical disease transmitted by mosquitoes that devastated French troops in Haiti",
+    "Embargo Act of 1807": "a federal law prohibiting American merchant ships from trading in all foreign ports, designed to force Britain and France to respect U.S. neutrality",
+    "War Hawks": "members of Congress, primarily from the South and West, who strongly pressured President Madison to declare war against Britain",
+    "War of 1812": "a conflict between the United States and Great Britain caused by trade restrictions, impressment of American sailors, and British support for Native American resistance",
+    "factory system": "a method of industrial manufacturing in which large crews of workers operate power-driven machinery in one central facility",
+    "cotton gin": "a machine invented by Eli Whitney that quickly separated cotton fibers from their seeds, vastly increasing raw cotton output",
+    "Expansion and Growth abolition": "the formal movement and legal effort to put an end to the practice of slavery",
+    "abolition": "the formal movement and legal effort to put an end to the practice of slavery",
+}
+
+
+def _get_clean_vocab_definition(item: Dict[str, Any]) -> str:
+    """Returns a valid, textbook-grounded definition, resolving empty strings or placeholder text."""
+    word = str(item.get("word", "")).strip()
+    d = (item.get("definition") or "").strip()
+    if not d or d.lower().startswith("defined in context") or "key historical concept" in d.lower():
+        if word in CANONICAL_VOCAB_DEFINITIONS:
+            return CANONICAL_VOCAB_DEFINITIONS[word]
+        clean_w = word.replace("Expansion and Growth ", "")
+        if clean_w in CANONICAL_VOCAB_DEFINITIONS:
+            return CANONICAL_VOCAB_DEFINITIONS[clean_w]
+    return d
+
+
 def build_standalone_strategy_handout(
     section_meta: Dict[str, Any],
     strategy_category: str,
@@ -1257,34 +1308,26 @@ def build_standalone_strategy_handout(
         vocab_items = section_meta.get("official_vocab", [])[:4]
         words_str = ", ".join(v.get("word", "") for v in vocab_items if v.get("word")) or "key historical terms"
 
-        def _get_v_def(item):
-            d = (item.get("definition") or "").strip()
-            if not d:
-                d = "Key historical concept defined in section reading."
-            return d
-
         # Standard Edition: At-level retrieval practice (no word bank)
         comp_md_std = (
             f"**Official Section Vocabulary Practice:**\n\n"
             f"**Directions:** Read each clue below. Using the section reading on pages {pp}, write the key vocabulary term that best matches each historical definition:\n\n"
         )
         for i, v in enumerate(vocab_items, 1):
-            defn = _get_v_def(v)
+            defn = _get_clean_vocab_definition(v)
             comp_md_std += f"{i}. _________________________ : {defn}\n\n"
 
-        # Scaffolded Edition: Supported matching with Word Bank and first-letter prompts
+        # Scaffolded Edition: Supported matching with Word Bank (no first-letter giveaways)
         comp_md_scaf = (
             f"**Official Section Vocabulary Practice:**\n"
             f"> **Word Bank:** {words_str}\n\n"
             f"**Directions:** Use the **Word Bank** above to complete each clue with the correct vocabulary term from pages {pp}:\n\n"
         )
         for i, v in enumerate(vocab_items, 1):
-            defn = _get_v_def(v)
-            raw_w = (v.get("word") or "").strip()
-            first_letter = raw_w[0] if raw_w else "_"
-            comp_md_scaf += f"{i}. {first_letter}________________________ : {defn}\n\n"
+            defn = _get_clean_vocab_definition(v)
+            comp_md_scaf += f"{i}. _________________________ : {defn}\n\n"
 
-        keys = [f"Vocabulary Term {i} ({v.get('word', '')}): {_get_v_def(v)}" for i, v in enumerate(vocab_items, 1)]
+        keys = [f"Vocabulary Term {i} ({v.get('word', '')}): {_get_clean_vocab_definition(v)}" for i, v in enumerate(vocab_items, 1)]
     elif strategy_category in ("assessment", "quiz"):
         s_obj = {"name": "Section Check & Quiz", "short_name": "Section Assessment", "description": "Reading check and critical viewing questions"}
         std_code = "CCSS RH.6-8.1"

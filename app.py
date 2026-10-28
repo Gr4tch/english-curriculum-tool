@@ -733,7 +733,7 @@ st.markdown(
 # ─────────────────────────────────────────────────────────────────────────────
 
 @st.cache_data
-def load_catalog() -> List[Dict[str, Any]]:
+def load_catalog(_mtime: float = 0.0) -> List[Dict[str, Any]]:
     cat_path = Path("output/catalog.json")
     if not cat_path.exists():
         return []
@@ -741,7 +741,7 @@ def load_catalog() -> List[Dict[str, Any]]:
 
 
 @st.cache_data
-def load_vocab_index() -> Dict[str, Any]:
+def load_vocab_index(_mtime: float = 0.0) -> Dict[str, Any]:
     vp = Path("output/vocab_index.json")
     if not vp.exists():
         return {}
@@ -749,7 +749,7 @@ def load_vocab_index() -> Dict[str, Any]:
 
 
 @st.cache_data
-def load_chapter_reviews() -> Dict[str, Any]:
+def load_chapter_reviews(_mtime: float = 0.0) -> Dict[str, Any]:
     rp = Path("output/chapter_reviews.json")
     if not rp.exists():
         return {}
@@ -966,9 +966,17 @@ if not verify_access():
     st.stop()
 
 
-catalog = load_catalog()
-vocab_index = load_vocab_index()
-chapter_reviews = load_chapter_reviews()
+cat_p = Path("output/catalog.json")
+cat_mtime = cat_p.stat().st_mtime if cat_p.exists() else 0.0
+catalog = load_catalog(cat_mtime)
+
+vocab_p = Path("output/vocab_index.json")
+vocab_mtime = vocab_p.stat().st_mtime if vocab_p.exists() else 0.0
+vocab_index = load_vocab_index(vocab_mtime)
+
+reviews_p = Path("output/chapter_reviews.json")
+reviews_mtime = reviews_p.stat().st_mtime if reviews_p.exists() else 0.0
+chapter_reviews = load_chapter_reviews(reviews_mtime)
 
 if not catalog:
     st.error("Textbook catalog (`output/catalog.json`) not found. Please run the compiler first.")
