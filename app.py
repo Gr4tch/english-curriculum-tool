@@ -1007,11 +1007,14 @@ if st.session_state["nav_view"] == "home":
 if st.session_state["nav_view"] == "home":
     render_clean_html(
         """
-        <div style="text-align: center; margin-top: 0.5rem; margin-bottom: 2.0rem;">
-            <h2 style="font-size: 1.65rem; font-weight: 700; color: #0f172a; margin-bottom: 0.45rem;">
-                Curriculum Design Studio — What would you like to create today?
-            </h2>
-            <div style="font-size: 1.05rem; color: #64748b; font-weight: 500;">
+        <div style="text-align: center; margin-top: 0.5rem; margin-bottom: 2.25rem;">
+            <h1 style="font-size: 2.20rem; font-weight: 800; color: #0f172a; letter-spacing: -0.025em; margin: 0 0 0.40rem 0; line-height: 1.2;">
+                Curriculum Design Studio
+            </h1>
+            <div style="font-size: 1.22rem; font-weight: 600; color: #1e40af; font-style: italic; margin-bottom: 0.75rem;">
+                What would you like to create today?
+            </div>
+            <div style="font-size: 0.92rem; color: #64748b; font-weight: 400; letter-spacing: 0.01em;">
                 Select one of the options below to get started!
             </div>
         </div>
