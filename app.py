@@ -159,57 +159,39 @@ st.markdown(
     .hero-card {
         background: #ffffff;
         border: 1.5px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1.4rem 1.4rem 1.0rem 1.4rem;
-        min-height: 190px;
-        display: block;
+        border-radius: 14px;
+        padding: 2.2rem 2.0rem 2.0rem 2.0rem;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         text-decoration: none !important;
         color: inherit !important;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease;
         margin-bottom: 0.75rem;
     }
-    .hero-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.10);
-    }
     .hero-blue {
-        border-top: 5px solid #2563eb !important;
-        background: linear-gradient(180deg, #eff6ff 0%, #ffffff 42%);
-    }
-    .hero-blue:hover {
-        border-color: #93c5fd;
-        border-top: 5px solid #1d4ed8 !important;
+        border-top: 6px solid #2563eb !important;
+        background: linear-gradient(180deg, #eff6ff 0%, #ffffff 48%);
     }
     .hero-indigo {
-        border-top: 5px solid #6366f1 !important;
-        background: linear-gradient(180deg, #eef2ff 0%, #ffffff 42%);
-    }
-    .hero-indigo:hover {
-        border-color: #c7d2fe;
-        border-top: 5px solid #4f46e5 !important;
-    }
-    .hero-teal {
-        border-top: 5px solid #0d9488 !important;
-        background: linear-gradient(180deg, #f0fdfa 0%, #ffffff 42%);
-    }
-    .hero-teal:hover {
-        border-color: #99f6e4;
-        border-top: 5px solid #0f766e !important;
+        border-top: 6px solid #6366f1 !important;
+        background: linear-gradient(180deg, #eef2ff 0%, #ffffff 48%);
     }
     .hero-title {
-        font-size: 1.20rem;
+        font-size: 1.45rem;
         font-weight: 700;
         color: #0f172a;
-        margin-bottom: 0.45rem;
-        line-height: 1.3;
+        margin-bottom: 0.75rem;
+        line-height: 1.25;
         display: block;
     }
     .hero-desc {
-        font-size: 0.90rem;
-        color: #475569;
-        line-height: 1.45;
-        margin-bottom: 0.75rem;
+        font-size: 1.05rem;
+        color: #334155;
+        line-height: 1.6;
+        margin-bottom: 0;
         display: block;
     }
 
@@ -465,7 +447,8 @@ st.markdown(
     }
 
     /* Full Tile Invisible Button Overlay */
-    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) div[class*="st-key-btn_tile_"] {
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) div[class*="st-key-btn_tile_"],
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_hero_"]) div[class*="st-key-btn_hero_"] {
         position: absolute !important;
         top: 0 !important;
         left: 0 !important;
@@ -477,7 +460,9 @@ st.markdown(
     }
 
     div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) div[class*="st-key-btn_tile_"] div.stButton,
-    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) div[class*="st-key-btn_tile_"] div.stButton button {
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_tile_"]) div[class*="st-key-btn_tile_"] div.stButton button,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_hero_"]) div[class*="st-key-btn_hero_"] div.stButton,
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_hero_"]) div[class*="st-key-btn_hero_"] div.stButton button {
         width: 100% !important;
         height: 100% !important;
         opacity: 0 !important;
@@ -487,6 +472,28 @@ st.markdown(
         padding: 0 !important;
         margin: 0 !important;
         box-shadow: none !important;
+    }
+
+    /* Hero Pathway Cards Column Hover */
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_hero_"]) {
+        position: relative !important;
+        cursor: pointer !important;
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_hero_"]):hover {
+        transform: translateY(-4px) scale(1.015) !important;
+        z-index: 10 !important;
+    }
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_hero_"]):hover .hero-card {
+        box-shadow: 0 16px 32px -4px rgba(15, 23, 42, 0.12), 0 6px 12px -4px rgba(15, 23, 42, 0.06) !important;
+    }
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_hero_"]):hover .hero-blue {
+        border-color: #93c5fd !important;
+        border-top: 6px solid #1d4ed8 !important;
+    }
+    div[data-testid="stColumn"]:has(div[class*="st-key-btn_hero_"]):hover .hero-indigo {
+        border-color: #c7d2fe !important;
+        border-top: 6px solid #4f46e5 !important;
     }
 
     /* Dynamic Page Tray Column & Tile Button Styling */
@@ -998,38 +1005,48 @@ if st.session_state["nav_view"] == "home":
 # ─────────────────────────────────────────────────────────────────────────────
 
 if st.session_state["nav_view"] == "home":
-    st.markdown("### Curriculum Design Studio — What would you like to create today?")
-    st.caption("Select one of the two primary pathways below to design print-ready materials for your 40-minute U.S. History class:")
+    render_clean_html(
+        """
+        <div style="text-align: center; margin-top: 0.5rem; margin-bottom: 2.0rem;">
+            <h2 style="font-size: 1.65rem; font-weight: 700; color: #0f172a; margin-bottom: 0.45rem;">
+                Curriculum Design Studio — What would you like to create today?
+            </h2>
+            <div style="font-size: 1.05rem; color: #64748b; font-weight: 500;">
+                Select one of the options below to get started!
+            </div>
+        </div>
+        """
+    )
 
     h_col1, h_col2 = st.columns(2)
 
     with h_col1:
         render_clean_html(
             """
-            <a href="?nav=packet&auth=ok" target="_self" class="hero-card hero-blue">
-                <span class="hero-title" style="color: #1d4ed8;">1. Modular Curriculum Packet Builder</span>
+            <div class="hero-card hero-blue">
+                <span class="hero-title" style="color: #1d4ed8;">Packet Builder</span>
                 <span class="hero-desc">
-                    Assemble custom 2-page, 3-page, or chapter unit packets page-by-page. Dynamic Page Tray gives you complete modular control to mix active reading organizers, central idea synthesizers, writing extensions, vocabulary practice, or assessments. Exports directly to print-ready vector PDF.
+                    Customize 2-page, 3-page, or chapter packets, page-by-page. Then export them as PDFs!
                 </span>
-            </a>
+            </div>
             """
         )
-        if st.button("Open Packet Builder ->", use_container_width=True, key="btn_hero_packet", type="primary"):
+        if st.button("Packet Builder", use_container_width=True, key="btn_hero_packet"):
             st.session_state["nav_view"] = "packet"
             st.rerun()
 
     with h_col2:
         render_clean_html(
             """
-            <a href="?nav=gallery&auth=ok" target="_self" class="hero-card hero-indigo">
-                <span class="hero-title" style="color: #4338ca;">2. Standalone Strategy Worksheet Gallery</span>
+            <div class="hero-card hero-indigo">
+                <span class="hero-title" style="color: #4338ca;">Worksheet Gallery</span>
                 <span class="hero-desc">
-                    Explore all 18 pedagogical strategy templates in an interactive visual thumbnail grid. Preview student worksheets with scaffolded support and authentic 8th-grade student exemplars grounded in any textbook section spread, then download vector PDFs or save directly to Google Drive.
+                    Explore the full run of available strategies, and print individual student handouts!
                 </span>
-            </a>
+            </div>
             """
         )
-        if st.button("Open Worksheet Gallery ->", use_container_width=True, key="btn_hero_gallery", type="primary"):
+        if st.button("Worksheet Gallery", use_container_width=True, key="btn_hero_gallery"):
             st.session_state["nav_view"] = "gallery"
             st.session_state["gal_active_tile_code"] = None
             st.rerun()
