@@ -161,6 +161,76 @@ def audit_vocabulary_practice_generation() -> int:
     return 0
 
 
+def audit_twr_because_but_so_strategy() -> int:
+    """Audits TWR 'Because, But, So' sentence expansion strategy across chapters for prompt cleanliness."""
+    cat = json.loads(Path("output/catalog.json").read_text(encoding="utf-8"))
+    errors = []
+
+    # Sample sections across diverse chapters
+    sample_sections = [
+        s for s in cat
+        if s.get("chapter_num") in [1, 2, 5, 6, 8]
+    ][:12]
+
+    for sec in sample_sections:
+        sec_code = sec.get("section_code", "?")
+        ch_num = sec.get("chapter_num", "?")
+        sec_title = sec.get("title", "")
+        md_p = Path(sec.get("md_file", ""))
+        raw_md = md_p.read_text(encoding="utf-8") if md_p.exists() else ""
+
+        handout = build_standalone_strategy_handout(
+            section_meta=sec,
+            strategy_category="twr",
+            strategy_code="twr_because_but_so",
+            markdown_text=raw_md,
+            is_scaffolded=False,
+        )
+
+        std_md = handout["student_standard_md"]
+        lines = [line.strip() for line in std_md.splitlines() if re.match(r"^\d+\.", line.strip())]
+
+        for item_idx, line in enumerate(lines, 1):
+            # Check 1: Must NOT contain "In Section X.X" in question prompt
+            if re.search(r"In Section \d+", line, flags=re.IGNORECASE):
+                errors.append(f"Ch {ch_num} Sec {sec_code}: Prompt contains redundant 'In Section' prefix: '{line}'")
+
+            # Check 2: Must NOT repeat section title in prompt
+            if sec_title and f"({sec_title})" in line:
+                errors.append(f"Ch {ch_num} Sec {sec_code}: Prompt contains redundant section title '({sec_title})': '{line}'")
+
+            # Check 3: Sentence stem must start with capital letter
+            m = re.match(r"^\d+\.\s+([A-Za-z])", line)
+            if m and not m.group(1).isupper():
+                errors.append(f"Ch {ch_num} Sec {sec_code}: Prompt stem starts with lowercase letter '{m.group(1)}': '{line}'")
+
+        # Check 4: Rendered HTML must not have orphan dot after solid line
+        std_html = format_booklet_for_web(std_md)
+        if "ws-solid-line\"></div>." in std_html or "ws-solid-line\"></div>\n." in std_html:
+            errors.append(f"Ch {ch_num} Sec {sec_code}: Rendered HTML contains orphan period after solid line!")
+
+    # Specific check for Ch 5 Sec 1.1
+    sec_51 = next((s for s in cat if str(s.get("section_code")) in ("5.1", "5.1.1", "1.1") and s.get("chapter_num") == 5), None)
+    if sec_51:
+        h51 = build_standalone_strategy_handout(sec_51, "twr", "twr_because_but_so")
+        md51 = h51["student_standard_md"]
+        if "1. Tensions grew between Britain and the colonies **because**" not in md51:
+            errors.append("Ch 5 Sec 1.1: Missing authentic capitalized stem 'Tensions grew between Britain and the colonies because'")
+        if "In Section 1.1" in md51:
+            errors.append("Ch 5 Sec 1.1: Still contains 'In Section 1.1' in prompt text")
+        if "(Limits on Freedom)" in md51:
+            errors.append("Ch 5 Sec 1.1: Still contains '(Limits on Freedom)' in question prompts")
+
+    if errors:
+        print(f"[FAIL] TWR Because/But/So Audit: Found {len(errors)} defects:")
+        for err in errors:
+            print(f"  - {err}")
+        return len(errors)
+
+    print(f"[PASS] TWR Because/But/So Audit: Passed across {len(sample_sections)} sample sections.")
+    return 0
+
+
 def main():
     print("=" * 60)
     print("Curriculum Product Quality & Content Audit")
@@ -170,6 +240,7 @@ def main():
     total_failures += audit_catalog_vocab_completeness()
     total_failures += audit_vocab_index_completeness()
     total_failures += audit_vocabulary_practice_generation()
+    total_failures += audit_twr_because_but_so_strategy()
 
     print("=" * 60)
     if total_failures == 0:

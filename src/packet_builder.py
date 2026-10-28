@@ -611,7 +611,7 @@ def build_dynamic_section_knowledge(section_meta: Dict[str, Any], markdown_text:
         return CHAPTER_5_KNOWLEDGE_BASE[sec_code]
 
     printed_mi = section_meta.get("printed_main_idea") or (
-        f"In Section {sec_code} ({section_meta['title']}), historical developments shaped the growth and conflicts of the nation."
+        "Historical developments shaped the growth and conflicts of the nation."
     )
     vocab_list = [v["word"] for v in section_meta.get("official_vocab", [])][:6]
 
@@ -947,6 +947,68 @@ def _render_central_idea_and_anti_copycat_component(
     return "\n".join(lines), keys
 
 
+CHAPTER_5_TWR_STEMS: Dict[str, str] = {
+    "1.1": "Tensions grew between Britain and the colonies",
+    "1.2": "Parliament passed new tax laws to raise revenue from the colonies",
+    "1.3": "Colonists united to protest and boycott British goods",
+    "1.4": "Benjamin Franklin urged Parliament to repeal colonial taxes",
+    "2.1": "Colonists organized widespread boycotts against the Townshend Acts",
+    "2.2": "Tensions in Boston escalated between colonists and British soldiers",
+    "2.3": "Parliament passed the Coercive Acts to punish Massachusetts",
+    "2.4": "Colonists used everyday objects and political symbols to resist British control",
+    "3.1": "Colonial delegates gathered at the First Continental Congress",
+    "3.2": "Patriot messengers rode through the night to alert colonial militias",
+    "3.3": "Colonial Minutemen clashed with British troops at Lexington and Concord",
+    "3.4": "Colonial militia defended the North Bridge at Concord against British regulars",
+    "4.1": "Patriot forces fought fiercely against British troops at Bunker Hill",
+    "4.2": "Colonial troops fortified strategic hills overlooking Boston Harbor",
+    "4.3": "Thomas Paine urged American colonists to declare full independence",
+    "4.4": "The Continental Congress adopted the Declaration of Independence",
+    "4.5": "Diverse Americans demanded liberty and equal rights during the Revolution",
+}
+
+
+def _get_twr_because_but_so_stem(section_meta: Dict[str, Any], kb: Dict[str, Any]) -> str:
+    """
+    Returns an authentic, capitalized historical stem for TWR 'Because, But, So' sentence expansion.
+    Enforces design rule: Question stems must NEVER include 'In Section X.X' or '(Section Title)'.
+    Section metadata belongs exclusively in the top header badge.
+    """
+    sec_code = str(section_meta.get("section_code", "")).strip()
+    ch_num = section_meta.get("chapter_num", 0)
+
+    # 1. Curated high-impact stems for Chapter 5
+    if ch_num == 5 and sec_code in CHAPTER_5_TWR_STEMS:
+        return CHAPTER_5_TWR_STEMS[sec_code]
+
+    # 2. Extract and clean from knowledge base or section metadata
+    raw = (
+        kb.get("printed_main_idea")
+        or section_meta.get("printed_main_idea")
+        or (kb.get("subheadings", [{}])[0].get("gist") if kb.get("subheadings") else "")
+        or "Historical developments shaped the growth of the nation"
+    ).strip()
+
+    # Strip any 'In Section ...' prefix
+    cleaned = re.sub(r"^In\s+Section\s+[^\s,()]+(?:\s*\([^)]*\))?,?\s*", "", raw, flags=re.IGNORECASE)
+
+    # Strip any parenthetical section title if present
+    sec_title = section_meta.get("title", "")
+    if sec_title:
+        cleaned = re.sub(r"\(" + re.escape(sec_title) + r"\),?\s*", "", cleaned, flags=re.IGNORECASE)
+
+    # Strip trailing punctuation
+    cleaned = cleaned.strip().rstrip(".,;:")
+
+    # Ensure capitalized start
+    if cleaned:
+        cleaned = cleaned[0].upper() + cleaned[1:]
+    else:
+        cleaned = "Historical developments shaped the growth of the nation"
+
+    return cleaned
+
+
 def _render_builtin_questions_and_optional_twr(
     section_meta: Dict[str, Any],
     kb: Dict[str, Any],
@@ -982,24 +1044,28 @@ def _render_builtin_questions_and_optional_twr(
 
     twr_code = blueprint.get("optional_twr_strategy", "twr_none")
     if twr_code and twr_code != "twr_none":
-        stem_base = f"In Section {section_meta['section_code']} ({section_meta['title']}), tensions grew between Britain and the colonies"
+        stem_base = _get_twr_because_but_so_stem(section_meta, kb)
         if twr_code == "twr_because_but_so":
             blocks.extend([
                 "**Writing Extension (Because, But, So):** Complete each sentence using specific facts from the reading.",
-                f"1. {stem_base} **because** _________________________________________________________________.",
-                f"2. {stem_base}, **but** ____________________________________________________________________.",
-                f"3. {stem_base}, **so** _____________________________________________________________________.",
+                f"1. {stem_base} **because** _________________________________________________________________",
+                f"2. {stem_base}, **but** ____________________________________________________________________",
+                f"3. {stem_base}, **so** _____________________________________________________________________",
             ])
-            keys.append(f"Optional TWR (Because/But/So): Verify causal, contrasting, and consequent facts from pp. {section_meta['printed_pages']}.")
+            keys.extend([
+                f"TWR Because Stem: {stem_base} because ... (verify causal historical evidence from pp. {section_meta['printed_pages']})",
+                f"TWR But Stem: {stem_base}, but ... (verify contrasting historical evidence from pp. {section_meta['printed_pages']})",
+                f"TWR So Stem: {stem_base}, so ... (verify consequent historical evidence from pp. {section_meta['printed_pages']})",
+            ])
         elif twr_code == "twr_subordinating":
             blocks.extend([
                 "**Writing Extension (Subordinating Conjunctions):** Complete each complex historical sentence using facts from pages " + str(section_meta['printed_pages']) + ".",
-                f"1. **Although** {kb['subheadings'][0]['gist'][:42].lower()}..., _________________________________________________________.",
-                f"2. **When** {kb['subheadings'][-1]['gist'][:42].lower()}..., ___________________________________________________________.",
+                f"1. **Although** {kb['subheadings'][0]['gist'][:42].lower()}..., _________________________________________________________",
+                f"2. **When** {kb['subheadings'][-1]['gist'][:42].lower()}..., ___________________________________________________________",
             ])
             keys.append(f"Optional TWR (Subordinating Conjunctions): {kb['exemplar_central_idea']}")
         elif twr_code == "twr_kernel_expansion":
-            k_subj = f"Colonists resisted British policies in Section {section_meta['section_code']}."
+            k_subj = "Colonists resisted British imperial policies."
             blocks.extend([
                 "**Writing Extension (Sentence Expansion):** Expand the short kernel sentence below by answering the guiding questions with facts from pages " + str(section_meta['printed_pages']) + ".",
                 f"**Kernel Sentence:** *{k_subj}*",
@@ -1337,7 +1403,7 @@ def build_standalone_strategy_handout(
             f"1. **Reading Check Question:** {q1}\n"
             f"_________________________________________________________________________________\n"
             f"_________________________________________________________________________________\n\n"
-            f"2. **Critical Viewing & Historical Reasoning:** How did the events in Section {sec_code} alter the relationship between American colonists and Great Britain?\n"
+            "2. **Critical Viewing & Historical Reasoning:** How did these historical developments alter the relationship between American colonists and Great Britain?\n"
             f"_________________________________________________________________________________\n"
             f"_________________________________________________________________________________\n"
         )
