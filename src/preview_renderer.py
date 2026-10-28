@@ -1520,6 +1520,8 @@ def format_booklet_for_web(booklet_md: str) -> str:
             def _rep_strategy_focus(m):
                 focus_content = m.group(1).strip()
                 clean_focus = re.sub(r"\s*\([A-Z]{3,4}\s+[^)]+\)", "", focus_content).strip()
+                clean_focus = re.sub(r"(?i)optional\s+twr:\s*", "", clean_focus).strip()
+                clean_focus = re.sub(r"(?i)^twr:\s*", "", clean_focus).strip()
                 return (
                     f'<div class="ws-strategy-focus" style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 6px; padding: 0.45rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.85rem; color: #1e3a8a;">'
                     f'<b>Strategy Focus:</b> {clean_focus}'

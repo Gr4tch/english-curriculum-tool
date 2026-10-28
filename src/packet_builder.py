@@ -1063,7 +1063,7 @@ def _render_builtin_questions_and_optional_twr(
                 f"1. **Although** {kb['subheadings'][0]['gist'][:42].lower()}..., _________________________________________________________",
                 f"2. **When** {kb['subheadings'][-1]['gist'][:42].lower()}..., ___________________________________________________________",
             ])
-            keys.append(f"Optional TWR (Subordinating Conjunctions): {kb['exemplar_central_idea']}")
+            keys.append(f"Writing Extension (Subordinating Conjunctions): {kb['exemplar_central_idea']}")
         elif twr_code == "twr_kernel_expansion":
             k_subj = "Colonists resisted British imperial policies."
             blocks.extend([
@@ -1076,7 +1076,7 @@ def _render_builtin_questions_and_optional_twr(
                 SOLID_LINE,
                 SOLID_LINE,
             ])
-            keys.append(f"Optional TWR (Sentence Expansion): {kb['exemplar_central_idea']}")
+            keys.append(f"Writing Extension (Sentence Expansion): {kb['exemplar_central_idea']}")
         elif twr_code == "twr_appositives":
             v_words = [v.get("word") for v in section_meta.get("official_vocab", []) if v.get("word")]
             app_subj1 = v_words[0] if v_words else "King George III"
@@ -1086,7 +1086,7 @@ def _render_builtin_questions_and_optional_twr(
                 f"1. **{app_subj1}**, ____________________________________________, influenced events across the colonies.",
                 f"2. **{app_subj2}**, ____________________________________________, shaped colonial resistance during this era.",
             ])
-            keys.append(f"Optional TWR (Appositives): {kb['exemplar_central_idea']}")
+            keys.append(f"Writing Extension (Appositives): {kb['exemplar_central_idea']}")
 
     return "\n\n".join(blocks), keys
 
@@ -1420,11 +1420,18 @@ def build_standalone_strategy_handout(
         keys = []
 
     strategy_name = s_obj.get("short_name", s_obj.get("name", "Strategy"))
+    clean_strat_focus = (
+        s_obj.get("name", strategy_name)
+        .replace("Optional TWR: ", "")
+        .replace("Optional TWR:", "")
+        .replace("TWR: ", "")
+        .strip()
+    )
 
     # Standard Handout (standards excluded from student materials)
     std_blocks = [
         f"## Section {sec_code}: {sec_title} (Textbook pp. {pp})",
-        f"> **Strategy Focus:** {s_obj.get('name', strategy_name)}",
+        f"> **Strategy Focus:** {clean_strat_focus}",
         "",
         comp_md_std,
         "",
@@ -1437,7 +1444,7 @@ def build_standalone_strategy_handout(
     # Scaffolded Handout (standards excluded from student materials)
     scaf_blocks = [
         f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) *(Scaffolded Support)*",
-        f"> **Strategy Focus:** {s_obj.get('name', strategy_name)}",
+        f"> **Strategy Focus:** {clean_strat_focus}",
         "",
         comp_md_scaf,
         "",

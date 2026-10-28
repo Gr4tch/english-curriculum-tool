@@ -446,8 +446,8 @@ OPTIONAL_TWR_STRATEGIES: List[Dict[str, str]] = [
     },
     {
         "code": "twr_because_but_so",
-        "name": "Optional TWR: Because, But, So (Cause, Contrast, Effect)",
-        "short_name": "TWR: Because, But, So",
+        "name": "Because, But, So (Cause, Contrast, Effect)",
+        "short_name": "Because, But, So",
         "description": "Expands a core historical stem from the section using 'because', 'but', and 'so'.",
         "visual_preview_md": """**Historical Sentence Expansion: Because, But, So**
 *Core Stem:* Great Britain passed new taxes on American colonists...
@@ -461,8 +461,8 @@ OPTIONAL_TWR_STRATEGIES: List[Dict[str, str]] = [
     },
     {
         "code": "twr_subordinating",
-        "name": "Optional TWR: Subordinating Conjunctions (Although, When, After, Since)",
-        "short_name": "TWR: Subordinating Conjunctions",
+        "name": "Subordinating Conjunctions (Although, When, After, Since)",
+        "short_name": "Subordinating Conjunctions",
         "description": "Completes complex historical sentences starting with dependent clauses.",
         "visual_preview_md": """**Complex Historical Sentences:**
 - **Although** Parliament repealed the Stamp Act, ___________________________________
@@ -475,8 +475,8 @@ OPTIONAL_TWR_STRATEGIES: List[Dict[str, str]] = [
     },
     {
         "code": "twr_appositives",
-        "name": "Optional TWR: Appositives (Defining Historical Figures & Laws)",
-        "short_name": "TWR: Appositives",
+        "name": "Appositives (Defining Historical Figures & Laws)",
+        "short_name": "Appositives",
         "description": "Inserts a descriptive noun phrase between commas immediately after a historical person, group, or act.",
         "visual_preview_md": """**Appositive Sentence Construction:**
 *Insert a descriptive noun phrase between commas to define the historical term:*
@@ -488,8 +488,8 @@ OPTIONAL_TWR_STRATEGIES: List[Dict[str, str]] = [
     },
     {
         "code": "twr_kernel_expansion",
-        "name": "Optional TWR: Sentence Expansion (When? Where? Why?)",
-        "short_name": "TWR: Sentence Expansion",
+        "name": "Sentence Expansion (When? Where? Why?)",
+        "short_name": "Sentence Expansion",
         "description": "Expands a short kernel sentence using dotted question notes into one complete historical sentence.",
         "visual_preview_md": """**Sentence Expansion:**
 *Kernel:* Colonists protested.
@@ -508,8 +508,8 @@ In 1765, colonists in port cities like Boston and New York actively protested ag
     },
     {
         "code": "twr_spo",
-        "name": "Optional TWR: Single-Paragraph Outline (SPO — Topic Sentence + 4 Notes + Clincher)",
-        "short_name": "TWR: Single-Paragraph Outline (SPO)",
+        "name": "Single-Paragraph Outline (SPO — Topic Sentence + 4 Notes + Clincher)",
+        "short_name": "Single-Paragraph Outline (SPO)",
         "description": "Plans a central-idea paragraph with a Topic Sentence (solid line), 4 detail notes (dotted lines), and Concluding Sentence.",
         "visual_preview_md": """**Single-Paragraph Outline (SPO):**
 - **Topic Sentence (Central Idea):** _____________________________________________
