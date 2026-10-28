@@ -1012,9 +1012,10 @@ if st.session_state["nav_view"] == "home":
             <div style="font-size: 2.25rem; font-weight: 800; color: #0f172a; letter-spacing: -0.025em; line-height: 1.15; margin: 0 0 0.25rem 0;">
                 Curriculum Design Studio
             </div>
-            <div style="font-size: 1.25rem; font-weight: 600; color: #2563eb; margin: 0 0 0.75rem 0; letter-spacing: -0.01em;">
+            <div style="font-size: 1.22rem; font-weight: 600; color: #2563eb; font-style: italic; margin: 0 0 0.65rem 0;">
                 What would you like to create today?
             </div>
+            <div style="width: 44px; height: 3px; background: #93c5fd; border-radius: 2px; margin: 0 auto 0.65rem auto;"></div>
             <div style="font-size: 0.92rem; color: #64748b; font-weight: 400; letter-spacing: 0.01em;">
                 Select one of the options below to get started!
             </div>
