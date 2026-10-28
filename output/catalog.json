@@ -126,7 +126,7 @@
       {
         "word": "kayak",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a small, narrow Inuit boat propelled by a double-bladed paddle, covered with watertight sealskin",
         "page": 26
       },
       {
@@ -450,7 +450,7 @@
       {
         "word": "vassal",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a person granted the use of land by a feudal lord in exchange for homage, fealty, and military service",
         "page": 36
       }
     ]
@@ -649,7 +649,7 @@
       {
         "word": "oasis",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a fertile, isolated area in an arid desert where freshwater allows vegetation and human settlement",
         "page": 42
       },
       {
@@ -661,7 +661,7 @@
       {
         "word": "trans-Siberian",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "trade routes traversing the Sahara Desert between West Africa and the Mediterranean world",
         "page": 42
       },
       {
@@ -1254,7 +1254,7 @@
       {
         "word": "mission",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a Spanish religious settlement established by Catholic priests to convert indigenous peoples to Christianity",
         "page": 66
       },
       {
@@ -1802,7 +1802,7 @@
       {
         "word": "Fundamental Orders of Connecticut",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "an early colonial charter and written constitution adopted in 1639 establishing representative government in Connecticut",
         "page": 101
       },
       {
@@ -2429,7 +2429,7 @@
       {
         "word": "provisions",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "supplies of food, water, and other necessary goods needed for a voyage or military campaign",
         "page": 124
       },
       {
@@ -2727,7 +2727,7 @@
       {
         "word": "backcountry",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "the rural, sparsely populated frontier region inland from the Atlantic coastal plains",
         "page": 134
       },
       {
@@ -3247,7 +3247,7 @@
       {
         "word": "salutary neglect",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "an unofficial British policy of loosely enforcing trade regulations in the American colonies as long as they remained economically profitable",
         "page": 151
       },
       {
@@ -3500,7 +3500,7 @@
       {
         "word": "Proclamation of 1763",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a British law forbidding American colonists from settling west of the Appalachian Mountains",
         "page": 178
       },
       {
@@ -4039,7 +4039,7 @@
       {
         "word": "minutemen",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "companies of handpicked, specially trained colonial militia members ready to fight at a minute's notice",
         "page": 196
       }
     ]
@@ -4252,7 +4252,7 @@
       {
         "word": "earthwork",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a temporary fortification constructed from earth and soil to provide cover for soldiers in battle",
         "page": 204
       },
       {
@@ -4309,7 +4309,7 @@
       {
         "word": "Hessian",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "German soldier hired by the British to fight against the American colonists in the Revolutionary War",
         "page": 206
       }
     ]
@@ -4364,13 +4364,13 @@
       {
         "word": "Declaration of Independence",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "the 1776 document written primarily by Thomas Jefferson declaring the American colonies free and independent from Great Britain",
         "page": 208
       },
       {
         "word": "unalienable right",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a basic human right that cannot be taken away by any government",
         "page": 208
       }
     ]
@@ -4959,7 +4959,7 @@
       {
         "word": "pacifist",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a person who stands against war, combat, and violence",
         "page": 239
       }
     ]
@@ -5118,7 +5118,7 @@
       {
         "word": "provisions",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "supplies of food, water, and other necessary goods needed for a voyage or military campaign",
         "page": 244
       },
       {
@@ -5130,7 +5130,7 @@
       {
         "word": "Treaty of Paris of 1783",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "the peace agreement signed by Britain and the United States officially ending the Revolutionary War and recognizing American independence",
         "page": 244
       },
       {
@@ -5205,7 +5205,7 @@
       {
         "word": "sovereign",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "possessing supreme, independent political authority; self-governing",
         "page": 250
       }
     ]
@@ -5255,7 +5255,7 @@
       {
         "word": "Northwest Ordinance of 1787",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a law passed by Congress establishing a framework for governing the Northwest Territory and admitting new states on equal footing",
         "page": 252
       },
       {
@@ -5267,7 +5267,7 @@
       {
         "word": "Ordinance of 1785",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a law that set up a standardized system for surveying, subdividing, and selling public land in the Northwest Territory",
         "page": 252
       },
       {
@@ -5943,13 +5943,13 @@
       {
         "word": "Cabinet",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "an advisory body made up of the heads of the executive departments who advise the president",
         "page": 287
       },
       {
         "word": "inauguration",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "an official ceremony marking the formal beginning of a president's term of office",
         "page": 287
       },
       {
@@ -6066,13 +6066,13 @@
       {
         "word": "national debt",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "the total amount of money owed by a nation's government to its creditors and lenders",
         "page": 290
       },
       {
         "word": "tariff",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a tax or customs duty placed on imported goods coming into a country",
         "page": 290
       },
       {
@@ -6419,7 +6419,7 @@
       {
         "word": "XYZ Affair",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a 1797 incident in which French agents demanded bribes from American diplomats, creating hostility between the nations",
         "page": 301
       },
       {
@@ -6585,7 +6585,7 @@
       {
         "word": "Judiciary Act of 1801",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a federal law passed by Federalists to reorganize the federal court system and appoint midnight judges before Thomas Jefferson took office",
         "page": 318
       },
       {
@@ -6648,7 +6648,7 @@
       {
         "word": "yellow fever",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "an infectious, often-fatal tropical disease transmitted by mosquitoes that devastated French troops in Haiti",
         "page": 320
       }
     ]
@@ -6813,7 +6813,7 @@
       {
         "word": "Embargo Act of 1807",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a federal law prohibiting American merchant ships from trading in all foreign ports, designed to force Britain and France to respect U.S. neutrality",
         "page": 327
       },
       {
@@ -6875,7 +6875,7 @@
       {
         "word": "War Hawks",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "members of Congress, primarily from the South and West, who strongly pressured President Madison to declare war against Britain",
         "page": 329
       },
       {
@@ -6939,7 +6939,7 @@
       {
         "word": "War of 1812",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a conflict between the United States and Great Britain caused by trade restrictions, impressment of American sailors, and British support for Native American resistance",
         "page": 330
       },
       {
@@ -6999,7 +6999,7 @@
       {
         "word": "factory system",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a method of industrial manufacturing in which large crews of workers operate power-driven machinery in one central facility",
         "page": 336
       },
       {
@@ -7245,7 +7245,7 @@
       {
         "word": "cotton gin",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "a machine invented by Eli Whitney that quickly separated cotton fibers from their seeds, vastly increasing raw cotton output",
         "page": 346
       },
       {
@@ -7596,7 +7596,7 @@
       {
         "word": "Expansion and Growth abolition",
         "type": "Content Vocabulary",
-        "definition": "",
+        "definition": "the formal movement and legal effort to put an end to the practice of slavery",
         "page": 357
       },
       {

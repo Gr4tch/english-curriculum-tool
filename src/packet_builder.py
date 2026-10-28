@@ -1256,15 +1256,35 @@ def build_standalone_strategy_handout(
         std_code = "CCSS L.6-8.4"
         vocab_items = section_meta.get("official_vocab", [])[:4]
         words_str = ", ".join(v.get("word", "") for v in vocab_items if v.get("word")) or "key historical terms"
+
+        def _get_v_def(item):
+            d = (item.get("definition") or "").strip()
+            if not d:
+                d = "Key historical concept defined in section reading."
+            return d
+
+        # Standard Edition: At-level retrieval practice (no word bank)
         comp_md_std = (
-            f"**Official Section Vocabulary Practice:**\n"
-            f"> **Word Bank:** {words_str}\n\n"
-            f"**Directions:** Read each term in context from pages {pp}. Write the term that best matches each historical clue:\n\n"
+            f"**Official Section Vocabulary Practice:**\n\n"
+            f"**Directions:** Read each clue below. Using the section reading on pages {pp}, write the key vocabulary term that best matches each historical definition:\n\n"
         )
         for i, v in enumerate(vocab_items, 1):
-            comp_md_std += f"{i}. _________________________ : {v.get('definition', 'Key historical concept from reading.')}\n\n"
-        comp_md_scaf = comp_md_std + "\n*First letter hints provided in word bank.*"
-        keys = [f"Vocabulary Term {i} ({v.get('word', '')}): {v.get('definition', '')}" for i, v in enumerate(vocab_items, 1)]
+            defn = _get_v_def(v)
+            comp_md_std += f"{i}. _________________________ : {defn}\n\n"
+
+        # Scaffolded Edition: Supported matching with Word Bank and first-letter prompts
+        comp_md_scaf = (
+            f"**Official Section Vocabulary Practice:**\n"
+            f"> **Word Bank:** {words_str}\n\n"
+            f"**Directions:** Use the **Word Bank** above to complete each clue with the correct vocabulary term from pages {pp}:\n\n"
+        )
+        for i, v in enumerate(vocab_items, 1):
+            defn = _get_v_def(v)
+            raw_w = (v.get("word") or "").strip()
+            first_letter = raw_w[0] if raw_w else "_"
+            comp_md_scaf += f"{i}. {first_letter}________________________ : {defn}\n\n"
+
+        keys = [f"Vocabulary Term {i} ({v.get('word', '')}): {_get_v_def(v)}" for i, v in enumerate(vocab_items, 1)]
     elif strategy_category in ("assessment", "quiz"):
         s_obj = {"name": "Section Check & Quiz", "short_name": "Section Assessment", "description": "Reading check and critical viewing questions"}
         std_code = "CCSS RH.6-8.1"

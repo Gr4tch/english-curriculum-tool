@@ -78,9 +78,9 @@ COMMON_CSS = """
     border-radius: 4px;
     margin-bottom: 0.5rem;
 }
-.ws-badge-blue { background: #dbeafe; color: #1e3a8a; }
-.ws-badge-green { background: #dcfce7; color: #15803d; }
-.ws-badge-amber { background: #fef3c7; color: #b45309; }
+.ws-badge-blue { background: #dbeafe; color: #1e3a8a; border: 1px solid #bfdbfe; }
+.ws-badge-green { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.ws-badge-amber { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
 
 .ws-callout {
     background: #f8fafc;
@@ -1472,8 +1472,10 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 cnum = m.group(1).strip()
                 ctitle = m.group(2).strip()
                 edition = m.group(3).strip()
+                is_scaf = "scaffolded" in edition.lower()
+                badge_cls = "ws-badge-amber" if is_scaf else "ws-badge-blue"
                 return (
-                    f'<div class="ws-title-badge ws-badge-blue">Chapter {cnum} • {edition}</div>\n'
+                    f'<div class="ws-title-badge {badge_cls}">Chapter {cnum} • {edition}</div>\n'
                     f'<div style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0.2rem 0 0.35rem 0;">Chapter {cnum}: {ctitle}</div>\n'
                 )
             page = re.sub(
@@ -1498,11 +1500,11 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 clean_title = re.sub(r'\((?:Textbook\s+)?pp?\.[^\)]+\)', '', full_rest)
                 clean_title = re.sub(r'\*?\([^\)]*scaffolded[^\)]*\)\*?', '', clean_title, flags=re.IGNORECASE).strip()
 
-                scaf_badge = ' <span style="background: #fef3c7; color: #b45309; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; text-transform: uppercase; margin-left: 0.4rem;">Scaffolded Edition</span>' if is_scaf else ""
+                badge_cls = "ws-badge-amber" if is_scaf else "ws-badge-blue"
                 pgs_formatted = f" <span style=\"font-size: 0.72rem; font-weight: 600; opacity: 0.9;\">{pgs_str}</span>" if pgs_str else ""
 
                 return (
-                    f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge ws-badge-blue">Section {sec_id} Handout • {clean_title}{pgs_formatted}</span>{scaf_badge}</div>\n'
+                    f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">Section {sec_id} Handout • {clean_title}{pgs_formatted}</span></div>\n'
                     f'<div class="ws-name-date-row" style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
                     f'<span><b>Name:</b> ___________________________</span><span><b>Date:</b> _____________</span><span><b>Class:</b> ________</span>\n'
                     f'</div>\n'
