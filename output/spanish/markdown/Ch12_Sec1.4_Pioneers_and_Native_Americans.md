@@ -12,20 +12,7 @@ encuentros con los indígenas dejaron profundas huellas en ambas culturas.
 
 ### Lectura de la sección (por subtítulo)
 
-#### 1. FUENTE PRIMARIA (pág. 404)
-**[¶1]** A la mayoría de la gente no le gusta hacer tareas, aun con la ayuda de
-
-**[¶2]** modernos aparatos. Imagina lo duro que debía ser para las familias que
-
-**[¶3]** viajaban por el Camino de Oregón en los años 1840 preparar la comida o
-
-**[¶4]** lavar la ropa, haciendo frente a la vez a las enfermedades y las heridas en
-
-**[¶5]** un territorio desconocido.
-
-**[¶6]** Pioneros e indígenas norteamericanos
-
-#### 2. UN VIAJE DIFÍCIL (pág. 404)
+#### 1. UN VIAJE DIFÍCIL (pág. 404)
 **[¶1]** Los pioneros se dirigían hacia el oeste normalmente 
 en grupos de carretas cubiertas llamados caravanas . 
 Más allá de su destino, el viaje era agotador y 
@@ -105,7 +92,7 @@ distintas.
 
 **[¶27]** —de One Woman’s West, by Martha Gay
 
-#### 3. ENCUENTROS CULTURALES (pág. 405)
+#### 2. ENCUENTROS CULTURALES (pág. 405)
 **[¶1]** Los caminos hacia el oeste atravesaban tierras 
 habitadas por indígenas norteamericanos. En las 
 Grandes Llanuras, los pioneros se encontraron con 

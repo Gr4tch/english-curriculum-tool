@@ -12,10 +12,7 @@
 
 ### Section Reading Passage (By Subheading)
 
-#### 1. IDENTIFY PROBLEMS AND SOLUTIONS (p. 227)
-**[¶1]** What problems did the Continental Army face at Saratoga, and what steps did it take to solve them?
-
-#### 2. A TURNING POINT (p. 227)
+#### 1. A TURNING POINT (p. 227)
 **[¶1]** As you have read, General Burgoyne found himself in a tricky situation as he moved south—without backup—toward Albany after his victory at Fort Ticonderoga. He expected to be joined by British troops moving north from New York, but that support never came. Here's what happened: In September 1777, 12,000 members of the Continental Army under General Horatio Gates surrounded Burgoyne and his 5,800 men at Saratoga, New York.
 
 **[¶2]** The Americans were well prepared for this clash. Gates and Polish military engineer Tadeusz Kos ́ciuszko (tah-DAY-oosh kos-CHOOS-ko) had overseen a plan to build up American fortifications , or structures built to protect a place from attack. They had brought in reinforcements from other states as well, including the Light Horse Volunteers commanded by Colonel John Langdon.
@@ -26,7 +23,7 @@
 
 **[¶5]** Burgoyne had requested that General Howe send reinforcements, but, as you may recall, Howe and his troops were on their way to Philadelphia. Greatly outnumbered, Burgoyne surrendered at Saratoga on October 17.
 
-#### 3. A NEW ALLY (p. 227)
+#### 2. A NEW ALLY (p. 227)
 **[¶1]** The Battles of Saratoga proved to be an important turning point in the American Revolution. As with the Battle of Trenton, the victories boosted Americans' morale and gave them hope that they could defeat a larger, well-established army. Success at Saratoga also earned the Americans a valuable asset: an alliance with France.
 
 **[¶2]** France was already supporting the United States with economic and military assistance, and these victories convinced the French government that the Americans could win the war. No longer feeling outmatched, the Americans now had military help from a wealthy nation, and they had experienced significant victories themselves.

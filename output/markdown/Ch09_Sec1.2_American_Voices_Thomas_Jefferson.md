@@ -23,14 +23,3 @@
 **[¶3]** Jefferson died at Monticello on July 4, 1826—50 years to the day after the signing of the Declaration of Independence. By a strange coincidence, his old friend and rival, John Adams, died on the same day. The pair had often locked horns politically but had always maintained a strong mutual respect.
 
 **[¶4]** When Adams died, his last words were, "Thomas Jefferson survives." He didn't know that his friend had passed away just a few hours before.
-
-#### 3. E VALUATE (p. 317)
-**[¶1]** Why do you think it might have been difficult for Jefferson to live up to his principles? 3. MAKE INFERENCES Why do you think Adams might have been thinking of Jefferson in his last moments? AMERICAN PLACES Monticello, Charlottesville, Virginia When Jefferson rebuilt the front of Monticello, he had the eight-sided dome, shown here, constructed.
-
-**[¶2]** A radical design feature at the time, the dome was the first in America to be installed on top of a private residence. The Jefferson Years
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 317)
-1. **READING CHECK: What were some of Jefferson's talents and accomplishments?**
-2. **E VALUATE: Why do you think it might have been difficult for Jefferson to live up to his principles?**
-3. **MAKE INFERENCES: Why do you think Adams might have been thinking of Jefferson in his last moments?**

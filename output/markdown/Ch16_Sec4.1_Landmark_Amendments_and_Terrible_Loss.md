@@ -33,22 +33,3 @@
 
 #### 3. ANALYZE LANGUAGE USE (p. 555)
 **[¶1]** What do you think is meant by the phrase "or any place subject to their jurisdiction" in the 13th Amendment? 3.
-
-#### 4. E VALUATE (p. 555)
-**[¶1]** In what ways did Lincoln's assassination affect Reconstruction and attitudes in the South? On April 21, Lincoln's funeral train began a somber journey to Springfield, Illinois, where he had lived before becoming president. Thousands of Americans lined the train's route to mourn. Lincoln was buried on May 4, 1865.
-
-**[¶2]** Vice President Andrew Johnson succeeded Lincoln as president. Johnson favored Lincoln's Reconstruction policies, but he lacked Lincoln's leadership skills. Also, Republican congressmen distrusted him because he was a former Democrat and former slaveholder. Johnson could not stop Congress from enacting harsh penalties on the southern states.
-
-**[¶3]** In particular, the Radical Republicans believed the former Confederacy should be punished for secession and war. Their treatment of the South caused long- standing resentment and discontent among many southerners. Lincoln's steady leadership had brought an end to the Civil War. Following his death, the nation struggled to regain a true sense of unity as it rebuilt without the leader who had saved it.
-
-**[¶4]** The far-reaching consequences of his loss were yet to be realized. The morning he died, Lincoln's Secretary of War, Edwin M. Stanton, is reported to have said either, "Now he belongs to the ages" or "Now he belongs to the angels." For Americans in 1865, both statements rang true.
-
-**[¶5]** Chicago History Museum After Lincoln was shot, he was taken to a small bedroom in the Petersen House and laid in this bed, diagonally, because he was so tall. Today, you can see Lincoln's death bed at the Chicago History Museum. The Last Hours of Abraham Lincoln, painted by Alonzo Chappel in 1868, hangs above the bed.
-
-**[¶6]** It dramatizes Lincoln's last hours, features Mary Todd Lincoln weeping on his chest, and includes many of the people who visited Lincoln before he died. Turning Points of the War
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 555)
-1. **READING CHECK: How did Lincoln plan to reunite and heal the nation after the Civil War?**
-2. **ANALYZE LANGUAGE USE: What do you think is meant by the phrase "or any place subject to their jurisdiction" in the 13th Amendment?**
-3. **E VALUATE: In what ways did Lincoln's assassination affect Reconstruction and attitudes in the South?**

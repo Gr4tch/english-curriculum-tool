@@ -28,14 +28,7 @@
 
 **[¶6]** Artist Frederick Kemmelmeyer created the painting sometime after 1795—shortly after the rebellion took place.
 
-#### 2. IDENTIFY PROBLEMS AND SOLUTIONS (p. 297)
-**[¶1]** Describe the conflicts between American settlers and Native Americans in the Northwest Territory and how they were resolved. 3. MAKE INFERENCES Why do you think the United States wanted to remain neutral during the French Revolution? Meanwhile, another conflict brewed in western Pennsylvania.
-
-**[¶2]** Farmers had been protesting a whiskey tax, claiming it was unfair. Secretary of the Treasury Alexander Hamilton had proposed the tax, which was passed by Congress in 1791 to raise money to pay down the national debt. The angry farmers who made, consumed, sold, and traded whiskey, tarred and feathered tax collectors and threatened armed attacks in what is known as the Whiskey Rebellion .
-
-**[¶3]** President Washington sent nearly 13,000 soldiers into the region to demonstrate the power of the federal government. The rebels soon stood down.
-
-#### 3. THE FRENCH REVOLUTION (p. 297)
+#### 2. THE FRENCH REVOLUTION (p. 297)
 **[¶1]** Across the Atlantic, the people in France were involved in a rebellion of their own. They sought to put an end to upper-class privilege and demanded equality for the lower classes. Many in the United States, and particularly the Democratic- Republicans, supported the French Revolution .
 
 **[¶2]** But then in 1793, radicals , or people who support complete social or political change, executed the French king, Louis XVI. France then declared war on Spain, Britain, and other neighboring nations. In this international conflict, the Federalists sided with Britain, thereby increasing the division between the two American parties.

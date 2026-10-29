@@ -36,12 +36,3 @@
 **[¶5]** The Algonquian lived along the Atlantic coast. The Iroquois primarily lived in the central part of present-day New York State. In Algonquian groups, men were the heads of households, but Iroquois society was matrilineal, and women shared political power with men. Five Iroquois-speaking nations banded together to form the Iroquois League : the Mohawk, Oneida, Onondaga, Cayuga (kah-YOO-guh), and Seneca.
 
 **[¶6]** This brought long-lasting peace among them. The Iroquois nations still exist to this day.
-
-#### 3. IDENTIFY PROBLEMS AND SOLUTIONS (p. 29)
-**[¶1]** How did the Eastern Woodlands people solve the problem of growing food in forests? 3. MAKE INFERENCES Why would the mild climate of the Southeast have made it an ideal place to grow crops? Three Worlds Before 1500
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 29)
-1. **READING CHECK: How did farming help maintain a large population in Cahokia?**
-2. **IDENTIFY PROBLEMS AND SOLUTIONS: How did the Eastern Woodlands people solve the problem of growing food in forests?**
-3. **MAKE INFERENCES: Why would the mild climate of the Southeast have made it an ideal place to grow crops?**

@@ -35,12 +35,3 @@
 
 #### 3. ANALYZE VISUALS (p. 444)
 **[¶1]** In which different ways do these two political cartoons portray immigrants, native-born Americans, and the political process? 3.
-
-#### 4. E VALUATE (p. 444)
-**[¶1]** What role did religion play in nativist prejudices?
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 445)
-1. **READING CHECK: What issues increased American prejudice toward immigrants in the mid-18 0 0 s?**
-2. **ANALYZE VISUALS: In which different ways do these two political cartoons portray immigrants, native-born Americans, and the political process?**
-3. **E VALUATE: What role did religion play in nativist prejudices?**

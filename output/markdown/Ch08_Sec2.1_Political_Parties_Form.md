@@ -35,23 +35,3 @@
 **[¶6]** In addition to these internal divisions within the government, the United States had to confront more fundamental challenges to its authority and legitimacy. Trouble was brewing in the Northwest Territory and abroad. You've probably seen the ads. "Vote for me! Don't vote for" — whomever.
 
 **[¶7]** The candidates are usually from different political parties. You can thank (or blame) Hamilton and Jefferson for laying the groundwork for such parties. Leaders formed political parties to promote their ideas, forming the basis of the modern American political system.
-
-#### 3. IDENTIFY PROBLEMS AND SOLUTIONS (p. 294)
-**[¶1]** What problems might either a loose or strict interpretation of the Constitution create or solve? 3.
-
-#### 4. E VALUATE (p. 294)
-**[¶1]** What are the advantages and disadvantages of political parties? Two-Party System Although the parties have changed and shifted over the years, the United States still has two major political parties: the Democrats and the Republicans. A two-party system is relatively unique in the world.
-
-**[¶2]** Some countries have only one party, while others have many. The symbols of each U.S. party are shown below: a donkey for the Democrats and an elephant for the Republicans. Neither modern party aligns closely with the political ideas of the Federalists or the Democratic-Republicans.
-
-**[¶3]** However, like the parties in the 1790s, the parties today have regional characteristics. The Republicans tend to be stronger in the South and the West, and the Democrats stronger on the coasts, the Northeast, and the upper Midwest. The campaign buttons shown are from the second half of the 20th century.
-
-**[¶4]** Remember, though, that supporters purchased buttons honoring George Washington at his inauguration. In the 1840 election, people wore campaign buttons sewn on clothing. Pins were added around 1860, along with the first photograph to appear on a campaign button—a picture of Abraham Lincoln.
-
-**[¶5]** Growing Pains in the New Republic
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 295)
-1. **READING CHECK: What regions of the United States supported each party, and why?**
-2. **IDENTIFY PROBLEMS AND SOLUTIONS: What problems might either a loose or strict interpretation of the Constitution create or solve?**
-3. **E VALUATE: What are the advantages and disadvantages of political parties?**

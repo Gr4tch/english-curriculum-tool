@@ -28,13 +28,10 @@
 
 **[¶7]** The cuffs were held closed by a screw. In Charleston, South Carolina, enslaved workers who were hired out by their owners had to wear tax badges engraved with tax registration numbers and job categories. Shackles Ta x badge
 
-#### 2. DRAW CONCLUSIONS (p. 349)
-**[¶1]** Why did free African Americans need Certificates of Freedom? 3.
-
-#### 3. MAKE CONNECTIONS (p. 349)
+#### 2. MAKE CONNECTIONS (p. 349)
 **[¶1]** Why was literacy for slaves a threat to slave owners?
 
-#### 4. SURVIVAL AND RESISTANCE (p. 349)
+#### 3. SURVIVAL AND RESISTANCE (p. 349)
 **[¶1]** Despite the horrific conditions under which they lived, enslaved people resisted the circumstances they faced every day. Many slave owners imposed their own religious beliefs on slaves because they suggested that a belief in Christianity would make slavery an acceptable situation.
 
 **[¶2]** But enslaved people interpreted scripture for themselves, in ways that encouraged a quest for freedom. They also composed songs called spirituals based on scripture and biblical figures such as Moses, who led the Israelites out of slavery in Egypt. In addition to their own religious practices, enslaved people developed a distinct African- American culture.

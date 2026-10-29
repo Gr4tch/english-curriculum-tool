@@ -11,10 +11,7 @@
 
 ### Section Reading Passage (By Subheading)
 
-#### 1. DESCRIBE (p. 381)
-**[¶1]** What challenges endured by Native Americans on the forced march to Indian Territory caused the journey to be known as the Trail of Tears? 3. INTERPRET MAPS Which southeastern Native American tribe traveled the farthest?
-
-#### 2. ONE LAST STAND (p. 381)
+#### 1. ONE LAST STAND (p. 381)
 **[¶1]** In an 1823 decision, Johnson v. M'Intosh , the Supreme Court had offered some protection for Native American lands. So, in 1832, the Cherokee turned to the Supreme Court to seek legal means to stay on their land. The Court ruled in their favor, determining that the Indian Removal Act was unconstitutional and that it violated previous treaties with the Cherokee.
 
 **[¶2]** But the state of Georgia and President Andrew Jackson opposed the Supreme Court's decision. They wanted the Cherokee to go. A small group of Cherokee signed the treaty, deciding that doing so was their only hope. They soon left for Indian Territory. But most of the Cherokee—about 17,000 people—opposed the treaty and remained on their land.
@@ -23,7 +20,7 @@
 
 **[¶4]** White settlers then looted and destroyed the Cherokee villages, leaving the Native Americans with only the few possessions they had taken to the camps.
 
-#### 3. A GRUELING MARCH (p. 381)
+#### 2. A GRUELING MARCH (p. 381)
 **[¶1]** After the Cherokee had been confined in the camps for months, American soldiers forced them on a march to Indian Territory. The terrible journey lasted about four months, during the fall and winter of 1838 and 1839. The Cherokee weren't given adequate food, shelter, or clothing as they struggled in the rain and snow.
 
 **[¶2]** Some soldiers even stole the few supplies that had been provided for the Native Americans. As a result, about 4,000 people died from cold, illness, and starvation on the march. One survivor remembered, "Children cry and many men cry, and all look sad like when friends die, but they say nothing." A witness to the forced migration reported that even old women "were traveling with heavy burdens attached to the back—on the sometimes frozen ground, and sometimes muddy streets, with no covering for the feet." Because of the suffering the Cherokee endured, the journey became known as the Trail of Tears .

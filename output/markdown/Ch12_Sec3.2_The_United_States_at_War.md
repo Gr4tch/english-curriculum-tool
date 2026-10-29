@@ -24,10 +24,7 @@
 #### 2. EXPLAIN (p. 419)
 **[¶1]** How did the battles over New Mexico and California territories give the U.S. Army an advantage? 3.
 
-#### 3. DRAW CONCLUSIONS (p. 419)
-**[¶1]** Why did some politicians argue that the United States should not claim any territory in Mexico?
-
-#### 4. INVADING MEXICO (p. 419)
+#### 3. INVADING MEXICO (p. 419)
 **[¶1]** Zachary Taylor, the leader of the troops that had crossed the Nueces River to spark the war, had enjoyed some success near the Rio Grande. Taylor now entered Mexico, pursuing retreating Mexican troops. He fought Santa Anna at Buena Vista in 1847. Though the battle seemed to be an even fight, Santa Anna withdrew his troops, and Taylor now controlled northern Mexico.
 
 **[¶2]** Because Taylor was reluctant to mount a large- scale invasion of Mexico, Polk changed the American strategy. He ordered General Winfield Scott to take his troops to Mexico by sea. Scott and his men landed at Veracruz, which they captured after a three-week siege. They then fought their way toward the capital, Mexico City.

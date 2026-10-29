@@ -27,18 +27,3 @@
 **[¶3]** The removal of so many Africans from their homeland to the Americas is known as the African diaspora . Slavery became an institution , or an established and accepted practice, in North America, particularly in the Southern Colonies and then in the new nation, the United States. The international slave trade ended in 1807, and the United States abolished slavery completely in 1865.
 
 **[¶4]** There is no doubt that slavery as an institution shaped the social, economic, and cultural development of the United States and that it still casts its shadow today.
-
-#### 3. DRAW CONCLUSIONS (p. 74)
-**[¶1]** How did Portuguese slave trading off the western coast of Africa help contribute to the development of slavery in the Americas? European access to African slave labor paved the way for the growth of slave labor in the Americas and the expansion of the slave trade. Indoor Sugar Refining This painting by William Clark captures work in a large sugar plantation after technology improved the sugar refining process.
-
-**[¶2]** Moving this process indoors better regulated the heat. Using brick ovens reduced the number of fires needed to boil the sugarcane, but these advances did not make the work much easier for enslaved workers. They still faced scalding, heat exhaustion, and grueling physical labor. In 1843, Norbert Rillieux invented an evaporating machine.
-
-**[¶3]** Additional inventions, such as steam power and a process that lowered the boiling point of liquid, continued to improve the sugar refining process. The Jamaica Train When sugar refining first began, enslaved workers used four vats of decreasing size called the Jamaica Train. One of the most dangerous jobs on a sugar plantation was boiling the sugarcane water in vats like the ones shown here.
-
-**[¶4]** When enough liquid had evaporated from one vat, the water was ladled into the next, smaller, vat. The process occurred two more times with more batches following. Enslaved workers had to move quickly so that all the vats were always full. European Exploration of the Americas
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 75)
-1. **READING CHECK: How did the slave trade change as demand for African slaves grew?**
-2. **MAKE INFERENCES: In what ways did the African diaspora change the population of the African continent?**
-3. **DRAW CONCLUSIONS: How did Portuguese slave trading off the western coast of Africa help contribute to the development of slavery in the Americas?**

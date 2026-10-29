@@ -40,12 +40,3 @@
 **[¶3]** But women, African Americans, and Native Americans still could not vote or hold office. Nevertheless, Jackson's election in 1828 reflected the steady expansion of white male suffrage, symbolized the shift of political power to the West, and opened a new era of political democracy in the United States.
 
 **[¶4]** President Jackson was a symbol of his age. People now believed they were represented by one of their own in the White House.
-
-#### 4. DRAW CONCLUSIONS (p. 371)
-**[¶1]** Why was Jacksonian democracy such an important development? Iraq Afghanistan Pakistan The Age of Jackson
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 371)
-1. **READING CHECK: How was the presidential election of 1824 decided?**
-2. **COMPARE AND CONTRAST: How was Jacksonian democracy different from what had existed before?**
-3. **DRAW CONCLUSIONS: Why was Jacksonian democracy such an important development?**

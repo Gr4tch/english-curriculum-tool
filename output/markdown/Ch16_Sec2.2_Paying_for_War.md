@@ -37,12 +37,7 @@
 
 **[¶6]** She photographed Lat Padang, a young soldier, while he was recovering from injuries sustained during South Sudan's civil war.
 
-#### 3. DESCRIBE (p. 541)
-**[¶1]** In what ways were civilians in the North and the South affected by the war? 3. COMPARE AND CONTRAST In terms of its economy and government, what advantages did the North have over the South? labor to the Union. Southern farms and plantations no longer had the labor necessary to grow food and cash crops.
-
-**[¶2]** Meanwhile, many southerners watched helplessly as armies stripped their farms of food and livestock. Some farmers grew cotton because it stored well and they thought it would fetch a high price after the war. As a result, the Confederacy devoted land and labor to growing cotton instead of growing food for its hungry citizens.
-
-#### 4. A GLOBAL PERSPECTIVE (p. 541)
+#### 3. A GLOBAL PERSPECTIVE (p. 541)
 **[¶1]** No matter when or where they are fought, civil wars have devastating consequences for ordinary people. Financial resources of nations are diverted away from supporting citizens in order to pay for war. Young men, and sometimes boys, are forced into military service. Day-to-day lives are disrupted, people are displaced from their homes and countries, and economies are damaged.
 
 **[¶2]** These characteristics all apply to the civil war that took place after the African country of South Sudan achieved independence in 2011. During that civil war, government spending on weapons took priority over other responsibilities, thousands of people were killed, and more than 1 million people fled the country.

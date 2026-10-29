@@ -34,10 +34,7 @@
 
 **[¶5]** Americans hoped to blend civic republicanism and ideals of classical liberal principles, including private property and individual and religious freedoms, to create their new government.
 
-#### 3. DESCRIBE (p. 244)
-**[¶1]** How did the U.S. government plan reflect the ideals of civic republicanism, classical liberal principles, and English parliamentary traditions? 3.
-
-#### 4. FORM AND SUPPORT OPINIONS (p. 244)
+#### 3. FORM AND SUPPORT OPINIONS (p. 244)
 **[¶1]** Do you think African Americans were better off after the revolution? Explain why or why not.
 
 ---

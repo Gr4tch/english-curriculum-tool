@@ -23,14 +23,7 @@
 
 **[¶7]** While exploring the West, he lived with a Crow tribe for several years. He was also a prospector and a U.S. Army scout, and he learned to overcome many challenges of the frontier.
 
-#### 2. E VALUATE (p. 399)
-**[¶1]** Why might lands in the West have seemed inaccessible to many Americans? mountains, the Sierra Nevada, and became the first white American to travel overland from the East to California and back. Another mountain man who explored the Sierra Nevada was Jim Beckwourth . He had been born into slavery but was set free when he was 25.
-
-**[¶2]** In 1850, he discovered a mountain pass through the Sierra Nevada for settlers to follow as they traveled to northern California. Today, that pass is still called Beckwourth Pass. The mountain men's explorations opened lands that had previously seemed inaccessible. After the Panic of 1837, many Americans faced economic difficulties.
-
-**[¶3]** Newly explored lands in the West started to look attractive to unhappy easterners, new immigrants, independent women, and others who were seeking a new start.
-
-#### 3. MANIFEST DESTINY (p. 399)
+#### 2. MANIFEST DESTINY (p. 399)
 **[¶1]** In 1845, magazine editor John O'Sullivan wrote an editorial urging the United States to annex , or add, Texas as a state. He also wrote that Americans had a " manifest destiny to overspread and possess the whole of the continent." The word manifest means "obvious," and destiny refers to the unavoidable events of the future.
 
 **[¶2]** The phrase, and the purpose underlying manifest destiny, reflected several cultural assumptions, including the certainty that the United States would— indeed, should—one day stretch from the Atlantic Ocean to the Pacific Ocean. Those who embraced this concept were driven by more than just the promise of new opportunities.

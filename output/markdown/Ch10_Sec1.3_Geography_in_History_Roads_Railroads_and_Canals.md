@@ -39,6 +39,3 @@
 **[¶2]** Building the Erie Canal took eight years. But after it was completed, farmers in Ohio, Illinois, Indiana, and other states in the Midwest could ship their grain much more cheaply and quickly to the East. Before the canal, farmers had to pay $100 per wagon to ship their grain. By using the canal, their cost was only $10 per shipment.
 
 **[¶3]** Instead of 20 days, the journey took just eight.
-
-#### 5. THINK LIKE A GEOGRAPHER (p. 341)
-**[¶1]** 1. IDENTIFY MAIN IDEAS AND DETAILS What were some geographic challenges the young United States faced? 2. INTERPRET MAPS Study the map. How did the road, railroad, and canal systems work together as one transportation network? Expansion and Growth

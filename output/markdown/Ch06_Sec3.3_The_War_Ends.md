@@ -22,16 +22,7 @@
 
 **[¶5]** In the painting, American troops (on the right) and French troops (on the left) are all on horseback. Cornwallis's soldiers appear in the center of the painting. Why do you think the British soldiers are all on foot?
 
-#### 2. DRAW CONCLUSIONS (p. 241)
-**[¶1]** What statement was Rochambeau making when he made O'Hara surrender the British general's sword to Washington? 3. ANALYZE CAUSE AND EFFECT What happened as a result of the American victory in both the long- and short-term? Remembering the Victors This stamp commemorates the 150th anniversary of the victory at Yorktown.
-
-**[¶2]** We all know George Washington, who is shown in the middle, but what about the other two leaders who helped the Americans win at Yorktown? Comte de Rochambeau (on the left), was born in Vendôme, France. Commissioned into the French army at age 17, he was a veteran of 14 military sieges in Europe.
-
-**[¶3]** King Louis XVI sent him to lead the French force in America in 1780. Comte de Grasse (on the right), was born in Le Bar, France, and started working on ships when he was only about 12 years old. At 18, he joined the French navy. DeGrasse was fighting the British in the West Indies when General Washington asked for his help in Virginia against Cornwallis.
-
-**[¶4]** The rest is history. Setting up camp on the peninsula would prove to be a fatal mistake for Lord Cornwallis and his soldiers.
-
-#### 3. THE WORLD TURNED UPSIDE DOWN (p. 241)
+#### 2. THE WORLD TURNED UPSIDE DOWN (p. 241)
 **[¶1]** American and French troops surrounded Cornwallis's camp by land and by sea. French naval officer admiral Comte de Grasse (duh-GRAHS) commanded a French fleet on the York River. He approached the British camp from the water. Meanwhile, a combined army of French soldiers, commanded by Comte de Rochambeau (ROH-sham-BOH), and Americans, led by General George Washington, marched south from New York, approaching the camp by land.
 
 **[¶2]** In a show of military expertise , or skill, these three commanders led their 17,000 troops against Cornwallis, trapping him on the peninsula. Cornwallis had no choice but to surrender. Charles O'Hara, second in command to Cornwallis, tried to surrender his general's sword to Rochambeau, but the French leader steered him to Washington instead.

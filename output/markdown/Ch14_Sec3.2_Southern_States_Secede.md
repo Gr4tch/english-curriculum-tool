@@ -29,16 +29,3 @@
 **[¶4]** But over time, rough handling causes the crack to deepen and run the length of the glass. Pretty soon, the smallest added pressure will make it snap and break in two. The election of Abraham Lincoln as president in 1860 led southern states to secede from the Union. 1860 campaign buttons feature Lincoln (left) and his running mate, Hamlin (right).
 
 **[¶5]** Abraham Lincoln This 1860 photo by Alexander Hesler reveals Lincoln's lined face and rugged features.
-
-#### 3. DRAW CONCLUSIONS (p. 483)
-**[¶1]** What fundamental challenge to the Constitution did secession and the doctrine of nullification pose? arguing that protecting slavery had been the "well-known intent" of the Founders. Meanwhile, the issue of secession was proving to be divisive in the more northern part of the South.
-
-**[¶2]** Many people opposed secession, calling it treason. They believed secession would be disastrous for the South. Others thought it would be best to wait before making a decision. For the time being, Virginia, Tennessee, North Carolina, and Arkansas remained in the Union. They still held out hope that the differences between the North and the South could be resolved.
-
-**[¶3]** A Broken Nation
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 483)
-1. **READING CHECK: Why did Lincoln's election drive southern states to secede from the Union?**
-2. **MAKE INFERENCES: Why do you think the Confederacy adopted a constitution that was very similar to the U.S. Constitution?**
-3. **DRAW CONCLUSIONS: What fundamental challenge to the Constitution did secession and the doctrine of nullification pose?**

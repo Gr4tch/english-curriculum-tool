@@ -34,10 +34,7 @@
 
 **[¶5]** Defeating the South had become more important than excluding fellow Americans from military service. In 1863, African Americans began to join U.S. military units and proved to be valuable soldiers for the Union.
 
-#### 3. DRAW CONCLUSIONS (p. 537)
-**[¶1]** Why did the 54th Massachusetts gain great respect in the Union Army despite losing its first battle? 3.
-
-#### 4. ANALYZE LANGUAGE USE (p. 537)
+#### 3. ANALYZE LANGUAGE USE (p. 537)
 **[¶1]** What made the words Colonel Shaw used with his troops before the battle at Fort Wagner particularly effective? question. For his bravery in the fight, William H. Carney became the first African American to receive the Congressional Medal of Honor. For the next two years, the 54th Massachusetts took part in a number of sieges in South Carolina, Georgia, and Florida.
 
 **[¶2]** The service and bravery of its members helped to win acceptance for other African-American regiments and solidified their importance in the war effort. Despite increased African-American enlistment, the need for more soldiers in both the North and the South grew. Smithsonian National Gallery of Art, Washington, D.C.

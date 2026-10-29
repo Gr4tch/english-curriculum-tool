@@ -31,12 +31,7 @@
 
 **[¶8]** How awful is it to be left behind at such a day! To see so many rejoicing and singing for joy of heart, while you have cause to mourn for sorrow of heart. How can you rest one moment in such a condition? Therefore let every one that is out of Christ [that has not accepted Christ], now awake and fly from the wrath [fury] to come. – from "Sinners in the Hands of an Angry God," by Jonathan Edwards, 1741
 
-#### 2. DRAW CONCLUSIONS (p. 149)
-**[¶1]** What did the Enlightenment and the Great Awakening contribute to colonial views about equality and government? Church of England minister George Whitefield appealed to many races and classes with his promise of a more equal, or egalitarian, relationship between believers and their God.
-
-**[¶2]** Here, artist John Collet portrays a meeting during one of Whitefield's seven visits to the colonies. The painting dates to the mid-1700s. connect with God. Even more dangerously, they began to challenge authority and think themselves equal to those in power.
-
-#### 3. THE ENLIGHTENMENT (p. 149)
+#### 2. THE ENLIGHTENMENT (p. 149)
 **[¶1]** The Great Awakening was not the only movement that helped pave the way for revolutionary fervor. The intellectual movement known as the Enlightenment spread from Great Britain to the colonies in the 1700s. Enlightenment thinkers believed that the "light" of human reason would shatter the "darkness" of ignorance, superstition, and unfair authority.
 
 **[¶2]** In part, they were influenced by the Scientific Revolution , which began in Europe around the mid-1550s and used logical thinking to answer scientific questions. The Enlightenment encouraged people to use logic and ask questions instead of just accepting what religious and political figures told them.

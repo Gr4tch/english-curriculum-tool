@@ -13,13 +13,10 @@
 
 ### Section Reading Passage (By Subheading)
 
-#### 1. DRAW CONCLUSIONS (p. 129)
-**[¶1]** What role did religion play in the importance of education in New England? 3.
-
-#### 2. MAKE GENERALIZATIONS (p. 129)
+#### 1. MAKE GENERALIZATIONS (p. 129)
 **[¶1]** Why would a newspaper's emphasis on European events and politics be helpful to colonial merchants?
 
-#### 3. A NEW ENGLAND EDUCATION (p. 129)
+#### 2. A NEW ENGLAND EDUCATION (p. 129)
 **[¶1]** New Englanders believed people needed to be able to read so they could learn about God. They set up schools that focused on the Bible, religious study, and texts that taught moral behavior. In the 1640s, the Massachusetts legislature established common schools , the colonial name for elementary schools, and secondary schools called Latin grammar schools.
 
 **[¶2]** Connecticut and other colonies followed with similar legislation. Eventually, more people in New England were able to read than in any other colony. Early education also involved teaching children skills that would help them thrive in their community. For many colonial boys, this meant becoming an apprentice .
@@ -30,7 +27,7 @@
 
 **[¶5]** Most of the graduates of colonial colleges became members of the clergy. None, however, were women. Colonial colleges only admitted men.
 
-#### 4. NEWSPAPERS AND BOOKS (p. 129)
+#### 3. NEWSPAPERS AND BOOKS (p. 129)
 **[¶1]** The rising rate of literacy throughout the colonies created a big demand for newspapers and books. Starting in 1704, newspapers popped up in Boston, Philadelphia, New York, and Charleston. These early newspapers focused on European events and politics. They helped colonists feel less separated from faraway Europe and more connected to England.
 
 **[¶2]** The general reading tastes of colonial people ranged across many subjects, but readers especially enjoyed topics unique to the American experience. In New England, books about being captured by Native Americans attracted interest. One of the most popular of these was by Mary Rowlandson .

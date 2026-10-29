@@ -12,10 +12,7 @@
 
 ### Section Reading Passage (By Subheading)
 
-#### 1. DRAW CONCLUSIONS (p. 123)
-**[¶1]** What conclusion can you draw about the relationship between a family's farm and its social class? 3. ANALYZE CAUSE AND EFFECT In what ways were the goods provided by the Atlantic Ocean essential to the livelihood, economy, and culture of the New England colonists?
-
-#### 2. FARMING HILLY, ROCKY LAND (p. 123)
+#### 1. FARMING HILLY, ROCKY LAND (p. 123)
 **[¶1]** Most New England colonists were farmers. Their farms were small and were frequently located on hilly and forested land with rocky soil. The long, cold winters made for a short growing season. Farmers relied on their large families to clear the fields, plant and harvest the crops, and care for the farm animals.
 
 **[¶2]** This all added up to something called subsistence farming . This means the farmers produced about enough food to provide for their family with only a little, if any, left over to sell or trade. In other words, they were barely scraping by. Without much in savings or extra food, a poor year of farming could ruin a family.
@@ -24,7 +21,7 @@
 
 **[¶4]** It wasn't fair, and these differences in land ownership created distinct social classes within the town.
 
-#### 3. FISHING, WHALING, AND TRADE (p. 123)
+#### 2. FISHING, WHALING, AND TRADE (p. 123)
 **[¶1]** The Atlantic Ocean provided greater economic opportunities than agriculture. Colonial fishers could engage in international trade, selling their catch to London merchants in exchange for goods such as shoes, textiles, and metal products. Whaling provided the colonists with many commercial products, including whale oils and waxes, meat, fat, bones, and leather.
 
 **[¶2]** Colonists sold and exported the whale meat and blubber, or fat. People used the blubber to light oil lamps, make candles, and soften leather. Fishing and whaling led to the growth of a shipbuilding industry. New England's plentiful forests supplied the shipyards with timber—and employment.

@@ -40,14 +40,3 @@
 **[¶4]** Europeans learned about quinine, which comes from the bark of a tree in South America, in the 1600s. For about 300 years, it served as the only effective remedy for malaria, which is carried by mosquitoes. Quinine's use as a treatment for malaria benefited millions of people, but it allowed Europeans to later colonize malaria- ridden areas of the world.
 
 **[¶5]** The Columbian Exchange affected the lives of people throughout the world. Some changes were positive, such as improved nutrition because of a greater variety of foods. However, the effect of the Columbian Exchange on native populations in the Americas was disastrous.
-
-#### 3. DRAW CONCLUSIONS (p. 71)
-**[¶1]** Which hemisphere benefited most from the Columbian Exchange and why? The Columbian Exchange More Options, New Troubles The exchange of crops and animals increased agricultural options and enriched diets on the continents of Europe, North America, Africa, and South America. Some elements of the exchange, such as tobacco and a host of European diseases, were not as positive.
-
-**[¶2]** European Exploration of the Americas
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 71)
-1. **READING CHECK: Why was the Columbian Exchange such an important phenomenon in world history?**
-2. **INTERPRET MAPS: Based on what you notice on the map, what foods do you enjoy today that originated in the Americas?**
-3. **DRAW CONCLUSIONS: Which hemisphere benefited most from the Columbian Exchange and why?**

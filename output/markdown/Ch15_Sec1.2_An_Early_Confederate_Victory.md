@@ -25,24 +25,3 @@
 **[¶4]** After graduating, Lee met and married a descendant of Martha Washington, George Washington's wife. During the Mexican-American War, Lee impressed his commanding officer, General Winfield Scott, with his keen military mind. He became an officer in the Confederate Army after turning down Lincoln's offer to command the Union Army.
 
 **[¶5]** His loyalty to his home state outweighed the president's request.
-
-#### 3. DRAW CONCLUSIONS (p. 499)
-**[¶1]** How did this battle reflect the beginnings of a broad pattern of leadership in the North and the South? Washington, D.C., more than a week later than planned. When the Confederate general stationed in Manassas, P.G.T. Beauregard, learned of the delay, he sent for help. Soon 11,000 more Confederate soldiers arrived to strengthen his forces.
-
-**[¶2]** The battle began on July 21, when Union forces crossed a small creek called Bull Run to attack the Confederates. As the Confederate soldiers charged, they unleashed a high-pitched battle cry that could be heard for miles. The earsplitting cry came to be known as the "rebel yell." Many Union soldiers wrote in letters and diaries about the terror the scream inspired.
-
-**[¶3]** During the battle, Confederate general Thomas Jackson and his forces filled a gap in the line of Confederate soldiers. He held the line so bravely that another general told his men to take heart from the sight of Jackson, "standing like a stone wall!" Jackson would be known by the nickname Stonewall Jackson for the rest of his life.
-
-**[¶4]** Meanwhile, J.E.B. Stuart , the leader of the Virginia Confederate cavalry , or soldiers on horseback, watched Union movements on a hill overlooking the battlefield. At a critical point in the battle, Stuart's cavalry charged and scattered the Union infantry , or foot soldiers. The charge forced the Union troops to retreat to Washington, D.C.
-
-**[¶5]** The Confederacy won the battle, but both sides suffered heavy casualties: about 3,000 soldiers for the North and more than 1,700 for the South. Another battle at Bull Run would take place more than a year later. Once again, the Confederates, under General Robert E. Lee , would win but with staggering casualties: nearly 15,000 for the Union and 9,000 for the Confederacy.
-
-**[¶6]** These extremely high casualty rates continued to make the war unpopular in the North. Lincoln knew it would be a long and grueling war. The first official Confederate flag is shown at the left. Often called the "Stars and Bars," it sometimes caused confusion on the battlefield because it looked so much like the U.S. flag.
-
-**[¶7]** The flag below was first flown by a Virginia regiment. Soon other regiments began using it, but the Confederacy never officially adopted the flag. Beginnings of War
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 499)
-1. **READING CHECK: How did the North and the South prepare for the war?**
-2. **ANALYZE CAUSE AND EFFECT: How did the first Battle of Bull Run affect the course of the early part of the war?**
-3. **DRAW CONCLUSIONS: How did this battle reflect the beginnings of a broad pattern of leadership in the North and the South?**

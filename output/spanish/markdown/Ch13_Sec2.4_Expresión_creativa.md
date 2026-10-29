@@ -89,35 +89,7 @@ conocidos de la colección es el “Canto a mí
 mismo”, la celebración que hace Whitman del 
 individualismo.
 
-#### 2. FUENTE PRIMARIA (pág. 452)
-**[¶1]** sincera y directamente. En su obra 
-más importante, Hojas de hierba, 
-Whitman usó verso libre, poesía que 
-no rima ni se ajusta a una métrica 
-estricta. Emily Dickinson también 
-escribió poemas que ignoraban las 
-reglas establecidas sobre rima y ritmo. 
-Los compartió con tan poca gente que 
-incluso los miembros de su familia no 
-conocieron todos sus poemas hasta 
-después de su muerte.
-
-**[¶2]** Los trascendentalistas apoyaban los 
-derechos de las mujeres, la abolición y 
-otras reformas sociales. Consideraban 
-que la religión organizada, las leyes 
-restrictivas, las instituciones sociales 
-y la industrialización impedían a los 
-individuos expresarse plenamente. 
-Whitman, por ejemplo, escribió 
-abiertamente sobre el amor así como 
-sobre las relaciones con el mismo 
-sexo. Su obra también celebró a los 
-trabajadores, los inmigrantes y a otras 
-personas, que eran parte de la creciente 
-diversidad de la nación.
-
-#### 3. PINTAR LA BELLEZA 
+#### 2. PINTAR LA BELLEZA 
 AMERICANA (pág. 453)
 **[¶1]** Los artistas visuales del siglo XIX 
 también moldearon la identidad 

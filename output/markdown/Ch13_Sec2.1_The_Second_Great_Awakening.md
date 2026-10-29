@@ -39,15 +39,3 @@
 **[¶7]** Others, motivated by the fervor of the Second Great Awakening, saw drinking as a sin. Some reformers wanted to protect women and children from neglect and mistreatment resulting from their husbands' and fathers' abuse of alcohol. Finally, medical professionals wanted Americans to limit their alcohol use for health reasons.
 
 **[¶8]** The reformers also looked beyond alcohol- related issues. They called attention to poor living conditions in overcrowded cities and advocated for working children's rights in factories and mills. Many, including California pioneer Annie Bidwell, also promoted free public education and voting rights for women.
-
-#### 3. DESCRIBE (p. 447)
-**[¶1]** How did Charles Grandison Finney play a significant role in society? 3. COMPARE AND CONTRAST What were the different ways in which reformers approached alcohol consumption in the 19th century? The Changing American Identity
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 447)
-1. **READING CHECK: What was the Second Great Awakening?**
-2. **DESCRIBE: How did Charles Grandison Finney play a significant role in society?**
-3. **COMPARE AND CONTRAST: What were the different ways in which reformers approached alcohol consumption in the 19th century?**
-
-### Built-In Visual & Map Analysis: Critical Viewing
-- (p. 447) In 1839, J. Maze Burbank captured the fervor of a revival in his painting Religious Camp Meeting. Revival meetings were also known as "camp meetings." Most were located on the frontier where churches had yet to be built. How does this painting convey what people who attended this revival meeting might have experienced?

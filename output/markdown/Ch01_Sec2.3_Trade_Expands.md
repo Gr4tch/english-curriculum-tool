@@ -31,12 +31,3 @@
 **[¶4]** During part of the Middle Ages, Portugal was under Islamic rule, and Muslim traders had long told stories about a "land of gold" near the African coast. A series of powerful African empires had inspired these stories. And the stories weren't that far from the truth. Just as the Renaissance spurred an expansion in people's thoughts and attitudes, it also inspired a spirit of adventure and curiosity about the world.
 
 **[¶5]** Sea voyagers set out to explore new lands and, above all, to find new trading opportunities and markets. New sea routes and developments in sailing technology allowed for an expansion of trade between European societies and the East.
-
-#### 3. E VALUATE (p. 40)
-**[¶1]** What might have been some of the advantages and disadvantages of taking a long voyage in a caravel?
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 41)
-1. **READING CHECK: What was the new sea route that Bartholomeu Dias first discovered and Vasco da Gama later followed to get to India?**
-2. **ANALYZE CAUSE AND EFFECT: Why did Europeans want to find new sea routes to Asia in the 15th century?**
-3. **E VALUATE: What might have been some of the advantages and disadvantages of taking a long voyage in a caravel?**

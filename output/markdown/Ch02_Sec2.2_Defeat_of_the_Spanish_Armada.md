@@ -36,15 +36,3 @@
 **[¶6]** Many thousands of Spanish men were killed, while England lost several hundred. With only 60 ships remaining, the Spanish returned home in shame. The defeat of the Spanish Armada was a blow to Spain's position as the dominant world power in both Europe and the New World. Through its victory, England ensured its own continued independence from foreign domination while preserving the Netherlands' United Provinces.
 
 **[¶7]** Spain's power weakened further as Sea Dogs continued to harass Spanish vessels and ports. At the same time, Protestant sects in Europe and later in the New World would continue to challenge the supremacy of Spain and the pope on colonization and commerce. Spain found itself on the defensive.
-
-#### 3. DRAW CONCLUSIONS (p. 63)
-**[¶1]** How did the Spanish captains' strategy to combat the English fleet lead to their own defeat? European Exploration of the Americas
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 63)
-1. **READING CHECK: What political changes did England's defeat of the Spanish Armada bring to Europe?**
-2. **COMPARE AND CONTRAST: What were the different advantages and disadvantages of the Spanish and English ships?**
-3. **DRAW CONCLUSIONS: How did the Spanish captains' strategy to combat the English fleet lead to their own defeat?**
-
-### Built-In Visual & Map Analysis: Critical Viewing
-- (p. 63) French artist Philippe-Jacques de Loutherbourg painted Defeat of the Spanish Armada, 8 August 1588 in 1796. How does the artist use color to show the drama of the battle?

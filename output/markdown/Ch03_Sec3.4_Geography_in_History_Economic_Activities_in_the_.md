@@ -29,29 +29,26 @@
 
 **[¶2]** Colonial Population Growth, 1630–1770 Source: from The Population of the United States by Douglas L. Anderton, Richard E. Barrett, and Donald J. Bogue, 1997 POPULATION IN THOUSANDS
 
-#### 3. RAW MATERIALS AND AGRICULTURAL PRODUCTS MANUFACTURED GOODS THINK LIKE A GEOGRAPHER (p. 115)
-**[¶1]** 1. IDENTIFY MAIN IDEAS AND DETAILS For each colonial region, identify an example of a natural resource that helped the region develop a specific economic activity. 2.
-
-#### 4. INTERPRET CHARTS (p. 115)
+#### 3. INTERPRET CHARTS (p. 115)
 **[¶1]** In what ways are the raw materials and economic activities of the New England Colonies and the Southern Colonies alike and different? 3.
 
-#### 5. ANALYZE ENVIRONMENTAL CONCEPTS (p. 115)
+#### 4. ANALYZE ENVIRONMENTAL CONCEPTS (p. 115)
 **[¶1]** In what ways did the quality and quantity of natural resources impact population growth in the 13 colonies? CLIMATE PHYSICAL FEATURES RAW MATERIALS ECONOMIC ACTIVITIES
 
-#### 6. NEW ENGLAND COLONIES MASSACHUSETTS (p. 115)
+#### 5. NEW ENGLAND COLONIES MASSACHUSETTS (p. 115)
 **[¶1]** mild, short summers; long, cold winters mountains, forests, rivers, poor soil fish, whales, timber, cattle, wheat farming, fishing, shipbuilding, rum production
 
-#### 7. CONNECTICUT (p. 115)
+#### 6. CONNECTICUT (p. 115)
 **[¶1]** mild, short summers; long, cold winters mountains, rivers, and poor, rocky soil cattle, iron shipbuilding, rum production
 
-#### 8. MIDDLE COLONIES NEW YORK (p. 115)
+#### 7. MIDDLE COLONIES NEW YORK (p. 115)
 **[¶1]** humid summers; cold, snowy winters mountains, plains, hills, rivers furs, timber, cattle, wheat trade and shipping, shipbuilding, farming
 
-#### 9. PENNSYLVANIA (p. 115)
+#### 8. PENNSYLVANIA (p. 115)
 **[¶1]** mild summers; mild winters mountains, plains, fertile soil, rivers flax, wheat, sheep, cattle, pigs farming, shipbuilding
 
-#### 10. SOUTHERN COLONIES VIRGINIA (p. 115)
+#### 9. SOUTHERN COLONIES VIRGINIA (p. 115)
 **[¶1]** warm, humid; plentiful rainfall rich soil, rivers, coastal lowlands furs, cattle, pigs, wheat, corn, tobacco, fish farming, fishing, rum production
 
-#### 11. NORTH CAROLINA (p. 115)
+#### 10. NORTH CAROLINA (p. 115)
 **[¶1]** warm, humid; plentiful rainfall deep forests, rivers, grasslands indigo, tobacco, furs, timber, pigs, cattle, rice, corn farming The Thirteen Colonies

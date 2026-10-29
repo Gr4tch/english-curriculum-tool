@@ -11,15 +11,12 @@
 #### 1. WILLIAM KELSO (p. 96)
 **[¶1]** ^ Kelso stands next to a portion of the Jamestown fort that he and his team reconstructed. The archaeologist has worked for more than 20 years in Jamestown in part because, as he says, "This is America's site. It belongs to the people."
 
-#### 2. DRAW CONCLUSIONS (p. 97)
-**[¶1]** What action on the settlers' part was key to the development of American constitutional democracy?
-
-#### 3. EARLY DISCOVERIES (p. 97)
+#### 2. EARLY DISCOVERIES (p. 97)
 **[¶1]** National Geographic Explorer William Kelso's search began in 1994. In anticipation of the 400th anniversary of Jamestown's founding, the Association for the Preservation of Virginia Antiquities had announced plans to investigate the island. Kelso volunteered for the job. About all he had to go on were some historical accounts and documents, including a roughly drawn Spanish map from 1608 showing the triangular Jamestown fort.
 
 **[¶2]** But he also knew that the only aboveground ruins that had survived in Jamestown were parts of a church tower. Kelso reasoned that the settlers would have built the fort near the church, so he began there. Fragments of early 1600s ceramics and the dark- stained dirt told him that he was on the right track.
 
-#### 4. THE TRUTH ABOUT JAMESTOWN (p. 97)
+#### 3. THE TRUTH ABOUT JAMESTOWN (p. 97)
 **[¶1]** In time, Kelso identified evidence of all but one corner of the fort's structure as well as thousands of artifacts. He and his team—at this point, Kelso wasn't working alone anymore—began reconstructing the fort, using the materials and tools available to the Jamestown settlers. During this process, he discovered just how tough the settlers had been.
 
 **[¶2]** Kelso says, "They were cutting down trees, digging holes, building forts, building buildings, digging ditches." The skeletons that Kelso has excavated also reveal how hard the settlers' lives were. Many died during the starving time of the early years and in the wars with Native Americans.

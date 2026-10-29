@@ -14,20 +14,17 @@
 
 ### Section Reading Passage (By Subheading)
 
-#### 1. E VALUATE (p. 318)
-**[¶1]** What was surprising about Marshall's decision that the Supreme Court did not have the power to issue Marbury's writ?
-
-#### 2. MARSHALL'S COURT (p. 318)
+#### 1. MARSHALL'S COURT (p. 318)
 **[¶1]** John Adams and the Federalists lost the presidential and congressional elections in 1800, but they made the most of their remaining time in office. Just before the Democratic-Republicans took over, Congress passed the Judiciary Act of 1801 . The act reduced the number of justices on the Supreme Court from six to five, which would deny Jefferson the chance to appoint a new justice when the next justice died or resigned.
 
 **[¶2]** This power is important because the position of a Supreme Court justice is a lifetime appointment. The act also allowed Adams to appoint many new, Federalist lower-court judges before he stepped down. Adams worked late into the night of his last day signing commissions for these judges, who became known as "midnight judges." Adams also chose a new Chief Justice of the United States, John Marshall —a Federalist.
 
 **[¶3]** One of Marshall's earliest and most important cases was Marbury v. Madison . The case pitted one of Adams's midnight judges, William Marbury, against Jefferson's secretary of state, James Madison.
 
-#### 3. MARBURY (p. 318)
+#### 2. MARBURY (p. 318)
 **[¶1]** V.
 
-#### 4. MADISON (p. 318)
+#### 3. MADISON (p. 318)
 **[¶1]** The case arose because Adams had signed Marbury's commission but left office before it was delivered. Adams believed that his signature alone made the commission valid. Jefferson disagreed and ordered Madison to block the commission. Marbury sued, saying that the Judiciary Act of 1789 required the Supreme Court to force Madison to give him his commission.
 
 **[¶2]** It seemed like a straightforward case. The Court had to decide three questions. First, was Marbury entitled to have the commission delivered to him? The Court said yes. Second, was it within the law to have the courts issue a writ , or legal document, commanding Madison to deliver the commission?

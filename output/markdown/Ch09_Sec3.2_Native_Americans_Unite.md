@@ -39,12 +39,3 @@
 **[¶5]** Many leaders felt, too, that the new nation had to demonstrate its viability, or skill, on the international stage. The War Hawks' anger boiled over in the Capitol, resulting in a call to arms. The shadow of war was falling on the country. Tecumseh's Eloquence Tecumseh traveled throughout the United States and Canada, persuading other tribes to join his confederacy.
 
 **[¶6]** In one speech, he told the Osage that they "belong to one family" and were all "children of the Great Spirit." His goal of confederation, he explained, was "to assist each other to bear our burdens." Tecumseh insisted, "We walk in the same path. . . . We must be united; we must smoke the same pipe; we must fight each others' battles."
-
-#### 3. E VALUATE (p. 329)
-**[¶1]** In what ways was Tecumseh's plan a good one, and in what ways was it likely to fail? The Jefferson Years
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 329)
-1. **READING CHECK: What was Tecumseh's plan, and how did he hope to accomplish it?**
-2. **ANALYZE CAUSE AND EFFECT: What main factors led Tecumseh to formulate his plan?**
-3. **E VALUATE: In what ways was Tecumseh's plan a good one, and in what ways was it likely to fail?**

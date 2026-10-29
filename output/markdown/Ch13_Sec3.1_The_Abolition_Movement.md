@@ -36,10 +36,7 @@
 
 **[¶7]** She captivated people with her simple, clear message: that all people deserved the same rights as white men. William Lloyd Garrison published the weekly newspaper The Liberator for 35 years, beginning in 1831. The masthead, or title area, depicts enslaved people before and after liberation.
 
-#### 3. DRAW CONCLUSIONS (p. 455)
-**[¶1]** Why did most Americans consider abolitionists' ideas radical? 3.
-
-#### 4. ANALYZE VISUALS (p. 455)
+#### 3. ANALYZE VISUALS (p. 455)
 **[¶1]** What details do you notice in the photo, and how might those—and the photo itself—have impacted people who saw it in the mid-1800s? The Changing American Identity
 
 ---

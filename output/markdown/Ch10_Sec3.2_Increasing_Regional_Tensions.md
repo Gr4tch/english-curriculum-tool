@@ -21,12 +21,7 @@
 
 **[¶4]** The compromise prohibited slavery in all the lands acquired in the Louisiana Purchase north of the 36° 30' N latitude line. These lands were considered unorganized territory , or lands governed by the federal government but not belonging to any state. As Missouri Compromise, 1820
 
-#### 2. IDENTIFY PROBLEMS AND SOLUTIONS (p. 353)
-**[¶1]** How did the Missouri Compromise attempt to solve a problem and cause a potential problem at the same time? 3. INTERPRET MAPS Based on details you notice on the map, what territories were open to slavery and what territories were closed to slavery? a result of the compromise, any states formed from this unorganized territory would be free states.
-
-**[¶2]** Even so, the compromise stated that enslaved people who escaped to free states could be captured and returned to their owners.
-
-#### 3. THE MONROE DOCTRINE (p. 353)
+#### 2. THE MONROE DOCTRINE (p. 353)
 **[¶1]** In December 1823, President Monroe delivered a speech in which he introduced a new approach to foreign policy. In it he stated, "The American continents, by the free and independent conditions which they have assumed and maintained, are henceforth not to be considered as subjects for future colonization by any European power." Monroe also promised that the United States would not fight in any European wars.
 
 **[¶2]** In simple terms, the president said, "You stay out of our hemisphere, and we'll stay out of yours." His ideas became known as the Monroe Doctrine . Monroe warned European nations against interfering in the Western Hemisphere. Doing so would be considered an act of aggression that would result in military action from the United States.

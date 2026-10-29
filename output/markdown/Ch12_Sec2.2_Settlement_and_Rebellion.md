@@ -28,12 +28,3 @@
 **[¶2]** For 13 days, 1,800 Mexican soldiers held the Alamo and its defenders under siege , which meant no one could leave or enter the building to bring food, supplies, or reinforcements. On March 2, Texans declared themselves a separate nation, the Republic of Texas. On March 6, the Mexican Army breached the Alamo's walls and killed almost everyone inside, including frontiersmen James Bowie, designer of the Bowie knife, and Davy Crockett, a U.S. congressman.
 
 **[¶3]** In response, on April 21, Sam Houston , the Texan Army's commander, attacked the Mexican Army near the San Jacinto River. He won the Battle of San Jacinto (sahn hah-SEEN-toh) and captured Santa Anna. Santa Anna agreed to withdraw and surrender. Texas had achieved independence.
-
-#### 3. DESCRIBE (p. 409)
-**[¶1]** What opportunities did Tejas offer women who settled and lived there? Manifest Destiny
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 409)
-1. **READING CHECK: Why did Texans want independence from Mexico?**
-2. **ANALYZE CAUSE AND EFFECT: How did the Texans' defeat at the Alamo affect the final outcome of the Texas War for Independence?**
-3. **DESCRIBE: What opportunities did Tejas offer women who settled and lived there?**

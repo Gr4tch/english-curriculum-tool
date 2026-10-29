@@ -606,6 +606,15 @@ CHAPTER_5_KNOWLEDGE_BASE: Dict[str, Dict[str, Any]] = {
 # DYNAMIC KNOWLEDGE FALLBACK FOR SECTIONS IN CHAPTERS 1–4 & 6–17
 # ─────────────────────────────────────────────────────────────────────────────
 
+NON_BLUE_SUBHEADINGS_REGEX = re.compile(
+    r"\b(FUENTE[S]?\s+PRIMARIA[S]?|PRIMARY\s+SOURCE[S]?|DRAW\s+CONCLUSIONS|SACAR\s+CONCLUSIONES|"
+    r"IDENTIFY\s+PROBLEMS|IDENTIFICAR\s+IDEAS|E\s*VALUATE|DESCRIBE|CONSTRUCTED\s+RESPONSE|"
+    r"CRITICAL\s+VIEWING|VISI[ÓO]N\s+CR[ÍI]TICA|OBSERVACI[ÓO]N\s+CR[ÍI]TICA|READING\s+CHECK|"
+    r"COMPROBAR\s+LA\s+LECTURA|INTERPRETAR\s+MAPAS|SINTETIZAR|THINK\s+LIKE\s+A\s+GEOGRAPHER)\b",
+    re.IGNORECASE,
+)
+
+
 def build_dynamic_section_knowledge(
     section_meta: Dict[str, Any],
     markdown_text: str = "",
@@ -636,8 +645,11 @@ def build_dynamic_section_knowledge(
         flags=re.DOTALL,
     )
     subheadings = []
-    for sh_title, sh_pg, sh_body in sh_blocks[:3]:
+    for sh_title, sh_pg, sh_body in sh_blocks:
         clean_title = sh_title.strip()
+        if NON_BLUE_SUBHEADINGS_REGEX.search(clean_title):
+            continue
+
         paras = [
             re.sub(r"^\*\*\[¶\d+\]\*\*\s*", "", p.strip())
             for p in sh_body.strip().split("\n\n")
@@ -666,6 +678,8 @@ def build_dynamic_section_knowledge(
                 "cloze_stmt": f"Under *{clean_title}* (p. {sh_pg}), the text explains that _________________________________________________________.",
                 "citation": f'[p. {sh_pg}, "{clean_title}", ¶1–2]',
             })
+        if len(subheadings) >= 2:
+            break
 
     if not subheadings:
         pp_label = f"págs. {section_meta['printed_pages']}" if is_es else f"pp. {section_meta['printed_pages']}"
@@ -834,7 +848,7 @@ def _render_reading_organizer_component(
     else:
         prefix = rm_obj.get("directions_prefix", "As we read each subheading,")
 
-    subs = kb["subheadings"]
+    subs = [s for s in kb["subheadings"] if not NON_BLUE_SUBHEADINGS_REGEX.search(s.get("name", ""))][:2]
     keys = []
     pp = section_meta['printed_pages']
 
@@ -943,7 +957,7 @@ def _render_central_idea_and_anti_copycat_component(
     """
     is_es = (lang == "es")
     printed_mi = kb["printed_main_idea"]
-    subs = kb["subheadings"]
+    subs = [s for s in kb["subheadings"] if not NON_BLUE_SUBHEADINGS_REGEX.search(s.get("name", ""))][:2]
     lines = []
     keys = []
     pp = section_meta['printed_pages']

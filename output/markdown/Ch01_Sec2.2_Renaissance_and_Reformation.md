@@ -33,18 +33,3 @@
 **[¶3]** Followers of the Reformation became known as Protestants , and the Church split between the Protestants and Catholics. Over time, many different Protestant churches, called denominations, developed, each with its own set of beliefs within the framework of Christianity. In the 1300s, a revolution began to brew in Europe.
 
 **[¶4]** But this revolution didn't involve weapons and war. It involved ideas. People focused on the individual and believed every person had unlimited possibilities. These, indeed, were revolutionary ideas. The Renaissance marked a time of curiosity, learning, experimentation, communication, and change.
-
-#### 3. DESCRIBE (p. 39)
-**[¶1]** Why was the printing press such an important invention during the Renaissance? 3.
-
-#### 4. DRAW CONCLUSIONS (p. 39)
-**[¶1]** Why do you think the Catholic Church excommunicated Martin Luther? Three Worlds Before 1500
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 39)
-1. **READING CHECK: From which ancient cultures did the Renaissance receive inspiration?**
-2. **DESCRIBE: Why was the printing press such an important invention during the Renaissance?**
-3. **DRAW CONCLUSIONS: Why do you think the Catholic Church excommunicated Martin Luther?**
-
-### Built-In Visual & Map Analysis: Critical Viewing
-- (p. 38) During the Renaissance, artists often painted secular, or nonreligious, subjects in everyday settings. What do the details in this painting tell you about this woman's everyday life?

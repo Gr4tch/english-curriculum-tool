@@ -33,23 +33,3 @@
 **[¶2]** The election of 1868 was similar, especially for Republicans and African Americans. A Democratic victory could deliver the end of Reconstruction. After their party's victory in the 1868 presidential election, Republicans helped pass the 15th Amendment. 1868 Campaign Buttons Grant's running mate was Schuyler (SKY-ler) Colfax, a prominent Radical Republican.
 
 **[¶3]** The candidates' campaign buttons feature ferrotypes, or photos printed on tin.
-
-#### 3. DRAW CONCLUSIONS (p. 581)
-**[¶1]** Why would a poll tax prevent African Americans from voting? previous condition of servitude—in other words, slavery. The amendment would complete the political reforms sought by Reconstruction. Congress approved the amendment in February 1869 despite Democratic opposition, and it became part of the Constitution in 1870.
-
-**[¶2]** The intent of the amendment was to limit the southern states' ability to prevent African Americans from participating in the political process. But the new law did little for African Americans outside the former Confederacy. It also did not restrict or change any of the laws that states had placed on the rights of males to vote, such as charging poll taxes .
-
-**[¶3]** A poll tax is a fee charged when people register to vote. Meanwhile, the Amnesty Act of 1872 removed voting restrictions on most of those who had belonged to the Confederacy. The adoption of the 13th, 14th, and 15th amendments fundamentally changed the nation by establishing citizenship rights and full equality for anyone born in the United States.
-
-**[¶4]** However, over the next couple of decades, courts and political interests would undermine the intent of the amendments. Still, rights and equality were not on the minds of most people in the 1870s. They wanted their elected leaders to pay more attention to problems closer to home, including a severe economic depression.
-
-**[¶5]** As an Illinois newspaper observed, "the negro is now a voter and a citizen. Let him hereafter take his chances in the battle of life."
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 581)
-1. **READING CHECK: What was the theme of Grant's presidential campaign?**
-2. **COMPARE AND CONTRAST: What differing views characterized the Republican and Democratic presidential candidates in the election of 1868?**
-3. **DRAW CONCLUSIONS: Why would a poll tax prevent African Americans from voting?**
-
-### Built-In Visual & Map Analysis: Critical Viewing
-- (p. 581) Called The 15th Amendment , this 1870 print illustrates a parade celebrating the amendment's passage. The large image is surrounded by portraits of those who helped pass the amendment, including Abraham Lincoln, and scenes depicting African-American life. What do some of the scenes illustrate?

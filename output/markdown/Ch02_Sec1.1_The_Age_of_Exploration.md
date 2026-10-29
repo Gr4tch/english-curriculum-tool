@@ -38,18 +38,3 @@
 **[¶3]** Balboa claimed everything he saw for Spain. Six years later, Ferdinand Magellan departed Spain with five ships to sail around South America and on to Asia. But the Pacific Ocean was much wider than the navigator expected. By the time the ships reached the island of Guam, the sailors were near starvation.
 
 **[¶4]** After inhabitants killed Magellan, another sailor, Sebastian del Cano, took command of the one remaining ship. He returned to Spain after a three-year voyage, completing the first navigation around the world.
-
-#### 3. DRAW CONCLUSIONS (p. 53)
-**[¶1]** In what ways did the Treaty of Tordesillas support Spain's mercantilist economy? 3. IDENTIFY MAIN IDEAS AND DETAILS How did further exploration prove that Christopher Columbus had not landed in Asia? The Controversy Over Columbus Day Was Christopher Columbus a great explorer or a ruthless invader?
-
-**[¶2]** The question is at the heart of the controversy over Columbus Day, an annual mid-October holiday that celebrates the explorer's "achievements." Supporters of the holiday argue that Columbus opened two continents to trade and further settlement, forever changing the world. Opponents say the holiday glorifies a man who nearly destroyed the livelihood of the native peoples of the Americas.
-
-**[¶3]** They argue instead for celebrating Indigenous Peoples Day to remember the native peoples lost through European colonization. Various city councils have replaced Columbus Day observances with celebrations of Indigenous Peoples Day. The state of South Dakota renamed the holiday Native Americans' Day.
-
-**[¶4]** European Exploration of the Americas
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 53)
-1. **READING CHECK: Why did the Spanish want to find a western route to Asia?**
-2. **DRAW CONCLUSIONS: In what ways did the Treaty of Tordesillas support Spain's mercantilist economy?**
-3. **IDENTIFY MAIN IDEAS AND DETAILS: How did further exploration prove that Christopher Columbus had not landed in Asia?**

@@ -24,10 +24,7 @@
 
 **[¶6]** When we gave them a biscuit they would set it up, step off some distance and pierce it with an arrow. Father got a pan of biscuits and he would measure off a distance, set up one and tell them to shoot at it. The one who struck it first got it for his own. They had considerable sport over the biscuits. — from One Woman's West , by Martha Gay Masterson, 1892
 
-#### 2. E VALUATE (p. 405)
-**[¶1]** What do we learn about family life on the frontier from the letters and diaries of travelers moving west?
-
-#### 3. CULTURAL ENCOUNTERS (p. 405)
+#### 2. CULTURAL ENCOUNTERS (p. 405)
 **[¶1]** Westward trails passed through lands inhabited by various Native American tribes. On the Great Plains, pioneers encountered the Lakota , and in the Oregon Territory they met the Nez Perce . Traders who traveled the Santa Fe Trail to the New Mexico territory interacted with southwestern tribes such as the Zuni .
 
 **[¶2]** The Lakota, Nez Perce, and Zuni had distinctive customs. Traditionally, the Lakota lived in tepees and hunted bison. The Nez Perce tended to settle along streams that provided a steady supply of food. Up to 30 families could live in one of their roomy lodges. The Zuni lived in adobe houses or dwellings built into cliffs.

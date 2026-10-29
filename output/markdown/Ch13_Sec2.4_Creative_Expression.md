@@ -30,14 +30,7 @@
 
 **[¶9]** PRIMARY SOURCE
 
-#### 2. DESCRIBE (p. 453)
-**[¶1]** In what ways did common themes in artistic expression reveal the ideals and aspirations of the new nation? 3. SYNTHESIZE How did writers, visual artists, and transcendental thinkers shape American identity in the 19th century? doesn't rhyme or depend upon a strict meter. Emily Dickinson also wrote poems that ignored established rules about rhyme and rhythm.
-
-**[¶2]** She shared them with so few people that even her family members were not aware of all her poems until after her death. Transcendentalists supported women's rights, abolition, and other social reforms. Organized religion, restrictive laws and social institutions, and industrialization inhibited individuals from fully expressing themselves.
-
-**[¶3]** Certain authors gave a voice to those who were sometimes overlooked. Whitman, for example, wrote openly about love as well as same-sex relationships. His work also celebrated laborers, immigrants, and people who were all part of the growing diversity of the nation.
-
-#### 3. PAINTING AMERICAN BEAUTY (p. 453)
+#### 2. PAINTING AMERICAN BEAUTY (p. 453)
 **[¶1]** Nineteenth-century visual artists also shaped American identity through landscape paintings that celebrated the diverse beauty of the United States. Thomas Cole was one of the early leaders of an art movement known as the Hudson River School . In the 1820s, Cole hiked in New York's Catskill Mountains and painted magnificent scenes of the Hudson River Valley.
 
 **[¶2]** Hudson River School painters became known for their landscapes, which often highlighted people's relationship with nature. Asher B. Durand and Frederic Edwin Church , friends of Cole, were two artists to emerge from the Hudson River School. Cole inspired Durand to switch from painting portraits to painting landscapes.

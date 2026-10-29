@@ -33,20 +33,3 @@
 **[¶4]** However, the sight of so many African Americans on the streets of New York made white people fearful. A law was put into effect requiring that all hiring of slaves be done at one place, the slave market. This put still more restrictions on the lives of the African Americans, and in turn, white people began to worry about a slave rebellion.
 
 **[¶5]** These fears became reality on the night of April 6, 1712, when about 20 enslaved people set fire to a building, attacking the white men who came to put it out. Nine white people were killed, and terror spread up and down the Atlantic coast. As in the case of later slave revolts and conspiracies, the revenge taken on the African- American community far outweighed any
-
-#### 3. E VALUATE (p. 145)
-**[¶1]** The text claims that "the revenge taken on the African-American community far outweighed any violence the rebels had committed." What evidence supports this? violence the rebels had committed. In the wake of the New York revolt, 13 enslaved African Americans were hanged, 3 were burned at the stake, 1 was tortured, and another starved to death in chains.
-
-**[¶2]** Some white colonists, however, questioned the morality of slavery. Wasn't it a violation of the Bible's golden rule, which says to act toward others as you want others to act toward you? A person who enslaves another certainly would not like to be enslaved in return. Other whites opposed slavery simply because they feared slave rebellions.
-
-**[¶3]** Despite these considerations, slavery became a part of early American culture and would remain so for more than 150 years. Quaker Meeting, by an unidentified British artist, c. 1700–1825 Museum of Fine Arts, Boston Like many Protestant groups, Quakers did not have a paid clergy. Instead, they believed every individual should decide how to worship.
-
-**[¶4]** People sat silently at Quaker meetings, thinking and praying, until they felt that God moved them to speak. They wore plain clothes and spoke plainly, even to nobility. This painting by an unknown artist from the late 1700s or early 1800s captures the feeling of a Quaker meeting.
-
-**[¶5]** Colonial Development
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 145)
-1. **READING CHECK: How did the Dutch colonists show tolerance for religious diversity in New Netherland?**
-2. **MAKE INFERENCES: Why do you think Quakers accepted other religions and races?**
-3. **E VALUATE: The text claims that "the revenge taken on the African-American community far outweighed any violence the rebels had committed." What evidence supports this?**

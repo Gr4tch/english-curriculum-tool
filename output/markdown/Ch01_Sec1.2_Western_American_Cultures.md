@@ -41,12 +41,3 @@
 **[¶5]** Vast grasslands stretched from the Mississippi River to the Rocky Mountains. Native Americans who lived in the eastern part of the Great Plains, such as the Mandan and Pawnee, lived the settled lives of farmers, building villages of earthen lodges. In the western grasslands, the Blackfoot and other tribes like them migrated , or moved from place to place, hunting herds of bison (also commonly called buffalo) and other game for food and clothing.
 
 **[¶6]** Tepees , or tents made of bison hides, served as their portable homes. At this time, tribes herded bison on foot. They steered the animals over cliffs or into corrals where men could kill them with arrows. Nonetheless, Plains Indian tribes considered the bison sacred. They used every part of the animal: meat for food, skin and fur for clothes and tepees, and bones for tools and crafts.
-
-#### 3. DRAW CONCLUSIONS (p. 27)
-**[¶1]** What can you conclude about similarities between the Maya culture and those of the ancient Pueblo and the Hohokam? Early North American Civilizations, c. 1400 Three Worlds Before 1500
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 27)
-1. **READING CHECK: How did the tribes of northern and western North America adapt to their environments?**
-2. **COMPARE AND CONTRAST: How did lifestyles differ among Great Plains tribes?**
-3. **DRAW CONCLUSIONS: What can you conclude about similarities between the Maya culture and those of the ancient Pueblo and the Hohokam?**

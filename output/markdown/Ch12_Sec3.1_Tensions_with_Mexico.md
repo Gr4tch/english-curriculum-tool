@@ -17,10 +17,7 @@
 
 **[¶4]** He is wearing a bicorn hat and elaborate epaulettes, or shoulder ornaments—both of which were typical of American and European military officers beginning in the 1790s.
 
-#### 2. E VALUATE (p. 417)
-**[¶1]** How did President Polk use emotion to persuade Congress to vote for war with Mexico?
-
-#### 3. CROSSING THE NUECES RIVER (p. 417)
+#### 2. CROSSING THE NUECES RIVER (p. 417)
 **[¶1]** Relations between the United States and Mexico had been tense since the creation of the Republic of Texas. Mexican president Antonio López de Santa Anna had signed the Treaties of Velasco, giving Texas its independence, but the Mexican government never formally acknowledged the treaties as legal.
 
 **[¶2]** Santa Anna had signed the treaties while he was a prisoner of the Texan Army, they argued, and therefore Texas was still a part of Mexico. Given this history, it's not surprising that Texas's annexation further worsened relations between the United States and Mexico. At the time, Texas extended only as far south as the Nueces River.

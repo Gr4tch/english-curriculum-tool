@@ -48,15 +48,3 @@
 
 #### 3. MAKE CONNECTIONS (p. 449)
 **[¶1]** What connections do you see between the school system Horace Mann helped establish and today's schools? 3.
-
-#### 4. DRAW CONCLUSIONS (p. 449)
-**[¶1]** How did American reformers help mentally ill and imprisoned people in the 19th century? The Changing American Identity
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 449)
-1. **READING CHECK: How did the common school movement address inequalities in education?**
-2. **MAKE CONNECTIONS: What connections do you see between the school system Horace Mann helped establish and today's schools?**
-3. **DRAW CONCLUSIONS: How did American reformers help mentally ill and imprisoned people in the 19th century?**
-
-### Built-In Visual & Map Analysis: Critical Viewing
-- (p. 448) Primers were small books used in schools to teach beginning reading and arithmetic. This primer was printed on cloth and sewn together by a Boston printer around 1860. What do you notice about the illustrations used in this primer?

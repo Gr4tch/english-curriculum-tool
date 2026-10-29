@@ -32,11 +32,3 @@
 
 #### 3. FORM AND SUPPORT OPINIONS (p. 103)
 **[¶1]** Do you think the treaty with the Wampanoag could have been created without Squanto? Why or why not? 3.
-
-#### 4. DRAW CONCLUSIONS (p. 103)
-**[¶1]** Based on his dying words, what did Squanto learn from the Pilgrims? The Thirteen Colonies
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 103)
-1. **READING CHECK: How did Squanto help the Pilgrims in Plymouth?**
-2. **FORM AND SUPPORT OPINIONS: Do you think the treaty with the Wampanoag could have been created without Squanto?**

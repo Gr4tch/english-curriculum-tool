@@ -25,15 +25,3 @@
 **[¶3]** For a time after his embarrassing defeat, Santa Anna fell from favor in Mexico. He returned to power eventually, but as you'll see, American troops would once again bring about his downfall. As for Houston, he became the first president of the Republic of Texas and served as senator after Texas achieved statehood.
 
 **[¶4]** He'd just been elected its governor when a number of southern states voted to separate from the United States. When Houston refused to allow Texas to join the southern states, he was removed from office.
-
-#### 3. E VALUATE (p. 413)
-**[¶1]** In what way did Santa Anna's character and judgment affect Texas and Mexico? Manifest Destiny
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 413)
-1. **READING CHECK: In which two areas did both Houston and Santa Anna pursue careers?**
-2. **COMPARE AND CONTRAST: How did Houston's treatment of the enemy in the Texas War for Independence differ from the way in which Santa Anna treated his prisoners?**
-3. **E VALUATE: In what way did Santa Anna's character and judgment affect Texas and Mexico?**
-
-### Built-In Visual & Map Analysis: Critical Viewing
-- (p. 413) During the Battle of San Jacinto, Houston was shot in the leg but continued to fight. In this painting by William Huddle, called Surrender of Santa Anna , Houston lies on a mat with his leg bandaged, while Santa Anna stands before him. Why do you think Houston's men surround Santa Anna?

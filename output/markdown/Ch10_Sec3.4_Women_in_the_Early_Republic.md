@@ -25,13 +25,10 @@
 
 **[¶5]** Mother as Teacher The early 19th-century woman had a lot to live up to. Literature, art, and social expectations defined roles for women in narrow ways. Paintings such as this one cast women in a nearly angelic light and featured them as doting mothers.
 
-#### 2. DRAW CONCLUSIONS (p. 357)
-**[¶1]** What conclusions can you draw about the work that 19th-century women's organizations did? 3.
-
-#### 3. MAKE CONNECTIONS (p. 357)
+#### 2. MAKE CONNECTIONS (p. 357)
 **[¶1]** How might a more comprehensive education and the expectation of rearing good citizens lead women to seek broader civic roles for themselves?
 
-#### 4. THE IMPORTANCE OF EDUCATION (p. 357)
+#### 3. THE IMPORTANCE OF EDUCATION (p. 357)
 **[¶1]** In the early 1800s, the ideal woman was pure, religiously devout, and a good housekeeper and mother. She also willingly deferred to all her husband's wishes. Such a role did not require women to be well educated, and few learned more than language arts and basic arithmetic— subjects that aided them in running an efficient home.
 
 **[¶2]** But without adequate education, how could mothers be expected to teach their children, especially their sons, the basics of civic life and service in a republic? This question had been brewing since the American Revolution, when Abigail Adams argued that in order to support male education, women should be educated as well: "If we mean to have heroes, statesmen, and philosophers, we should have learned [educated] women." A few years later, Judith Sargent Murray, an American essayist and playwright in the early republic, was known for commenting on public issues, especially women's rights.

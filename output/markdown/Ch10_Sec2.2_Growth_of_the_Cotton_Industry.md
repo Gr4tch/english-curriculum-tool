@@ -24,13 +24,7 @@
 
 **[¶5]** Today, economies all over the world are connected to each other in visible and sometimes not-so-visible ways. The same was true for two seemingly very different parts of the United States—the South and the North—in the 19th century. A new invention enabled southern plantation owners to grow more crops and increase profits.
 
-#### 2. DRAW CONCLUSIONS (p. 347)
-**[¶1]** How did the interstate slave trade affect enslaved communities? 3.
-
-#### 3. E VALUATE (p. 347)
-**[¶1]** In what ways did the institution of slavery shape the economic development of both the South and the North?
-
-#### 4. SLAVERY EXPANDS (p. 347)
+#### 2. SLAVERY EXPANDS (p. 347)
 **[¶1]** Even with the advent of the cotton gin, growing and picking cotton was labor intensive, and the production of cotton relied on the labor system created to support it: slavery. The "peculiar institution" of slavery shaped the South's political, social, economic, and cultural development.
 
 **[¶2]** Southern plantation owners who wanted to maximize their profits from cotton production tried to do so by acquiring more land. As you have read, in the early 19th century, the federal government intentionally seized Native American lands. So when some southern landowners and farmers did the same in order to expand their farmlands, they did so with the blessing of the federal government.

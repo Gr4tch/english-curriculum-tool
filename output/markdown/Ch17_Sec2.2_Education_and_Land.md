@@ -8,10 +8,7 @@
 
 ### Section Reading Passage (By Subheading)
 
-#### 1. DRAW CONCLUSIONS (p. 577)
-**[¶1]** In what way did sharecropping replace slavery?
-
-#### 2. AN OPPORTUNITY TO LEARN (p. 577)
+#### 1. AN OPPORTUNITY TO LEARN (p. 577)
 **[¶1]** African Americans appreciated the value of education. Slavery had denied many of them the opportunity to learn, so they saw education as a path to empowerment. Literacy , or the ability to read and write, and a solid working knowledge of mathematics gave African Americans the tools they needed to understand labor contracts.
 
 **[¶2]** Education helped them advance in a wage economy , or an economy in which people are paid for their work. With a good education, they could fully participate in the political process and understand their civil rights. The Freedmen's Bureau helped provide educational opportunities.
@@ -22,7 +19,7 @@
 
 **[¶5]** In return, teachers experienced the satisfaction of teaching enthusiastic and motivated students. By the time the Freedmen's Bureau closed, about 150,000 students had attended classes.
 
-#### 3. BACK TO WORKING THE LAND (p. 577)
+#### 2. BACK TO WORKING THE LAND (p. 577)
 **[¶1]** A good education was important to African Americans in the South because it offered their only chance for advancement. For the most part, uneducated African Americans worked the land of white landowners, but they faced discrimination in a southern economy on the edge of collapse.
 
 **[¶2]** As a result, many former slaves wanted to obtain their own land to farm. Some freed African Americans had this wish fulfilled—at least for a short time. In January 1865, General William T. Sherman issued Special Field Order No. 15, which set aside the Sea Islands for newly freed African Americans.

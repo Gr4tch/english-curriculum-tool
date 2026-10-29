@@ -28,15 +28,12 @@
 
 **[¶7]** Stuart began creating his likenesses of the president in 1795. Washington became extremely impatient sitting for his portrait, however. Even though Stuart was known as an entertaining conversationalist, Washington remained mostly silent during their sessions.
 
-#### 2. IDENTIFY PROBLEMS AND SOLUTIONS (p. 287)
-**[¶1]** How did Washington deal with treaty negotiations, since no process was spelled out in the Constitution? 3.
-
-#### 3. MAKE CONNECTIONS (p. 287)
+#### 2. MAKE CONNECTIONS (p. 287)
 **[¶1]** How did Washington's presidency help establish an American identity? Washington particularly wanted to make it clear that he was president of the United States, not its king . He dressed plainly for his inauguration , the ceremony that marked the beginning of his presidency, in an American-made brown suit.
 
 **[¶2]** And he refused to be called "His Excellency" or "Your Highness," as John Adams had suggested. After much debate, Washington decided that "Mr. President" would do just fine.
 
-#### 4. AN OCEAN OF DIFFICULTIES (p. 287)
+#### 3. AN OCEAN OF DIFFICULTIES (p. 287)
 **[¶1]** Once in office, Washington got to work—and there was a lot to do. As he himself described it, the nation faced "an ocean of difficulties." The new government had to deal with problems within the country as well as conflicts in the Northwest Territory and wars across the Atlantic.
 
 **[¶2]** To tackle all these situations, both the president and Congress had certain responsibilities and powers, as spelled out in the Constitution. Essentially, Congress would make the laws, and the president would ensure they were carried out. But not everything was covered in the Constitution.

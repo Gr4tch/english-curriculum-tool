@@ -25,18 +25,3 @@
 **[¶4]** He assured the South that he did not support freeing its slaves. But he also emphasized that there was no constitutional basis for withdrawing from the Union. PRIMARY SOURCE I hold that, in contemplation of universal law and of the Constitution, the Union of these States is perpetual [everlasting].
 
 **[¶5]** Perpetuity [This permanence] is implied, if not expressed, in the fundamental law of all national governments. It is safe to assert that no government proper ever had a provision in its organic law [system of laws] for its own termination [end]. . . . The Union will endure forever. —from Abraham Lincoln's First Inaugural Address, March 4, 1861
-
-#### 3. DRAW CONCLUSIONS (p. 485)
-**[¶1]** Why did Confederate forces threaten Fort Sumter? still intact, and he vowed to use his powers as president to protect places and property belonging to the federal government. He assured the South, however, that he did not intend to interfere with slavery where it already existed, and there would be no invasion or use of force by the government. "We are not enemies, but friends," Lincoln said. "Though passion may have strained, it must not break our bonds of affection." Lincoln's words had little effect.
-
-**[¶2]** The day after his address, a message arrived in Washington from Fort Sumter , which lay at the entrance to the harbor in Charleston, South Carolina. The fort was under threat from Confederate forces, and its garrison , or defense force, of about 85 federal soldiers would soon run out of food.
-
-**[¶3]** Lincoln faced the decision of whether to try to resupply the fort. He wanted to avoid conflict, but a civil war looked more and more likely. Lincoln with his Cabinet and Generals In this engraving from 1866, Lincoln meets with his Cabinet and military leaders to discuss their response to the South's secession.
-
-**[¶4]** Lincoln did not want war with the South, but he wanted to be prepared for it if it couldn't be avoided. A Broken Nation
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 485)
-1. **READING CHECK: What compromise did the Crittenden Plan propose?**
-2. **IDENTIFY MAIN IDEAS AND DETAILS: Who did Lincoln choose to be in his Cabinet, and why did he appoint these individuals?**
-3. **DRAW CONCLUSIONS: Why did Confederate forces threaten Fort Sumter?**

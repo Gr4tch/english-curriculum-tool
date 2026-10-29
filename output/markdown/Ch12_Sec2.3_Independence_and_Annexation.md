@@ -17,10 +17,7 @@
 
 **[¶4]** Admitting Texas as a state would upset the balance between states that had outlawed slavery and states where slavery was still practiced. Presidents Jackson and Van Buren argued that annexation was not in the best interest of the country. 1829 Texas State Flag The flag of the Republic of Texas, which also became the state flag of Texas, is the only state flag that once flew as the flag of an independent country.
 
-#### 2. E VALUATE (p. 411)
-**[¶1]** What made James K. Polk an attractive but unlikely candidate for president?
-
-#### 3. ANNEXATION OF TEXAS (p. 411)
+#### 2. ANNEXATION OF TEXAS (p. 411)
 **[¶1]** Texas remained independent for almost 10 years. Then, in 1844, annexation gained a supporter in the White House— James K. Polk . Polk had been the Speaker of the House and the governor of Tennessee, but he was not a superstar politician. When the Democrats nominated him for president in 1844, he was an unknown candidate who had little chance of winning.
 
 **[¶2]** But despite running as an unknown against Henry Clay, the prominent Whig candidate, Polk won the presidency, barely, with 49.5 percent of the popular vote and an electoral college margin , or amount by which something is won or lost, of 170–105. As president, Polk managed to turn his political ambitions into policy.
@@ -29,7 +26,7 @@
 
 **[¶4]** Under his leadership, Texas became the 28th state.
 
-#### 4. A GLOBAL PERSPECTIVE (p. 411)
+#### 3. A GLOBAL PERSPECTIVE (p. 411)
 **[¶1]** In recent decades, some Texans have supported a movement for Texas to leave the United States and become an independent republic again. Proponents of this effort believe that the state gives too much power and money to the federal government. Some have compared these views with those advocated by "Brexit," the British movement that voted to leave the European Union (EU) in June 2016.
 
 **[¶2]** The Texan movement earned a similar nickname, "Texit," a combination of the words Texa s and exit . In this photo, campaigners for and against Brexit pass out flyers in London. What historical precedent might supporters of Texit cite as evidence that Texas should leave the United States?

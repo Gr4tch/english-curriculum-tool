@@ -13,10 +13,7 @@
 
 **[¶3]** After his escape, he changed his name to reduce the risk of being found by slave catchers. Before, he had been called Frederick Augustus Washington Bailey. From this point on, he would call himself Frederick Douglass.
 
-#### 2. DRAW CONCLUSIONS (p. 535)
-**[¶1]** Why do you think Douglass took the Fourth of July as a theme for a speech on slavery?
-
-#### 3. FIGHTER FOR FREEDOM (p. 535)
+#### 2. FIGHTER FOR FREEDOM (p. 535)
 **[¶1]** Douglass settled in New Bedford, Massachusetts, where he worked as a laborer and furthered his education by reading widely. In 1841, he made his first speech describing his life in slavery and calling for an end to the brutal practice. It was the beginning of a lifelong career in public speaking.
 
 **[¶2]** Douglass's speeches were so eloquent that some people suspected him of simply pretending to be a former slave. They reasoned that a man born in slavery could never have learned to speak with such brilliance. In many ways, Douglass remade how his fellow citizens viewed African Americans.

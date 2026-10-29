@@ -29,24 +29,3 @@
 **[¶2]** At first, Lee succeeded in sending the Union troops into retreat. Then, on July 1, reinforcements arrived for both sides, bringing troop numbers to approximately 90,000 for the Union and about 75,000 for the Confederates. Union forces stopped retreating and stationed themselves on Cemetery Hill , where the high vantage point gave them a defensive edge.
 
 **[¶3]** Sometimes you can recall the exact moment when things suddenly change and get either much better or much worse. For Civil War generals, two battles in particular dramatically shifted the war's direction. The battles of Vicksburg and Gettysburg were the key turning points in the Union's eventual victory in the Civil War.
-
-#### 3. IDENTIFY PROBLEMS AND SOLUTIONS (p. 545)
-**[¶1]** What challenges did Grant and his troops face, and how were they eventually able to capture the city of Vicksburg? 3.
-
-#### 4. E VALUATE (p. 545)
-**[¶1]** How did the Union's position on Cemetery Hill contribute to its victory at Gettysburg? On Friday, July 3, hoping to outflank Union forces on Cemetery Hill, Lee ordered Major General George Pickett and about 15,000 of his men to attack the Union troops on a plain just below the hill.
-
-**[¶2]** Lee's strategy proved disastrous. The Union repelled Pickett's charge, killing or wounding more than half of Pickett's troops. The next day, Lee retreated, eventually crossing the Potomac River to Virginia. This retreat marked a turning point in the war. It put the Confederacy on the defensive and the Union in a favorable position for victory.
-
-**[¶3]** On November 19, 1863, President Lincoln delivered the Gettysburg Address at the battle site to commemorate the loss of so many men and to dedicate a military cemetery there. Throughout his speech, Lincoln referred to the Declaration of Independence directly and to its ideas. His address reinforced the Declaration's principles of equality and freedom for which the war was fought and for which so many died, and were still dying.
-
-**[¶4]** Turning Points of the War
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 545)
-1. **READING CHECK: How did the battles of Vicksburg and Gettysburg affect the Civil War?**
-2. **IDENTIFY PROBLEMS AND SOLUTIONS: What challenges did Grant and his troops face, and how were they eventually able to capture the city of Vicksburg?**
-3. **E VALUATE: How did the Union's position on Cemetery Hill contribute to its victory at Gettysburg?**
-
-### Built-In Visual & Map Analysis: Critical Viewing
-- (p. 545) Photography played a new and important role in the Civil War. This iconic photo, captured by Timothy O'Sullivan in July 1863, shows about 20 of the more than 3,100 fallen Union soldiers after the Battle of Gettysburg. What effect do you think this photo might have had on Americans who saw it in 1863?

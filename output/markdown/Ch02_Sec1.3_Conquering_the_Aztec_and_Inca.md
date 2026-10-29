@@ -37,15 +37,3 @@
 **[¶4]** Smallpox and other European diseases killed or weakened many Aztec, Inca, and Native Americans. The Spanish were masterful at forming alliances with Native American groups, especially with tribes opposing the Aztec. Aztec and Inca weapons were no match for the guns and swift horses of the Spanish.
 
 **[¶5]** Finally, the Spanish used violence and forced labor to control Native American populations and put down revolts.
-
-#### 3. DRAW CONCLUSIONS (p. 57)
-**[¶1]** What might have led Aztec and Inca leaders to underestimate the Spanish invaders? European Exploration of the Americas
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 57)
-1. **READING CHECK: What was the goal of the Spanish conquistadors?**
-2. **ANALYZE CAUSE AND EFFECT: What factors helped the Spanish defeat the Aztec and Inca?**
-3. **DRAW CONCLUSIONS: What might have led Aztec and Inca leaders to underestimate the Spanish invaders?**
-
-### Built-In Visual & Map Analysis: Critical Viewing
-- (p. 57) In the late 1600s, an unknown artist depicted the conquest of Tenochtitlán. Based on details you notice in the painting, what advantages did the Spanish and the Aztec each have as they faced each other in battle?

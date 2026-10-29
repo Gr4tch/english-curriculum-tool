@@ -29,13 +29,10 @@
 
 **[¶8]** The shape and material of his plow kept the soil from clumping, and he began selling his successful invention in 1838. Deere solved an agricultural problem by examining the design and function of a common tool, and paved the way for more improvements in farming technology. Today, Deere & Company manufactures plows and combines, which perform all the tasks associated with crop harvesting in one step.
 
-#### 2. DRAW CONCLUSIONS (p. 339)
-**[¶1]** How did McCormick's mechanical reaper contribute to agricultural and urban growth? 3.
-
-#### 3. MAKE CONNECTIONS (p. 339)
+#### 2. MAKE CONNECTIONS (p. 339)
 **[¶1]** McCormick's reaper connected both rural and urban innovation. How might another invention described in the text connect the country and the city?
 
-#### 4. STEAMBOATS AND TELEGRAPHS (p. 339)
+#### 3. STEAMBOATS AND TELEGRAPHS (p. 339)
 **[¶1]** New technologies also changed shipping, communication, and agriculture. Robert Fulton's steamboats , or boats outfitted with steam boiler engines to power their paddle wheels, revolutionized river travel and made shipping quicker. By 1811, Fulton had designed a steamboat powerful and sturdy enough for the strong currents of the Mississippi River.
 
 **[¶2]** Soon, an upstream journey on the Mississippi and Ohio rivers from New Orleans to Louisville, Kentucky was shortened from several months to just 14 days. But even the swiftest ship could not carry a message across miles in a matter of minutes. Samuel F. B. Morse's telegraph sent messages over electrical wires using a series of long and short pulses known as Morse code.

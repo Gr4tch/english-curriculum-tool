@@ -26,10 +26,7 @@
 #### 2. SUMMARIZE (p. 497)
 **[¶1]** Why was it important for the Union to keep the border states out of the Confederacy? 3.
 
-#### 3. IDENTIFY PROBLEMS AND SOLUTIONS (p. 497)
-**[¶1]** How did Lincoln deal with Confederate attempts to seize the border states?
-
-#### 4. THE GEOGRAPHY OF WAR (p. 497)
+#### 3. THE GEOGRAPHY OF WAR (p. 497)
 **[¶1]** Within two days of Lincoln's call to arms, Virginia seceded. The Confederacy established its capital at Richmond, Virginia. Soon after, Arkansas, Tennessee, and North Carolina left the Union. However, four states bordering both the Union and the Confederacy—Maryland, Delaware, Missouri, and Kentucky—remained undecided.
 
 **[¶2]** These states, called the border states , lay in the middle ground between the warring North and South and so were very important geographically. Maryland, for example, bordered Washington, D.C., on three sides. If the state joined the Confederacy, the Union's capital would be completely surrounded by Confederate states.

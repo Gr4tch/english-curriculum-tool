@@ -38,13 +38,10 @@
 
 **[¶4]** Louis Buffalo Albany Providence Newark Cincinnati Louisville New Orleans Detroit Union state or territory Border state not seceding Confederate state City with population over 40,000 U.S. Population, c . 18 6 0
 
-#### 5. THINK LIKE A GEOGRAPHER (p. 515)
-**[¶1]** 1. IDENTIFY MAIN IDEAS AND DETAILS What geographic advantages did the Confederacy have, and why were they important? 2. ANALYZE CAUSE AND EFFECT How did the Union's superiority in rail transportation contribute to its victory in the war? 3.
-
-#### 6. FORM AND SUPPORT OPINIONS (p. 515)
+#### 5. FORM AND SUPPORT OPINIONS (p. 515)
 **[¶1]** In your opinion, what was the most important geographic factor in the outcome of the war? Industry and Agriculture in the North and the South, 1850
 
-#### 7. AGR ICULTUR E (p. 515)
+#### 6. AGR ICULTUR E (p. 515)
 **[¶1]** As the map above shows, cotton was king in the South. The region devoted the majority of its economic and technological energy to this cash crop. As a result, the South supplied most of the world's cotton, producing 77 percent of the cotton used by Great Britain, the largest maker of textiles in the world.
 
 **[¶2]** Cotton was critical to the Confederacy's ability to raise the huge amounts of money needed to fight a war. In addition to Great Britain, the South exported cotton to France and other European countries and used the profits to buy weapons and equipment and to fund the Confederate government.

@@ -39,14 +39,3 @@
 **[¶4]** In 1788, horrified by the violence she witnessed during Shays's Rebellion, she argued that the revolutionaries did not fight against Britain only to meet with more tyranny. Sometimes a fight between two people can spread until everyone takes a side. After the Constitutional Convention, citizens in the new nation faced this situation as two separate groups argued that their ideal vision was the right one.
 
 **[¶5]** Americans with opposite views about a strong central government engaged in intense debates over the ratification of the Constitution.
-
-#### 3. DESCRIBE (p. 263)
-**[¶1]** Why did Congress add the Bill of Rights to the Constitution? By July 1788, all but two states— North Carolina and Rhode Island— had voted for ratification. Rhode Island, again a holdout, refused to ratify the Constitution until a list of changes was included. The vote for ratification was so close that James Madison finally proposed to Congress that a set of 12 official amendments , or changes, be added to the Constitution to provide greater constitutional protection for individual liberties.
-
-**[¶2]** The states ratified 10 of these amendments, and Congress added them to the Constitution. These amendments, which place specific restrictions on governmental power, became known as the Bill of Rights . Together, the Constitution and the Bill of Rights have provided the foundation for the U.S. government for more than 200 years.
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 263)
-1. **READING CHECK: What were the main arguments between the federalists and the antifederalists?**
-2. **COMPARE AND CONTRAST: What are some general characteristics of the people who identified as federalists and those who identified as antifederalists?**
-3. **DESCRIBE: Why did Congress add the Bill of Rights to the Constitution?**

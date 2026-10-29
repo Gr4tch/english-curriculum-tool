@@ -21,17 +21,14 @@
 
 **[¶3]** Those who gathered at the Convention to create the Constitution became known as the Framers . The Framers were wealthy, influential, and well educated. Many of the Framers had also been leaders during the Revolution, including Pennsylvania delegate Benjamin Franklin. The
 
-#### 2. DESCRIBE (p. 257)
-**[¶1]** What were the main issues of debate among delegates at the Constitutional Convention? 3.
-
-#### 3. FORM AND SUPPORT OPINIONS (p. 257)
+#### 2. FORM AND SUPPORT OPINIONS (p. 257)
 **[¶1]** Which principle under debate at the Convention do you think was most important to the new nation? Support your opinion with evidence from the text. Framers elected George Washington from Virginia to lead the Convention. Of the Framers at the Convention, James Madison, from Virginia, was the best prepared to craft a constitution for the new nation.
 
 **[¶2]** Madison's research and knowledge proved the most influential in shaping the ideas the delegates debated and ultimately included in the final document. Because of his active role, Madison is often called the "Father of the Constitution." Some notable American leaders did not attend.
 
 **[¶3]** Thomas Jefferson and John Adams were serving as ministers to France and Great Britain. Patrick Henry refused to attend because he fiercely opposed a strong central government.
 
-#### 4. GOALS AND CHALLENGES (p. 257)
+#### 3. GOALS AND CHALLENGES (p. 257)
 **[¶1]** The delegates debated for four months. Because of their experience, the Framers aimed to create a government that was neither too strong, like the British monarchy, nor too weak, as under the Articles of Confederation. The delegates wanted national, state, and local governments to share governing power, an idea called federalism .
 
 **[¶2]** They also felt dual sovereignty , or giving state governments certain powers that the national government could not overrule, was important. Delegates at the Convention agreed upon other main principles. One was republicanism. In a republican government, citizens elect officials to represent them, and these officials must act and govern according to the law.

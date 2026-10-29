@@ -139,17 +139,3 @@ la autoridad británica.
 
 **[¶24]** consejo de indígenas norteamericanos 
 cerca de Detroit, mayo de 1763
-
-#### 3. FUENTE PRIMARIA (pág. 159)
-**[¶1]** El desarrollo de las colonias 159
-
----
-### Preguntas del libro: Razonamiento histórico (pág. 159)
-1. **COMPROBAR LA LECTURA: Cómo influyó el 
-Tratado de París en la distribución del poder en 
-Norteamérica?**
-2. **INTERPRETAR MAPAS: ¿Qué países 
-obtuvieron la mayor parte del territorio después 
-de 1763?**
-3. **SINTETIZAR: ¿Qué efectos tuvo el resultado de 
-la guerra en los indígenas norteamericanos?**

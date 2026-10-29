@@ -38,10 +38,7 @@
 
 **[¶3]** The administration of James Monroe , who was elected president of the United States in 1816, is remembered as the Era of Good Feelings . When Monroe ran for re-election in 1820, the Federalist Party didn't even offer a candidate to oppose him. By 1820, the Federalist Party was no longer a national force.
 
-#### 3. DRAW CONCLUSIONS (p. 351)
-**[¶1]** What parts of the American System are still in effect today? 3.
-
-#### 4. SUMMARIZE (p. 351)
+#### 3. SUMMARIZE (p. 351)
 **[¶1]** Why is Monroe's presidency remembered as the Era of Good Feelings? During this period, important Supreme Court rulings strengthened the federal government's power. In 1819, the Court affirmed the constitutionality of the Second Bank of the United States in the McCulloch v. Maryland decision.
 
 **[¶2]** According to the Necessary and Proper Clause in the Constitution, Congress has implied powers , or powers not explicitly stated in the Constitution. In short, because a National Bank had previously been established, Congress could establish the Second Bank of the United States. Additionally, the state of Maryland did not have the power to tax that national bank.

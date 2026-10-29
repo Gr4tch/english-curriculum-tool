@@ -30,8 +30,5 @@
 
 **[¶2]** When the troops reached North America, they took weeks to march from one field of combat to another. from northern border of Maine to southern border of Georgia from New York City to Charleston from New York City to Philadelphia from New York City to Fort Pitt population of Philadelphia in 1776
 
-#### 5. THINK LIKE A GEOGRAPHER (p. 243)
-**[¶1]** 1. IDENTIFY MAIN IDEAS AND DETAILS Why did distance pose problems for British troops during the American Revolution? 2. ANALYZE CAUSE AND EFFECT How did the Americans use geography to gain an advantage over the British? 3.
-
-#### 6. FORM AND SUPPORT OPINIONS (p. 243)
+#### 5. FORM AND SUPPORT OPINIONS (p. 243)
 **[¶1]** Of the four geographic factors, which one do you think had the greatest impact on the war? Explain your reasons. The Original Thirteen Colonies, 1776 The American Revolution

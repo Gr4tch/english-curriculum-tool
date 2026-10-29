@@ -32,12 +32,3 @@
 **[¶4]** State courts dealt with cases involving state laws and civil disputes within states. The act also created lower, or less powerful, federal courts. The federal government established executive departments and a working system of courts, but more challenges lay in store. For one thing, there was the small matter of a very large war debt to be paid.
 
 **[¶5]** Imagine trying to play a game of soccer or basketball without any teammates. It wouldn't work. George Washington didn't guide the new country alone, either. He gathered an A-list of team members to help him. The first order of business for George Washington and Congress was to assemble a presidential Cabinet and create a court system.
-
-#### 3. DRAW CONCLUSIONS (p. 289)
-**[¶1]** What do the Cabinet departments suggest about what was important to the new government? 3. MAKE INFERENCES Why do you think the Federal Judiciary Act created both state and federal courts? Growing Pains in the New Republic
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 289)
-1. **READING CHECK: What departments made up Washington's Cabinet?**
-2. **DRAW CONCLUSIONS: What do the Cabinet departments suggest about what was important to the new government?**
-3. **MAKE INFERENCES: Why do you think the Federal Judiciary Act created both state and federal courts?**

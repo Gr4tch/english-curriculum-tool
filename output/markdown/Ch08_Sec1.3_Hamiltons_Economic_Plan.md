@@ -29,10 +29,7 @@
 
 **[¶6]** The engraving of Alexander Hamilton, shown here, appears on the ten-dollar bill. Very narrow lines are used to create the engravings on U.S. money, making them so detailed that it is virtually impossible to copy exactly, or counterfeit, paper money.
 
-#### 2. IDENTIFY PROBLEMS AND SOLUTIONS (p. 291)
-**[¶1]** How did Hamilton propose to pay off the national debt?
-
-#### 3. CRITICS WEIGH IN (p. 291)
+#### 2. CRITICS WEIGH IN (p. 291)
 **[¶1]** Thomas Jefferson, on the other hand, envisioned an agricultural nation. He and other antifederalists opposed the strong central government and National Bank that Hamilton envisioned. A National Bank, they feared, would favor the interests of business over agriculture—specifically, the interests of the industrial North over those of the agricultural South.
 
 **[¶2]** And southern states had even more reasons to oppose Hamilton's plan. Most had already paid their war debts. Hamilton ultimately won the South's favor by promising to relocate the nation's capital to Virginia, in an area that would eventually become Washington, D.C., the current capital of the United States.

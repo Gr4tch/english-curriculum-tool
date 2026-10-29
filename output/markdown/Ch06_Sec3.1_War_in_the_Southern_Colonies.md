@@ -29,15 +29,3 @@
 **[¶2]** Because he was so clever and good at dodging the British, Marion soon earned the nickname "the Swamp Fox." Marion had once been a regular soldier fighting for the Patriots. But General Gates dismissed him before the disastrous Battle of Camden to focus on defending other territories.
 
 **[¶3]** Marion soon discovered his genius for guerrilla warfare— conducting surprise attacks on the British, gathering intelligence about the enemy, and winning the loyalty of local people. Despite the many early American defeats in the Southern Colonies, guerilla leaders such as Marion caused enough trouble for the British to keep the United States competitive—and, eventually, on the path to victory.
-
-#### 3. DRAW CONCLUSIONS (p. 237)
-**[¶1]** What characteristics of a fox did Francis Marion demonstrate as a guerrilla leader? The American Revolution
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 237)
-1. **READING CHECK: What early wins did the British score in the Southern Colonies?**
-2. **IDENTIFY MAIN IDEAS AND DETAILS: What role did France play in the war in the Southern Colonies?**
-3. **DRAW CONCLUSIONS: What characteristics of a fox did Francis Marion demonstrate as a guerrilla leader?**
-
-### Built-In Visual & Map Analysis: Critical Viewing
-- (p. 236) In 1780, Francis Marion lured a British force 26 miles into the heart of a South Carolina swamp. Will Anderson illustrated this episode in a mural he painted in 2001. Why do you think the British (on horseback) might have had a difficult time fighting on the Swamp Fox's terms?

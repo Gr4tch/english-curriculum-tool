@@ -81,47 +81,7 @@ una oportunidad para salvarse. ¿Cómo crees
 que los oyentes de Edwards respondieron a sus 
 palabras de esperanza?
 
-#### 2. FUENTE PRIMARIA (pág. 148)
-**[¶1]** Y ahora ustedes tienen una extraordinaria
-
-**[¶2]** oportunidad, un día en el que Cristo ha dejado
-
-**[¶3]** abierta la puerta de la misericordia y está de
-
-**[¶4]** pie llamando a viva voz a los pobres pecadores.
-
-**[¶5]** ¡Qué horrible es quedarse rezagado en este
-
-**[¶6]** día! Ver a tantos regocijándose y cantando con
-
-**[¶7]** el corazón gozoso [alegre], mientras ustedes
-
-**[¶8]** tienen motivos para lamentarse con un corazón
-
-**[¶9]** apenado. ¿Cómo pueden estar siquiera un
-
-**[¶10]** momento en tal condición? Por lo tanto, que
-
-**[¶11]** todo aquel que esté sin Cristo [que no haya
-
-**[¶12]** aceptado a Cristo], despierte ahora y huya de la
-
-**[¶13]** –De “Pecadores en las manos de un Dios airado”,
-
-**[¶14]** por Jonathan Edwards, 1741
-
-**[¶15]** El ministro George Whitefield de 
-la Iglesia de Inglaterra atraía a 
-muchas razas y clases diferentes 
-con la promesa de una relación más 
-igualitaria entre los creyentes y su 
-Dios. Aquí, el artista John Collet 
-representa una reunión religiosa 
-durante una de las siete visitas de 
-Whitefield a las colonias. La pintura 
-data de mediados del siglo XVIII.
-
-#### 3. LA ILUSTRACIÓN (pág. 149)
+#### 2. LA ILUSTRACIÓN (pág. 149)
 **[¶1]** El Gran Despertar no fue el único movimiento que 
 preparó el camino para el fervor revolucionario. 
 El movimiento intelectual conocido como 

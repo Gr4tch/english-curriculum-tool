@@ -41,12 +41,3 @@
 **[¶6]** Philip perceived them as a menace. The king sent General Pedro Menéndez de Avilés to remove the Huguenot colony. After a brief encounter at sea, Menéndez captured the French settlement at Fort Caroline. Most of the men who refused to return to Catholicism were killed. The Cleveland Museum of Art, Cleveland Looking at this gold, enamel, and citrine cameo, it may be hard to believe that King Philip II was actually in financial trouble during his reign.
 
 **[¶7]** When he took the throne in 1556, he assumed the kingdom's debt. The debt only grew as Philip waged war after war and built a lavish palace. Eventually, Philip's spending would be a factor in the fall of the Spanish Empire.
-
-#### 3. DRAW CONCLUSIONS (p. 61)
-**[¶1]** How did the Protestant Reformation influence European relations in the Americas? King Philip II of Spain European Exploration of the Americas
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 61)
-1. **READING CHECK: What was Spain's response to the claims of other European countries in North America?**
-2. **INTERPRET MAPS: Based on the sea routes shown on the map, which countries were likely competing over land claims in the Western Hemisphere?**
-3. **DRAW CONCLUSIONS: How did the Protestant Reformation influence European relations in the Americas?**

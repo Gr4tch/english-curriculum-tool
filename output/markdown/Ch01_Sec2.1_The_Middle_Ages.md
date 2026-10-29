@@ -42,16 +42,3 @@
 **[¶4]** Outbreaks of a devastating disease called the bubonic plague also created jobs. In the 14th century, the plague killed as many as one-third of all Europeans. Those laborers lucky enough to survive the illness found better work prospects as a result of the decline in population. Less competition led to greater opportunities for those who survived.
 
 **[¶5]** The plague, along with the movement to cities and towns, helped bring about the decline of feudalism and the end of the Middle Ages. Europe began to experience cultural changes that would mark the beginning of a new age of creativity.
-
-#### 3. E VALUATE (p. 37)
-**[¶1]** In what way were the Crusaders both successful and unsuccessful? 3. COMPARE AND CONTRAST How did feudalism and the Church affect Europe similarly and differently? The Plague Doctors When the bubonic plague swept through medieval Europe in the 1300s, medical science was still 500 years away from understanding its cause.
-
-**[¶2]** At that time, some doctors believed the plague was spread by bad air or odors. In the 1600s, a French physician created the costume, shown here, to protect against such odors and supposedly against the plague. But the problem was not odors. The problem was infected rats and their fleas.
-
-**[¶3]** Rats spread throughout medieval cities, which lacked sanitation. Fleas living on the rats spread the disease by biting people. The victim then often suffered swelling, vomiting, back pain, delirium, and, finally, death. Three Worlds Before 1500
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 37)
-1. **READING CHECK: How are the manor system and feudalism similar to each other?**
-2. **E VALUATE: In what way were the Crusaders both successful and unsuccessful?**
-3. **COMPARE AND CONTRAST: How did feudalism and the Church affect Europe similarly and differently?**

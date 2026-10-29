@@ -36,12 +36,3 @@
 
 #### 3. THINK LIKE A GEOLOGIST (p. 205)
 **[¶1]** 1. IDENTIFY MAIN IDEAS AND DETAILS If you were a commander defending your city, where would you set up troops? Why? 2.
-
-#### 4. DESCRIBE (p. 205)
-**[¶1]** What advantages or disadvantages would your local terrain present in battle? 3. INTERPRET MAPS Aside from hills, which geologic features do you think affected the battle? have read, the British won the battle, but at a terrible cost. Over 1,000 British soldiers were killed or wounded, compared to over 400 Americans.
-
-**[¶2]** This showed that the Patriots could hold their own against a better-trained, better-equipped, and far larger British force. Clearly local terrain played a role in how the battle unfolded. War commanders probably don't think much about the geologic story that shaped their battlefields, but that doesn't mean the geology isn't significant.
-
-**[¶3]** Breed's or Bunker? On June 16, 1775, more than 1,000 colonists set out to fortify Bunker Hill, but they passed it in the dark and fortified Breed's Hill instead. Taking the High Ground The colonists didn't have many cannons, and they weren't very good at firing the ones they did have.
-
-**[¶4]** But they did have a strong position on high ground, just across the water from Boston. This forced the British to attack before they were fully ready to do so. The Road to Revolution

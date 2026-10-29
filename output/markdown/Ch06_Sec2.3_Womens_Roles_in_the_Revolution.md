@@ -30,21 +30,3 @@
 
 #### 3. FORM AND SUPPORT OPINIONS (p. 232)
 **[¶1]** Which woman named in this lesson do you think contributed most to the American Revolution? Use evidence from the text to explain and support your opinion. 3.
-
-#### 4. DRAW CONCLUSIONS (p. 232)
-**[¶1]** In what way do Abigail Adams's comments to her husband reflect ideas in the Declaration of Independence? Mary Ludwig Hays McCauly carried water to cool off the soldiers and the hot cannon her husband was firing during battles. This earned her the nickname Molly Pitcher. She also worked with her husband to fire the cannon.
-
-**[¶2]** Other women served in combat during the war. One of them was Margaret Corbin, who is buried and honored with a monument at the United States Military Academy at West Point, New York. The woman in the postcard above represents not just Molly Pitcher but all the brave women who faced combat during the Revolution.
-
-**[¶3]** Anna Smith Strong was a member of a spy ring on the coast of New York. She used a code based on how she hung out her laundry to let other members of the ring know when a messenger with information was arriving. A black petticoat on her clothesline meant the messenger was coming. The number of handkerchiefs scattered on the line indicated the cove in which he would land.
-
-**[¶4]** The four women featured on this page—Abigail Adams, Anna Smith Strong, Mary Ludwig Hays McCauly, and Phillis Wheatley—provide examples of women who were every bit as involved and took the same or greater risks in the American Revolution as the men. Phillis Wheatley proved the pen could also be a mighty weapon.
-
-**[¶5]** She was born in Africa, enslaved as a young girl, and sold to a family of Boston Quakers who provided her with a good education. She became a poet who called for freedom for all, praised George Washington, and supported the American Revolution. She was the first African-American poet to have her work published.
-
-**[¶6]** Molly Pitcher at the Cannon's Mouth postcard, 1909 Portrait of Abigail Adams by Benjamin Blyth, c. 1766 Abigail Adams wrote the following to her husband, John Adams, affirming that women were as much a force behind the war as men and deserved to be heard. In the new Code of Laws which I suppose it will be necessary for you to make I desire you would Remember the Ladies . . . we are determined to foment a Rebellion, and will not hold ourselves bound by any Laws in which we have no voice, or Representation. —Abigail Adams in a letter to John Adams, March 31, 1776 The American Revolution
-
----
-### Built-In Textbook Questions: Historical Thinking (p. 233)
-1. **READING CHECK: How did women contribute to the success of the American Revolution?**
-2. **FORM AND SUPPORT OPINIONS: Which woman named in this lesson do you think contributed most to the American Revolution?**
