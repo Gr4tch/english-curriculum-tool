@@ -33,7 +33,7 @@ TOKEN_FILE_PATHS = [
     Path("output/gdrive_token.json"),
     Path(".gdrive_token.json"),
 ]
-ROOT_FOLDER_NAME = "#US History (English) Curriculum"
+ROOT_FOLDER_NAME = "#US History Curriculum Materials"
 TEMP_DOCS_DIR = Path("output/google_docs_temp")
 
 

@@ -1402,32 +1402,40 @@ def format_booklet_for_web(booklet_md: str) -> str:
         page = re.sub(r'\[GRADE_BOX:\s*([^\]]+)\]', _replace_grade_box, page)
 
         # 5. Check if page is an Exemplar page
-        if re.search(r"^#\s+Student Exemplar & Answer Key:", page, flags=re.MULTILINE):
+        if re.search(r"^#\s+(?:Student Exemplar & Answer Key|Modelo y clave de respuestas para el docente):", page, flags=re.MULTILINE):
+            is_es_ex = bool(re.search(r"Modelo y clave de respuestas", page, flags=re.IGNORECASE))
             def _rep_ex_header(m):
                 sec_id = m.group(1).strip()
                 strat = m.group(2).strip()
+                badge_title = f"Modelo auténtico de estudiante de 8.º grado • Sec. {sec_id}" if is_es_ex else f"Authentic 8th-Grade Student Exemplar • Sec. {sec_id}"
+                score_label = "Puntuación: 100/100" if is_es_ex else "Score: 100/100"
                 return (
-                    f'<div class="ws-title-badge ws-badge-green">Authentic 8th-Grade Student Exemplar • Sec. {sec_id}</div>\n'
-                    f'<div style="font-size: 1.15rem; font-weight: 700; color: #064e3b; margin: 0.15rem 0 0.25rem 0;">{strat} — <span style="color: #10b981;">Score: 100/100</span></div>\n'
+                    f'<div class="ws-title-badge ws-badge-green">{badge_title}</div>\n'
+                    f'<div style="font-size: 1.15rem; font-weight: 700; color: #064e3b; margin: 0.15rem 0 0.25rem 0;">{strat} — <span style="color: #10b981;">{score_label}</span></div>\n'
                 )
             page = re.sub(
-                r"^#\s+Student Exemplar & Answer Key:\s*Sec\.\s*([^\s—]+)\s*—\s*([^\n]+)",
+                r"^#\s+(?:Student Exemplar & Answer Key|Modelo y clave de respuestas para el docente):\s*Sec\.\s*([^\s—]+)\s*—\s*([^\n]+)",
                 _rep_ex_header,
                 page,
                 flags=re.MULTILINE,
             )
 
             # Style Textbook Reference line
+            def _rep_ref_line(m):
+                lbl = m.group(1).strip()
+                val = m.group(2).strip()
+                return f'<div style="font-size: 0.82rem; color: #047857; margin-bottom: 0.75rem; border-bottom: 1px solid #bbf7d0; padding-bottom: 0.4rem;"><b>{lbl}:</b> {val}</div>'
+
             page = re.sub(
-                r"^\*\*Textbook Reference:\*\*\s*(.*?)(?=\n)",
-                r'<div style="font-size: 0.82rem; color: #047857; margin-bottom: 0.75rem; border-bottom: 1px solid #bbf7d0; padding-bottom: 0.4rem;"><b>Textbook Reference:</b> \1</div>',
+                r"^\*\*(Textbook Reference|Referencia del libro):\*\*\s*(.*?)(?=\n)",
+                _rep_ref_line,
                 page,
                 flags=re.MULTILINE,
             )
 
             # Remove redundant headers
-            page = re.sub(r"^###\s+Authentic 8th-Grade Student Model Response\n+", "", page, flags=re.MULTILINE)
-            page = re.sub(r"^>\s*\*Student Response Sample for [^\*]+\*:\n+", "", page, flags=re.MULTILINE)
+            page = re.sub(r"^###\s+(?:Authentic 8th-Grade Student Model Response|Respuesta modelo auténtica de estudiante de 8.º grado)\n+", "", page, flags=re.MULTILINE)
+            page = re.sub(r"^>\s*\*(?:Student Response Sample for|Muestra de respuesta del estudiante para) [^\*]+\*:\n+", "", page, flags=re.MULTILINE)
 
             # Transform bullet exemplar answers into styled green pills
             def _rep_ex_bullet(m):
@@ -1448,16 +1456,17 @@ def format_booklet_for_web(booklet_md: str) -> str:
 
             # Style Textbook Source Grounding callout
             def _rep_grounding(m):
-                pg = m.group(1).strip()
-                raw_txt = m.group(2).strip()
+                lbl = m.group(1).strip()
+                pg = m.group(2).strip()
+                raw_txt = m.group(3).strip()
                 clean_txt = re.sub(r'^[\s*"\']+|[\s*"\']+$', '', raw_txt)
                 return (
                     f'<div class="ws-callout" style="background: #ffffff; border: 1.5px solid #a7f3d0; border-left: 5px solid #10b981; margin-top: 0.85rem; font-size: 0.83rem; color: #14532d;">\n'
-                    f'<b>Textbook Source Grounding (p. {pg}):</b> "<i>{clean_txt}</i>"\n'
+                    f'<b>{lbl} (p. {pg}):</b> "<i>{clean_txt}</i>"\n'
                     f'</div>'
                 )
             page = re.sub(
-                r"^\*Textbook Source Grounding \(p\.\s*(\d+)\):\*\s*(.*)",
+                r"^\*(Textbook Source Grounding|Fundamentación en el libro de texto) \((?:p\.|pág\.)\s*(\d+)\):\*\s*(.*)",
                 _rep_grounding,
                 page,
                 flags=re.MULTILINE,
@@ -1467,19 +1476,20 @@ def format_booklet_for_web(booklet_md: str) -> str:
             formatted_pages.append(wrapped_page)
 
         # 6. Check if page is Cover Page
-        elif re.search(r"^#\s+Chapter\s+\d+:", page, flags=re.MULTILINE):
+        elif re.search(r"^#\s+(?:Chapter|Capítulo)\s+\d+:", page, flags=re.MULTILINE):
             def _rep_cov_header(m):
-                cnum = m.group(1).strip()
-                ctitle = m.group(2).strip()
-                edition = m.group(3).strip()
-                is_scaf = "scaffolded" in edition.lower()
+                prefix = m.group(1).strip()
+                cnum = m.group(2).strip()
+                ctitle = m.group(3).strip()
+                edition = m.group(4).strip()
+                is_scaf = ("scaffolded" in edition.lower()) or ("apoyo" in edition.lower())
                 badge_cls = "ws-badge-amber" if is_scaf else "ws-badge-blue"
                 return (
-                    f'<div class="ws-title-badge {badge_cls}">Chapter {cnum} • {edition}</div>\n'
-                    f'<div style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0.2rem 0 0.35rem 0;">Chapter {cnum}: {ctitle}</div>\n'
+                    f'<div class="ws-title-badge {badge_cls}">{prefix} {cnum} • {edition}</div>\n'
+                    f'<div style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0.2rem 0 0.35rem 0;">{prefix} {cnum}: {ctitle}</div>\n'
                 )
             page = re.sub(
-                r"^#\s+Chapter\s+(\d+):\s*([^\n—]+)\s*—\s*([^\n]+)",
+                r"^#\s+(Chapter|Capítulo)\s+(\d+):\s*([^\n—]+)\s*—\s*([^\n]+)",
                 _rep_cov_header,
                 page,
                 flags=re.MULTILINE,
@@ -1488,29 +1498,44 @@ def format_booklet_for_web(booklet_md: str) -> str:
             formatted_pages.append(wrapped_page)
 
         # 7. Standard Student Section Handout
-        elif re.search(r"^##\s+Section\s+[\d\.]+", page, flags=re.MULTILINE):
+        elif re.search(r"^##\s+(?:Section|Sección)\s+[\d\.]+", page, flags=re.MULTILINE):
+            is_es_page = bool(re.search(r"^##\s+Sección", page, flags=re.MULTILINE))
             def _rep_handout_header(m):
-                sec_id = m.group(1).strip()
-                full_rest = m.group(2).strip()
-                is_scaf = "scaffolded" in full_rest.lower()
+                sec_lbl = m.group(1).strip()
+                sec_id = m.group(2).strip()
+                full_rest = m.group(3).strip()
+                is_scaf = ("scaffolded" in full_rest.lower()) or ("apoyo" in full_rest.lower())
 
-                pg_match = re.search(r'\((?:Textbook\s+)?pp?\.\s*([^\)]+)\)', full_rest)
-                pgs_str = f"(pp. {pg_match.group(1)})" if pg_match else ""
+                pg_match = re.search(r'\((?:(?:Textbook|Libro de texto)\s+)?(?:pp?|págs?)\.\s*([^\)]+)\)', full_rest, flags=re.IGNORECASE)
+                if pg_match:
+                    pgs_str = f"(págs. {pg_match.group(1)})" if is_es_page else f"(pp. {pg_match.group(1)})"
+                else:
+                    pgs_str = ""
 
-                clean_title = re.sub(r'\((?:Textbook\s+)?pp?\.[^\)]+\)', '', full_rest)
-                clean_title = re.sub(r'\*?\([^\)]*scaffolded[^\)]*\)\*?', '', clean_title, flags=re.IGNORECASE).strip()
+                clean_title = re.sub(r'\((?:(?:Textbook|Libro de texto)\s+)?(?:pp?|págs?)\.[^\)]+\)', '', full_rest, flags=re.IGNORECASE)
+                clean_title = re.sub(r'\*?\([^\)]*(?:scaffolded|apoyo didáctico)[^\)]*\)\*?', '', clean_title, flags=re.IGNORECASE).strip()
 
                 badge_cls = "ws-badge-amber" if is_scaf else "ws-badge-blue"
                 pgs_formatted = f" <span style=\"font-size: 0.72rem; font-weight: 600; opacity: 0.9;\">{pgs_str}</span>" if pgs_str else ""
 
-                return (
-                    f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">Section {sec_id} Handout • {clean_title}{pgs_formatted}</span></div>\n'
-                    f'<div class="ws-name-date-row" style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
-                    f'<span><b>Name:</b> ___________________________</span><span><b>Date:</b> _____________</span><span><b>Class:</b> ________</span>\n'
-                    f'</div>\n'
-                )
+                if is_es_page:
+                    badge_markup = f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">Ficha de trabajo Sección {sec_id} • {clean_title}{pgs_formatted}</span></div>\n'
+                    meta_row = (
+                        f'<div class="ws-name-date-row" style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
+                        f'<span><b>Nombre:</b> ___________________________</span><span><b>Fecha:</b> _____________</span><span><b>Clase:</b> ________</span>\n'
+                        f'</div>\n'
+                    )
+                else:
+                    badge_markup = f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">Section {sec_id} Handout • {clean_title}{pgs_formatted}</span></div>\n'
+                    meta_row = (
+                        f'<div class="ws-name-date-row" style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
+                        f'<span><b>Name:</b> ___________________________</span><span><b>Date:</b> _____________</span><span><b>Class:</b> ________</span>\n'
+                        f'</div>\n'
+                    )
+                return badge_markup + meta_row
+
             page = re.sub(
-                r"^##\s+Section\s+([\d\.]+):?\s+(.*)",
+                r"^##\s+(Section|Sección)\s+([\d\.]+):?\s+(.*)",
                 _rep_handout_header,
                 page,
                 flags=re.MULTILINE,
@@ -1518,17 +1543,18 @@ def format_booklet_for_web(booklet_md: str) -> str:
 
             # Style Strategy Focus badge (stripping any CCSS / ELA standards from student text)
             def _rep_strategy_focus(m):
-                focus_content = m.group(1).strip()
+                lbl = m.group(1).strip()
+                focus_content = m.group(2).strip()
                 clean_focus = re.sub(r"\s*\([A-Z]{3,4}\s+[^)]+\)", "", focus_content).strip()
                 clean_focus = re.sub(r"(?i)optional\s+twr:\s*", "", clean_focus).strip()
                 clean_focus = re.sub(r"(?i)^twr:\s*", "", clean_focus).strip()
                 return (
                     f'<div class="ws-strategy-focus" style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid #3b82f6; border-radius: 6px; padding: 0.45rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.85rem; color: #1e3a8a;">'
-                    f'<b>Strategy Focus:</b> {clean_focus}'
+                    f'<b>{lbl}:</b> {clean_focus}'
                     f'</div>'
                 )
             page = re.sub(
-                r"^>\s*\*\*Strategy Focus:\*\*\s*(.*?)(?=\n)",
+                r"^>\s*\*\*(Strategy Focus|Enfoque de la estrategia):\*\*\s*(.*?)(?=\n)",
                 _rep_strategy_focus,
                 page,
                 flags=re.MULTILINE,
@@ -1536,26 +1562,33 @@ def format_booklet_for_web(booklet_md: str) -> str:
 
             # Style Textbook Printed Main Idea callout
             def _rep_pmi_callout(m):
-                pg = m.group(1).strip()
-                raw_txt = m.group(2).strip()
+                lbl = m.group(1).strip()
+                pg = m.group(2).strip()
+                raw_txt = m.group(3).strip()
                 clean_txt = re.sub(r'^[\s*"\']+|[\s*"\']+$', '', raw_txt)
+                heading = f"{lbl} (pág. {pg})" if is_es_page else f"{lbl} (p. {pg})"
                 return (
                     f'<div class="ws-callout ws-pmi-callout" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #1e3a8a; margin: 0.75rem 0;">\n'
-                    f'<div style="font-size: 0.75rem; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">Textbook Printed Main Idea (p. {pg})</div>\n'
+                    f'<div style="font-size: 0.75rem; font-weight: 700; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">{heading}</div>\n'
                     f'<div style="font-style: italic; color: #1e293b; font-size: 0.90rem;">"{clean_txt}"</div>\n'
                     f'</div>'
                 )
             page = re.sub(
-                r"^>\s*\*\*Textbook Printed Main Idea \(p\.\s*(\d+)\):\*\s*(.*)",
+                r"^>\s*\*\*(Textbook Printed Main Idea|Idea principal del libro(?: de texto)?)\s*\((?:p\.|pág\.)\s*(\d+)\):\*\s*(.*)",
                 _rep_pmi_callout,
                 page,
                 flags=re.MULTILINE,
             )
 
             # Clean prompt subheading labels
+            def _rep_gist_label(m):
+                sh_name = m.group(1).strip()
+                sub_label = "Idea clave de 10 palabras:" if is_es_page else "10-Word Subheading Gist:"
+                return f'<div style="font-weight: 600; color: #1e3a8a; font-size: 0.88rem; margin: 0.65rem 0 0.15rem 0;">• {sh_name}:</div><div style="font-style: italic; color: #64748b; font-size: 0.80rem;">{sub_label}</div>'
+
             page = re.sub(
-                r"^\s*-\s+\*\*Gist for ([^\n:]+):\*\*",
-                r'<div style="font-weight: 600; color: #1e3a8a; font-size: 0.88rem; margin: 0.65rem 0 0.15rem 0;">• \1:</div><div style="font-style: italic; color: #64748b; font-size: 0.80rem;">10-Word Subheading Gist:</div>',
+                r"^\s*-\s+\*\*(?:Gist for|Idea clave para)\s+([^\n:]+):\*\*",
+                _rep_gist_label,
                 page,
                 flags=re.MULTILINE,
             )

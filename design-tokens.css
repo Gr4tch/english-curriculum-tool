@@ -1,0 +1,918 @@
+/**
+ * Curriculum Design Studio — Portable Design System & Base Stylesheet
+ * Extracted from: app.py, src/preview_renderer.py, src/strategy_thumbnails.py, pdf_exporter.py, .streamlit/config.toml
+ */
+
+:root {
+  /* ==========================================================================
+   * 1. COLOR TOKENS — SURFACES & BACKGROUNDS
+   * ========================================================================== */
+  --bg-app: #f8fafc;                 /* Main app background, subtle callouts, secondary button bg */
+  --bg-surface: #ffffff;             /* Primary card, worksheet container, modal, input surface */
+  --bg-surface-muted: #f1f5f9;       /* Breadcrumb bar, table headers (th), gray pills, nav arrows */
+  --bg-surface-code: #e2e8f0;        /* Monospace Drive folder badge, arrow hover surface */
+  --bg-active-tint: #f0f7ff;         /* Selected strategy tile & active tray page card surface */
+  --bg-info-tint: #eff6ff;           /* Strategy focus bar, scaffold box, active inspector tile, hero-blue gradient start */
+  --bg-indigo-tint: #eef2ff;         /* Hero-indigo card gradient start */
+  --bg-success-tint: #f0fdf4;        /* Teacher exemplar container & active strategy toolbar */
+  --bg-success-pill: #dcfce7;        /* Exemplar badge, student answer highlight, active reading table header */
+  --bg-warning-pill: #fef3c7;        /* Scaffolded edition badge, amber category badge, appositive highlight */
+  --bg-danger-tint: #fef2f2;         /* Anti-copycat warning box background */
+  --bg-danger-hover: #fee2e2;        /* Delete button hover surface */
+
+  /* ==========================================================================
+   * 2. COLOR TOKENS — TEXT & TYPOGRAPHY
+   * ========================================================================== */
+  --text-primary: #0f172a;           /* Headings, card titles, primary labels, table headers */
+  --text-secondary: #1e293b;         /* Worksheet body copy, quotes, expander body text */
+  --text-body: #334155;              /* Card descriptions, table cell copy, tray card subtitles */
+  --text-muted: #475569;             /* Secondary subtitles, tray headers, gray badge text */
+  --text-subtle: #64748b;            /* Captions, uppercase metadata labels, name/date line, hints */
+  --text-placeholder: #94a3b8;       /* Inactive labels, strikethrough text */
+  --text-on-primary: #ffffff;        /* High-contrast white text on dark/primary surfaces */
+
+  /* ==========================================================================
+   * 3. COLOR TOKENS — BRAND & ACCENTS
+   * ========================================================================== */
+  --accent-primary: #1e3a8a;         /* Primary Navy: active borders, primary buttons, worksheet headers */
+  --accent-primary-dark: #172554;    /* Primary button border & hover surface */
+  --accent-blue-gdrive: #1e40af;     /* Google Drive action button background */
+  --accent-blue-bold: #1d4ed8;       /* Hero-blue title, hero-blue hover top bar, Drive button border */
+  --accent-blue: #2563eb;            /* Hero-blue top bar, gateway subtitle, active inspector label */
+  --accent-blue-bright: #3b82f6;     /* Strategy focus left border, cover page border, card hover border */
+  --accent-blue-light: #93c5fd;      /* Gateway divider bar, hero-blue hover border */
+
+  --accent-indigo: #6366f1;          /* Hero-indigo top bar */
+  --accent-indigo-dark: #4f46e5;     /* Hero-indigo hover top bar */
+  --accent-indigo-deep: #4338ca;     /* Hero-indigo title text */
+  --accent-indigo-light: #c7d2fe;    /* Hero-indigo hover border */
+
+  /* ==========================================================================
+   * 4. COLOR TOKENS — SEMANTIC STATUS (SUCCESS / WARNING / DANGER)
+   * ========================================================================== */
+  --success-accent: #10b981;         /* Exemplar left border, score highlight */
+  --success-text-strong: #064e3b;    /* Exemplar title & bullet prompt labels */
+  --success-text-body: #14532d;      /* Exemplar container text & source grounding text */
+  --success-text-mid: #166534;       /* Active strategy toolbar text & green pill text */
+  --success-text-action: #15803d;    /* Student answer text & ws-badge-green text */
+  --success-text-ref: #047857;       /* Exemplar textbook reference line */
+
+  --warning-text-strong: #92400e;    /* Scaffolded badge pill text */
+  --warning-text-mid: #b45309;       /* Amber badge text & anti-copycat warning note */
+
+  --danger-accent: #ef4444;          /* Delete button hover border, anti-copycat callout left bar */
+  --danger-text: #b91c1c;            /* Delete button hover text */
+  --danger-text-dark: #991b1b;       /* Anti-copycat callout text */
+
+  /* ==========================================================================
+   * 5. COLOR TOKENS — BORDERS & LINES
+   * ========================================================================== */
+  --border-subtle: #e2e8f0;          /* Hero cards, login card, banner, mockup inner frame, name/date rule */
+  --border-default: #cbd5e1;         /* Worksheet container, tables, inactive tiles, expanders, page breaks */
+  --border-strong: #94a3b8;          /* Selectbox border, dashed add-card border, dotted writing line, cut line */
+  --border-line-solid: #64748b;      /* Solid student handwriting line */
+  --border-info: #bfdbfe;            /* Strategy focus border, blue badge border, scaffold container border */
+  --border-success: #86efac;         /* Exemplar container border, active strategy toolbar border */
+  --border-success-subtle: #bbf7d0;  /* Green badge border, exemplar reference rule */
+  --border-success-callout: #a7f3d0; /* Source grounding callout border */
+  --border-warning: #fde68a;         /* Amber badge border */
+
+  /* ==========================================================================
+   * 6. TYPOGRAPHY TOKENS — FONTS, SIZES, WEIGHTS, LINE HEIGHTS
+   * ========================================================================== */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --text-display: 2.25rem;           /* 36.0px — Gateway main title */
+  --text-icon-lg: 1.60rem;           /* 25.6px — Add page '+' icon */
+  --text-h1: 1.45rem;                /* 23.2px — Hero pathway card title */
+  --text-h2: 1.35rem;                /* 21.6px — Login card title */
+  --text-h3: 1.25rem;                /* 20.0px — Top bar H2, Cover page title */
+  --text-subtitle-lg: 1.22rem;       /* 19.5px — Gateway italic subtitle */
+  --text-h4: 1.15rem;                /* 18.4px — Exemplar heading */
+  --text-body-lg: 1.05rem;           /* 16.8px — Hero card body, active editor header, modal title */
+  --text-base: 0.95rem;              /* 15.2px — Breadcrumb title, unit title, strategy card title, worksheet H3 */
+  --text-expander: 0.94rem;          /* 15.0px — Expander summary label */
+  --text-sm-plus: 0.92rem;           /* 14.7px — Gateway helper copy, PMI quote */
+  --text-btn: 0.90rem;               /* 14.4px — Action buttons, half-sheet H2/H3 */
+  --text-sm: 0.88rem;                /* 14.0px — Tray card header, grade box, worksheet subheading, exemplar answer */
+  --text-table: 0.86rem;             /* 13.8px — Worksheet table, breadcrumb pill, exemplar bullet label */
+  --text-xs-plus: 0.85rem;           /* 13.6px — Strategy focus bar, tray header, active strategy bar */
+  --text-code: 0.82rem;              /* 13.1px — Drive folder code pill, inspector tile title, worksheet prompts */
+  --text-xs: 0.80rem;                /* 12.8px — Standard badge pill, name/date row, half-sheet base */
+  --text-2xs: 0.78rem;               /* 12.5px — Tray strategy label, strategy card subtitle, page break pill */
+  --text-3xs: 0.76rem;               /* 12.2px — Strategy card target copy, half-sheet table & callout */
+  --text-4xs: 0.75rem;               /* 12.0px — Worksheet title badge, PMI callout label, half-sheet focus */
+  --text-5xs: 0.72rem;               /* 11.5px — Uppercase banner labels, inspector subtitle, card category pill */
+  --text-6xs: 0.70rem;               /* 11.2px — Tray click hint, delete icon, half-sheet grade box */
+  --text-micro: 0.68rem;             /* 10.9px — Tray status badge, half-sheet title badge */
+  --text-nano: 0.65rem;              /* 10.4px — Tray scaffolded mini-pill, inspector status text */
+
+  --font-normal: 400;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  --leading-none: 1;
+  --leading-tight: 1.15;
+  --leading-compact: 1.20;
+  --leading-snug: 1.25;
+  --leading-short: 1.30;
+  --leading-normal: 1.35;
+  --leading-relaxed: 1.45;
+  --leading-worksheet: 1.50;
+  --leading-loose: 1.60;
+
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0.01em;
+  --tracking-wide: 0.03em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.06em;
+
+  /* ==========================================================================
+   * 7. ELEVATION & BOX SHADOW TOKENS
+   * ========================================================================== */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-ws: 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-exemplar: 0 2px 4px rgba(16, 185, 129, 0.05);
+  --shadow-topbar: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --shadow-modal: 0 4px 20px rgba(15, 23, 42, 0.08);
+
+  --shadow-btn-secondary: 0 2px 4px rgba(30, 58, 138, 0.08);
+  --shadow-btn-secondary-hover: 0 4px 8px rgba(30, 58, 138, 0.22);
+  --shadow-btn-primary: 0 2px 4px rgba(30, 58, 138, 0.20);
+  --shadow-btn-primary-hover: 0 4px 8px rgba(30, 58, 138, 0.35);
+  --shadow-btn-gdrive: 0 2px 4px rgba(30, 64, 175, 0.20);
+  --shadow-btn-gdrive-hover: 0 4px 8px rgba(30, 64, 175, 0.35);
+
+  --shadow-hero: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+  --shadow-hero-hover: 0 16px 32px -4px rgba(15, 23, 42, 0.12), 0 6px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-tile-active: 0 4px 12px rgba(30, 58, 138, 0.12);
+  --shadow-tile-hover: 0 12px 28px -4px rgba(30, 58, 138, 0.16), 0 6px 12px -4px rgba(15, 23, 42, 0.08);
+
+  --focus-ring-primary: 0 0 0 2px rgba(30, 58, 138, 0.20);
+  --focus-ring-active: 0 0 0 2px rgba(30, 58, 138, 0.30);
+
+  /* ==========================================================================
+   * 8. BORDER RADIUS & SPACING TOKENS
+   * ========================================================================== */
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
+  --radius-3xl: 14px;
+  --radius-full: 9999px;
+
+  --space-1: 0.20rem;                /* 3.2px */
+  --space-2: 0.35rem;                /* 5.6px */
+  --space-3: 0.50rem;                /* 8.0px */
+  --space-4: 0.65rem;                /* 10.4px */
+  --space-5: 0.75rem;                /* 12.0px */
+  --space-6: 0.85rem;                /* 13.6px */
+  --space-7: 1.00rem;                /* 16.0px */
+  --space-8: 1.15rem;                /* 18.4px */
+  --space-9: 1.25rem;                /* 20.0px */
+  --space-10: 2.00rem;               /* 32.0px */
+  --space-11: 2.25rem;               /* 36.0px */
+  --space-12: 2.50rem;               /* 40.0px */
+
+  /* ==========================================================================
+   * 9. MOTION, LAYOUT & PRINT DIMENSIONS
+   * ========================================================================== */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.15s ease-in-out;
+  --transition-card: transform 0.22s var(--ease-spring), box-shadow 0.22s var(--ease-spring), border-color 0.22s ease;
+
+  --layout-max-width: 1400px;
+  --tray-tile-width: 185px;
+  --tray-tile-min-height: 220px;
+  --strategy-card-min-height: 255px;
+  --hero-card-min-height: 200px;
+  --inspector-tile-height: 75px;
+
+  --print-page-margin: 0.45in;
+  --half-sheet-wrapper-height: 10.10in;
+  --half-sheet-item-height: 4.88in;
+  --half-sheet-cut-height: 0.22in;
+}
+
+/* ==========================================================================
+ * BASE STYLES & LAYOUT CONTAINER
+ * ========================================================================== */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  line-height: var(--leading-relaxed);
+  -webkit-font-smoothing: antialiased;
+}
+
+.studio-container {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-9) var(--space-12) var(--space-9);
+}
+
+/* ==========================================================================
+ * BADGES & PILLS
+ * ========================================================================== */
+.badge-pill {
+  display: inline-block;
+  padding: 0.20rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  background: #dbeafe;
+  color: var(--accent-primary);
+  margin-right: var(--space-2);
+}
+
+.badge-scaf {
+  background: var(--bg-warning-pill);
+  color: var(--warning-text-strong);
+}
+
+.badge-gray {
+  background: var(--bg-surface-muted);
+  color: var(--text-muted);
+}
+
+.ws-title-badge {
+  display: inline-block;
+  font-size: var(--text-4xs);
+  font-weight: var(--font-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  padding: 0.20rem 0.55rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+}
+
+.ws-badge-blue {
+  background: #dbeafe;
+  color: var(--accent-primary);
+  border: 1px solid var(--border-info);
+}
+
+.ws-badge-green {
+  background: var(--bg-success-pill);
+  color: var(--success-text-action);
+  border: 1px solid var(--border-success-subtle);
+}
+
+.ws-badge-amber {
+  background: var(--bg-warning-pill);
+  color: var(--warning-text-mid);
+  border: 1px solid var(--border-warning);
+}
+
+/* ==========================================================================
+ * CONTEXTUAL METADATA BANNER & NAVIGATION BARS
+ * ========================================================================== */
+.context-banner {
+  background: var(--bg-app);
+  border: 1px solid var(--border-subtle);
+  border-left: 5px solid var(--accent-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-8);
+  margin-bottom: var(--space-7);
+  display: grid;
+  grid-template-columns: 1fr auto 2fr auto 1fr;
+  align-items: center;
+  gap: var(--space-9);
+}
+
+.context-banner-divider {
+  width: 1.5px;
+  height: 38px;
+  background: var(--border-default);
+}
+
+.context-banner-label {
+  font-size: var(--text-5xs);
+  font-weight: var(--font-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-subtle);
+  margin-bottom: var(--space-1);
+}
+
+.context-code-pill {
+  font-size: var(--text-code);
+  background: var(--bg-surface-code);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-weight: var(--font-semibold);
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface-muted);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-7);
+  margin-bottom: var(--space-7);
+}
+
+/* ==========================================================================
+ * HERO PATHWAY CARDS
+ * ========================================================================== */
+.hero-card {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-3xl);
+  padding: 2.2rem 2.0rem 2.0rem 2.0rem;
+  min-height: var(--hero-card-min-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-hero);
+  transition: var(--transition-card);
+  margin-bottom: var(--space-5);
+  cursor: pointer;
+}
+
+.hero-card:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: var(--shadow-hero-hover);
+}
+
+.hero-blue {
+  border-top: 6px solid var(--accent-blue);
+  background: linear-gradient(180deg, var(--bg-info-tint) 0%, var(--bg-surface) 48%);
+}
+
+.hero-blue:hover {
+  border-color: var(--accent-blue-light);
+  border-top: 6px solid var(--accent-blue-bold);
+}
+
+.hero-indigo {
+  border-top: 6px solid var(--accent-indigo);
+  background: linear-gradient(180deg, var(--bg-indigo-tint) 0%, var(--bg-surface) 48%);
+}
+
+.hero-indigo:hover {
+  border-color: var(--accent-indigo-light);
+  border-top: 6px solid var(--accent-indigo-dark);
+}
+
+.hero-title {
+  font-size: var(--text-h1);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+  line-height: var(--leading-snug);
+  display: block;
+}
+
+.hero-desc {
+  font-size: var(--text-body-lg);
+  color: var(--text-body);
+  line-height: var(--leading-loose);
+  margin-bottom: 0;
+  display: block;
+}
+
+/* ==========================================================================
+ * DYNAMIC HORIZONTAL PAGE TRAY & TILES
+ * ========================================================================== */
+.tray-scroll-strip {
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  padding: 0.6rem 0.4rem 1.1rem 0.4rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-blue-bright) var(--bg-surface-muted);
+  -webkit-overflow-scrolling: touch;
+}
+
+.tray-scroll-strip::-webkit-scrollbar {
+  height: 10px;
+}
+
+.tray-scroll-strip::-webkit-scrollbar-track {
+  background: var(--bg-surface-muted);
+  border-radius: var(--radius-md);
+}
+
+.tray-scroll-strip::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--bg-surface-muted);
+}
+
+.tray-scroll-strip::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+.tray-tile-slot {
+  flex: 0 0 var(--tray-tile-width);
+  min-width: var(--tray-tile-width);
+  max-width: var(--tray-tile-width);
+  width: var(--tray-tile-width);
+  position: relative;
+  transition: transform 0.22s var(--ease-spring);
+  cursor: pointer;
+}
+
+.tray-tile-slot:hover {
+  transform: translateY(-4px) scale(1.025);
+  z-index: 15;
+}
+
+.tray-preview-card {
+  border: 1.5px solid var(--border-default);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  min-height: var(--tray-tile-min-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+  position: relative;
+}
+
+.tray-preview-card.tray-preview-active {
+  border: 2.5px solid var(--accent-primary);
+  background: var(--bg-active-tint);
+  box-shadow: var(--shadow-tile-active);
+}
+
+.tray-tile-slot:hover .tray-preview-card {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-tile-hover);
+}
+
+.tray-sheet-mockup {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.45rem;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  margin: var(--space-2) 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tray-tile-slot:hover .tray-sheet-mockup {
+  transform: scale(1.03);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+.tray-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 25;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-6xs);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-none);
+  background: var(--bg-surface-muted);
+  border: 1px solid var(--border-default);
+  color: var(--text-subtle);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.tray-delete-btn:hover {
+  background: var(--bg-danger-hover);
+  border-color: var(--danger-accent);
+  color: var(--danger-text);
+  transform: scale(1.15);
+}
+
+.tray-add-card {
+  border: 2px dashed var(--border-strong);
+  background: var(--bg-app);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  min-height: var(--tray-tile-min-height);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: var(--space-3);
+  transition: all 0.22s ease;
+}
+
+.tray-tile-slot:hover .tray-add-card {
+  border-color: var(--accent-primary);
+  background: var(--bg-info-tint);
+}
+
+/* ==========================================================================
+ * STRATEGY GALLERY CARDS
+ * ========================================================================== */
+.strategy-tile-card {
+  border: 1.5px solid var(--border-default);
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+  min-height: var(--strategy-card-min-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-card);
+  cursor: pointer;
+}
+
+.strategy-tile-card:hover {
+  transform: translateY(-4px) scale(1.025);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-tile-hover);
+  z-index: 20;
+}
+
+.strategy-tile-card.strategy-tile-active {
+  border: 2.5px solid var(--accent-primary);
+  background: var(--bg-active-tint);
+  box-shadow: var(--focus-ring-active);
+}
+
+/* ==========================================================================
+ * HORIZONTAL PAGE INSPECTOR BAR
+ * ========================================================================== */
+.inspector-tile {
+  border-radius: var(--radius-lg);
+  padding: 0.5rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: center;
+  height: var(--inspector-tile-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.inspector-tile-active {
+  border: 2.5px solid var(--accent-primary);
+  background: var(--bg-info-tint);
+  box-shadow: var(--shadow-tile-active);
+}
+
+.inspector-tile-inactive {
+  border: 1.5px solid var(--border-default);
+  background: var(--bg-surface);
+}
+
+.inspector-tile-inactive:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-app);
+  transform: translateY(-2px);
+}
+
+.inspector-arrow-btn {
+  height: var(--inspector-tile-height);
+  font-size: 1.3rem;
+  font-weight: var(--font-bold);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface-muted);
+  border: 1.5px solid var(--border-default);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.inspector-arrow-btn:hover:not(:disabled) {
+  background: var(--bg-surface-code);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+/* ==========================================================================
+ * BUTTONS & FORM CONTROLS
+ * ========================================================================== */
+.btn-primary {
+  background-color: var(--accent-primary);
+  color: var(--text-on-primary);
+  border: 2px solid var(--accent-primary-dark);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-bold);
+  font-size: var(--text-btn);
+  padding: 0.60rem 1.00rem;
+  box-shadow: var(--shadow-btn-primary);
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-primary-dark);
+  border-color: var(--text-primary);
+  color: var(--text-on-primary);
+  box-shadow: var(--shadow-btn-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary-outline {
+  background-color: var(--bg-app);
+  color: var(--accent-primary);
+  border: 2px solid var(--accent-primary);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-bold);
+  font-size: var(--text-btn);
+  padding: 0.60rem 1.00rem;
+  box-shadow: var(--shadow-btn-secondary);
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn-secondary-outline:hover {
+  background-color: var(--accent-primary);
+  color: var(--text-on-primary);
+  box-shadow: var(--shadow-btn-secondary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-gdrive {
+  background-color: var(--accent-blue-gdrive);
+  color: var(--text-on-primary);
+  border: 1.5px solid var(--accent-blue-bold);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-bold);
+  font-size: var(--text-btn);
+  padding: 0.60rem 1.00rem;
+  box-shadow: var(--shadow-btn-gdrive);
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn-gdrive:hover {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary-dark);
+  box-shadow: var(--shadow-btn-gdrive-hover);
+  transform: translateY(-1px);
+}
+
+.input-select {
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-surface);
+  box-shadow: var(--shadow-xs);
+  transition: var(--transition-fast);
+}
+
+.input-select:hover {
+  border-color: var(--accent-primary);
+  box-shadow: 0 2px 4px rgba(30, 58, 138, 0.12);
+}
+
+.input-select:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: var(--focus-ring-primary);
+}
+
+/* ==========================================================================
+ * WORKSHEET & EXEMPLAR SHEET CONTAINERS (WEB & PRINT)
+ * ========================================================================== */
+.ws-container {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-9);
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+  line-height: var(--leading-worksheet);
+  box-shadow: var(--shadow-ws);
+  margin-bottom: var(--space-5);
+}
+
+.ws-exemplar-container {
+  background: var(--bg-success-tint);
+  border: 1.5px solid var(--border-success);
+  border-left: 5px solid var(--success-accent);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-9);
+  font-family: var(--font-sans);
+  color: var(--success-text-body);
+  line-height: var(--leading-worksheet);
+  box-shadow: var(--shadow-exemplar);
+  margin-bottom: var(--space-5);
+}
+
+.ws-scaffold-container {
+  background: var(--bg-info-tint);
+  border: 1.5px solid var(--border-info);
+  border-left: 5px solid var(--accent-blue-bright);
+  border-radius: var(--radius-lg);
+  padding: 0.95rem var(--space-8);
+  font-family: var(--font-sans);
+  color: var(--accent-primary);
+  line-height: var(--leading-worksheet);
+  margin-top: var(--space-5);
+}
+
+.ws-name-date-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.30rem;
+}
+
+.ws-strategy-focus {
+  background: var(--bg-info-tint);
+  border: 1px solid var(--border-info);
+  border-left: 4px solid var(--accent-blue-bright);
+  border-radius: var(--radius-md);
+  padding: 0.45rem var(--space-5);
+  margin-bottom: var(--space-5);
+  font-size: var(--text-xs-plus);
+  color: var(--accent-primary);
+}
+
+.ws-callout {
+  background: var(--bg-app);
+  border: 1px solid var(--border-default);
+  border-left: 4px solid var(--accent-primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-7);
+  margin: var(--space-4) 0;
+}
+
+.ws-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-5) 0;
+  font-size: var(--text-table);
+}
+
+.ws-table th {
+  background: var(--bg-surface-muted);
+  border: 1px solid var(--border-default);
+  padding: 0.55rem var(--space-5);
+  text-align: left;
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+}
+
+.ws-table td {
+  border: 1px solid var(--border-default);
+  padding: 0.60rem var(--space-5);
+  vertical-align: top;
+  color: var(--text-body);
+}
+
+.ws-dotted-line {
+  border-bottom: 1.5px dotted var(--border-strong);
+  height: 20px;
+  margin: 3px 0 6px 0;
+}
+
+.ws-solid-line {
+  border-bottom: 1.5px solid var(--border-line-solid);
+  height: 22px;
+  margin: 4px 0 7px 0;
+}
+
+.ws-student-answer {
+  color: var(--success-text-action);
+  font-weight: var(--font-semibold);
+  background: var(--bg-success-pill);
+  padding: 0.10rem 0.35rem;
+  border-radius: var(--radius-xs);
+}
+
+.ws-grade-box-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin: var(--space-8) 0 var(--space-2) 0;
+}
+
+.ws-grade-box {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--accent-primary);
+  background: var(--bg-app);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-6);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ==========================================================================
+ * 2-UP HALF-SHEET (50% PAPER SAVER) LAYOUT
+ * ========================================================================== */
+.half-sheet-page-wrapper {
+  width: 100%;
+  height: var(--half-sheet-wrapper-height);
+  min-height: var(--half-sheet-wrapper-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.half-sheet-item {
+  height: var(--half-sheet-item-height);
+  max-height: 4.92in;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.ws-half-sheet {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0.35rem 0.65rem;
+  font-size: var(--text-xs);
+  line-height: var(--leading-short);
+  margin-bottom: 0;
+  box-shadow: none;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.half-sheet-cut-divider {
+  height: var(--half-sheet-cut-height);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  margin: 0.04in 0;
+}
+
+.half-sheet-cut-divider::before {
+  content: "";
+  display: block;
+  width: 100%;
+  border-top: 2px dashed var(--border-strong);
+}
+
+/* ==========================================================================
+ * PRINT MEDIA & VECTOR PDF EXPORT RULES
+ * ========================================================================== */
+@page {
+  size: letter;
+  margin: 0.45in;
+}
+
+@media print {
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .page-break {
+    page-break-after: always !important;
+    break-after: page !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    display: block !important;
+  }
+
+  .ws-container,
+  .ws-exemplar-container,
+  .half-sheet-item,
+  .half-sheet-cut-divider {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    box-shadow: none !important;
+  }
+}

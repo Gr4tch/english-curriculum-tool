@@ -30,6 +30,8 @@ output/google_docs_temp/
 
 # Redundant local PDF hierarchy (catalog.json and output/sections/ are preserved)
 output/American Stories (Sections)/
+output/spanish/Historias Americanas (Secciones)/
+output/spanish/sections/
 input/cengage_cache/
 input/*.pdf
 

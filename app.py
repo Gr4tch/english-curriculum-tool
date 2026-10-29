@@ -876,19 +876,32 @@ def show_page_preview_modal(p_cfg: Dict[str, Any], page_num: int):
     tile = get_tile_by_code(s_strat)
     strat_name = tile["name"] if tile else s_strat.replace("_", " ").title()
 
-    render_clean_html(
-        f"""
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; padding-bottom: 0.45rem; border-bottom: 1.5px solid #e2e8f0;">
-            <div>
+    m_hdr1, m_hdr2 = st.columns([2.0, 1.2])
+    with m_hdr1:
+        render_clean_html(
+            f"""
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
                 <span class="badge-pill" style="font-size: 0.85rem; padding: 0.22rem 0.65rem; background: #dbeafe; color: #1e3a8a;">Page {page_num}: Sec {s_code}</span>
-                <span style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-left: 0.4rem;">{strat_name}</span>
+                <span style="font-size: 1.05rem; font-weight: 700; color: #0f172a;">{strat_name}</span>
+                {'<span class="badge-pill badge-scaf" style="font-size: 0.72rem;">Scaffolded Edition</span>' if is_scaf else '<span class="badge-pill badge-gray" style="font-size: 0.72rem;">Standard Edition</span>'}
             </div>
-            <div>
-                {'<span class="badge-pill badge-scaf">Scaffolded Edition</span>' if is_scaf else '<span class="badge-pill badge-gray">Standard Edition</span>'}
-            </div>
-        </div>
-        """
-    )
+            """
+        )
+    with m_hdr2:
+        cur_lang_idx = 1 if st.session_state.get("handout_language") == "es" else 0
+        modal_lang = st.radio(
+            "Language",
+            options=["English", "Español"],
+            index=cur_lang_idx,
+            horizontal=True,
+            key=f"modal_lang_toggle_{page_num}",
+            label_visibility="collapsed",
+        )
+        target_modal_lang = "es" if modal_lang == "Español" else "en"
+        if target_modal_lang != st.session_state.get("handout_language"):
+            st.session_state["handout_language"] = target_modal_lang
+            st.session_state.pop("cached_modular_result", None)
+            st.rerun()
 
     handout = build_standalone_strategy_handout(
         section_meta=s_meta,
@@ -896,6 +909,7 @@ def show_page_preview_modal(p_cfg: Dict[str, Any], page_num: int):
         strategy_code=s_strat,
         markdown_text=raw_md,
         is_scaffolded=is_scaf,
+        lang=st.session_state.get("handout_language", "en"),
     )
 
     std_md = handout["student_scaffolded_md" if is_scaf else "student_standard_md"]
@@ -1037,6 +1051,8 @@ if "nav_view" not in st.session_state:
     st.session_state["nav_view"] = "home"
 if "selected_ch_num" not in st.session_state:
     st.session_state["selected_ch_num"] = 5 if 5 in sorted_chapter_nums else sorted_chapter_nums[0]
+if "handout_language" not in st.session_state:
+    st.session_state["handout_language"] = "en"
 
 # Direct navigation via query parameters
 if "nav" in st.query_params:
@@ -1050,6 +1066,15 @@ if "nav" in st.query_params:
         pass
     if has_auth:
         st.query_params["auth"] = "ok"
+
+if "lang" in st.query_params:
+    target_lang = str(st.query_params["lang"]).strip().lower()
+    if target_lang in ["en", "es"]:
+        st.session_state["handout_language"] = target_lang
+    try:
+        del st.query_params["lang"]
+    except Exception:
+        pass
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1086,17 +1111,33 @@ if st.session_state["nav_view"] == "home":
         )
 
     with top_col2:
-        tc_pill, tc_out = st.columns([3.2, 1])
+        tc_pill, tc_lang, tc_out = st.columns([1.6, 1.4, 0.7])
         with tc_pill:
             render_clean_html(
                 f"""
                 <div style="text-align: right; padding-top: 0.25rem; white-space: nowrap;">
                     <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
-                        <b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections Available
+                        <b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections
                     </span>
                 </div>
                 """
             )
+        with tc_lang:
+            cur_lang_idx = 1 if st.session_state.get("handout_language") == "es" else 0
+            st.markdown("<div style='font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 2px;'>Language</div>", unsafe_allow_html=True)
+            sel_lang = st.radio(
+                "Handout Language",
+                options=["English", "Español"],
+                index=cur_lang_idx,
+                horizontal=True,
+                key="home_lang_toggle",
+                label_visibility="collapsed",
+            )
+            target_lang = "es" if sel_lang == "Español" else "en"
+            if target_lang != st.session_state.get("handout_language"):
+                st.session_state["handout_language"] = target_lang
+                st.session_state.pop("cached_modular_result", None)
+                st.rerun()
         with tc_out:
             if st.button("Log Out", key="top_logout_btn", use_container_width=True):
                 st.session_state["authenticated"] = False
@@ -1186,7 +1227,7 @@ if st.session_state["nav_view"] == "home":
 elif st.session_state["nav_view"] == "packet":
 
     # Breadcrumb Header
-    b_col1, b_col2, b_col3, b_col4 = st.columns([1.1, 2.5, 0.8, 0.7])
+    b_col1, b_col2, b_col_lang, b_col3, b_col4 = st.columns([1.0, 1.9, 1.1, 0.6, 0.6])
     with b_col1:
         if st.button("<- Main Menu", use_container_width=True, key="btn_back_packet"):
             st.session_state["nav_view"] = "home"
@@ -1201,6 +1242,22 @@ elif st.session_state["nav_view"] == "packet":
             </div>
             """
         )
+    with b_col_lang:
+        cur_lang_idx = 1 if st.session_state.get("handout_language") == "es" else 0
+        st.markdown("<div style='font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 2px;'>Language</div>", unsafe_allow_html=True)
+        sel_pkt_lang = st.radio(
+            "Handout Language",
+            options=["English", "Español"],
+            index=cur_lang_idx,
+            horizontal=True,
+            key="packet_lang_toggle",
+            label_visibility="collapsed",
+        )
+        target_pkt_lang = "es" if sel_pkt_lang == "Español" else "en"
+        if target_pkt_lang != st.session_state.get("handout_language"):
+            st.session_state["handout_language"] = target_pkt_lang
+            st.session_state.pop("cached_modular_result", None)
+            st.rerun()
     with b_col3:
         with st.popover("Context"):
             st.markdown(f"**Curriculum Unit:** {display_unit}")
@@ -1313,7 +1370,7 @@ elif st.session_state["nav_view"] == "packet":
         scope = st.session_state.get("packet_scope_radio")
         _apply_packet_scope(scope)
 
-    sc_c1, sc_c2 = st.columns(2)
+    sc_c1, sc_c2, sc_c3 = st.columns([1.1, 1.1, 0.8])
     with sc_c1:
         packet_scope = st.radio(
             "Packet Scope:",
@@ -1329,6 +1386,20 @@ elif st.session_state["nav_view"] == "packet":
             horizontal=True,
             key="packet_mode_radio",
         )
+    with sc_c3:
+        cur_lang_idx = 1 if st.session_state.get("handout_language") == "es" else 0
+        cfg_lang = st.radio(
+            "Handout Language:",
+            options=["English", "Español"],
+            index=cur_lang_idx,
+            horizontal=True,
+            key="cfg_lang_radio",
+        )
+        target_cfg_lang = "es" if cfg_lang == "Español" else "en"
+        if target_cfg_lang != st.session_state.get("handout_language"):
+            st.session_state["handout_language"] = target_cfg_lang
+            st.session_state.pop("cached_modular_result", None)
+            st.rerun()
 
     def on_click_preset_2page():
         _clear_editor_widget_states()
@@ -1796,7 +1867,7 @@ elif st.session_state["nav_view"] == "packet_export":
     tray_pages = st.session_state["tray_pages"]
 
     # Breadcrumb Header
-    b_col1, b_col2, b_col3, b_col4 = st.columns([1.2, 2.4, 0.8, 0.7])
+    b_col1, b_col2, b_col_lang, b_col3, b_col4 = st.columns([1.1, 1.9, 1.1, 0.6, 0.6])
     with b_col1:
         if st.button("← Back to Packet Editor", use_container_width=True, key="btn_back_packet_export"):
             st.session_state["nav_view"] = "packet"
@@ -1811,6 +1882,21 @@ elif st.session_state["nav_view"] == "packet_export":
             </div>
             """
         )
+    with b_col_lang:
+        cur_lang_idx = 1 if st.session_state.get("handout_language") == "es" else 0
+        sel_exp_lang = st.radio(
+            "Handout Language",
+            options=["English", "Español"],
+            index=cur_lang_idx,
+            horizontal=True,
+            key="export_lang_toggle",
+            label_visibility="collapsed",
+        )
+        target_exp_lang = "es" if sel_exp_lang == "Español" else "en"
+        if target_exp_lang != st.session_state.get("handout_language"):
+            st.session_state["handout_language"] = target_exp_lang
+            st.session_state.pop("cached_modular_result", None)
+            st.rerun()
     with b_col3:
         with st.popover("Context"):
             st.markdown(f"**Curriculum Unit:** {display_unit}")
@@ -1827,9 +1913,10 @@ elif st.session_state["nav_view"] == "packet_export":
     foot_mode = st.session_state.get("footer_style_select", "gb_01_points_stamp")
 
     # Cache compiled packet bundle so navigating between pages in the inspector is instant
+    cur_lang = st.session_state.get("handout_language", "en")
     pkt_cache_key = (
         str([(p.get("section_meta", {}).get("section_code"), p.get("strategy_code"), p.get("is_scaffolded")) for p in tray_pages])
-        + f"_{include_cov}_{cov_mode}_{foot_mode}"
+        + f"_{include_cov}_{cov_mode}_{foot_mode}_{cur_lang}"
     )
     if "cached_modular_result" not in st.session_state or st.session_state.get("cached_pkt_key") != pkt_cache_key:
         with st.spinner("Compiling modular packet and rendering letter-size vector PDFs..."):
@@ -1838,6 +1925,7 @@ elif st.session_state["nav_view"] == "packet_export":
                 include_cover=include_cov,
                 cover_mode=cov_mode,
                 footer_mode=foot_mode,
+                lang=cur_lang,
             )
             st.session_state["cached_modular_result"] = modular_result
             st.session_state["cached_pkt_key"] = pkt_cache_key
@@ -2039,7 +2127,7 @@ elif st.session_state["nav_view"] == "packet_export":
 elif st.session_state["nav_view"] == "gallery":
 
     # ── Tier 1: Single-Row Universal Navigation & Scope Bar (~38px) ──
-    nav_c1, nav_c2, nav_c3, nav_c4, nav_c5 = st.columns([1.1, 1.8, 2.4, 0.9, 0.7])
+    nav_c1, nav_c2, nav_c3, nav_lang, nav_c4, nav_c5 = st.columns([0.9, 1.6, 2.0, 1.1, 0.6, 0.6])
     with nav_c1:
         if st.button("<- Main Menu", use_container_width=True, key="btn_back_gallery"):
             st.session_state["nav_view"] = "home"
@@ -2071,6 +2159,22 @@ elif st.session_state["nav_view"] == "gallery":
             key=f"gal_select_sec_{gal_ch_num}",
             label_visibility="collapsed",
         )
+
+    with nav_lang:
+        cur_lang_idx = 1 if st.session_state.get("handout_language") == "es" else 0
+        st.markdown("<div style='font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 2px;'>Language</div>", unsafe_allow_html=True)
+        sel_gal_lang = st.radio(
+            "Handout Language",
+            options=["English", "Español"],
+            index=cur_lang_idx,
+            horizontal=True,
+            key="gal_lang_toggle",
+            label_visibility="collapsed",
+        )
+        target_gal_lang = "es" if sel_gal_lang == "Español" else "en"
+        if target_gal_lang != st.session_state.get("handout_language"):
+            st.session_state["handout_language"] = target_gal_lang
+            st.rerun()
 
     with nav_c4:
         with st.popover("Context"):
@@ -2224,6 +2328,7 @@ elif st.session_state["nav_view"] == "gallery":
             strategy_code=active_tile_code,
             markdown_text=gal_raw_md,
             is_scaffolded=is_scaf_ws,
+            lang=st.session_state.get("handout_language", "en"),
         )
 
         std_md = handout_data["student_standard_md"]

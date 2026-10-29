@@ -20,6 +20,11 @@ from src.agent_team import (
     sanitize_aesthetics,
     enforce_page_budget_guardrail,
 )
+from src.i18n import (
+    t,
+    get_localized_strategy_name,
+    get_localized_section_meta,
+)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -601,23 +606,32 @@ CHAPTER_5_KNOWLEDGE_BASE: Dict[str, Dict[str, Any]] = {
 # DYNAMIC KNOWLEDGE FALLBACK FOR SECTIONS IN CHAPTERS 1–4 & 6–17
 # ─────────────────────────────────────────────────────────────────────────────
 
-def build_dynamic_section_knowledge(section_meta: Dict[str, Any], markdown_text: str) -> Dict[str, Any]:
+def build_dynamic_section_knowledge(
+    section_meta: Dict[str, Any],
+    markdown_text: str = "",
+    lang: str = "en",
+) -> Dict[str, Any]:
     """
-    Constructs a 100% passage-grounded knowledge object for any section outside Chapter 5
+    Constructs a 100% passage-grounded knowledge object for any section
     directly from its extracted subheadings, paragraphs, printed Main Idea, and built-in questions.
+    Supports both English and Spanish passage extraction.
     """
     sec_code = str(section_meta["section_code"])
-    if section_meta["chapter_num"] == 5 and sec_code in CHAPTER_5_KNOWLEDGE_BASE:
+    if lang == "en" and section_meta["chapter_num"] == 5 and sec_code in CHAPTER_5_KNOWLEDGE_BASE:
         return CHAPTER_5_KNOWLEDGE_BASE[sec_code]
 
-    printed_mi = section_meta.get("printed_main_idea") or (
+    is_es = (lang == "es")
+    fallback_mi = (
+        "Los acontecimientos históricos marcaron el desarrollo y los conflictos de la nación."
+        if is_es else
         "Historical developments shaped the growth and conflicts of the nation."
     )
+    printed_mi = section_meta.get("printed_main_idea") or fallback_mi
     vocab_list = [v["word"] for v in section_meta.get("official_vocab", [])][:6]
 
     # Parse subheadings and first paragraphs from markdown_text
     sh_blocks = re.findall(
-        r"####\s+\d+\.\s+([^\n(]+)\s+\(p\.\s*(\d+)\)\n(.*?)(?=(?:\n####\s+\d+\.|\n---|\Z))",
+        r"####\s+\d+\.\s+([^\n(]+)\s+\((?:p\.|pág\.)\s*(\d+)\)\n(.*?)(?=(?:\n####\s+\d+\.|\n---|\Z))",
         markdown_text or "",
         flags=re.DOTALL,
     )
@@ -631,30 +645,75 @@ def build_dynamic_section_knowledge(section_meta: Dict[str, Any], markdown_text:
         ]
         first_sent = re.split(r"(?<=[.!?])\s+", paras[0])[0] if paras else clean_title
         second_sent = re.split(r"(?<=[.!?])\s+", paras[1])[0] if len(paras) > 1 else first_sent
-        subheadings.append({
-            "name": f"{clean_title} (p. {sh_pg})",
-            "gist": first_sent,
-            "cause": first_sent,
-            "effect": second_sent,
-            "say_something_q": f"What is the most important historical development explained under '{clean_title}' on page {sh_pg}?",
-            "cloze_stmt": f"Under *{clean_title}* (p. {sh_pg}), the text explains that _________________________________________________________.",
-            "citation": f'[p. {sh_pg}, "{clean_title}", ¶1–2]',
-        })
+
+        if is_es:
+            subheadings.append({
+                "name": f"{clean_title} (pág. {sh_pg})",
+                "gist": first_sent,
+                "cause": first_sent,
+                "effect": second_sent,
+                "say_something_q": f"¿Cuál es el acontecimiento histórico más importante explicado en '{clean_title}' en la página {sh_pg}?",
+                "cloze_stmt": f"Bajo *{clean_title}* (pág. {sh_pg}), el texto explica que _________________________________________________________.",
+                "citation": f'[pág. {sh_pg}, "{clean_title}", ¶1–2]',
+            })
+        else:
+            subheadings.append({
+                "name": f"{clean_title} (p. {sh_pg})",
+                "gist": first_sent,
+                "cause": first_sent,
+                "effect": second_sent,
+                "say_something_q": f"What is the most important historical development explained under '{clean_title}' on page {sh_pg}?",
+                "cloze_stmt": f"Under *{clean_title}* (p. {sh_pg}), the text explains that _________________________________________________________.",
+                "citation": f'[p. {sh_pg}, "{clean_title}", ¶1–2]',
+            })
 
     if not subheadings:
-        subheadings = [
-            {
-                "name": f"{section_meta['title'].upper()} (pp. {section_meta['printed_pages']})",
-                "gist": printed_mi,
-                "cause": f"Key historical developments described on pages {section_meta['printed_pages']}.",
-                "effect": printed_mi,
-                "say_something_q": f"What is the central historical development explained on pages {section_meta['printed_pages']}?",
-                "cloze_stmt": f"On pages {section_meta['printed_pages']}, the reading explains that _________________________________________________________.",
-                "citation": f"[pp. {section_meta['printed_pages']}, ¶1–2]",
-            }
-        ]
+        pp_label = f"págs. {section_meta['printed_pages']}" if is_es else f"pp. {section_meta['printed_pages']}"
+        if is_es:
+            subheadings = [
+                {
+                    "name": f"{section_meta['title'].upper()} ({pp_label})",
+                    "gist": printed_mi,
+                    "cause": f"Acontecimientos históricos fundamentales descritos en las páginas {section_meta['printed_pages']}.",
+                    "effect": printed_mi,
+                    "say_something_q": f"¿Cuál es el acontecimiento histórico central explicado en las páginas {section_meta['printed_pages']}?",
+                    "cloze_stmt": f"En las páginas {section_meta['printed_pages']}, la lectura explica que _________________________________________________________.",
+                    "citation": f"[{pp_label}, ¶1–2]",
+                }
+            ]
+        else:
+            subheadings = [
+                {
+                    "name": f"{section_meta['title'].upper()} ({pp_label})",
+                    "gist": printed_mi,
+                    "cause": f"Key historical developments described on pages {section_meta['printed_pages']}.",
+                    "effect": printed_mi,
+                    "say_something_q": f"What is the central historical development explained on pages {section_meta['printed_pages']}?",
+                    "cloze_stmt": f"On pages {section_meta['printed_pages']}, the reading explains that _________________________________________________________.",
+                    "citation": f"[{pp_label}, ¶1–2]",
+                }
+            ]
 
     ht = section_meta.get("historical_thinking", {})
+    if is_es:
+        return {
+            "printed_main_idea": printed_mi,
+            "exemplar_central_idea": f"{printed_mi} Específicamente, {', '.join(s['name'] for s in subheadings[:2])} demuestran cómo estos acontecimientos marcaron esta época histórica.",
+            "scaffolded_central_idea_stem": f"La idea central de la Sección {sec_code} es que _________________________________________________________, lo cual tuvo importancia histórica porque _________________________________________________________.",
+            "word_bank": vocab_list if vocab_list else ["Término clave 1", "Término clave 2", "Idea central"],
+            "subheadings": subheadings,
+            "perspectives": {
+                "side_a_label": f"Parte 1: {subheadings[0]['name']}",
+                "side_a_point": f"{subheadings[0]['gist']} {subheadings[0]['citation']}",
+                "side_b_label": f"Parte 2: {subheadings[-1]['name']}",
+                "side_b_point": f"{subheadings[-1]['gist']} {subheadings[-1]['citation']}",
+            },
+            "reading_check_a": f"Verificar que la respuesta cite detalles explícitos de las págs. {section_meta['printed_pages']} ({ht.get('q1_reading_check', 'Verificación de lectura')}).",
+            "skill_q2_a": f"Verificar que la respuesta conecte ideas de los subtítulos en las págs. {section_meta['printed_pages']} ({ht.get('q2_skill', 'Razonamiento histórico')}).",
+            "word_meaning_q3_a": f"Verificar que el estudiante defina el término objetivo utilizando el contexto de las págs. {section_meta['printed_pages']} ({ht.get('q3_word_meaning', 'Significado de palabras')}).",
+            "critical_viewing_a": f"Verificar que el estudiante cite evidencia visual o del mapa en las págs. {section_meta['printed_pages']}.",
+        }
+
     return {
         "printed_main_idea": printed_mi,
         "exemplar_central_idea": f"{printed_mi} Specifically, {', '.join(s['name'] for s in subheadings[:2])} show how these events shaped this era.",
@@ -682,45 +741,76 @@ def _render_vocab_component(
     section_meta: Dict[str, Any],
     kb: Dict[str, Any],
     vocab_mode: str,
-    is_scaffolded: bool
+    is_scaffolded: bool,
+    lang: str = "en",
 ) -> Tuple[str, List[str]]:
     """Renders the teacher's chosen Vocabulary block (or empty if embedded only or zero vocab)."""
     if vocab_mode in ("vocab_embedded_only", "vocab_none"):
         return "", []
 
+    is_es = (lang == "es")
     ht = section_meta.get("historical_thinking", {})
     if vocab_mode == "vocab_word_meaning_q3" and ht.get("q3_word_meaning"):
         q3_str = ht["q3_word_meaning"]
-        lines = [
-            f"**Context Vocabulary Check (p. {section_meta['end_page']}):** {q3_str}",
-        ]
+        pg_lbl = f"pág. {section_meta['end_page']}" if is_es else f"p. {section_meta['end_page']}"
+        check_title = (
+            f"**Comprobación de vocabulario en contexto ({pg_lbl}):** {q3_str}"
+            if is_es else
+            f"**Context Vocabulary Check ({pg_lbl}):** {q3_str}"
+        )
+        lines = [check_title]
         if is_scaffolded:
-            lines.append("*Sentence Starter: Based on the context of the sentence, this word means* ____________________________________.")
+            starter = (
+                "*Inicio de oración: Según el contexto de la oración, esta palabra significa* ____________________________________."
+                if is_es else
+                "*Sentence Starter: Based on the context of the sentence, this word means* ____________________________________."
+            )
+            lines.append(starter)
         else:
             lines.append(SOLID_LINE)
-        return "\n".join(lines), [f"Context Vocab (#3): {kb['word_meaning_q3_a']}"]
+        k_lbl = f"Vocabulario en contexto (#3): {kb.get('word_meaning_q3_a', '')}" if is_es else f"Context Vocab (#3): {kb.get('word_meaning_q3_a', '')}"
+        return "\n".join(lines), [k_lbl]
 
-    # Default: Compact Official Textbook Vocabulary Box (2-4 terms from R44-R58 & spread)
+    # Default: Compact Official Textbook Vocabulary Box (2-4 terms from glossary/spread)
     vocab_items = section_meta.get("official_vocab", [])[:3]
     if not vocab_items:
         return "", []
 
+    if is_es:
+        p1_label = "**Parte 1: Vocabulario clave de la sección en contexto** — *Revisa cada definición del libro de texto y completa la comprobación rápida en la columna derecha.*"
+        c1_head = "Término clave y pág."
+        c2_head = "Definición oficial del libro de texto"
+        c3_head = "¿Cómo se conecta este término con esta sección? (Nota breve)"
+    else:
+        p1_label = "**Part 1: Key Section Vocabulary in Context** — *Review each textbook definition and complete the quick check in the right column.*"
+        c1_head = "Key Term & Page"
+        c2_head = "Official Textbook Definition"
+        c3_head = "How does this term connect to this section? (Brief Note)"
+
     rows = [
-        "**Part 1: Key Section Vocabulary in Context** — *Review each textbook definition and complete the quick check in the right column.*",
-        "| Key Term & Page | Official Textbook Definition | How does this term connect to this section? (Brief Note) |",
+        p1_label,
+        f"| {c1_head} | {c2_head} | {c3_head} |",
         "| :--- | :--- | :--- |",
     ]
     key_list = []
     for v in vocab_items:
         w = v["word"]
         pg = v.get("page", section_meta["start_page"])
-        defn = v.get("definition") or "Key historical term defined in the reading."
+        pg_str = f"pág. {pg}" if is_es else f"p. {pg}"
+        defn = v.get("definition") or ("Concepto histórico clave definido en la lectura." if is_es else "Key historical term defined in the reading.")
         if is_scaffolded:
-            prompt_cell = f"*In this section, **{w}** is important because* ..............................."
+            prompt_cell = (
+                f"*En esta sección, **{w}** es importante porque* ..............................."
+                if is_es else
+                f"*In this section, **{w}** is important because* ..............................."
+            )
         else:
             prompt_cell = "..........................................................................................."
-        rows.append(f"| **{w}** (p. {pg}) | {defn} | {prompt_cell} |")
-        key_list.append(f"**{w}** (p. {pg}): {defn} — Connected directly to events in Section {section_meta['section_code']}.")
+        rows.append(f"| **{w}** ({pg_str}) | {defn} | {prompt_cell} |")
+        if is_es:
+            key_list.append(f"**{w}** ({pg_str}): {defn} — Conectado directamente con los acontecimientos de la Sección {section_meta['section_code']}.")
+        else:
+            key_list.append(f"**{w}** ({pg_str}): {defn} — Connected directly to events in Section {section_meta['section_code']}.")
 
     return "\n".join(rows), key_list
 
@@ -732,57 +822,73 @@ def _render_reading_organizer_component(
     reading_mode_code: str,
     is_scaffolded: bool,
     custom_prefix: str = "",
+    lang: str = "en",
 ) -> Tuple[str, List[str]]:
     """Renders the active reading organizer for the section."""
+    is_es = (lang == "es")
     rm_obj = get_strategy_by_code(READING_MODES, reading_mode_code)
-    prefix = custom_prefix.strip() if (reading_mode_code == "mode_custom_other" and custom_prefix.strip()) else rm_obj.get("directions_prefix", "As we read each subheading,")
+    if reading_mode_code == "mode_custom_other" and custom_prefix.strip():
+        prefix = custom_prefix.strip()
+    elif is_es:
+        prefix = "A medida que leemos cada subtítulo,"
+    else:
+        prefix = rm_obj.get("directions_prefix", "As we read each subheading,")
+
     subs = kb["subheadings"]
     keys = []
+    pp = section_meta['printed_pages']
 
+    dir_prefix = f"**{t('directions_label', lang=lang)}**"
     if read_code == "read_01_cause_effect":
         lines = [
-            f"**Directions:** {prefix} complete the **Historical Cause & Effect** table using specific facts from pages {section_meta['printed_pages']}.",
-            "| Historical Cause<br>What happened first? | Historical Effect<br>What happened as a result? |",
+            f"{dir_prefix} {t('cause_effect_directions', lang=lang, prefix=prefix, pages=pp)}",
+            f"| {t('cause_header', lang=lang)} | {t('effect_header', lang=lang)} |",
             "| :--- | :--- |",
         ]
+        eff_lbl = "Efecto" if is_es else "Effect"
+        res_lbl = "Como resultado," if is_es else "As a result,"
+        bec_lbl = "Porque" if is_es else "Because"
         for idx, sh in enumerate(subs, start=1):
             if idx % 2 == 1:
                 c_cell = f"**{idx}. {sh['name']}:** {sh['cause']}"
                 if is_scaffolded:
-                    e_cell = f"**Effect {idx}:** As a result, {sh['effect'][:28]} _____________________________<br>______________________________________________________."
+                    e_cell = f"**{eff_lbl} {idx}:** {res_lbl} {sh['effect'][:28]} _____________________________<br>______________________________________________________."
                 else:
-                    e_cell = f"**Effect {idx}:**<br>______________________________________________________<br>______________________________________________________"
+                    e_cell = f"**{eff_lbl} {idx}:**<br>______________________________________________________<br>______________________________________________________"
                 keys.append(f"Row {idx} Effect ({sh['name']}): {sh['effect']} {sh['citation']}")
             else:
                 if is_scaffolded:
-                    c_cell = f"**{idx}. {sh['name']}:** Because {sh['cause'][:28]} _____________________________<br>______________________________________________________."
+                    c_cell = f"**{idx}. {sh['name']}:** {bec_lbl} {sh['cause'][:28]} _____________________________<br>______________________________________________________."
                 else:
                     c_cell = f"**{idx}. {sh['name']}:**<br>______________________________________________________<br>______________________________________________________"
-                e_cell = f"**Effect {idx}:** {sh['effect']}"
+                e_cell = f"**{eff_lbl} {idx}:** {sh['effect']}"
                 keys.append(f"Row {idx} Cause ({sh['name']}): {sh['cause']} {sh['citation']}")
             lines.append(f"| {c_cell} | {e_cell} |")
         return "\n".join(lines), keys
 
     elif read_code == "read_04_sequence_timeline":
+        step_header = "Paso y subtítulo" if is_es else "Step & Subheading Locator"
         lines = [
-            f"**Directions:** {prefix} trace the **Chronological Sequence** of events across pages {section_meta['printed_pages']} in complete sentences.",
-            "| Step & Subheading Locator | What Happened at This Stage? (Key Event & Outcome) |",
+            f"{dir_prefix} {t('sequence_directions', lang=lang, prefix=prefix, pages=pp)}",
+            f"| {step_header} | {t('sequence_header', lang=lang)} |",
             "| :--- | :--- |",
         ]
+        step_lbl = "Paso" if is_es else "Step"
         for idx, sh in enumerate(subs, start=1):
             if is_scaffolded:
                 body_cell = f"*{sh['gist'][:36]}* ______________________________________________________<br>______________________________________________________."
             else:
                 body_cell = "______________________________________________________________________<br>______________________________________________________________________"
-            lines.append(f"| **Step {idx}: {sh['name']}** | {body_cell} |")
+            lines.append(f"| **{step_lbl} {idx}: {sh['name']}** | {body_cell} |")
             keys.append(f"Step {idx} ({sh['name']}): {sh['gist']} {sh['citation']}")
         return "\n".join(lines), keys
 
     elif read_code == "read_05_compare_perspectives":
         persp = kb["perspectives"]
+        p_hdr = "Perspectiva o grupo histórico" if is_es else "Historical Perspective / Group"
         lines = [
-            f"**Directions:** {prefix} compare the two historical perspectives or developments in Section {section_meta['section_code']} (pp. {section_meta['printed_pages']}).",
-            f"| Historical Perspective / Group | Core Position, Actions & Text Evidence (pp. {section_meta['printed_pages']}) |",
+            f"{dir_prefix} {t('perspectives_directions', lang=lang, prefix=prefix, code=section_meta['section_code'], pages=pp)}",
+            f"| {p_hdr} | {t('perspectives_header', lang=lang, pages=pp)} |",
             "| :--- | :--- |",
         ]
         if is_scaffolded:
@@ -799,10 +905,10 @@ def _render_reading_organizer_component(
 
     elif read_code == "read_03_cloze_guided":
         lines = [
-            f"**Directions:** {prefix} fill in the missing historical terms in each **Guided Cloze** statement from pages {section_meta['printed_pages']}.",
+            f"{dir_prefix} {t('cloze_directions', lang=lang, prefix=prefix, pages=pp)}",
         ]
         if is_scaffolded and kb.get("word_bank"):
-            lines.append(f"*Word Bank:* **{', '.join(kb['word_bank'])}**")
+            lines.append(f"*{t('word_bank_label', lang=lang)}* **{', '.join(kb['word_bank'])}**")
         for idx, sh in enumerate(subs, start=1):
             lines.append(f"**{idx}. {sh['name']}:** {sh['cloze_stmt']}")
             keys.append(f"Cloze {idx} ({sh['name']}): {sh['gist']} {sh['citation']}")
@@ -810,12 +916,12 @@ def _render_reading_organizer_component(
 
     else:  # read_02_say_something (Default Stop & Jot by Subheading)
         lines = [
-            f"**Directions:** {prefix} pause after each subheading to **'Say Something!'** in 1 complete sentence answering the guiding question.",
+            f"{dir_prefix} {t('say_something_directions', lang=lang, prefix=prefix)}",
         ]
         for idx, sh in enumerate(subs, start=1):
             lines.append(f"**{idx}. {sh['name']}** — *{sh['say_something_q']}*")
             if is_scaffolded:
-                lines.append(f"*Sentence Starter: In this part of the reading, {sh['gist'][:32]}* _________________________________________.")
+                lines.append(f"*{t('say_something_starter', lang=lang, gist=sh['gist'][:32])}* _________________________________________.")
             else:
                 lines.append(SOLID_LINE)
                 lines.append(SOLID_LINE)
@@ -828,115 +934,128 @@ def _render_central_idea_and_anti_copycat_component(
     kb: Dict[str, Any],
     ci_code: str,
     pmi_code: str,
-    is_scaffolded: bool
+    is_scaffolded: bool,
+    lang: str = "en",
 ) -> Tuple[str, List[str]]:
     """
     Renders the Central Idea Synthesis block combined with the selected Anti-Copycat Mode
     so students never copy the textbook's printed MAIN IDEA verbatim.
     """
+    is_es = (lang == "es")
     printed_mi = kb["printed_main_idea"]
     subs = kb["subheadings"]
     lines = []
     keys = []
+    pp = section_meta['printed_pages']
 
     # 1. Anti-Copycat Framing Header (callout only if mode requires textbook main idea)
     if pmi_code == "pmi_01_prove_it":
         lines.extend([
-            f"> **Textbook Printed Main Idea (p. {section_meta['start_page']}):** *\"{printed_mi}\"*",
+            f"> **{t('prove_it_header', lang=lang, page=section_meta['start_page'])}** *\"{printed_mi}\"*",
             "",
         ])
     elif pmi_code == "pmi_03_upgrade_it":
+        u_lbl = "Idea principal básica del libro de texto" if is_es else "Textbook Basic Main Idea"
+        pg_lbl = f"pág. {section_meta['start_page']}" if is_es else f"p. {section_meta['start_page']}"
         lines.extend([
-            f"> **Textbook Basic Main Idea (p. {section_meta['start_page']}):** *\"{printed_mi}\"*",
+            f"> **{u_lbl} ({pg_lbl}):** *\"{printed_mi}\"*",
             "",
         ])
-    # Note: Redundant section title heading ("**Central Idea Synthesis (Section X.X: ...):**")
-    # removed to maximize student writing response space; title already appears in the top badge.
 
     # 2. Render specific Central Idea template
+    dir_prefix = f"**{t('directions_label', lang=lang)}**"
     if ci_code == "ci_01_subheading_gist":
-        lines.append("**Directions:** Write a brief 10-word gist for each subheading on the dotted lines, then combine them into a detailed Whole-Section Central Idea on the solid lines.")
+        lines.append(f"{dir_prefix} {t('subheading_gist_directions', lang=lang)}")
         for idx, sh in enumerate(subs, start=1):
-            lines.append(f"- **Gist for {sh['name']}:** {DOTTED_LINE}")
+            lines.append(f"- **{t('gist_label', lang=lang, name=sh['name'])}** {DOTTED_LINE}")
             keys.append(f"Subheading {idx} Gist ({sh['name']}): {sh['gist']} {sh['citation']}")
         if is_scaffolded:
-            lines.append(f"**Whole-Section Central Idea:** *{kb['scaffolded_central_idea_stem']}*")
+            lines.append(f"**{t('whole_section_ci_scaf_label', lang=lang)}** *{kb['scaffolded_central_idea_stem']}*")
         else:
-            lines.append("**Whole-Section Central Idea (1–2 complete sentences):**")
+            lines.append(f"**{t('whole_section_ci_label', lang=lang)}**")
             lines.append(SOLID_LINE)
             lines.append(SOLID_LINE)
         keys.append(f"Whole-Section Central Idea Exemplar: {kb['exemplar_central_idea']}")
 
     elif ci_code == "ci_02_box_and_bullets":
         if pmi_code == "pmi_01_prove_it":
-            box_prompt = f"**Textbook Main Idea to Prove:** *{printed_mi}*"
+            p_lbl = "Idea principal del libro a demostrar:" if is_es else "Textbook Main Idea to Prove:"
+            box_prompt = f"**{p_lbl}** *{printed_mi}*"
         elif is_scaffolded:
-            box_prompt = f"**Central Idea Claim:** *{kb['scaffolded_central_idea_stem']}*"
+            c_lbl = "Afirmación de la idea central:" if is_es else "Central Idea Claim:"
+            box_prompt = f"**{c_lbl}** *{kb['scaffolded_central_idea_stem']}*"
         else:
-            box_prompt = f"**Central Idea Claim (State the main historical point of pp. {section_meta['printed_pages']}):**<br>{SOLID_LINE}<br>{SOLID_LINE}"
+            box_prompt = f"**{t('box_bullets_claim_prompt', lang=lang, pages=pp)}**<br>{SOLID_LINE}<br>{SOLID_LINE}"
 
         lines.extend([
             "",
-            "| BOX & BULLETS: CENTRAL IDEA + SUPPORTING TEXT EVIDENCE |",
+            f"| {t('box_bullets_table_header', lang=lang)} |",
             "| :--- |",
             f"| {box_prompt} |",
             "",
         ])
         for idx, sh in enumerate(subs, start=1):
-            lines.append(f"- **Supporting Evidence {idx} from {sh['name']}:**\n{DOTTED_LINE}\n{DOTTED_LINE}")
+            lines.append(f"- **{t('box_bullets_evidence_label', lang=lang, idx=idx, name=sh['name'])}**\n{DOTTED_LINE}\n{DOTTED_LINE}")
             keys.append(f"Bullet {idx} Evidence ({sh['name']}): {sh['gist']} {sh['citation']}")
         keys.insert(0, f"Box & Bullets Central Idea Exemplar: {kb['exemplar_central_idea']}")
 
     elif ci_code == "ci_04_cer_paragraph":
-        lines.append(f"**Directions:** Write a 3-part **Claim–Evidence–Reasoning (CER)** response explaining the central idea of pages {section_meta['printed_pages']}.")
+        lines.append(f"{dir_prefix} {t('cer_directions', lang=lang, pages=pp)}")
         if is_scaffolded:
-            lines.append(f"- **CLAIM (Central Idea):** *{kb['scaffolded_central_idea_stem']}*")
-            lines.append(f"- **EVIDENCE (Cite a specific law/event from p. {section_meta['start_page']} or p. {section_meta['end_page']}):** *For example, on page {section_meta['start_page']}, the text states that* _________________________________________________________.")
-            lines.append("- **REASONING (Why it mattered):** *This evidence proves the central idea because* _________________________________________________________.")
+            c_tag = "AFIRMACIÓN (Idea central):" if is_es else "CLAIM (Central Idea):"
+            lines.append(f"- **{c_tag}** *{kb['scaffolded_central_idea_stem']}*")
+            lines.append(f"- **{t('cer_evidence_label', lang=lang, pages=pp)}** *{t('cer_evidence_starter', lang=lang, page=section_meta['start_page'])}* _________________________________________________________.")
+            lines.append(f"- **{t('cer_reasoning_label', lang=lang)}** *{t('cer_reasoning_starter', lang=lang)}* _________________________________________________________.")
         else:
-            lines.append(f"- **CLAIM (State the Central Idea in 1 complete sentence):**\n{SOLID_LINE}")
-            lines.append(f"- **EVIDENCE (Cite 1–2 specific facts or laws from pp. {section_meta['printed_pages']}):**\n{SOLID_LINE}\n{SOLID_LINE}")
-            lines.append(f"- **REASONING (Explain how your evidence supports the Central Idea):**\n{SOLID_LINE}\n{SOLID_LINE}")
+            lines.append(f"- **{t('cer_claim_label', lang=lang)}**\n{SOLID_LINE}")
+            lines.append(f"- **{t('cer_evidence_label', lang=lang, pages=pp)}**\n{SOLID_LINE}\n{SOLID_LINE}")
+            lines.append(f"- **{t('cer_reasoning_label', lang=lang)}**\n{SOLID_LINE}\n{SOLID_LINE}")
         keys.append(f"CER Claim Exemplar: {kb['exemplar_central_idea']}")
         keys.append(f"CER Evidence & Reasoning: {subs[0]['gist']} {subs[0]['citation']}; {subs[-1]['gist']} {subs[-1]['citation']}")
 
     else:  # ci_03_what_so_what or Anti-Copycat synthesis modes
         if pmi_code == "pmi_01_prove_it":
-            lines.append(
-                f"**Directions (Prove It!):** DO NOT copy the textbook statement above. Cite 1 specific historical fact or law from each subheading that proves the textbook's claim is true:"
-            )
+            lines.append(f"**Directions (Demostrar / Prove It!):** {t('prove_it_directions', lang=lang)}")
             for idx, sh in enumerate(subs, start=1):
-                lines.append(f"- **Proof {idx} from {sh['name']}:**\n{DOTTED_LINE}\n{DOTTED_LINE}")
+                lines.append(f"- **{t('prove_it_label', lang=lang, idx=idx, name=sh['name'])}**\n{DOTTED_LINE}\n{DOTTED_LINE}")
                 keys.append(f"Proof {idx} ({sh['name']}): {sh['gist']} {sh['citation']}")
         elif pmi_code == "pmi_02_subheading_focus":
-            lines.append(
-                f"**Directions (Subheading Focus):** The textbook printed only 1 basic sentence for the whole section. State the central idea of each subheading in your own words, then combine them:"
+            pmi2_dir = (
+                "**Instrucciones (Enfoque por subtítulo):** El libro de texto imprimió solo una oración básica para toda la sección. Expresa la idea central de cada subtítulo en tus propias palabras y luego combínalas:"
+                if is_es else
+                "**Directions (Subheading Focus):** The textbook printed only 1 basic sentence for the whole section. State the central idea of each subheading in your own words, then combine them:"
             )
+            lines.append(pmi2_dir)
             for idx, sh in enumerate(subs, start=1):
-                lines.append(f"- **Central Idea for {sh['name']}:**\n{SOLID_LINE}\n{SOLID_LINE}")
+                c_lbl = f"Idea central para {sh['name']}:" if is_es else f"Central Idea for {sh['name']}:"
+                lines.append(f"- **{c_lbl}**\n{SOLID_LINE}\n{SOLID_LINE}")
                 keys.append(f"Subheading {idx} Central Idea ({sh['name']}): {sh['gist']} {sh['citation']}")
-            lines.append("**Whole-Section Connection:**")
+            con_lbl = "**Conexión de toda la sección:**" if is_es else "**Whole-Section Connection:**"
+            lines.append(con_lbl)
             lines.append(SOLID_LINE)
             lines.append(SOLID_LINE)
         elif pmi_code == "pmi_03_upgrade_it":
-            lines.append(
-                f"**Directions (Upgrade the Claim):** Upgrade the textbook's basic 5th-grade sentence above into a detailed 8th-grade historical claim that names the specific laws, historical figures, and consequences from pages {section_meta['printed_pages']}:"
+            pmi3_dir = (
+                f"**Instrucciones (Ampliar la afirmación histórica):** Amplía la oración básica del libro de texto anterior convirtiéndola en una afirmación histórica detallada de 8.º grado que nombre las leyes específicas, los personajes históricos y las consecuencias de las páginas {pp}:"
+                if is_es else
+                f"**Directions (Upgrade the Claim):** Upgrade the textbook's basic 5th-grade sentence above into a detailed 8th-grade historical claim that names the specific laws, historical figures, and consequences from pages {pp}:"
             )
+            lines.append(pmi3_dir)
             if is_scaffolded:
                 if kb.get("word_bank"):
-                    lines.append(f"*Key Terms to Include:* **{', '.join(kb['word_bank'][:4])}**")
+                    wb_lbl = "Términos clave a incluir:" if is_es else "Key Terms to Include:"
+                    lines.append(f"*{wb_lbl}* **{', '.join(kb['word_bank'][:4])}**")
                 lines.append(f"*{kb['scaffolded_central_idea_stem']}*")
             else:
                 lines.append(SOLID_LINE)
                 lines.append(SOLID_LINE)
                 lines.append(SOLID_LINE)
         else:
-            lines.append(
-                f"**Directions ('What Happened? + So What?'):** In 1–2 complete sentences, state the **Central Idea** of Section {section_meta['section_code']} by connecting *what happened* to *why it mattered historically*."
-            )
+            lines.append(f"**Directions ('What Happened? + So What?'):** {t('what_so_what_directions', lang=lang, code=section_meta['section_code'])}")
             if is_scaffolded:
                 if kb.get("word_bank"):
-                    lines.append(f"*Key Terms to Include:* **{', '.join(kb['word_bank'][:4])}**")
+                    wb_lbl = "Términos clave a incluir:" if is_es else "Key Terms to Include:"
+                    lines.append(f"*{wb_lbl}* **{', '.join(kb['word_bank'][:4])}**")
                 lines.append(f"*{kb['scaffolded_central_idea_stem']}*")
             else:
                 lines.append(SOLID_LINE)
@@ -967,8 +1086,32 @@ CHAPTER_5_TWR_STEMS: Dict[str, str] = {
     "4.5": "Diverse Americans demanded liberty and equal rights during the Revolution",
 }
 
+CHAPTER_5_TWR_STEMS_ES: Dict[str, str] = {
+    "1.1": "Aumentaron las tensiones entre Gran Bretaña y las colonias",
+    "1.2": "El Parlamento aprobó nuevas leyes impositivas para recaudar ingresos de las colonias",
+    "1.3": "Los colonos se unieron para protestar y boicotear las mercancías británicas",
+    "1.4": "Benjamin Franklin instó al Parlamento a derogar los impuestos coloniales",
+    "2.1": "Los colonos organizaron boicots generalizados contra las Leyes Townshend",
+    "2.2": "Las tensiones en Boston aumentaron entre los colonos y los soldados británicos",
+    "2.3": "El Parlamento aprobó las Leyes Coercitivas para castigar a Massachusetts",
+    "2.4": "Los colonos usaron objetos cotidianos y símbolos políticos para resistir el control británico",
+    "3.1": "Los delegados coloniales se reunieron en el Primer Congreso Continental",
+    "3.2": "Los mensajeros patriotas cabalgaron durante la noche para alertar a las milicias coloniales",
+    "3.3": "Los Minutemen coloniales se enfrentaron con las tropas británicas en Lexington y Concord",
+    "3.4": "La milicia colonial defendió el puente North Bridge en Concord contra los soldados regulares británicos",
+    "4.1": "Las fuerzas patriotas lucharon con valentía contra las tropas británicas en Bunker Hill",
+    "4.2": "Las tropas coloniales fortificaron colinas estratégicas que dominaban el puerto de Boston",
+    "4.3": "Thomas Paine instó a los colonos norteamericanos a declarar su total independencia",
+    "4.4": "El Congreso Continental aprobó la Declaración de Independencia",
+    "4.5": "Diversos sectores de la población norteamericana exigieron libertad e igualdad durante la Revolución",
+}
 
-def _get_twr_because_but_so_stem(section_meta: Dict[str, Any], kb: Dict[str, Any]) -> str:
+
+def _get_twr_because_but_so_stem(
+    section_meta: Dict[str, Any],
+    kb: Dict[str, Any],
+    lang: str = "en",
+) -> str:
     """
     Returns an authentic, capitalized historical stem for TWR 'Because, But, So' sentence expansion.
     Enforces design rule: Question stems must NEVER include 'In Section X.X' or '(Section Title)'.
@@ -977,11 +1120,28 @@ def _get_twr_because_but_so_stem(section_meta: Dict[str, Any], kb: Dict[str, Any
     sec_code = str(section_meta.get("section_code", "")).strip()
     ch_num = section_meta.get("chapter_num", 0)
 
-    # 1. Curated high-impact stems for Chapter 5
+    if lang == "es":
+        if ch_num == 5 and sec_code in CHAPTER_5_TWR_STEMS_ES:
+            return CHAPTER_5_TWR_STEMS_ES[sec_code]
+
+        raw = (
+            kb.get("printed_main_idea")
+            or section_meta.get("printed_main_idea")
+            or (kb.get("subheadings", [{}])[0].get("gist") if kb.get("subheadings") else "")
+            or "Los acontecimientos históricos marcaron el desarrollo de la nación"
+        ).strip()
+
+        cleaned = re.sub(r"^(?:En\s+la\s+secci[óo]n|En\s+secci[óo]n)\s+[^\s,()]+(?:\s*\([^)]*\))?,?\s*", "", raw, flags=re.IGNORECASE)
+        sec_title = section_meta.get("title", "")
+        if sec_title:
+            cleaned = re.sub(r"\(" + re.escape(sec_title) + r"\),?\s*", "", cleaned, flags=re.IGNORECASE)
+        cleaned = cleaned.strip().rstrip(".,;:")
+        return (cleaned[0].upper() + cleaned[1:]) if cleaned else "Los acontecimientos históricos marcaron el desarrollo de la nación"
+
+    # English default
     if ch_num == 5 and sec_code in CHAPTER_5_TWR_STEMS:
         return CHAPTER_5_TWR_STEMS[sec_code]
 
-    # 2. Extract and clean from knowledge base or section metadata
     raw = (
         kb.get("printed_main_idea")
         or section_meta.get("printed_main_idea")
@@ -1014,79 +1174,110 @@ def _render_builtin_questions_and_optional_twr(
     kb: Dict[str, Any],
     blueprint: Dict[str, Any],
     rec_info: Dict[str, Any],
-    is_scaffolded: bool
+    is_scaffolded: bool,
+    lang: str = "en",
 ) -> Tuple[str, List[str]]:
     """Renders any toggled-on Textbook Historical Thinking / Critical Viewing questions or Optional TWR."""
+    is_es = (lang == "es")
     ht = section_meta.get("historical_thinking", {})
     cv = section_meta.get("critical_viewing", [])
     blocks = []
     keys = []
+    pp = section_meta['printed_pages']
 
     if blueprint.get("include_reading_check_q1") and ht.get("q1_reading_check"):
         q1 = ht["q1_reading_check"]
-        blocks.append(f"**Textbook Reading Check (p. {section_meta['end_page']}):** *{q1}*")
+        pg_lbl = f"pág. {section_meta['end_page']}" if is_es else f"p. {section_meta['end_page']}"
+        q1_title = f"**Verificación de lectura del libro ({pg_lbl}):** *{q1}*" if is_es else f"**Textbook Reading Check ({pg_lbl}):** *{q1}*"
+        blocks.append(q1_title)
         if is_scaffolded:
-            blocks.append(f"*Sentence Starter: {kb['reading_check_a'][:38]}* _________________________________________________________.")
+            s_tag = "*Inicio de oración:" if is_es else "*Sentence Starter:"
+            blocks.append(f"{s_tag} {kb['reading_check_a'][:38]}* _________________________________________________________.")
         else:
             blocks.append(SOLID_LINE)
-        keys.append(f"Textbook #1 Reading Check (p. {section_meta['end_page']}): {kb['reading_check_a']}")
+        keys.append(f"Textbook #1 Reading Check ({pg_lbl}): {kb['reading_check_a']}")
 
     if blueprint.get("include_skill_q2") and ht.get("q2_skill"):
         q2 = ht["q2_skill"]
-        blocks.append(f"**Historical Thinking Skill (p. {section_meta['end_page']}):** *{q2}*")
+        pg_lbl = f"pág. {section_meta['end_page']}" if is_es else f"p. {section_meta['end_page']}"
+        q2_title = f"**Habilidad de razonamiento histórico ({pg_lbl}):** *{q2}*" if is_es else f"**Historical Thinking Skill ({pg_lbl}):** *{q2}*"
+        blocks.append(q2_title)
         blocks.append(SOLID_LINE)
-        keys.append(f"Textbook #2 Skill Question (p. {section_meta['end_page']}): {kb['skill_q2_a']}")
+        keys.append(f"Textbook #2 Skill Question ({pg_lbl}): {kb['skill_q2_a']}")
 
     if rec_info.get("include_critical_viewing") and cv:
-        blocks.append(f"**Critical Viewing — Map & Visual Analysis:** *{cv[0]}*")
+        cv_title = f"**Observación crítica — Análisis de mapas y recursos visuales:** *{cv[0]}*" if is_es else f"**Critical Viewing — Map & Visual Analysis:** *{cv[0]}*"
+        blocks.append(cv_title)
         blocks.append(SOLID_LINE)
         keys.append(f"Critical Viewing Analysis: {kb['critical_viewing_a']}")
 
     twr_code = blueprint.get("optional_twr_strategy", "twr_none")
     if twr_code and twr_code != "twr_none":
-        stem_base = _get_twr_because_but_so_stem(section_meta, kb)
+        stem_base = _get_twr_because_but_so_stem(section_meta, kb, lang=lang)
         if twr_code == "twr_because_but_so":
+            ext_label = "Extensión de escritura (Porque, Pero, Por lo tanto):" if is_es else "Writing Extension (Because, But, So):"
             blocks.extend([
-                "**Writing Extension (Because, But, So):** Complete each sentence using specific facts from the reading.",
-                f"1. {stem_base} **because** _________________________________________________________________",
-                f"2. {stem_base}, **but** ____________________________________________________________________",
-                f"3. {stem_base}, **so** _____________________________________________________________________",
+                f"**{ext_label}** {t('twr_bbs_directions', lang=lang)}",
+                f"1. {stem_base} **{t('twr_bbs_because', lang=lang)}** _________________________________________________________________",
+                f"2. {stem_base}, **{t('twr_bbs_but', lang=lang)}** ____________________________________________________________________",
+                f"3. {stem_base}, **{t('twr_bbs_so', lang=lang)}** _____________________________________________________________________",
             ])
             keys.extend([
-                f"TWR Because Stem: {stem_base} because ... (verify causal historical evidence from pp. {section_meta['printed_pages']})",
-                f"TWR But Stem: {stem_base}, but ... (verify contrasting historical evidence from pp. {section_meta['printed_pages']})",
-                f"TWR So Stem: {stem_base}, so ... (verify consequent historical evidence from pp. {section_meta['printed_pages']})",
+                f"TWR Because Stem: {stem_base} {t('twr_bbs_because', lang=lang)} ... (verify causal historical evidence from pp. {pp})",
+                f"TWR But Stem: {stem_base}, {t('twr_bbs_but', lang=lang)} ... (verify contrasting historical evidence from pp. {pp})",
+                f"TWR So Stem: {stem_base}, {t('twr_bbs_so', lang=lang)} ... (verify consequent historical evidence from pp. {pp})",
             ])
         elif twr_code == "twr_subordinating":
+            ext_label = "Extensión de escritura (Conjunciones subordinantes):" if is_es else "Writing Extension (Subordinating Conjunctions):"
+            c1_tag = "Aunque" if is_es else "Although"
+            c2_tag = "Cuando" if is_es else "When"
             blocks.extend([
-                "**Writing Extension (Subordinating Conjunctions):** Complete each complex historical sentence using facts from pages " + str(section_meta['printed_pages']) + ".",
-                f"1. **Although** {kb['subheadings'][0]['gist'][:42].lower()}..., _________________________________________________________",
-                f"2. **When** {kb['subheadings'][-1]['gist'][:42].lower()}..., ___________________________________________________________",
+                f"**{ext_label}** {t('twr_subordinating_directions', lang=lang, pages=pp)}",
+                f"1. **{c1_tag}** {kb['subheadings'][0]['gist'][:42].lower()}..., _________________________________________________________",
+                f"2. **{c2_tag}** {kb['subheadings'][-1]['gist'][:42].lower()}..., ___________________________________________________________",
             ])
             keys.append(f"Writing Extension (Subordinating Conjunctions): {kb['exemplar_central_idea']}")
         elif twr_code == "twr_kernel_expansion":
-            k_subj = "Colonists resisted British imperial policies."
+            k_subj = (
+                "Los colonos se opusieron a las políticas imperiales británicas."
+                if is_es else
+                "Colonists resisted British imperial policies."
+            )
+            ext_label = "Extensión de escritura (Expansión de oraciones):" if is_es else "Writing Extension (Sentence Expansion):"
             blocks.extend([
-                "**Writing Extension (Sentence Expansion):** Expand the short kernel sentence below by answering the guiding questions with facts from pages " + str(section_meta['printed_pages']) + ".",
-                f"**Kernel Sentence:** *{k_subj}*",
-                f"- **When?** {DOTTED_LINE}",
-                f"- **Where?** {DOTTED_LINE}",
-                f"- **Why?** {DOTTED_LINE}",
-                "**Expanded Historical Sentence (1–2 complete sentences):**",
+                f"**{ext_label}** {t('twr_kernel_directions', lang=lang, pages=pp)}",
+                f"**{t('twr_kernel_label', lang=lang)}** *{k_subj}*",
+                f"- **{'¿Cuándo?' if is_es else 'When?'}** {DOTTED_LINE}",
+                f"- **{'¿Dónde?' if is_es else 'Where?'}** {DOTTED_LINE}",
+                f"- **{'¿Por qué?' if is_es else 'Why?'}** {DOTTED_LINE}",
+                f"**{t('twr_kernel_expanded_label', lang=lang)}**",
                 SOLID_LINE,
                 SOLID_LINE,
             ])
             keys.append(f"Writing Extension (Sentence Expansion): {kb['exemplar_central_idea']}")
         elif twr_code == "twr_appositives":
             v_words = [v.get("word") for v in section_meta.get("official_vocab", []) if v.get("word")]
-            app_subj1 = v_words[0] if v_words else "King George III"
-            app_subj2 = v_words[1] if len(v_words) > 1 else "The American colonists"
-            blocks.extend([
-                "**Writing Extension (Appositive Phrases):** Insert a descriptive noun phrase between commas to define each historical term:",
-                f"1. **{app_subj1}**, ____________________________________________, influenced events across the colonies.",
-                f"2. **{app_subj2}**, ____________________________________________, shaped colonial resistance during this era.",
-            ])
+            if is_es:
+                app_subj1 = v_words[0] if v_words else "El rey Jorge III"
+                app_subj2 = v_words[1] if len(v_words) > 1 else "Los colonos norteamericanos"
+                ext_label = "Extensión de escritura (Aposiciones):"
+                blocks.extend([
+                    f"**{ext_label}** {t('twr_appositives_directions', lang=lang)}",
+                    f"1. **{app_subj1}**, ____________________________________________, influyó en los acontecimientos de las colonias.",
+                    f"2. **{app_subj2}**, ____________________________________________, marcó la resistencia colonial durante esta época.",
+                ])
+            else:
+                app_subj1 = v_words[0] if v_words else "King George III"
+                app_subj2 = v_words[1] if len(v_words) > 1 else "The American colonists"
+                ext_label = "Writing Extension (Appositive Phrases):"
+                blocks.extend([
+                    f"**{ext_label}** {t('twr_appositives_directions', lang=lang)}",
+                    f"1. **{app_subj1}**, ____________________________________________, influenced events across the colonies.",
+                    f"2. **{app_subj2}**, ____________________________________________, shaped colonial resistance during this era.",
+                ])
             keys.append(f"Writing Extension (Appositives): {kb['exemplar_central_idea']}")
+
+    return "\n\n".join(blocks), keys
 
     return "\n\n".join(blocks), keys
 
@@ -1308,18 +1499,29 @@ def build_standalone_strategy_handout(
     strategy_code: str,
     markdown_text: str = "",
     is_scaffolded: bool = False,
+    lang: str = "en",
 ) -> Dict[str, Any]:
     """
     Builds a focused, single-strategy standalone student worksheet and authentic student exemplar
     strictly grounded in the selected section spread, free from surrounding packet clutter.
-    Categories: 'central_idea', 'reading_organizer', 'anti_copycat', 'twr'.
+    Categories: 'central_idea', 'reading_organizer', 'anti_copycat', 'twr', 'vocab', 'assessment'.
+    Supports both English ('en') and authentic academic Spanish ('es').
     """
+    is_es = (lang == "es")
+    if is_es:
+        section_meta = get_localized_section_meta(section_meta, lang="es")
+
     if not markdown_text and section_meta.get("md_file"):
         md_p = Path(section_meta["md_file"])
         if md_p.exists():
             markdown_text = md_p.read_text(encoding="utf-8")
+    elif is_es and section_meta.get("md_file"):
+        # Ensure Spanish markdown is used when lang=='es'
+        md_p = Path(section_meta["md_file"])
+        if md_p.exists():
+            markdown_text = md_p.read_text(encoding="utf-8")
 
-    kb = build_dynamic_section_knowledge(section_meta, markdown_text)
+    kb = build_dynamic_section_knowledge(section_meta, markdown_text, lang=lang)
     ch_num = section_meta["chapter_num"]
     sec_code = str(section_meta["section_code"])
     sec_title = section_meta["title"]
@@ -1329,30 +1531,30 @@ def build_standalone_strategy_handout(
         s_obj = get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, strategy_code)
         std_code = "CCSS RH.6-8.2"
         comp_md_std, std_keys = _render_central_idea_and_anti_copycat_component(
-            section_meta, kb, strategy_code, "none", is_scaffolded=False
+            section_meta, kb, strategy_code, "none", is_scaffolded=False, lang=lang
         )
         comp_md_scaf, _ = _render_central_idea_and_anti_copycat_component(
-            section_meta, kb, strategy_code, "none", is_scaffolded=True
+            section_meta, kb, strategy_code, "none", is_scaffolded=True, lang=lang
         )
         keys = std_keys
     elif strategy_category == "reading_organizer":
         s_obj = get_strategy_by_code(READING_ORGANIZERS, strategy_code)
         std_code = "CCSS RH.6-8.5"
         comp_md_std, std_keys = _render_reading_organizer_component(
-            section_meta, kb, strategy_code, "mode_mixed_flexible", is_scaffolded=False
+            section_meta, kb, strategy_code, "mode_mixed_flexible", is_scaffolded=False, lang=lang
         )
         comp_md_scaf, _ = _render_reading_organizer_component(
-            section_meta, kb, strategy_code, "mode_mixed_flexible", is_scaffolded=True
+            section_meta, kb, strategy_code, "mode_mixed_flexible", is_scaffolded=True, lang=lang
         )
         keys = std_keys
     elif strategy_category == "anti_copycat":
         s_obj = get_strategy_by_code(PRINTED_MAIN_IDEA_MODES, strategy_code)
         std_code = "CCSS RH.6-8.2"
         comp_md_std, std_keys = _render_central_idea_and_anti_copycat_component(
-            section_meta, kb, "ci_03_what_so_what", strategy_code, is_scaffolded=False
+            section_meta, kb, "ci_03_what_so_what", strategy_code, is_scaffolded=False, lang=lang
         )
         comp_md_scaf, _ = _render_central_idea_and_anti_copycat_component(
-            section_meta, kb, "ci_03_what_so_what", strategy_code, is_scaffolded=True
+            section_meta, kb, "ci_03_what_so_what", strategy_code, is_scaffolded=True, lang=lang
         )
         keys = std_keys
     elif strategy_category == "twr":
@@ -1362,56 +1564,93 @@ def build_standalone_strategy_handout(
         std_code = "CCSS WHST.6-8.2"
         dummy_bp = {"optional_twr_strategy": strategy_code}
         comp_md_std, std_keys = _render_builtin_questions_and_optional_twr(
-            section_meta, kb, dummy_bp, {}, is_scaffolded=False
+            section_meta, kb, dummy_bp, {}, is_scaffolded=False, lang=lang
         )
         comp_md_scaf, _ = _render_builtin_questions_and_optional_twr(
-            section_meta, kb, dummy_bp, {}, is_scaffolded=True
+            section_meta, kb, dummy_bp, {}, is_scaffolded=True, lang=lang
         )
         keys = std_keys
     elif strategy_category in ("vocab", "vocabulary"):
         s_obj = {"name": "Vocabulary Practice", "short_name": "Vocabulary Practice", "description": "Key vocabulary application"}
         std_code = "CCSS L.6-8.4"
         vocab_items = section_meta.get("official_vocab", [])[:4]
-        words_str = ", ".join(v.get("word", "") for v in vocab_items if v.get("word")) or "key historical terms"
+        words_str = ", ".join(v.get("word", "") for v in vocab_items if v.get("word")) or ("términos históricos clave" if is_es else "key historical terms")
 
-        # Standard Edition: At-level retrieval practice (no word bank)
-        comp_md_std = (
-            f"**Official Section Vocabulary Practice:**\n\n"
-            f"**Directions:** Read each clue below. Using the section reading on pages {pp}, write the key vocabulary term that best matches each historical definition:\n\n"
-        )
-        for i, v in enumerate(vocab_items, 1):
-            defn = _get_clean_vocab_definition(v)
-            comp_md_std += f"{i}. _________________________ : {defn}\n\n"
+        if is_es:
+            comp_md_std = (
+                f"**{t('vocab_practice_title', lang='es')}**\n\n"
+                f"**{t('vocab_directions_std', lang='es', pages=pp)}**\n\n"
+            )
+            for i, v in enumerate(vocab_items, 1):
+                defn = v.get("definition") or "Concepto histórico clave definido en la lectura."
+                comp_md_std += f"{i}. _________________________ : {defn}\n\n"
 
-        # Scaffolded Edition: Supported matching with Word Bank (no first-letter giveaways)
-        comp_md_scaf = (
-            f"**Official Section Vocabulary Practice:**\n"
-            f"> **Word Bank:** {words_str}\n\n"
-            f"**Directions:** Use the **Word Bank** above to complete each clue with the correct vocabulary term from pages {pp}:\n\n"
-        )
-        for i, v in enumerate(vocab_items, 1):
-            defn = _get_clean_vocab_definition(v)
-            comp_md_scaf += f"{i}. _________________________ : {defn}\n\n"
+            comp_md_scaf = (
+                f"**{t('vocab_practice_title', lang='es')}**\n"
+                f"> **{t('word_bank_label', lang='es')}** {words_str}\n\n"
+                f"**{t('vocab_directions_scaf', lang='es', pages=pp)}**\n\n"
+            )
+            for i, v in enumerate(vocab_items, 1):
+                defn = v.get("definition") or "Concepto histórico clave definido en la lectura."
+                comp_md_scaf += f"{i}. _________________________ : {defn}\n\n"
 
-        keys = [f"Vocabulary Term {i} ({v.get('word', '')}): {_get_clean_vocab_definition(v)}" for i, v in enumerate(vocab_items, 1)]
+            keys = [f"Término de vocabulario {i} ({v.get('word', '')}): {v.get('definition', '')}" for i, v in enumerate(vocab_items, 1)]
+        else:
+            # Standard Edition: At-level retrieval practice (no word bank)
+            comp_md_std = (
+                f"**Official Section Vocabulary Practice:**\n\n"
+                f"**Directions:** Read each clue below. Using the section reading on pages {pp}, write the key vocabulary term that best matches each historical definition:\n\n"
+            )
+            for i, v in enumerate(vocab_items, 1):
+                defn = _get_clean_vocab_definition(v)
+                comp_md_std += f"{i}. _________________________ : {defn}\n\n"
+
+            # Scaffolded Edition: Supported matching with Word Bank (no first-letter giveaways)
+            comp_md_scaf = (
+                f"**Official Section Vocabulary Practice:**\n"
+                f"> **Word Bank:** {words_str}\n\n"
+                f"**Directions:** Use the **Word Bank** above to complete each clue with the correct vocabulary term from pages {pp}:\n\n"
+            )
+            for i, v in enumerate(vocab_items, 1):
+                defn = _get_clean_vocab_definition(v)
+                comp_md_scaf += f"{i}. _________________________ : {defn}\n\n"
+
+            keys = [f"Vocabulary Term {i} ({v.get('word', '')}): {_get_clean_vocab_definition(v)}" for i, v in enumerate(vocab_items, 1)]
     elif strategy_category in ("assessment", "quiz"):
         s_obj = {"name": "Section Check & Quiz", "short_name": "Section Assessment", "description": "Reading check and critical viewing questions"}
         std_code = "CCSS RH.6-8.1"
-        q1 = kb.get("say_something_q", "What was the most important historical development explained in this section?")
-        comp_md_std = (
-            f"**Section Reading Check & Synthesis:**\n\n"
-            f"1. **Reading Check Question:** {q1}\n"
-            f"_________________________________________________________________________________\n"
-            f"_________________________________________________________________________________\n\n"
-            "2. **Critical Viewing & Historical Reasoning:** How did these historical developments alter the relationship between American colonists and Great Britain?\n"
-            f"_________________________________________________________________________________\n"
-            f"_________________________________________________________________________________\n"
-        )
-        comp_md_scaf = comp_md_std + "\n*Sentence Starter: After these events occurred, colonists responded by...*"
-        keys = [
-            f"Reading Check Question 1: {kb.get('reading_check_a', 'Colonists resisted British policies.')}",
-            f"Critical Viewing / Synthesis Question 2: {kb.get('critical_viewing_a', 'Tensions escalated leading toward revolution.')}",
-        ]
+        if is_es:
+            q1 = kb.get("say_something_q", "¿Cuál fue el acontecimiento histórico más importante explicado en esta sección?")
+            comp_md_std = (
+                f"**Verificación de lectura y síntesis de la sección:**\n\n"
+                f"1. **Pregunta de verificación:** {q1}\n"
+                f"_________________________________________________________________________________\n"
+                f"_________________________________________________________________________________\n\n"
+                "2. **Observación crítica y razonamiento histórico:** ¿De qué manera estos acontecimientos alteraron la relación entre los colonos y Gran Bretaña?\n"
+                f"_________________________________________________________________________________\n"
+                f"_________________________________________________________________________________\n"
+            )
+            comp_md_scaf = comp_md_std + "\n*Inicio de oración: Después de que ocurrieron estos hechos, los colonos respondieron...*"
+            keys = [
+                f"Pregunta de verificación 1: {kb.get('reading_check_a', 'Los colonos se opusieron a las políticas.')}",
+                f"Observación crítica / Síntesis 2: {kb.get('critical_viewing_a', 'Las tensiones aumentaron.')}",
+            ]
+        else:
+            q1 = kb.get("say_something_q", "What was the most important historical development explained in this section?")
+            comp_md_std = (
+                f"**Section Reading Check & Synthesis:**\n\n"
+                f"1. **Reading Check Question:** {q1}\n"
+                f"_________________________________________________________________________________\n"
+                f"_________________________________________________________________________________\n\n"
+                "2. **Critical Viewing & Historical Reasoning:** How did these historical developments alter the relationship between American colonists and Great Britain?\n"
+                f"_________________________________________________________________________________\n"
+                f"_________________________________________________________________________________\n"
+            )
+            comp_md_scaf = comp_md_std + "\n*Sentence Starter: After these events occurred, colonists responded by...*"
+            keys = [
+                f"Reading Check Question 1: {kb.get('reading_check_a', 'Colonists resisted British policies.')}",
+                f"Critical Viewing / Synthesis Question 2: {kb.get('critical_viewing_a', 'Tensions escalated leading toward revolution.')}",
+            ]
     else:
         s_obj = {"name": "Strategy Model", "short_name": "Strategy", "description": ""}
         std_code = "CCSS ELA-History"
@@ -1427,47 +1666,80 @@ def build_standalone_strategy_handout(
         .replace("TWR: ", "")
         .strip()
     )
+    localized_strat_focus = get_localized_strategy_name(clean_strat_focus, lang=lang)
+    localized_strat_name = get_localized_strategy_name(strategy_name, lang=lang)
 
     # Standard Handout (standards excluded from student materials)
-    std_blocks = [
-        f"## Section {sec_code}: {sec_title} (Textbook pp. {pp})",
-        f"> **Strategy Focus:** {clean_strat_focus}",
-        "",
-        comp_md_std,
-        "",
-        f"[GRADE_BOX: Sec {sec_code}   _____/100]",
-    ]
+    if is_es:
+        std_blocks = [
+            f"## Sección {sec_code}: {sec_title} (págs. {pp})",
+            f"> **Enfoque de la estrategia:** {localized_strat_focus}",
+            "",
+            comp_md_std,
+            "",
+            f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+        ]
+    else:
+        std_blocks = [
+            f"## Section {sec_code}: {sec_title} (Textbook pp. {pp})",
+            f"> **Strategy Focus:** {clean_strat_focus}",
+            "",
+            comp_md_std,
+            "",
+            f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+        ]
     fitted_std, _ = enforce_page_budget_guardrail(
         sanitize_aesthetics("\n\n".join(b for b in std_blocks if b.strip())), target_pages=1
     )
 
     # Scaffolded Handout (standards excluded from student materials)
-    scaf_blocks = [
-        f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) *(Scaffolded Support)*",
-        f"> **Strategy Focus:** {clean_strat_focus}",
-        "",
-        comp_md_scaf,
-        "",
-        f"[GRADE_BOX: Sec {sec_code}   _____/100]",
-    ]
+    if is_es:
+        scaf_blocks = [
+            f"## Sección {sec_code}: {sec_title} (págs. {pp}) *(Edición con apoyo didáctico)*",
+            f"> **Enfoque de la estrategia:** {localized_strat_focus}",
+            "",
+            comp_md_scaf,
+            "",
+            f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+        ]
+    else:
+        scaf_blocks = [
+            f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) *(Scaffolded Support)*",
+            f"> **Strategy Focus:** {clean_strat_focus}",
+            "",
+            comp_md_scaf,
+            "",
+            f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+        ]
     fitted_scaf, _ = enforce_page_budget_guardrail(
         sanitize_aesthetics("\n\n".join(b for b in scaf_blocks if b.strip())), target_pages=1
     )
 
     # Authentic 8th-Grade Student Exemplar & Answer Key
-    exemplar_blocks = [
-        f"# Student Exemplar & Answer Key: Sec. {sec_code} — {strategy_name}",
-        f"**Textbook Reference:** pp. {pp}  |  **Target Standard:** {std_code}  |  **Score:** 100/100",
-        "",
-        "### Authentic 8th-Grade Student Model Response",
-        f"> *Student Response Sample for Section {sec_code}:*",
-        "",
-    ]
+    if is_es:
+        exemplar_blocks = [
+            f"# Modelo y clave de respuestas para el docente: Sec. {sec_code} — {localized_strat_name}",
+            f"**Referencia del libro:** págs. {pp}  |  **Estándar:** {std_code}  |  **Puntuación:** 100/100",
+            "",
+            "### Respuesta modelo auténtica de estudiante de 8.º grado",
+            f"> *Muestra de respuesta del estudiante para la Sección {sec_code}:*",
+            "",
+        ]
+    else:
+        exemplar_blocks = [
+            f"# Student Exemplar & Answer Key: Sec. {sec_code} — {strategy_name}",
+            f"**Textbook Reference:** pp. {pp}  |  **Target Standard:** {std_code}  |  **Score:** 100/100",
+            "",
+            "### Authentic 8th-Grade Student Model Response",
+            f"> *Student Response Sample for Section {sec_code}:*",
+            "",
+        ]
     for k_item in keys:
         exemplar_blocks.append(f"- **{k_item}**")
 
     if kb.get("printed_main_idea"):
-        exemplar_blocks.append(f"\n*Textbook Source Grounding (p. {section_meta.get('start_page', '')}):* \"{kb['printed_main_idea']}\"")
+        ground_lbl = f"*Fundamentación en el libro de texto (pág. {section_meta.get('start_page', '')}):*" if is_es else f"*Textbook Source Grounding (p. {section_meta.get('start_page', '')}):*"
+        exemplar_blocks.append(f"\n{ground_lbl} \"{kb['printed_main_idea']}\"")
 
     exemplar_md = "\n\n".join(exemplar_blocks)
 
@@ -1475,10 +1747,14 @@ def build_standalone_strategy_handout(
         "student_standard_md": fitted_std,
         "student_scaffolded_md": fitted_scaf,
         "exemplar_md": exemplar_md,
-        "strategy_name": strategy_name,
+        "strategy_name": localized_strat_name,
         "standard_code": std_code,
         "section_code": sec_code,
+        "section_title": sec_title,
+        "printed_pages": pp,
         "chapter_num": ch_num,
+        "keys": keys,
+        "lang": lang,
     }
 
 
@@ -1728,6 +2004,7 @@ def _render_front_cover_page(
     chapter_title: str,
     pages_config: List[Dict[str, Any]],
     cover_mode: str = "central_idea_tracker",
+    lang: str = "en",
 ) -> str:
     """
     Renders the front cover page for modular packets:
@@ -1738,13 +2015,16 @@ def _render_front_cover_page(
     if cover_mode == "none":
         return ""
 
+    is_es = (lang == "es")
     ch_std = CHAPTER_STANDARDS_MAP.get(str(chapter_num), CHAPTER_STANDARDS_MAP.get("5", {}))
-    eq = ch_std.get("essential_question", "What key historical developments shaped this era?")
+    eq = ch_std.get("essential_question", "¿Qué acontecimientos históricos marcaron esta época?" if is_es else "What key historical developments shaped this era?")
 
     seen = set()
     sec_entries = []
     for p in pages_config:
         sm = p.get("section_meta", {})
+        if is_es:
+            sm = get_localized_section_meta(sm, lang="es")
         code = str(sm.get("section_code", ""))
         if code and code not in seen:
             seen.add(code)
@@ -1754,33 +2034,60 @@ def _render_front_cover_page(
                 "pages": sm.get("printed_pages", ""),
             })
 
-    cover_lines = [
-        f"# Chapter {chapter_num}: {chapter_title} — Curriculum Packet",
-        f"**Chapter Essential Question:** *{eq}*",
-    ]
-
-    if cover_mode == "score_checklist":
-        cover_lines.extend([
-            "**Packet Instructions:** Complete each section activity in this packet and track your completion stamps or scores below.",
-            "[CENTER_HEADING: Chapter Section Completion & Score Tracker]",
-            "| Section # | Section Title & Textbook Pages | Status / Completion Date | Teacher Stamp / Score |",
-            "| :--- | :--- | :---: | :---: |",
-        ])
-        for s in sec_entries:
-            cover_lines.append(
-                f"| **Sec. {s['code']}** | {s['title']} *(pp. {s['pages']})* | [   /   ] | _____ / 100 |"
-            )
+    if is_es:
+        cover_lines = [
+            f"# Capítulo {chapter_num}: {chapter_title} — Cuaderno de trabajo",
+            f"**Pregunta esencial del capítulo:** *{eq}*",
+        ]
+        if cover_mode == "score_checklist":
+            cover_lines.extend([
+                "**Instrucciones del cuaderno:** Completa cada actividad de las secciones y registra tus sellos de verificación o calificaciones a continuación.",
+                "[CENTER_HEADING: Registro de calificaciones y verificación de secciones]",
+                "| Sección # | Título de la sección y páginas | Estado / Fecha | Sello / Calificación |",
+                "| :--- | :--- | :---: | :---: |",
+            ])
+            for s in sec_entries:
+                cover_lines.append(
+                    f"| **Sec. {s['code']}** | {s['title']} *(págs. {s['pages']})* | [   /   ] | _____ / 100 |"
+                )
+        else:
+            cover_lines.extend([
+                "**Registro de ideas centrales de la sección:** A medida que completemos cada sección, escribe tu **conclusión de la idea central en 1 oración** en la tabla. ¡Esta portada te servirá como guía de estudio al final de la unidad!",
+                "[CENTER_HEADING: Registro acumulativo de ideas centrales para la guía de estudio]",
+                "| Sección y páginas | Idea central en 1 oración (Guía de estudio) | Sello del docente |",
+                "| :--- | :--- | :---: |",
+            ])
+            for s in sec_entries:
+                cover_lines.append(
+                    f"| **Sec. {s['code']}:** {s['title']}<br>*(págs. {s['pages']})* | ________________________________________________________________<br>________________________________________________________________ | [ SELLO ] |"
+                )
     else:
-        cover_lines.extend([
-            "**Chapter Central Idea Study Guide Tracker:** As we complete each section in this unit, record your **1-sentence Central Idea takeaway** in the table below. This cover page serves as your end-of-unit study guide!",
-            "[CENTER_HEADING: Cumulative Central Idea Study Guide Tracker]",
-            "| Section & Pages | 1-Sentence Central Idea Takeaway (Study Guide Log) | Teacher Stamp |",
-            "| :--- | :--- | :---: |",
-        ])
-        for s in sec_entries:
-            cover_lines.append(
-                f"| **Sec. {s['code']}:** {s['title']}<br>*(pp. {s['pages']})* | ________________________________________________________________<br>________________________________________________________________ | [ STAMP ] |"
-            )
+        cover_lines = [
+            f"# Chapter {chapter_num}: {chapter_title} — Curriculum Packet",
+            f"**Chapter Essential Question:** *{eq}*",
+        ]
+        if cover_mode == "score_checklist":
+            cover_lines.extend([
+                "**Packet Instructions:** Complete each section activity in this packet and track your completion stamps or scores below.",
+                "[CENTER_HEADING: Chapter Section Completion & Score Tracker]",
+                "| Section # | Section Title & Textbook Pages | Status / Completion Date | Teacher Stamp / Score |",
+                "| :--- | :--- | :---: | :---: |",
+            ])
+            for s in sec_entries:
+                cover_lines.append(
+                    f"| **Sec. {s['code']}** | {s['title']} *(pp. {s['pages']})* | [   /   ] | _____ / 100 |"
+                )
+        else:
+            cover_lines.extend([
+                "**Chapter Central Idea Study Guide Tracker:** As we complete each section in this unit, record your **1-sentence Central Idea takeaway** in the table below. This cover page serves as your end-of-unit study guide!",
+                "[CENTER_HEADING: Cumulative Central Idea Study Guide Tracker]",
+                "| Section & Pages | 1-Sentence Central Idea Takeaway (Study Guide Log) | Teacher Stamp |",
+                "| :--- | :--- | :---: |",
+            ])
+            for s in sec_entries:
+                cover_lines.append(
+                    f"| **Sec. {s['code']}:** {s['title']}<br>*(pp. {s['pages']})* | ________________________________________________________________<br>________________________________________________________________ | [ STAMP ] |"
+                )
 
     return "\n".join(cover_lines).strip()
 
@@ -1791,10 +2098,12 @@ def build_custom_modular_packet(
     cover_mode: str = "central_idea_tracker",
     footer_mode: str = "gb_01_points_stamp",
     packet_title: Optional[str] = None,
+    lang: str = "en",
 ) -> Dict[str, Any]:
     """
     Builds a custom modular student packet and matching teacher answer key page-by-page
     from the Dynamic Page Tray.
+    Supports English ('en') and authentic Spanish ('es') student handouts.
     Each item in pages_config specifies:
       - section_meta: Dict[str, Any]
       - strategy_type: str (e.g. 'reading_organizer', 'central_idea', 'anti_copycat', 'twr', 'vocab', 'assessment')
@@ -1829,9 +2138,13 @@ def build_custom_modular_packet(
             "primary_chapter_title": "Curriculum",
             "primary_section_code": "1.1",
             "primary_section_title": "Section",
+            "lang": lang,
         }
 
     first_sec = pages_config[0]["section_meta"]
+    if lang == "es":
+        first_sec = get_localized_section_meta(first_sec, lang="es")
+
     ch_num = first_sec.get("chapter_num", 1)
     ch_title = first_sec.get("chapter_title", f"Chapter {ch_num}")
     sec_code = str(first_sec.get("section_code", "1.1"))
@@ -1841,13 +2154,14 @@ def build_custom_modular_packet(
     all_sec_codes = [str(p["section_meta"].get("section_code", "")) for p in pages_config]
     is_single_sec = len(all_ch_nums) == 1 and len(set(all_sec_codes)) == 1
 
+    lang_suffix = "_ES" if lang == "es" else ""
     if is_single_sec:
-        base_filename = f"Chp{ch_num:02d}_Sec{sec_code}_Packet"
+        base_filename = f"Chp{ch_num:02d}_Sec{sec_code}_Packet{lang_suffix}"
     elif len(all_ch_nums) == 1:
         clean_sec_range = f"{all_sec_codes[0]}-{all_sec_codes[-1]}" if all_sec_codes else f"Sec{sec_code}"
-        base_filename = f"Chp{ch_num:02d}_Sec{clean_sec_range}_Packet"
+        base_filename = f"Chp{ch_num:02d}_Sec{clean_sec_range}_Packet{lang_suffix}"
     else:
-        base_filename = f"Custom_Chp{all_ch_nums[0]}-Chp{all_ch_nums[-1]}_Packet"
+        base_filename = f"Custom_Chp{all_ch_nums[0]}-Chp{all_ch_nums[-1]}_Packet{lang_suffix}"
 
     student_pages_md = []
     teacher_pages_md = []
@@ -1855,7 +2169,7 @@ def build_custom_modular_packet(
     # Optional Cover Page
     has_cover = bool(include_cover and len(pages_config) >= 2 and cover_mode != "none")
     if has_cover:
-        cov_md = _render_front_cover_page(ch_num, ch_title, pages_config, cover_mode)
+        cov_md = _render_front_cover_page(ch_num, ch_title, pages_config, cover_mode, lang=lang)
         if cov_md:
             student_pages_md.append(cov_md)
             teacher_pages_md.append(cov_md)
@@ -1874,6 +2188,7 @@ def build_custom_modular_packet(
             strategy_code=s_code,
             markdown_text=raw_md,
             is_scaffolded=is_scaf,
+            lang=lang,
         )
 
         std_md = handout["student_scaffolded_md" if is_scaf else "student_standard_md"]
