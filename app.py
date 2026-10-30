@@ -37,9 +37,6 @@ from src.blueprint_designer import (
     save_chapter_blueprint,
     recommend_section_strategies,
 )
-import importlib
-import src.packet_builder
-importlib.reload(src.packet_builder)
 from src.packet_builder import (
     generate_section_packet,
     build_standalone_strategy_handout,
