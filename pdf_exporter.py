@@ -100,7 +100,87 @@ CHROMIUM_ARGS = [
     "--disable-dev-shm-usage",
     "--disable-gpu",
     "--no-zygote",
+    "--single-process",
+    "--disable-extensions",
+    "--disable-background-networking",
+    "--disable-default-apps",
+    "--disable-sync",
+    "--renderer-process-limit=1",
+    "--js-flags=--max-old-space-size=128",
 ]
+
+
+def compile_both_pdfs(
+    html1: str,
+    title1: str,
+    html2: str,
+    title2: str,
+) -> Tuple[bytes, bytes]:
+    """
+    Compiles both student and teacher PDFs in a SINGLE Chromium session,
+    cutting memory consumption and launch time by more than half to prevent OOM on cloud containers.
+    """
+    import shutil
+    import subprocess
+    import sys
+    from playwright.sync_api import sync_playwright
+
+    full_html1 = _wrap_in_full_html_doc(html1, title=title1)
+    full_html2 = _wrap_in_full_html_doc(html2, title=title2)
+
+    with sync_playwright() as p:
+        browser = None
+        launch_err = None
+
+        # 1. Try launching default Chromium with container sandbox arguments
+        try:
+            browser = p.chromium.launch(args=CHROMIUM_ARGS, headless=True)
+        except Exception as e:
+            launch_err = e
+            logger.info(f"Playwright default chromium launch failed: {e}")
+
+        # 2. If launch failed, try auto-installing browser binaries
+        if browser is None:
+            try:
+                subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=False)
+                browser = p.chromium.launch(args=CHROMIUM_ARGS, headless=True)
+            except Exception as e2:
+                launch_err = e2
+                logger.info(f"Playwright install and launch attempt failed: {e2}")
+
+        # 3. If still failed, check for system-installed Chromium binary (from packages.txt)
+        if browser is None:
+            sys_chrome = shutil.which("chromium") or shutil.which("chromium-browser") or shutil.which("google-chrome")
+            if sys_chrome:
+                try:
+                    browser = p.chromium.launch(executable_path=sys_chrome, args=CHROMIUM_ARGS, headless=True)
+                except Exception as e3:
+                    launch_err = e3
+                    logger.info(f"System chromium launch failed: {e3}")
+
+        if browser is None:
+            raise RuntimeError(f"Could not launch Chromium for PDF generation on this host: {launch_err}")
+
+        page = browser.new_page()
+        page.set_content(full_html1, wait_until="networkidle")
+        pdf1 = page.pdf(
+            format="Letter",
+            print_background=True,
+            margin={"top": "0.45in", "bottom": "0.45in", "left": "0.45in", "right": "0.45in"},
+            prefer_css_page_size=True,
+        )
+
+        page.set_content(full_html2, wait_until="networkidle")
+        pdf2 = page.pdf(
+            format="Letter",
+            print_background=True,
+            margin={"top": "0.45in", "bottom": "0.45in", "left": "0.45in", "right": "0.45in"},
+            prefer_css_page_size=True,
+        )
+
+        browser.close()
+
+    return pdf1, pdf2
 
 
 def html_to_pdf_bytes(html_content: str, title: str = "Curriculum Document") -> bytes:

@@ -55,6 +55,7 @@ from src.strategy_thumbnails import (
 )
 from pdf_exporter import (
     html_to_pdf_bytes,
+    compile_both_pdfs,
     create_pdf_bundle_zip,
     upload_pdf_to_google_drive,
     upload_packet_bundle_to_google_drive,
@@ -1030,6 +1031,12 @@ def compile_pdf_cached(html_content: str, title: str) -> bytes:
     return html_to_pdf_bytes(html_content, title=title)
 
 
+@st.cache_data(show_spinner=False)
+def compile_both_pdfs_cached(html1: str, title1: str, html2: str, title2: str) -> Tuple[bytes, bytes]:
+    """Caches compiled vector PDF bytes for student and teacher answer key generated in a single browser session."""
+    return compile_both_pdfs(html1, title1, html2, title2)
+
+
 def verify_access() -> bool:
     """Passcode protection gate for secure multi-user and cloud access."""
     if st.session_state.get("authenticated", False):
@@ -1129,34 +1136,20 @@ if "nav" in st.query_params:
     target_nav = str(st.query_params["nav"]).strip().lower()
     if target_nav in ["packet", "packet_export", "gallery", "home"]:
         st.session_state["nav_view"] = target_nav
-    has_auth = st.query_params.get("auth") == "ok" or st.session_state.get("authenticated", False)
-    try:
-        del st.query_params["nav"]
-    except Exception:
-        pass
-    if has_auth:
-        st.query_params["auth"] = "ok"
 
 if "lang" in st.query_params:
     target_lang = str(st.query_params["lang"]).strip().lower()
     if target_lang in ["en", "es"]:
         st.session_state["handout_language"] = target_lang
-    try:
-        del st.query_params["lang"]
-    except Exception:
-        pass
 
 if "strategy" in st.query_params:
-    st.session_state["gal_active_tile_code"] = str(st.query_params["strategy"]).strip()
-    try:
-        del st.query_params["strategy"]
-    except Exception:
-        pass
+    strat = str(st.query_params["strategy"]).strip()
+    if strat:
+        st.session_state["gal_active_tile_code"] = strat
 
 if "ch" in st.query_params:
     try:
         st.session_state["selected_ch_num"] = int(st.query_params["ch"])
-        del st.query_params["ch"]
     except Exception:
         pass
 
@@ -2216,6 +2209,11 @@ elif st.session_state["nav_view"] == "gallery":
         if st.button("<- Main Menu", use_container_width=True, key="btn_back_gallery"):
             st.session_state["nav_view"] = "home"
             st.session_state["gal_active_tile_code"] = None
+            st.query_params["nav"] = "home"
+            try:
+                del st.query_params["strategy"]
+            except Exception:
+                pass
             st.rerun()
 
     with nav_c2:
@@ -2236,6 +2234,15 @@ elif st.session_state["nav_view"] == "gallery":
         gal_ch_sections = chapters_map[gal_ch_num]["sections"]
 
     active_tile_code = st.session_state.get("gal_active_tile_code", None)
+    st.query_params["nav"] = "gallery"
+    st.query_params["ch"] = str(gal_ch_num)
+    if active_tile_code:
+        st.query_params["strategy"] = active_tile_code
+    else:
+        try:
+            del st.query_params["strategy"]
+        except Exception:
+            pass
 
     with nav_c3:
         if active_tile_code == "ro_02_multi_section_cause_effect":
@@ -2592,8 +2599,9 @@ elif st.session_state["nav_view"] == "gallery":
         bundle_filename = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Bundle{hs_suffix}.zip"
 
         try:
-            student_pdf_bytes = compile_pdf_cached(student_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student{hs_suffix}")
-            teacher_pdf_bytes = compile_pdf_cached(teacher_html, title=f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar{hs_suffix}")
+            s_title = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student{hs_suffix}"
+            t_title = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar{hs_suffix}"
+            student_pdf_bytes, teacher_pdf_bytes = compile_both_pdfs_cached(student_html, s_title, teacher_html, t_title)
             single_bundle_zip = create_pdf_bundle_zip({
                 student_filename: student_pdf_bytes,
                 teacher_filename: teacher_pdf_bytes,
