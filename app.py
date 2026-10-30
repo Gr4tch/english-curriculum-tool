@@ -39,6 +39,7 @@ from src.blueprint_designer import (
 from src.packet_builder import (
     generate_section_packet,
     build_standalone_strategy_handout,
+    build_multi_section_strategy_handout,
     build_chapter_student_booklet,
     build_chapter_master_teacher_plan,
     build_chapter_review_and_assessment,
@@ -2151,14 +2152,30 @@ elif st.session_state["nav_view"] == "gallery":
         )
         gal_ch_sections = chapters_map[gal_ch_num]["sections"]
 
+    active_tile_code = st.session_state.get("gal_active_tile_code", None)
+
     with nav_c3:
-        gal_selected_sec = st.selectbox(
-            "Section Spread to Practice:",
-            options=gal_ch_sections,
-            format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']})",
-            key=f"gal_select_sec_{gal_ch_num}",
-            label_visibility="collapsed",
-        )
+        if active_tile_code == "ro_02_multi_section_cause_effect":
+            def_secs = gal_ch_sections[:2] if len(gal_ch_sections) >= 2 else gal_ch_sections
+            gal_selected_secs = st.multiselect(
+                "Select 2 or 3 Sections to Connect:",
+                options=gal_ch_sections,
+                default=st.session_state.get(f"gal_multi_secs_{gal_ch_num}", def_secs),
+                max_selections=3,
+                format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']})",
+                key=f"gal_multi_secs_{gal_ch_num}",
+                label_visibility="collapsed",
+            )
+            gal_selected_sec = gal_selected_secs[0] if gal_selected_secs else gal_ch_sections[0]
+        else:
+            gal_selected_sec = st.selectbox(
+                "Section Spread to Practice:",
+                options=gal_ch_sections,
+                format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']})",
+                key=f"gal_select_sec_{gal_ch_num}",
+                label_visibility="collapsed",
+            )
+            gal_selected_secs = [gal_selected_sec]
 
     with nav_lang:
         cur_lang_idx = 1 if st.session_state.get("handout_language") == "es" else 0
@@ -2192,8 +2209,6 @@ elif st.session_state["nav_view"] == "gallery":
     gal_md_path = resolve_file_path(gal_selected_sec.get("md_file"))
     gal_raw_md = gal_md_path.read_text(encoding="utf-8") if gal_md_path.exists() else ""
 
-    active_tile_code = st.session_state.get("gal_active_tile_code", None)
-
     if not active_tile_code:
         # ── Step 2: All-in-One Visual Strategy Grid (Open Browsing Mode) ──
         st.markdown("<div style='font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.20rem;'>All-in-One Visual Strategy Grid — Choose a Worksheet Layout</div>", unsafe_allow_html=True)
@@ -2202,10 +2217,10 @@ elif st.session_state["nav_view"] == "gallery":
         category_filter = st.radio(
             "Filter by Pedagogical Category:",
             options=[
-                "All Strategies (18)",
+                "All Strategies (19)",
                 "Central Idea (4)",
                 "Anti-Copycat (3)",
-                "Active Reading (5)",
+                "Active Reading (6)",
                 "The Writing Revolution (4)",
                 "Vocabulary & Assessment (2)",
             ],
@@ -2291,10 +2306,10 @@ elif st.session_state["nav_view"] == "gallery":
             min_cat_filter = st.radio(
                 "Filter by Pedagogical Category:",
                 options=[
-                    "All Strategies (18)",
+                    "All Strategies (19)",
                     "Central Idea (4)",
                     "Anti-Copycat (3)",
-                    "Active Reading (5)",
+                    "Active Reading (6)",
                     "The Writing Revolution (4)",
                     "Vocabulary & Assessment (2)",
                 ],
@@ -2322,14 +2337,30 @@ elif st.session_state["nav_view"] == "gallery":
             )
 
         # Build focused handout
-        handout_data = build_standalone_strategy_handout(
-            section_meta=gal_selected_sec,
-            strategy_category=active_cat_key,
-            strategy_code=active_tile_code,
-            markdown_text=gal_raw_md,
-            is_scaffolded=is_scaf_ws,
-            lang=st.session_state.get("handout_language", "en"),
-        )
+        if active_tile_code == "ro_02_multi_section_cause_effect":
+            if len(gal_selected_secs) < 2:
+                st.warning("Please select at least 2 section spreads (up to 3) from the dropdown above to generate the Multi-Section Cause & Effect flow.")
+                secs_to_use = gal_ch_sections[:2] if len(gal_ch_sections) >= 2 else gal_selected_secs
+            else:
+                secs_to_use = gal_selected_secs[:3]
+
+            handout_data = build_multi_section_strategy_handout(
+                section_metas=secs_to_use,
+                strategy_code=active_tile_code,
+                is_scaffolded=is_scaf_ws,
+                lang=st.session_state.get("handout_language", "en"),
+            )
+            gal_sec_code = handout_data["section_code"]
+        else:
+            handout_data = build_standalone_strategy_handout(
+                section_meta=gal_selected_sec,
+                strategy_category=active_cat_key,
+                strategy_code=active_tile_code,
+                markdown_text=gal_raw_md,
+                is_scaffolded=is_scaf_ws,
+                lang=st.session_state.get("handout_language", "en"),
+            )
+            gal_sec_code = str(gal_selected_sec["section_code"])
 
         std_md = handout_data["student_standard_md"]
         scaf_md = handout_data["student_scaffolded_md"]

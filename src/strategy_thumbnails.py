@@ -200,6 +200,38 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
         """,
     },
     {
+        "code": "ro_02_multi_section_cause_effect",
+        "category": "Active Reading",
+        "category_badge": "ws-badge-green",
+        "name": "Multi-Section Cause & Effect",
+        "subtitle": "Cross-Section Flow (2–3 Spreads)",
+        "best_for": "Tracing escalating historical causes and consequences across 2 or 3 sections.",
+        "thumbnail_svg": """
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:4px; height:74px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="display:flex; background:#dcfce7; border-radius:2px; font-size:7px; font-weight:700; padding:2px; color:#166534;">
+                <div style="width:34%;">SECTION</div>
+                <div style="width:33%;">CAUSE</div>
+                <div style="width:33%;">EFFECT</div>
+            </div>
+            <div style="display:flex; gap:2px; padding:1px 0; font-size:6px; color:#334155;">
+                <div style="width:34%; font-weight:700;">Sec 1.1</div>
+                <div style="width:33%;">War debt...</div>
+                <div style="width:33%; border-bottom:1px solid #64748b; height:5px;"></div>
+            </div>
+            <div style="display:flex; gap:2px; padding:1px 0; font-size:6px; color:#334155;">
+                <div style="width:34%; font-weight:700;">Sec 1.2</div>
+                <div style="width:33%; border-bottom:1px solid #64748b; height:5px;"></div>
+                <div style="width:33%;">Protests...</div>
+            </div>
+            <div style="display:flex; gap:2px; padding:1px 0; font-size:6px; color:#334155;">
+                <div style="width:34%; font-weight:700;">Sec 1.3</div>
+                <div style="width:33%;">Stamp Act...</div>
+                <div style="width:33%; border-bottom:1px solid #64748b; height:5px;"></div>
+            </div>
+        </div>
+        """,
+    },
+    {
         "code": "read_05_compare_perspectives",
         "category": "Active Reading",
         "category_badge": "ws-badge-green",

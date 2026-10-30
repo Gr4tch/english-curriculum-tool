@@ -1414,7 +1414,7 @@ def format_booklet_for_web(booklet_md: str) -> str:
                     f'<div style="font-size: 1.15rem; font-weight: 700; color: #064e3b; margin: 0.15rem 0 0.25rem 0;">{strat} — <span style="color: #10b981;">{score_label}</span></div>\n'
                 )
             page = re.sub(
-                r"^#\s+(?:Student Exemplar & Answer Key|Modelo y clave de respuestas para el docente):\s*Sec\.\s*([^\s—]+)\s*—\s*([^\n]+)",
+                r"^#\s+(?:Student Exemplar & Answer Key|Modelo y clave de respuestas para el docente):\s*(?:Sec\.|Secs\.|Secciones|Sección)?\s*([^\s—]+)\s*—\s*([^\n]+)",
                 _rep_ex_header,
                 page,
                 flags=re.MULTILINE,
@@ -1498,8 +1498,8 @@ def format_booklet_for_web(booklet_md: str) -> str:
             formatted_pages.append(wrapped_page)
 
         # 7. Standard Student Section Handout
-        elif re.search(r"^##\s+(?:Section|Sección)\s+[\d\.]+", page, flags=re.MULTILINE):
-            is_es_page = bool(re.search(r"^##\s+Sección", page, flags=re.MULTILINE))
+        elif re.search(r"^##\s+(?:Section|Sección|Sections|Secciones)\s+[\d\.\–\-]+", page, flags=re.MULTILINE):
+            is_es_page = bool(re.search(r"^##\s+(?:Sección|Secciones)", page, flags=re.MULTILINE))
             def _rep_handout_header(m):
                 sec_lbl = m.group(1).strip()
                 sec_id = m.group(2).strip()
@@ -1519,14 +1519,16 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 pgs_formatted = f" <span style=\"font-size: 0.72rem; font-weight: 600; opacity: 0.9;\">{pgs_str}</span>" if pgs_str else ""
 
                 if is_es_page:
-                    badge_markup = f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">Ficha de trabajo Sección {sec_id} • {clean_title}{pgs_formatted}</span></div>\n'
+                    sec_name_clean = "Secciones" if "secc" in sec_lbl.lower() and "es" in sec_lbl.lower() else "Sección"
+                    badge_markup = f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">Ficha de trabajo {sec_name_clean} {sec_id} • {clean_title}{pgs_formatted}</span></div>\n'
                     meta_row = (
                         f'<div class="ws-name-date-row" style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
                         f'<span><b>Nombre:</b> ___________________________</span><span><b>Fecha:</b> _____________</span><span><b>Clase:</b> ________</span>\n'
                         f'</div>\n'
                     )
                 else:
-                    badge_markup = f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">Section {sec_id} Handout • {clean_title}{pgs_formatted}</span></div>\n'
+                    sec_name_clean = "Sections" if sec_lbl.lower().startswith("section") and sec_lbl.lower().endswith("s") else "Section"
+                    badge_markup = f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">{sec_name_clean} {sec_id} Handout • {clean_title}{pgs_formatted}</span></div>\n'
                     meta_row = (
                         f'<div class="ws-name-date-row" style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
                         f'<span><b>Name:</b> ___________________________</span><span><b>Date:</b> _____________</span><span><b>Class:</b> ________</span>\n'
@@ -1535,7 +1537,7 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 return badge_markup + meta_row
 
             page = re.sub(
-                r"^##\s+(Section|Sección)\s+([\d\.]+):?\s+(.*)",
+                r"^##\s+(Section|Sección|Sections|Secciones)\s+([\d\.\–\-]+):?\s+(.*)",
                 _rep_handout_header,
                 page,
                 flags=re.MULTILINE,

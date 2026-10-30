@@ -211,8 +211,29 @@ READING_ORGANIZERS: List[Dict[str, str]] = [
 | **Cause 1:** Britain stationed 10,000 soldiers in the colonies and passed the Quartering Act (p. 178). | **Effect 1:** Colonists, especially in New York, felt their rights were violated and assemblies refused to pay for soldiers' supplies. |
 | **Cause 2:** British settlers moved onto Native American lands west of the Appalachian Mountains without compensation (p. 179). | **Effect 2:** Pontiac led Native American attacks on British frontier forts, prompting the Proclamation of 1763. |""",
         "scaffolded_md": """*Scaffolded Support Elements:*
-- **Effect 1 Stem:** As a result of the Quartering Act, colonial assemblies... [Word Bank: refused, protested, supplies]
-- **Cause 2 Stem:** Pontiac attacked frontier forts because British settlers... [Word Bank: Native lands, hunting grounds, encroached]""",
+- **Effect 1 Starter:** *As a result,* ____________________________________
+- **Cause 2 Starter:** *Because* _______________________________________""",
+    },
+    {
+        "code": "ro_02_multi_section_cause_effect",
+        "name": "Multi-Section Cause & Effect Synthesis",
+        "short_name": "Multi-Section Cause & Effect",
+        "requires_audit": "cause_effect",
+        "description": "Cross-section synthesis organizer tracing cascading historical causes and consequences across 2 or 3 section spreads (4 to 6 rows).",
+        "visual_preview_md": """| Section & Subheading | Historical Cause (Action / Policy / Event) | Historical Effect (Reaction / Outcome) |
+| :--- | :--- | :--- |
+| **Sec 1.1 • 1. PROBLEMS ARISE** | King George III wanted to maintain control after the French and Indian War. | **Effect 1:** ......................................................................... |
+| **Sec 1.1 • 2. SOLDIERS IN THE COLONIES** | ......................................................................... | The king issued the Proclamation of 1763 to stop western settlement. |
+| **Sec 1.2 • 3. WAR DEBT** | Britain accumulated massive debt from the French and Indian War. | **Effect 3:** ......................................................................... |""",
+        "exemplar_md": """**Student Exemplar:**
+| Section & Subheading | Historical Cause (Action / Policy / Event) | Historical Effect (Reaction / Outcome) |
+| :--- | :--- | :--- |
+| **Sec 1.1 • 1. PROBLEMS ARISE** | King George III wanted to maintain control after the French and Indian War. | Colonists grew resentful of royal proclamations restricting western expansion. |
+| **Sec 1.1 • 2. SOLDIERS IN THE COLONIES** | Britain stationed 10,000 soldiers in colonial towns to enforce royal rule. | Parliament passed the Quartering Act forcing colonists to house British troops. |
+| **Sec 1.2 • 3. WAR DEBT** | Britain accumulated massive debt from the French and Indian War. | Prime Minister George Grenville decided to tax the colonies directly for revenue. |""",
+        "scaffolded_md": """*Scaffolded Support Elements:*
+- **Odd Row Starters:** *As a result,* ____________________________________
+- **Even Row Starters:** *Because* _______________________________________""",
     },
     {
         "code": "read_02_say_something",

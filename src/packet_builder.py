@@ -640,13 +640,13 @@ def build_dynamic_section_knowledge(
 
     # Parse subheadings and first paragraphs from markdown_text
     sh_blocks = re.findall(
-        r"####\s+\d+\.\s+([^\n(]+)\s+\((?:p\.|pág\.)\s*(\d+)\)\n(.*?)(?=(?:\n####\s+\d+\.|\n---|\Z))",
+        r"####\s+\d+\.\s+([\s\S]+?)\s+\((?:p\.|pág\.)\s*(\d+)\)\n(.*?)(?=(?:\n####\s+\d+\.|\n---|\Z))",
         markdown_text or "",
         flags=re.DOTALL,
     )
     subheadings = []
     for sh_title, sh_pg, sh_body in sh_blocks:
-        clean_title = sh_title.strip()
+        clean_title = re.sub(r"\s+", " ", sh_title).strip()
         if NON_BLUE_SUBHEADINGS_REGEX.search(clean_title):
             continue
 
@@ -866,13 +866,13 @@ def _render_reading_organizer_component(
             if idx % 2 == 1:
                 c_cell = f"**{idx}. {sh['name']}:** {sh['cause']}"
                 if is_scaffolded:
-                    e_cell = f"**{eff_lbl} {idx}:** {res_lbl} {sh['effect'][:28]} _____________________________<br>______________________________________________________."
+                    e_cell = f"**{eff_lbl} {idx}:** *{res_lbl}* __________________________________________________<br>______________________________________________________."
                 else:
                     e_cell = f"**{eff_lbl} {idx}:**<br>______________________________________________________<br>______________________________________________________"
                 keys.append(f"Row {idx} Effect ({sh['name']}): {sh['effect']} {sh['citation']}")
             else:
                 if is_scaffolded:
-                    c_cell = f"**{idx}. {sh['name']}:** {bec_lbl} {sh['cause'][:28]} _____________________________<br>______________________________________________________."
+                    c_cell = f"**{idx}. {sh['name']}:** *{bec_lbl}* __________________________________________________<br>______________________________________________________."
                 else:
                     c_cell = f"**{idx}. {sh['name']}:**<br>______________________________________________________<br>______________________________________________________"
                 e_cell = f"**{eff_lbl} {idx}:** {sh['effect']}"
@@ -1768,6 +1768,213 @@ def build_standalone_strategy_handout(
         "printed_pages": pp,
         "chapter_num": ch_num,
         "keys": keys,
+        "lang": lang,
+    }
+
+
+def build_multi_section_strategy_handout(
+    section_metas: List[Dict[str, Any]],
+    strategy_code: str = "ro_02_multi_section_cause_effect",
+    is_scaffolded: bool = False,
+    lang: str = "en",
+) -> Dict[str, Any]:
+    """
+    Builds a standalone multi-section Cause & Effect synthesis worksheet spanning 2 to 3 sections.
+    Each section contributes its two authentic blue subheadings (4 to 6 rows total).
+    Standard Edition provides alternating blank response lines.
+    Scaffolded Edition provides authentic sentence starters with ZERO text/answer leaks.
+    Supports English ('en') and authentic academic Spanish ('es').
+    """
+    is_es = (lang == "es")
+    if not section_metas or len(section_metas) < 2:
+        raise ValueError("Multi-section strategy requires at least 2 sections.")
+
+    # Constrain to at most 3 sections (4 to 6 rows total) to guarantee a 1-page fit
+    selected_metas = section_metas[:3]
+
+    rows_data: List[Dict[str, str]] = []
+    localized_metas: List[Dict[str, Any]] = []
+
+    for s_meta in selected_metas:
+        if is_es:
+            s_meta = get_localized_section_meta(s_meta, lang="es")
+        localized_metas.append(s_meta)
+
+        md_text = ""
+        if s_meta.get("md_file"):
+            md_p = Path(s_meta["md_file"])
+            if md_p.exists():
+                md_text = md_p.read_text(encoding="utf-8")
+
+        kb = build_dynamic_section_knowledge(s_meta, md_text, lang=lang)
+        sec_code = str(s_meta["section_code"])
+        clean_subs = [s for s in kb.get("subheadings", []) if not NON_BLUE_SUBHEADINGS_REGEX.search(s.get("name", ""))][:2]
+
+        for s_idx, sh in enumerate(clean_subs, start=1):
+            rows_data.append({
+                "sec_code": sec_code,
+                "sh_name": sh["name"],
+                "cause": sh["cause"],
+                "effect": sh["effect"],
+                "citation": sh.get("citation", f'[Sec {sec_code}, ¶1–2]'),
+            })
+
+    first_sec = localized_metas[0]
+    last_sec = localized_metas[-1]
+    sec_range = f"{first_sec['section_code']}–{last_sec['section_code']}"
+    pp_range = f"{first_sec['start_page']}–{last_sec['end_page']}"
+    ch_num = first_sec["chapter_num"]
+    ch_title = first_sec.get("chapter_title", "")
+    std_code = "CCSS RH.6-8.5"
+
+    if is_es:
+        title_line = f"## Secciones {sec_range}: {ch_title} (págs. {pp_range})"
+        strat_focus = f"> **Enfoque de la estrategia:** Síntesis de causa y efecto multisección (Flujo de {len(selected_metas)} secciones)"
+        dir_text = (
+            f"**Instrucciones:** A medida que repasas las secciones indicadas (págs. {pp_range}), "
+            f"analiza cómo los acontecimientos clave crearon causas y efectos a lo largo de la historia. "
+            f"Completa la causa o el efecto que falta para cada subtítulo histórico a continuación:"
+        )
+        col_sec = "Sección y subtítulo"
+        col_cause = "Causa histórica (Acción / Política / Acontecimiento)"
+        col_effect = "Efecto histórico (Reacción / Resultado)"
+        eff_lbl = "Efecto"
+        cause_lbl = "Causa"
+        res_lbl = "Como resultado,"
+        bec_lbl = "Porque"
+        grade_text = f"[GRADE_BOX: Sec {sec_range}   _____/100]"
+        strategy_name = "Causa y efecto multisección"
+    else:
+        title_line = f"## Sections {sec_range}: {ch_title} (pp. {pp_range})"
+        strat_focus = f"> **Strategy Focus:** Multi-Section Cause & Effect Synthesis ({len(selected_metas)}-Spread Flow)"
+        dir_text = (
+            f"**Directions:** As you read across the selected section spreads (pp. {pp_range}), "
+            f"analyze how key events created causes and effects that shaped history. "
+            f"Complete the missing cause or effect for each historical subheading below:"
+        )
+        col_sec = "Section & Subheading"
+        col_cause = "Historical Cause (Action / Policy / Event)"
+        col_effect = "Historical Effect (Reaction / Outcome)"
+        eff_lbl = "Effect"
+        cause_lbl = "Cause"
+        res_lbl = "As a result,"
+        bec_lbl = "Because"
+        grade_text = f"[GRADE_BOX: Sec {sec_range}   _____/100]"
+        strategy_name = "Multi-Section Cause & Effect"
+
+    table_header = [
+        f"| {col_sec} | {col_cause} | {col_effect} |",
+        "| :--- | :--- | :--- |",
+    ]
+
+    std_rows: List[str] = []
+    scaf_rows: List[str] = []
+    ex_rows: List[str] = []
+    key_items: List[str] = []
+
+    for idx, row in enumerate(rows_data, start=1):
+        sec_prefix = f"**Sec {row['sec_code']}**<br>{row['sh_name']}"
+
+        # Alternating: Odd rows prompt Effect; Even rows prompt Cause
+        if idx % 2 == 1:
+            cause_cell_std = row["cause"]
+            cause_cell_scaf = row["cause"]
+            cause_cell_ex = row["cause"]
+
+            effect_cell_std = f"**{eff_lbl} {idx}:**<br>________________________________________<br>________________________________________"
+            effect_cell_scaf = f"**{eff_lbl} {idx}:** *{res_lbl}* _____________________________<br>______________________________________________________."
+            effect_cell_ex = f"**{eff_lbl} {idx}:** {row['effect']} {row['citation']}"
+
+            key_items.append(f"Row {idx} Effect (Sec {row['sec_code']} • {row['sh_name']}): {row['effect']} {row['citation']}")
+        else:
+            effect_cell_std = row["effect"]
+            effect_cell_scaf = row["effect"]
+            effect_cell_ex = row["effect"]
+
+            cause_cell_std = f"**{cause_lbl} {idx}:**<br>________________________________________<br>________________________________________"
+            cause_cell_scaf = f"**{cause_lbl} {idx}:** *{bec_lbl}* _____________________________<br>______________________________________________________."
+            cause_cell_ex = f"**{cause_lbl} {idx}:** {row['cause']} {row['citation']}"
+
+            key_items.append(f"Row {idx} Cause (Sec {row['sec_code']} • {row['sh_name']}): {row['cause']} {row['citation']}")
+
+        std_rows.append(f"| {sec_prefix} | {cause_cell_std} | {effect_cell_std} |")
+        scaf_rows.append(f"| {sec_prefix} | {cause_cell_scaf} | {effect_cell_scaf} |")
+        ex_rows.append(f"| {sec_prefix} | {cause_cell_ex} | {effect_cell_ex} |")
+
+    std_md = "\n".join([
+        title_line,
+        "",
+        strat_focus,
+        "",
+        dir_text,
+        "",
+        *table_header,
+        *std_rows,
+        "",
+        grade_text,
+    ])
+
+    scaf_tag = " (Edición con apoyo didáctico)" if is_es else " (Scaffolded Support)"
+    scaf_title = title_line.replace(f" ({'págs.' if is_es else 'pp.'}", f"{scaf_tag} ({'págs.' if is_es else 'pp.'}")
+    scaf_md = "\n".join([
+        scaf_title,
+        "",
+        strat_focus,
+        "",
+        dir_text,
+        "",
+        *table_header,
+        *scaf_rows,
+        "",
+        grade_text,
+    ])
+
+    if is_es:
+        ex_header = f"# Modelo y clave de respuestas para el docente: Sec. {sec_range} — {strategy_name}"
+        ex_ref = f"**Referencia del libro:** págs. {pp_range}  |  **Estándar:** {std_code}  |  **Puntuación:** 100/100"
+        ex_callout = (
+            f"> **Síntesis histórica de la era:** A lo largo de las secciones {sec_range}, "
+            f"los acontecimientos descritos demuestran cómo las decisiones iniciales crearon reacciones en cadena "
+            f"que aumentaron los conflictos y transformaron la nación."
+        )
+        key_heading = f"### Clave de respuestas y citas del libro de texto (Secciones {sec_range}: págs. {pp_range})"
+    else:
+        ex_header = f"# Student Exemplar & Answer Key: Sec. {sec_range} — {strategy_name}"
+        ex_ref = f"**Textbook Reference:** pp. {pp_range}  |  **Target Standard:** {std_code}  |  **Score:** 100/100"
+        ex_callout = (
+            f"> **Historical Era Synthesis:** Across sections {sec_range}, "
+            f"these developments demonstrate how initial policies and actions created a cascading chain of cause and effect "
+            f"that heightened tensions and transformed the nation."
+        )
+        key_heading = f"### Clipboard Answer Key & Exact Citations (Sections {sec_range}: pp. {pp_range})"
+
+    ex_md = "\n".join([
+        ex_header,
+        ex_ref,
+        "",
+        ex_callout,
+        "",
+        *table_header,
+        *ex_rows,
+        "",
+        "---",
+        key_heading,
+        *[f"- **{item.split(':', 1)[0]}:** {item.split(':', 1)[1].strip()}" for item in key_items],
+    ])
+
+    fitted_std, _ = enforce_page_budget_guardrail(sanitize_aesthetics(std_md), target_pages=1)
+    fitted_scaf, _ = enforce_page_budget_guardrail(sanitize_aesthetics(scaf_md), target_pages=1)
+
+    return {
+        "student_standard_md": fitted_std,
+        "student_scaffolded_md": fitted_scaf,
+        "exemplar_md": ex_md,
+        "strategy_name": strategy_name,
+        "section_code": sec_range,
+        "section_title": ch_title,
+        "printed_pages": pp_range,
+        "chapter_num": ch_num,
+        "keys": key_items,
         "lang": lang,
     }
 

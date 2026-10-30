@@ -167,6 +167,8 @@ SPANISH_STRATEGY_NAMES: Dict[str, str] = {
     "Text Structure: Historical Cause & Effect Table": "Causa y efecto histórico",
     "Cause & Effect Table": "Causa y efecto histórico",
     "Cause & Effect": "Causa y efecto histórico",
+    "Multi-Section Cause & Effect": "Causa y efecto multisección",
+    "Multi-Section Cause & Effect Synthesis": "Síntesis de causa y efecto multisección",
     "'Say Something!' Subheading Check-Ins (Stop & Jot)": "¡Dí algo! (Reacción por subtítulo)",
     "'Say Something!' by Subheading": "¡Dí algo! (Reacción por subtítulo)",
     "Say Something! (Stop & Jot)": "¡Dí algo! (Reacción por subtítulo)",
