@@ -928,6 +928,7 @@ def _render_strategy_card_grid(
                     use_container_width=True,
                 ):
                     st.session_state["gal_active_tile_code"] = tile["code"]
+                    st.query_params["strategy"] = tile["code"]
                     st.rerun()
 
 
@@ -1128,27 +1129,30 @@ if "selected_ch_num" not in st.session_state:
 if "handout_language" not in st.session_state:
     st.session_state["handout_language"] = "en"
 
-# Direct navigation via query parameters
-if "nav" in st.query_params:
-    target_nav = str(st.query_params["nav"]).strip().lower()
-    if target_nav in ["packet", "packet_export", "gallery", "home"]:
-        st.session_state["nav_view"] = target_nav
+# Direct navigation via query parameters (only on initial session startup)
+if "query_params_initialized" not in st.session_state:
+    st.session_state["query_params_initialized"] = True
 
-if "lang" in st.query_params:
-    target_lang = str(st.query_params["lang"]).strip().lower()
-    if target_lang in ["en", "es"]:
-        st.session_state["handout_language"] = target_lang
+    if "nav" in st.query_params:
+        target_nav = str(st.query_params["nav"]).strip().lower()
+        if target_nav in ["packet", "packet_export", "gallery", "home"]:
+            st.session_state["nav_view"] = target_nav
 
-if "strategy" in st.query_params:
-    strat = str(st.query_params["strategy"]).strip()
-    if strat:
-        st.session_state["gal_active_tile_code"] = strat
+    if "lang" in st.query_params:
+        target_lang = str(st.query_params["lang"]).strip().lower()
+        if target_lang in ["en", "es"]:
+            st.session_state["handout_language"] = target_lang
 
-if "ch" in st.query_params:
-    try:
-        st.session_state["selected_ch_num"] = int(st.query_params["ch"])
-    except Exception:
-        pass
+    if "strategy" in st.query_params:
+        strat = str(st.query_params["strategy"]).strip()
+        if strat:
+            st.session_state["gal_active_tile_code"] = strat
+
+    if "ch" in st.query_params:
+        try:
+            st.session_state["selected_ch_num"] = int(st.query_params["ch"])
+        except Exception:
+            pass
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2455,6 +2459,10 @@ elif st.session_state["nav_view"] == "gallery":
             with t_sub2:
                 if st.button("Change", key="btn_clear_active_tile", use_container_width=True, help="Switch to a different curriculum strategy layout"):
                     st.session_state["gal_active_tile_code"] = None
+                    try:
+                        del st.query_params["strategy"]
+                    except Exception:
+                        pass
                     st.rerun()
 
         with tb_col2:
