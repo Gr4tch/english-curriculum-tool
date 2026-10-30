@@ -643,6 +643,20 @@ NON_BLUE_SUBHEADINGS_REGEX = re.compile(
 )
 
 
+def _clean_word_truncate(text: str, max_len: int = 40) -> str:
+    """Safely truncates text at a whole word boundary, never splitting mid-word."""
+    if not text:
+        return ""
+    clean = re.sub(r"\[.*?\]", "", text).strip().rstrip(".,;:")
+    if len(clean) <= max_len:
+        return clean
+    truncated = clean[:max_len]
+    last_space = truncated.rfind(" ")
+    if last_space > 15:
+        truncated = truncated[:last_space]
+    return truncated.rstrip(".,;:")
+
+
 def build_dynamic_section_knowledge(
     section_meta: Dict[str, Any],
     markdown_text: str = "",
@@ -920,7 +934,8 @@ def _render_reading_organizer_component(
         step_lbl = "Paso" if is_es else "Step"
         for idx, sh in enumerate(subs, start=1):
             if is_scaffolded:
-                body_cell = f"*{sh['gist'][:36]}* ______________________________________________________<br>______________________________________________________."
+                starter = _clean_word_truncate(sh["gist"], 42)
+                body_cell = f"*{starter}* ______________________________________________________<br>______________________________________________________."
             else:
                 body_cell = "______________________________________________________________________<br>______________________________________________________________________"
             lines.append(f"| **{step_lbl} {idx}: {sh['name']}** | {body_cell} |")
@@ -936,8 +951,8 @@ def _render_reading_organizer_component(
             "| :--- | :--- |",
         ]
         if is_scaffolded:
-            c1 = f"*{persp['side_a_point'][:38]}* ______________________________________________________."
-            c2 = f"*{persp['side_b_point'][:38]}* ______________________________________________________."
+            c1 = f"*{_clean_word_truncate(persp['side_a_point'], 42)}* ______________________________________________________."
+            c2 = f"*{_clean_word_truncate(persp['side_b_point'], 42)}* ______________________________________________________."
         else:
             c1 = "______________________________________________________________________<br>______________________________________________________________________"
             c2 = "______________________________________________________________________<br>______________________________________________________________________"
@@ -965,7 +980,8 @@ def _render_reading_organizer_component(
         for idx, sh in enumerate(subs, start=1):
             lines.append(f"**{idx}. {sh['name']}** — *{sh['say_something_q']}*")
             if is_scaffolded:
-                lines.append(f"*{t('say_something_starter', lang=lang, gist=sh['gist'][:32])}* _________________________________________.")
+                starter = _clean_word_truncate(sh["gist"], 36)
+                lines.append(f"*{t('say_something_starter', lang=lang, gist=starter)}* _________________________________________.")
             else:
                 lines.append(SOLID_LINE)
                 lines.append(SOLID_LINE)
@@ -1402,6 +1418,38 @@ def _get_twr_because_but_so_stem(
     return cleaned
 
 
+def _get_twr_subordinating_clause(gist: str, max_words: int = 14) -> str:
+    """
+    Extracts a clean, grammatically coherent dependent clause from a subheading gist for TWR subordinating conjunctions.
+    Never slices mid-word, strips bracket citations, and avoids dangling ellipses.
+    """
+    if not gist:
+        return "los acontecimientos históricos marcaron esta era"
+    # Clean brackets and spacing around punctuation
+    text = re.sub(r"\[.*?\]", "", gist)
+    text = re.sub(r"\s+([,.;:])", r"\1", text).strip()
+    text = text.rstrip(".!?;:,")
+
+    words = text.split()
+    if len(words) <= max_words:
+        clause = text
+    else:
+        # Search for a natural clause boundary (comma, semicolon) between word 5 and max_words + 4
+        comma_indices = [i for i, w in enumerate(words[:max_words + 4]) if w.endswith(",") or w.endswith(";")]
+        valid_commas = [i for i in comma_indices if i >= 4]
+        if valid_commas:
+            split_idx = valid_commas[-1] + 1
+            clause = " ".join(words[:split_idx]).rstrip(",;")
+        else:
+            # Cut cleanly at a word boundary
+            clause = " ".join(words[:max_words])
+
+    clause = clause.strip().rstrip(",;:-–")
+    if clause:
+        clause = clause[0].lower() + clause[1:]
+    return clause
+
+
 def _render_builtin_questions_and_optional_twr(
     section_meta: Dict[str, Any],
     kb: Dict[str, Any],
@@ -1425,7 +1473,8 @@ def _render_builtin_questions_and_optional_twr(
         blocks.append(q1_title)
         if is_scaffolded:
             s_tag = "*Inicio de oración:" if is_es else "*Sentence Starter:"
-            blocks.append(f"{s_tag} {kb['reading_check_a'][:38]}* _________________________________________________________.")
+            starter = _clean_word_truncate(kb['reading_check_a'], 42)
+            blocks.append(f"{s_tag} {starter}* _________________________________________________________.")
         else:
             blocks.append(SOLID_LINE)
         keys.append(f"Textbook #1 Reading Check ({pg_lbl}): {kb['reading_check_a']}")
@@ -1464,10 +1513,14 @@ def _render_builtin_questions_and_optional_twr(
             ext_label = "Extensión de escritura (Conjunciones subordinantes):" if is_es else "Writing Extension (Subordinating Conjunctions):"
             c1_tag = "Aunque" if is_es else "Although"
             c2_tag = "Cuando" if is_es else "When"
+            sh1_gist = kb["subheadings"][0]["gist"] if kb.get("subheadings") else ""
+            sh2_gist = kb["subheadings"][-1]["gist"] if kb.get("subheadings") else ""
+            stem1 = _get_twr_subordinating_clause(sh1_gist)
+            stem2 = _get_twr_subordinating_clause(sh2_gist)
             blocks.extend([
                 f"**{ext_label}** {t('twr_subordinating_directions', lang=lang, pages=pp)}",
-                f"1. **{c1_tag}** {kb['subheadings'][0]['gist'][:42].lower()}..., _________________________________________________________",
-                f"2. **{c2_tag}** {kb['subheadings'][-1]['gist'][:42].lower()}..., ___________________________________________________________",
+                f"1. **{c1_tag}** {stem1}, _________________________________________________________",
+                f"2. **{c2_tag}** {stem2}, ___________________________________________________________",
             ])
             keys.append(f"Writing Extension (Subordinating Conjunctions): {kb['exemplar_central_idea']}")
         elif twr_code == "twr_kernel_expansion":

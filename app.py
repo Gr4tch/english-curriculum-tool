@@ -7,6 +7,7 @@ Features a 2-Path Guided Wizard:
   2. Standalone Strategy Worksheet Gallery (All-in-One Visual Thumbnail Grid across 18 strategies, Side-by-Side Review)
 
 Exports directly to 100% Vector Print-Ready PDFs (Letter size) and synchronized Google Drive folders.
+# Updated with clean TWR clauses and robust multi-section sequencing.
 """
 
 import json
@@ -36,6 +37,9 @@ from src.blueprint_designer import (
     save_chapter_blueprint,
     recommend_section_strategies,
 )
+import importlib
+import src.packet_builder
+importlib.reload(src.packet_builder)
 from src.packet_builder import (
     generate_section_packet,
     build_standalone_strategy_handout,
@@ -421,6 +425,71 @@ st.markdown(
     div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:focus-within {
         border-color: #1e3a8a !important;
         box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.20) !important;
+    }
+
+    /* Popover Buttons: Consistent 38px Navbar Height & Clean Borders */
+    div[data-testid="stPopover"] > button {
+        border: 1.5px solid #94a3b8 !important;
+        border-radius: 8px !important;
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+        font-weight: 600 !important;
+        font-size: 0.86rem !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        max-height: 38px !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+        transition: all 0.15s ease-in-out !important;
+        white-space: nowrap !important;
+        padding: 0 12px !important;
+        overflow: hidden !important;
+    }
+    div[data-testid="stPopover"] > button:hover {
+        border-color: #1e3a8a !important;
+        box-shadow: 0 2px 4px rgba(30, 58, 138, 0.12) !important;
+        color: #1e3a8a !important;
+    }
+    div[data-testid="stPopover"] > button p {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        margin: 0 !important;
+        font-weight: 600 !important;
+    }
+    div[data-testid="stPopoverBody"] {
+        padding: 1rem !important;
+        max-width: 460px !important;
+    }
+    div[data-testid="stPopoverBody"] div[data-testid="stCheckbox"] {
+        padding: 0.30rem 0.50rem !important;
+        border-radius: 6px !important;
+        transition: background-color 0.15s ease !important;
+    }
+    div[data-testid="stPopoverBody"] div[data-testid="stCheckbox"]:hover {
+        background-color: #f1f5f9 !important;
+    }
+
+    /* MultiSelect Styling: Modern Soft Pill Chips */
+    div[data-testid="stMultiSelect"] div[data-baseweb="select"] > div {
+        border: 1.5px solid #94a3b8 !important;
+        border-radius: 8px !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+    }
+    div[data-testid="stMultiSelect"] div[data-baseweb="tag"] {
+        background-color: #eff6ff !important;
+        border: 1px solid #bfdbfe !important;
+        border-radius: 6px !important;
+        color: #1e40af !important;
+        font-weight: 600 !important;
+        font-size: 0.80rem !important;
+        padding: 2px 6px !important;
+    }
+    div[data-testid="stMultiSelect"] div[data-baseweb="tag"] span {
+        color: #1e40af !important;
+    }
+    div[data-testid="stMultiSelect"] div[data-baseweb="tag"] svg {
+        fill: #1e40af !important;
     }
 
     /* Strategy Gallery Tiles: Interactive Card & Hover Zoom */
@@ -1074,6 +1143,20 @@ if "lang" in st.query_params:
         st.session_state["handout_language"] = target_lang
     try:
         del st.query_params["lang"]
+    except Exception:
+        pass
+
+if "strategy" in st.query_params:
+    st.session_state["gal_active_tile_code"] = str(st.query_params["strategy"]).strip()
+    try:
+        del st.query_params["strategy"]
+    except Exception:
+        pass
+
+if "ch" in st.query_params:
+    try:
+        st.session_state["selected_ch_num"] = int(st.query_params["ch"])
+        del st.query_params["ch"]
     except Exception:
         pass
 
@@ -2156,17 +2239,99 @@ elif st.session_state["nav_view"] == "gallery":
 
     with nav_c3:
         if active_tile_code == "ro_02_multi_section_cause_effect":
-            def_secs = gal_ch_sections[:2] if len(gal_ch_sections) >= 2 else gal_ch_sections
-            gal_selected_secs = st.multiselect(
-                "Select 2 or 3 Sections to Connect:",
-                options=gal_ch_sections,
-                default=st.session_state.get(f"gal_multi_secs_{gal_ch_num}", def_secs),
-                max_selections=3,
-                format_func=lambda s: f"Sec. {s['section_code']}: {s['title']} (pp. {s['printed_pages']})",
-                key=f"gal_multi_secs_{gal_ch_num}",
-                label_visibility="collapsed",
-            )
-            gal_selected_sec = gal_selected_secs[0] if gal_selected_secs else gal_ch_sections[0]
+            avail_secs = gal_ch_sections
+
+            # Ensure session state initialization for checkboxes
+            # Default to first 2 sections if not yet initialized for this chapter
+            for idx, s in enumerate(avail_secs):
+                cb_key = f"cb_ms_{gal_ch_num}_{s['section_code']}"
+                if cb_key not in st.session_state:
+                    st.session_state[cb_key] = (idx < 2)
+
+            # Determine which sections are currently checked
+            checked_secs = [
+                s for s in avail_secs
+                if st.session_state.get(f"cb_ms_{gal_ch_num}_{s['section_code']}", False)
+            ]
+            num_checked = len(checked_secs)
+
+            # Enforce 2-3 section constraints for the handout builder
+            if num_checked >= 2:
+                gal_selected_secs = checked_secs[:3]
+            elif num_checked == 1:
+                # Add one adjacent section as fallback so handout generation never fails
+                other_secs = [s for s in avail_secs if s != checked_secs[0]]
+                gal_selected_secs = [checked_secs[0]] + (other_secs[:1] if other_secs else [])
+            else:
+                gal_selected_secs = avail_secs[:2] if len(avail_secs) >= 2 else avail_secs
+
+            gal_selected_sec = gal_selected_secs[0]
+
+            # Label on Tier 1 navbar button: Shortened section numbers (e.g. "Sec. 1.1, 1.2")
+            codes_str = ", ".join([str(s["section_code"]) for s in gal_selected_secs])
+            pop_label = f"Sec. {codes_str}"
+
+            with st.popover(pop_label, use_container_width=True):
+                st.markdown(
+                    f"""
+                    <div style="font-weight: 700; font-size: 0.92rem; color: #0f172a; margin-bottom: 0.15rem;">
+                        🔗 Multi-Section Cause & Effect Spreads
+                    </div>
+                    <div style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.65rem;">
+                        Check 2 or 3 chronological section spreads from Chapter {gal_ch_num:02d} to synthesize historical causes and effects (4–6 rows total):
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+                # Quick presets
+                if len(avail_secs) >= 2:
+                    st.markdown(
+                        "<div style='font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.35rem;'>Quick Presets:</div>",
+                        unsafe_allow_html=True,
+                    )
+                    p_c1, p_c2, p_c3 = st.columns(3)
+                    with p_c1:
+                        if st.button(f"First 2 ({avail_secs[0]['section_code']} + {avail_secs[1]['section_code']})", key=f"btn_p1_{gal_ch_num}", use_container_width=True):
+                            for s in avail_secs:
+                                st.session_state[f"cb_ms_{gal_ch_num}_{s['section_code']}"] = (s["section_code"] in [avail_secs[0]["section_code"], avail_secs[1]["section_code"]])
+                            st.rerun()
+                    with p_c2:
+                        if len(avail_secs) >= 3:
+                            if st.button(f"Next 2 ({avail_secs[1]['section_code']} + {avail_secs[2]['section_code']})", key=f"btn_p2_{gal_ch_num}", use_container_width=True):
+                                for s in avail_secs:
+                                    st.session_state[f"cb_ms_{gal_ch_num}_{s['section_code']}"] = (s["section_code"] in [avail_secs[1]["section_code"], avail_secs[2]["section_code"]])
+                                st.rerun()
+                    with p_c3:
+                        if len(avail_secs) >= 3:
+                            if st.button("All 3 Spreads", key=f"btn_p3_{gal_ch_num}", use_container_width=True):
+                                for s in avail_secs:
+                                    st.session_state[f"cb_ms_{gal_ch_num}_{s['section_code']}"] = (s["section_code"] in [s["section_code"] for s in avail_secs[:3]])
+                                st.rerun()
+
+                    st.markdown("<hr style='margin: 0.50rem 0; border: none; border-top: 1px solid #e2e8f0;'/>", unsafe_allow_html=True)
+
+                st.markdown(
+                    "<div style='font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.35rem;'>Chapter Sections:</div>",
+                    unsafe_allow_html=True,
+                )
+
+                for s in avail_secs:
+                    s_code = s["section_code"]
+                    cb_key = f"cb_ms_{gal_ch_num}_{s_code}"
+                    is_cur = st.session_state.get(cb_key, False)
+                    # When 3 sections are already checked, disable remaining unchecked boxes to protect 1-page budget
+                    is_dis = (not is_cur and num_checked >= 3)
+                    st.checkbox(
+                        f"Sec. {s_code}: {s['title']} (pp. {s['printed_pages']})",
+                        key=cb_key,
+                        disabled=is_dis,
+                    )
+
+                if num_checked >= 3:
+                    st.caption("ℹ️ Maximum 3 sections selected to maintain a clean single-page handout layout.")
+                elif num_checked < 2:
+                    st.warning("⚠️ Please check at least 2 sections for the multi-section cause & effect worksheet.")
         else:
             gal_selected_sec = st.selectbox(
                 "Section Spread to Practice:",
@@ -2305,6 +2470,50 @@ elif st.session_state["nav_view"] == "gallery":
                     help="Formats two identical compact worksheets onto a single 8.5x11 letter page separated by a dashed cut line to cut photocopy usage in half.",
                 )
 
+        # Multi-Section Connection Flow Banner (Visual Sequence Card)
+        if active_tile_code == "ro_02_multi_section_cause_effect":
+            ms_secs = gal_selected_secs[:3] if len(gal_selected_secs) >= 2 else (gal_ch_sections[:2] if len(gal_ch_sections) >= 2 else gal_selected_secs)
+            pp_range = f"{ms_secs[0]['start_page']}–{ms_secs[-1]['end_page']}"
+            step_cards = []
+            for idx, sm in enumerate(ms_secs, start=1):
+                role_label = "Cause / Starting Event" if idx == 1 else ("Effect / Escalation" if idx == 2 else "Final Culmination")
+                step_cards.append(
+                    f"""
+                    <div style="background: #ffffff; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 0.50rem 0.75rem; flex: 1; min-width: 170px; box-shadow: 0 1px 3px rgba(30, 58, 138, 0.06);">
+                        <div style="font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #1e40af; margin-bottom: 2px;">
+                            Step {idx}: {role_label}
+                        </div>
+                        <div style="font-size: 0.86rem; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            Sec. {sm['section_code']}: {sm['title']}
+                        </div>
+                        <div style="font-size: 0.74rem; color: #64748b; font-weight: 500;">
+                            pp. {sm['printed_pages']} • 2 Blue Subheadings
+                        </div>
+                    </div>
+                    """
+                )
+            arrow_html = '<div style="color: #3b82f6; font-size: 1.25rem; font-weight: 800; padding: 0 0.35rem; display: flex; align-items: center; justify-content: center;">➔</div>'
+            steps_html = arrow_html.join(step_cards)
+
+            render_clean_html(
+                f"""
+                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%); border: 1.5px solid #bae6fd; border-radius: 10px; padding: 0.70rem 1rem; margin-bottom: 0.85rem; box-shadow: 0 2px 4px rgba(15, 23, 42, 0.04);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.55rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <div style="display: flex; align-items: center; gap: 0.40rem;">
+                            <span style="font-size: 0.90rem; font-weight: 800; color: #0369a1;">🔗 Multi-Section Synthesis Flow</span>
+                            <span class="badge-pill" style="font-size: 0.70rem; padding: 0.12rem 0.45rem; background: #e0f2fe; color: #0284c7; border: 1px solid #7dd3fc;">{len(ms_secs)}-Spread Connected Chain</span>
+                        </div>
+                        <div style="font-size: 0.78rem; color: #64748b; font-weight: 600;">
+                            Textbook pp. {pp_range} • {len(ms_secs)*2} Historical Cause & Effect Rows • Use top-bar dropdown to modify spreads
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.50rem; flex-wrap: wrap;">
+                        {steps_html}
+                    </div>
+                </div>
+                """
+            )
+
         # Minimized Expander for Quick Layout Switching
         with st.expander(f"Quick-Switch Layout (Currently: {active_tile['name']})", expanded=False):
             min_cat_filter = st.radio(
@@ -2345,11 +2554,7 @@ elif st.session_state["nav_view"] == "gallery":
 
         # Build focused handout
         if active_tile_code == "ro_02_multi_section_cause_effect":
-            if len(gal_selected_secs) < 2:
-                st.warning("Please select at least 2 section spreads (up to 3) from the dropdown above to generate the Multi-Section Cause & Effect flow.")
-                secs_to_use = gal_ch_sections[:2] if len(gal_ch_sections) >= 2 else gal_selected_secs
-            else:
-                secs_to_use = gal_selected_secs[:3]
+            secs_to_use = gal_selected_secs[:3] if len(gal_selected_secs) >= 2 else (gal_ch_sections[:2] if len(gal_ch_sections) >= 2 else gal_selected_secs)
 
             handout_data = build_multi_section_strategy_handout(
                 section_metas=secs_to_use,
@@ -2497,8 +2702,21 @@ elif st.session_state["nav_view"] == "gallery":
             st.markdown(teacher_html, unsafe_allow_html=True)
 
         with ws_tab3:
-            if gal_raw_md:
-                with st.container(height=520):
-                    st.markdown(gal_raw_md)
+            if active_tile_code == "ro_02_multi_section_cause_effect":
+                combined_md_parts = []
+                for s in secs_to_use:
+                    p = resolve_file_path(s.get("md_file"))
+                    if p.exists():
+                        combined_md_parts.append(f"# Section {s['section_code']}: {s['title']} (pp. {s['printed_pages']})\n\n" + p.read_text(encoding="utf-8"))
+                multi_raw_md = "\n\n---\n\n".join(combined_md_parts)
+                if multi_raw_md:
+                    with st.container(height=520):
+                        st.markdown(multi_raw_md)
+                else:
+                    st.warning("Textbook passage markdown files could not be loaded.")
             else:
-                st.warning("Textbook passage markdown file could not be loaded.")
+                if gal_raw_md:
+                    with st.container(height=520):
+                        st.markdown(gal_raw_md)
+                else:
+                    st.warning("Textbook passage markdown file could not be loaded.")
