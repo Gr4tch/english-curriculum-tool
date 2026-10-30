@@ -76,6 +76,17 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "exemplar_header": "# Student Exemplar & Answer Key: Sec. {code} — {strategy_name}",
         "exemplar_meta": "**Textbook Reference:** pp. {pages}  |  **Target Standard:** {standard}  |  **Score:** 100/100",
         "exemplar_model_heading": "### Authentic 8th-Grade Student Model Response",
+
+        # Critical Thinking / Inference
+        "crit_focus_focus": "Reading Between the Lines → Text-Based Inference",
+        "crit_menu_focus": "Historical Perspectives & Inquiry → Student Choice Inference",
+        "crit_focus_directions": "Read the inferential question below. In history, an inference combines facts from the reading with logical reasoning. Complete Steps 1–3 to build your answer.",
+        "crit_menu_directions": "Review the three inferential questions below. Check ONE question you want to investigate, then complete Steps 1–3 below using evidence from the text.",
+        "crit_step1_label": "Step 1: Text Clues (What the book explicitly says)",
+        "crit_step2_label": "Step 2: My Reasoning (What these clues suggest)",
+        "crit_step3_label": "Step 3: Inferred Conclusion (Complete answer in 2–3 sentences)",
+        "crit_step2_prompt": "How these clues connect to answer the question:",
+        "crit_step3_prompt": "Inferred Claim & Historical Explanation:",
     },
     "es": {
         # Worksheet Header & Badges
@@ -145,6 +156,17 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "exemplar_header": "# Modelo y clave de respuestas para el docente: Sec. {code} — {strategy_name}",
         "exemplar_meta": "**Referencia del libro:** págs. {pages}  |  **Estándar:** {standard}  |  **Puntuación:** 100/100",
         "exemplar_model_heading": "### Respuesta modelo auténtica de estudiante de 8.º grado",
+
+        # Critical Thinking / Inference
+        "crit_focus_focus": "Lectura entre líneas → Inferencias basadas en el texto",
+        "crit_menu_focus": "Perspectivas históricas e indagación → Inferencia con opción a elegir",
+        "crit_focus_directions": "Lee la pregunta de inferencia a continuación. En historia, una inferencia combina hechos de la lectura con el razonamiento lógico. Completa los Pasos 1 al 3 para elaborar tu respuesta.",
+        "crit_menu_directions": "Revisa las tres preguntas de inferencia a continuación. Marca UNA pregunta que desees investigar y luego completa los Pasos 1 al 3 usando evidencia del texto.",
+        "crit_step1_label": "Paso 1: Pistas del texto (Lo que dice el libro)",
+        "crit_step2_label": "Paso 2: Mi razonamiento (Lo que estas pistas indican)",
+        "crit_step3_label": "Paso 3: Conclusión inferida (Respuesta completa en 2–3 oraciones)",
+        "crit_step2_prompt": "Cómo se conectan estas pistas para responder a la pregunta:",
+        "crit_step3_prompt": "Afirmación inferida y explicación histórica:",
     },
 }
 
@@ -210,6 +232,13 @@ SPANISH_STRATEGY_NAMES: Dict[str, str] = {
     "Vocabulary Practice": "Práctica de vocabulario",
     "Section Assessment": "Evaluación de la sección",
     "Section Check & Quiz": "Evaluación de la sección",
+
+    # Critical Thinking
+    "Critical Thinking": "Pensamiento crítico",
+    "Read and Infer: Target Question": "Leer e inferir: Pregunta clave",
+    "Read & Infer: Target Question": "Leer e inferir: Pregunta clave",
+    "Read and Infer: Choice Menu": "Leer e inferir: Menú de opciones",
+    "Read & Infer: Choice Menu": "Leer e inferir: Menú de opciones",
 }
 
 

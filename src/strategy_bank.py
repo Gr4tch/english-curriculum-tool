@@ -548,7 +548,90 @@ In 1765, colonists in port cities like Boston and New York actively protested ag
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 6. OSPI 8TH GRADE SOCIAL STUDIES & SUPPORTING ELA STANDARDS BY CHAPTER
+# 6. CRITICAL THINKING & POST-READING INFERENCE STRATEGIES
+# ─────────────────────────────────────────────────────────────────────────────
+
+CRITICAL_THINKING_STRATEGIES: List[Dict[str, str]] = [
+    {
+        "code": "crit_01_read_and_infer_focus",
+        "name": "Read and Infer: Target Question",
+        "short_name": "Read & Infer (Target Question)",
+        "best_for": "Deep-dive analytical thinking on one high-impact inferential question grounded in the section reading using a 3-step evidence scaffold.",
+        "description": "Students answer a section-specific inferential question by citing 2 text clues, explaining what the clues suggest, and writing a 2–3 sentence inferred claim.",
+        "visual_preview_md": """**Historical Inference Question:**
+> *Was King George III's Proclamation of 1763 a reasonable decision to keep peace, or an unfair restriction on colonists? Explain with evidence.*
+
+**Step 1: Text Clues (What the book says):**
+- *Clue 1 (from PROBLEMS ARISE, p. 178):* ........................................................................
+- *Clue 2 (from A PROCLAMATION LINE, p. 179):* ....................................................................
+
+**Step 2: My Reasoning (What these clues suggest):**
+- *How these clues connect:* ....................................................................................
+
+**Step 3: Inferred Conclusion (Complete answer in 2–3 sentences):**
+_________________________________________________________________________________
+_________________________________________________________________________________
+_________________________________________________________________________________""",
+        "exemplar_md": """**Historical Inference Question (Student Exemplar):**
+> *Was King George III's Proclamation of 1763 a reasonable decision to keep peace, or an unfair restriction on colonists? Explain with evidence.*
+
+**Step 1: Text Clues (What the book says):**
+- *Clue 1 (p. 178):* Britain faced massive war debt after the French and Indian War and stationed 10,000 troops in America.
+- *Clue 2 (p. 179):* Pontiac's War showed that settlers crossing the mountains would provoke costly frontier warfare with Native Americans.
+
+**Step 2: My Reasoning (What these clues suggest):**
+From the British perspective, preventing settlement was a cost-saving security measure, but colonists who fought for that land felt cheated out of their economic future.
+
+**Step 3: Inferred Conclusion (Complete answer):**
+While King George III viewed the Proclamation of 1763 as a practical way to prevent costly frontier wars with Native Americans, colonists reasonably inferred that Parliament was trying to control them and limit their economic freedom [pp. 178–179]. This created lasting resentment because settlers felt their sacrifices in the war were disregarded.""",
+        "scaffolded_md": """*Scaffolded Support Elements:*
+- **Step 1 Clue Hints:** Look back at [Subheading 1] (p. ___) and [Subheading 2] (p. ___) to find 2 specific facts.
+- **Step 2 Reasoning Starter:** *These details demonstrate that* _________________________________________________
+- **Step 3 Inferred Claim Frame:** *Based on the reading, I can infer that* ______________________________________ *because the text notes that* ______________________________________ [p. ___].""",
+    },
+    {
+        "code": "crit_02_read_and_infer_menu",
+        "name": "Read and Infer: Choice Menu",
+        "short_name": "Read & Infer (Choice Menu)",
+        "best_for": "Differentiated inquiry and student choice across 3 inferential lenses (Compare & Contrast, Take a Stand, Equity & Perspectives).",
+        "description": "Presents a choice board of 3 inferential lenses. Students select one prompt to investigate, cite evidence from the section, explain their reasoning, and write a complete inferred claim.",
+        "visual_preview_md": """**Select ONE inference question to investigate (check one box):**
+- [ ] **Lens A (Compare & Contrast):** How did British and colonial views on western land differ after the war?
+- [ ] **Lens B (Take a Stand / Significance):** Which had a bigger impact: the threat of frontier attacks or the restriction on westward settlement? Explain.
+- [ ] **Lens C (Equity & Perspectives):** Was life on the frontier equally secure for British authorities, colonial settlers, and Native Americans? Give examples.
+
+**Step 1: Text Clues (What the book says for your chosen question):**
+- *Clue 1 (p. 178):* ............................................................................................
+- *Clue 2 (p. 179):* ............................................................................................
+
+**Step 2: My Reasoning (What these clues suggest):**
+- *Connection to my claim:* ....................................................................................
+
+**Step 3: Inferred Conclusion (Complete answer in 2–3 sentences):**
+_________________________________________________________________________________
+_________________________________________________________________________________
+_________________________________________________________________________________""",
+        "exemplar_md": """**Student Exemplar (Lens C Chosen):**
+> *Was life on the frontier equally secure for British authorities, colonial settlers, and Native Americans? Give examples.*
+
+**Step 1: Text Clues:**
+- *Clue 1 (p. 178):* Chief Pontiac attacked 13 British forts because settlers encroached on Native American territory.
+- *Clue 2 (p. 179):* King George issued the Proclamation of 1763 to stop settlers, but many ignored the line and moved anyway.
+
+**Step 2: My Reasoning:**
+None of the groups felt safe: Native nations faced loss of land, settlers risked frontier raids without troop protection, and British soldiers were spread too thin.
+
+**Step 3: Inferred Conclusion:**
+The post-war frontier was not equally secure for anyone involved [pp. 178–179]. Native Americans faced the loss of their ancestral lands, frontier settlers faced violence without government support, and British officials struggled unsuccessfully to enforce peace across hundreds of miles of mountains.""",
+        "scaffolded_md": """*Scaffolded Support Elements:*
+- **Step 1 Evidence Prompt:** Write 2 facts from pages ___ and ___ that help answer your chosen question.
+- **Step 2 Reasoning Starter:** *These facts show that* ___________________________________________________________
+- **Step 3 Inferred Claim Frame:** *Regarding [chosen question], the evidence indicates that* _____________________ *because* ____________________________________________________________________ [p. ___].""",
+    },
+]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 7. OSPI 8TH GRADE SOCIAL STUDIES & SUPPORTING ELA STANDARDS BY CHAPTER
 # ─────────────────────────────────────────────────────────────────────────────
 
 CHAPTER_STANDARDS_MAP: Dict[str, Dict[str, Any]] = {

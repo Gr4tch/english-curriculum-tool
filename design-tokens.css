@@ -271,6 +271,12 @@ body {
   border: 1px solid var(--border-warning);
 }
 
+.ws-badge-purple {
+  background: #f3e8ff;
+  color: #6b21a8;
+  border: 1px solid #d8b4fe;
+}
+
 /* ==========================================================================
  * CONTEXTUAL METADATA BANNER & NAVIGATION BARS
  * ========================================================================== */

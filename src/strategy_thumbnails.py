@@ -424,6 +424,49 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
         </div>
         """,
     },
+
+    # ── 6. CRITICAL THINKING ──
+    {
+        "code": "crit_01_read_and_infer_focus",
+        "category": "Critical Thinking",
+        "category_badge": "ws-badge-purple",
+        "name": "Read & Infer: Target Question",
+        "subtitle": "Single Focus (3-Step Frame)",
+        "best_for": "Deep-dive analytical thinking on one high-impact inferential question grounded in the section reading.",
+        "thumbnail_svg": """
+        <div style="background:#faf5ff; border:1px solid #d8b4fe; border-radius:4px; padding:5px; height:74px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="background:#f3e8ff; border-left:3px solid #7c3aed; padding:2px 4px; font-size:6.5px; font-weight:700; color:#5b21b6;">
+                Q: Was the Proclamation fair?
+            </div>
+            <div style="font-size:6px; color:#6b21a8; display:flex; flex-direction:column; gap:2px;">
+                <div style="display:flex; justify-content:space-between;"><b>1. Clues:</b> <span style="border-bottom:1px dotted #a855f7; width:65%; height:4px;"></span></div>
+                <div style="display:flex; justify-content:space-between;"><b>2. Logic:</b> <span style="border-bottom:1px dotted #a855f7; width:65%; height:4px;"></span></div>
+                <div style="display:flex; justify-content:space-between;"><b>3. Claim:</b> <span style="border-bottom:1px solid #7c3aed; width:65%; height:4px;"></span></div>
+            </div>
+        </div>
+        """,
+    },
+    {
+        "code": "crit_02_read_and_infer_menu",
+        "category": "Critical Thinking",
+        "category_badge": "ws-badge-purple",
+        "name": "Read & Infer: Choice Menu",
+        "subtitle": "Choice Board (3-Step Frame)",
+        "best_for": "Differentiated inquiry and student choice across 3 inferential lenses (Compare, Weigh, Equity).",
+        "thumbnail_svg": """
+        <div style="background:#faf5ff; border:1px solid #d8b4fe; border-radius:4px; padding:5px; height:74px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="font-size:6px; font-weight:700; color:#5b21b6;">Choose 1 Lens to Investigate:</div>
+            <div style="font-size:5.5px; color:#475569; display:flex; flex-direction:column; gap:2px;">
+                <div>[x] A. Compare & Contrast</div>
+                <div>[ ] B. Take a Stand</div>
+                <div>[ ] C. Equity & Perspectives</div>
+            </div>
+            <div style="font-size:5.5px; color:#6b21a8; border-top:1px dashed #d8b4fe; padding-top:2px; display:flex; justify-content:space-between;">
+                <b>3-Step Frame</b> <span style="border-bottom:1px solid #7c3aed; width:50%; height:4px;"></span>
+            </div>
+        </div>
+        """,
+    },
 ]
 
 

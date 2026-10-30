@@ -81,6 +81,7 @@ COMMON_CSS = """
 .ws-badge-blue { background: #dbeafe; color: #1e3a8a; border: 1px solid #bfdbfe; }
 .ws-badge-green { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
 .ws-badge-amber { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+.ws-badge-purple { background: #f3e8ff; color: #6b21a8; border: 1px solid #d8b4fe; }
 
 .ws-callout {
     background: #f8fafc;

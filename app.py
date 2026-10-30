@@ -2217,10 +2217,11 @@ elif st.session_state["nav_view"] == "gallery":
         category_filter = st.radio(
             "Filter by Pedagogical Category:",
             options=[
-                "All Strategies (19)",
+                "All Strategies (21)",
                 "Central Idea (4)",
                 "Anti-Copycat (3)",
                 "Active Reading (6)",
+                "Critical Thinking (2)",
                 "The Writing Revolution (4)",
                 "Vocabulary & Assessment (2)",
             ],
@@ -2236,6 +2237,8 @@ elif st.session_state["nav_view"] == "gallery":
             filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Anti-Copycat"]
         elif "Active Reading" in category_filter:
             filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Active Reading"]
+        elif "Critical Thinking" in category_filter:
+            filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Critical Thinking"]
         elif "Writing Revolution" in category_filter:
             filtered_tiles = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["The Writing Revolution", "Writing (TWR)"]]
         else:
@@ -2259,6 +2262,7 @@ elif st.session_state["nav_view"] == "gallery":
             "Active Reading": "reading_organizer",
             "The Writing Revolution": "twr",
             "Writing (TWR)": "twr",
+            "Critical Thinking": "critical_thinking",
             "Vocabulary": "vocab",
             "Assessment": "assessment",
         }
@@ -2306,10 +2310,11 @@ elif st.session_state["nav_view"] == "gallery":
             min_cat_filter = st.radio(
                 "Filter by Pedagogical Category:",
                 options=[
-                    "All Strategies (19)",
+                    "All Strategies (21)",
                     "Central Idea (4)",
                     "Anti-Copycat (3)",
                     "Active Reading (6)",
+                    "Critical Thinking (2)",
                     "The Writing Revolution (4)",
                     "Vocabulary & Assessment (2)",
                 ],
@@ -2325,6 +2330,8 @@ elif st.session_state["nav_view"] == "gallery":
                 min_filtered = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Anti-Copycat"]
             elif "Active Reading" in min_cat_filter:
                 min_filtered = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Active Reading"]
+            elif "Critical Thinking" in min_cat_filter:
+                min_filtered = [t for t in ALL_STRATEGY_TILES if t.get("category") == "Critical Thinking"]
             elif "Writing Revolution" in min_cat_filter:
                 min_filtered = [t for t in ALL_STRATEGY_TILES if t.get("category") in ["The Writing Revolution", "Writing (TWR)"]]
             else:

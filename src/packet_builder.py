@@ -7,6 +7,7 @@ from src.strategy_bank import (
     CENTRAL_IDEA_STRATEGIES,
     PRINTED_MAIN_IDEA_MODES,
     READING_ORGANIZERS,
+    CRITICAL_THINKING_STRATEGIES,
     VOCAB_MODES,
     READING_MODES,
     OPTIONAL_TWR_STRATEGIES,
@@ -67,6 +68,33 @@ CHAPTER_5_KNOWLEDGE_BASE: Dict[str, Dict[str, Any]] = {
         "skill_q2_a": "Both eastern and western colonists felt British laws restricted their freedoms: western settlers objected to the Proclamation of 1763 blocking westward expansion [p. 178, ¶4], while eastern city residents resented being forced to house British troops under the Quartering Act [pp. 178–179, ¶1–4].",
         "word_meaning_q3_a": "'Prosperous' means economically successful and thriving after decades of economic growth [p. 178, \"PROBLEMS ARISE\", ¶2].",
         "critical_viewing_a": "The engraving of British troops in a colonial home shows the resentment and tension caused by forcing residents to quarter soldiers [p. 178]; the 1763 map shows that settlers pushing west of the Proclamation Line broke the peaceful promises of the Covenant Chain with the Iroquois League [p. 179, ¶5–6].",
+        "inference": {
+            "focus_question": "Was King George III's decision to ban settlement west of the Appalachians in the Proclamation of 1763 an understandable security policy or an unreasonable violation of colonial rights? Explain with evidence.",
+            "menu_questions": [
+                {
+                    "lens": "Lens A (Compare & Contrast)",
+                    "question": "How did colonial expectations after the French and Indian War clash with Parliament's priorities regarding western lands?",
+                },
+                {
+                    "lens": "Lens B (Take a Stand / Significance)",
+                    "question": "Which posed a more serious threat to British authority: Pontiac's frontier war or colonial defiance of the Proclamation Line? Defend your view.",
+                },
+                {
+                    "lens": "Lens C (Equity & Perspectives)",
+                    "question": "Did the Treaty of Paris and Proclamation of 1763 bring genuine peace and security to Native Americans, British soldiers, and colonial settlers? Explain.",
+                },
+            ],
+            "clue1_source": "PROBLEMS ARISE (p. 178)",
+            "clue2_source": "SOLDIERS IN THE COLONIES (pp. 178–179)",
+            "exemplar_clue1": "Britain faced massive war debt after 1763 and Pontiac's War showed that settlers crossing the mountains provoked costly frontier wars with Native Americans [p. 178, ¶3–4].",
+            "exemplar_clue2": "Parliament passed the Quartering Act of 1765 and stationed 10,000 soldiers in colonial port cities, which colonists resented as peacetime occupation [pp. 178–179, ¶1–4].",
+            "exemplar_reasoning": "From the British crown's perspective, halting western settlement was a practical move to avoid expensive frontier wars, but colonists who fought for that land felt cheated out of their economic future.",
+            "exemplar_conclusion": "While King George III viewed the Proclamation of 1763 as an understandable security measure to avoid costly frontier wars with Native Americans, colonists reasonably inferred that Parliament was restricting their hard-earned economic freedom and treating them as second-class subjects [pp. 178–179]. This created lasting resentment because settlers felt their wartime sacrifices were dismissed.",
+            "scaffolded_clue1_hint": "Look back at PROBLEMS ARISE (p. 178) to find why the king issued the Proclamation of 1763.",
+            "scaffolded_clue2_hint": "Look back at SOLDIERS IN THE COLONIES (pp. 178–179) to find why colonists resented the Quartering Act.",
+            "scaffolded_reasoning_starter": "These details demonstrate that",
+            "scaffolded_conclusion_starter": "Based on the text, I can infer that",
+        },
     },
     "1.2": {
         "printed_main_idea": "British attempts to impose taxes and exert greater control over the colonies caused growing anger and resentment among colonists.",
@@ -726,6 +754,7 @@ def build_dynamic_section_knowledge(
             "skill_q2_a": f"Verificar que la respuesta conecte ideas de los subtítulos en las págs. {section_meta['printed_pages']} ({ht.get('q2_skill', 'Razonamiento histórico')}).",
             "word_meaning_q3_a": f"Verificar que el estudiante defina el término objetivo utilizando el contexto de las págs. {section_meta['printed_pages']} ({ht.get('q3_word_meaning', 'Significado de palabras')}).",
             "critical_viewing_a": f"Verificar que el estudiante cite evidencia visual o del mapa en las págs. {section_meta['printed_pages']}.",
+            "inference": _build_default_inference_for_section(section_meta, {"subheadings": subheadings, "printed_main_idea": printed_mi}, lang="es"),
         }
 
     return {
@@ -744,6 +773,7 @@ def build_dynamic_section_knowledge(
         "skill_q2_a": f"Verify student response connects ideas across subheadings on pp. {section_meta['printed_pages']} ({ht.get('q2_skill', 'Historical Thinking')}).",
         "word_meaning_q3_a": f"Verify student defines the target term using context clues on pp. {section_meta['printed_pages']} ({ht.get('q3_word_meaning', 'Word Meaning')}).",
         "critical_viewing_a": f"Verify student references specific visual/map details on pp. {section_meta['printed_pages']}.",
+        "inference": _build_default_inference_for_section(section_meta, {"subheadings": subheadings, "printed_main_idea": printed_mi}, lang="en"),
     }
 
 
@@ -941,6 +971,195 @@ def _render_reading_organizer_component(
                 lines.append(SOLID_LINE)
             keys.append(f"{idx}. {sh['name']}: {sh['gist']} {sh['citation']}")
         return "\n".join(lines), keys
+
+
+def _build_default_inference_for_section(
+    section_meta: Dict[str, Any],
+    kb: Dict[str, Any],
+    lang: str = "en",
+) -> Dict[str, Any]:
+    """Generates 100% passage-grounded inference prompts, clues, reasoning, and exemplars."""
+    is_es = (lang == "es")
+    pp = section_meta.get("printed_pages", "")
+    subs = [s for s in kb.get("subheadings", []) if not NON_BLUE_SUBHEADINGS_REGEX.search(s.get("name", ""))][:2]
+
+    if subs:
+        sh0_name = subs[0]["name"]
+        sh0_gist = subs[0]["gist"]
+        sh0_cite = subs[0]["citation"]
+        sh1_name = subs[-1]["name"] if len(subs) > 1 else sh0_name
+        sh1_gist = subs[-1]["gist"] if len(subs) > 1 else sh0_gist
+        sh1_cite = subs[-1]["citation"] if len(subs) > 1 else sh0_cite
+    else:
+        sh0_name = section_meta.get("title", "")
+        sh0_gist = kb.get("printed_main_idea", "")
+        sh0_cite = f"[pp. {pp}]"
+        sh1_name = sh0_name
+        sh1_gist = sh0_gist
+        sh1_cite = sh0_cite
+
+    sh0_clean = re.sub(r"\s*\([^)]*\)", "", sh0_name).strip()
+    sh1_clean = re.sub(r"\s*\([^)]*\)", "", sh1_name).strip()
+
+    if is_es:
+        focus_q = (
+            f"¿De qué manera los acontecimientos y decisiones descritos en '{sh0_clean}' influyeron directamente en lo ocurrido en '{sh1_clean}'? Explica utilizando evidencia del texto."
+        )
+        menu_qs = [
+            {
+                "lens": "Lente A (Comparar y contrastar)",
+                "question": f"¿En qué se parecen o diferencian las motivaciones y acciones descritas en '{sh0_clean}' frente a las de '{sh1_clean}'?",
+            },
+            {
+                "lens": "Lente B (Tomar postura / Importancia)",
+                "question": f"¿Qué acontecimiento de esta sección tuvo un impacto más duradero: '{sh0_clean}' o '{sh1_clean}'? Explica y defiende tu postura.",
+            },
+            {
+                "lens": "Lente C (Equidad y perspectivas)",
+                "question": f"¿Fueron los resultados descritos en esta sección igualmente justos o beneficiosos para todos los grupos involucrados? ¿Quiénes salieron ganando y quiénes perdiendo? Explica.",
+            },
+        ]
+        return {
+            "focus_question": focus_q,
+            "menu_questions": menu_qs,
+            "clue1_source": sh0_name,
+            "clue2_source": sh1_name,
+            "exemplar_clue1": f"{sh0_gist} {sh0_cite}",
+            "exemplar_clue2": f"{sh1_gist} {sh1_cite}",
+            "exemplar_reasoning": f"Al conectar {sh0_clean} con {sh1_clean}, se observa cómo las decisiones iniciales generaron tensiones acumulativas que cambiaron la postura de los colonos frente a la autoridad británica.",
+            "exemplar_conclusion": f"Basándome en la lectura de las páginas {pp}, puedo inferir que las acciones tomadas en {sh0_clean} aceleraron las divisiones expuestas en {sh1_clean}, demostrando que el conflicto colonial no surgió de un solo incidente sino de un patrón continuo de políticas restrictivas [págs. {pp}].",
+            "scaffolded_clue1_hint": f"Revisa {sh0_name} para identificar un hecho o ley específica.",
+            "scaffolded_clue2_hint": f"Revisa {sh1_name} para identificar un hecho o reacción específica.",
+            "scaffolded_reasoning_starter": "Estos hechos demuestran que",
+            "scaffolded_conclusion_starter": "Basándome en la lectura, puedo inferir que",
+        }
+    else:
+        focus_q = (
+            f"How did the events and decisions described in '{sh0_clean}' directly influence or lead to what happened in '{sh1_clean}'? Explain using evidence from the text."
+        )
+        menu_qs = [
+            {
+                "lens": "Lens A (Compare & Contrast)",
+                "question": f"How do the motivations and actions in '{sh0_clean}' compare to those in '{sh1_clean}'?",
+            },
+            {
+                "lens": "Lens B (Take a Stand / Significance)",
+                "question": f"Which development in this section had a greater lasting impact on colonial history: '{sh0_clean}' or '{sh1_clean}'? Explain and defend your choice.",
+            },
+            {
+                "lens": "Lens C (Equity & Perspectives)",
+                "question": f"Were the results of the events described in this section equally beneficial or fair for everyone involved? Who gained the most, and who bore the greatest hardship? Explain.",
+            },
+        ]
+        return {
+            "focus_question": focus_q,
+            "menu_questions": menu_qs,
+            "clue1_source": sh0_name,
+            "clue2_source": sh1_name,
+            "exemplar_clue1": f"{sh0_gist} {sh0_cite}",
+            "exemplar_clue2": f"{sh1_gist} {sh1_cite}",
+            "exemplar_reasoning": f"Connecting {sh0_clean} to {sh1_clean} demonstrates how early imperial policies triggered unexpected resistance and created a chain reaction of colonial defiance.",
+            "exemplar_conclusion": f"Based on the reading on pp. {pp}, I can infer that the policies introduced in {sh0_clean} directly intensified the conflicts seen in {sh1_clean}, showing that parliamentary enforcement had the unintended consequence of uniting colonists against British authority [pp. {pp}].",
+            "scaffolded_clue1_hint": f"Look back at {sh0_name} to find 1 specific fact or policy.",
+            "scaffolded_clue2_hint": f"Look back at {sh1_name} to find 1 specific reaction or outcome.",
+            "scaffolded_reasoning_starter": "These details demonstrate that",
+            "scaffolded_conclusion_starter": "Based on the text, I can infer that",
+        }
+
+
+def _render_critical_thinking_component(
+    section_meta: Dict[str, Any],
+    kb: Dict[str, Any],
+    strategy_code: str,
+    is_scaffolded: bool,
+    lang: str = "en",
+) -> Tuple[str, List[str]]:
+    """
+    Renders the 3-step Critical Thinking & Inference strategy component:
+    - crit_01_read_and_infer_focus: 1 targeted inference prompt.
+    - crit_02_read_and_infer_menu: 3-prompt choice menu (Compare & Contrast, Take a Stand, Equity & Perspectives).
+    Both use Option A: 3-step structured scaffold (Clues -> Reasoning -> Inferred Claim).
+    """
+    is_es = (lang == "es")
+    inf = kb.get("inference")
+    if not inf:
+        inf = _build_default_inference_for_section(section_meta, kb, lang=lang)
+
+    subs = [s for s in kb.get("subheadings", []) if not NON_BLUE_SUBHEADINGS_REGEX.search(s.get("name", ""))][:2]
+    sh0_name = inf.get("clue1_source") or (subs[0]["name"] if subs else (f"Sección {section_meta['section_code']}" if is_es else f"Section {section_meta['section_code']}"))
+    sh1_name = inf.get("clue2_source") or (subs[-1]["name"] if len(subs) > 1 else sh0_name)
+
+    keys = []
+    lines = []
+
+    if strategy_code == "crit_02_read_and_infer_menu":
+        # Strategy 2: Choice Menu
+        lines.append(f"**{t('directions_label', lang=lang)}** {t('crit_menu_directions', lang=lang)}")
+        lines.append("")
+
+        menu_items = inf.get("menu_questions", [])
+        for m in menu_items:
+            lines.append(f"- [ ] **{m['lens']}:** {m['question']}")
+        lines.append("")
+
+        for idx, m in enumerate(menu_items, 1):
+            keys.append(f"{m['lens']}: {m['question']}")
+
+    else:
+        # Strategy 1: Target Question (Focus)
+        focus_q = inf.get("focus_question", "")
+        lines.append(f"**{t('directions_label', lang=lang)}** {t('crit_focus_directions', lang=lang)}")
+        lines.append("")
+        q_label = "Pregunta clave de inferencia" if is_es else "Target Inference Question"
+        lines.append(f"> **{q_label}:** {focus_q}")
+        lines.append("")
+        keys.append(f"Inference Question: {focus_q}")
+
+    # Step 1: Text Clues
+    lines.append(f"**{t('crit_step1_label', lang=lang)}:**")
+    clue_lbl = "Pista" if is_es else "Clue"
+    from_lbl = "de" if is_es else "from"
+
+    if is_scaffolded:
+        h1 = inf.get("scaffolded_clue1_hint") or f"Revisa {sh0_name}" if is_es else f"Look back at {sh0_name}"
+        h2 = inf.get("scaffolded_clue2_hint") or f"Revisa {sh1_name}" if is_es else f"Look back at {sh1_name}"
+        lines.append(f"- **{clue_lbl} 1 ({h1}):** ...................................................................................................")
+        lines.append(f"- **{clue_lbl} 2 ({h2}):** ...................................................................................................")
+    else:
+        lines.append(f"- **{clue_lbl} 1 ({from_lbl} {sh0_name}):** ...................................................................................................")
+        lines.append(f"- **{clue_lbl} 2 ({from_lbl} {sh1_name}):** ...................................................................................................")
+
+    keys.append(f"Step 1 Clues: {inf.get('exemplar_clue1', '')} | {inf.get('exemplar_clue2', '')}")
+    lines.append("")
+
+    # Step 2: My Reasoning
+    lines.append(f"**{t('crit_step2_label', lang=lang)}:**")
+    if is_scaffolded:
+        r_starter = inf.get("scaffolded_reasoning_starter", "Estos hechos demuestran que" if is_es else "These details demonstrate that")
+        lines.append(f"*{r_starter}* __________________________________________________________________________________")
+    else:
+        lines.append(f"*{t('crit_step2_prompt', lang=lang)}*")
+        lines.append("........................................................................................................................................")
+
+    keys.append(f"Step 2 Reasoning: {inf.get('exemplar_reasoning', '')}")
+    lines.append("")
+
+    # Step 3: Inferred Conclusion
+    lines.append(f"**{t('crit_step3_label', lang=lang)}:**")
+    if is_scaffolded:
+        c_starter = inf.get("scaffolded_conclusion_starter", "Basándome en la lectura, puedo inferir que" if is_es else "Based on the text, I can infer that")
+        bec_word = "porque" if is_es else "because"
+        lines.append(f"*{c_starter}* _________________________________________________________________________")
+        lines.append(f"*{bec_word}* ____________________________________________________________________________________")
+        lines.append(SOLID_LINE)
+    else:
+        lines.append(SOLID_LINE)
+        lines.append(SOLID_LINE)
+        lines.append(SOLID_LINE)
+
+    keys.append(f"Step 3 Conclusion: {inf.get('exemplar_conclusion', '')}")
+
+    return "\n".join(lines), keys
 
 
 def _render_central_idea_and_anti_copycat_component(
@@ -1630,6 +1849,16 @@ def build_standalone_strategy_handout(
                 comp_md_scaf += f"{i}. _________________________ : {defn}\n\n"
 
             keys = [f"Vocabulary Term {i} ({v.get('word', '')}): {_get_clean_vocab_definition(v)}" for i, v in enumerate(vocab_items, 1)]
+    elif strategy_category in ("critical_thinking", "crit"):
+        s_obj = get_strategy_by_code(CRITICAL_THINKING_STRATEGIES, strategy_code)
+        std_code = "CCSS RH.6-8.1 / RH.6-8.2"
+        comp_md_std, std_keys = _render_critical_thinking_component(
+            section_meta, kb, strategy_code, is_scaffolded=False, lang=lang
+        )
+        comp_md_scaf, _ = _render_critical_thinking_component(
+            section_meta, kb, strategy_code, is_scaffolded=True, lang=lang
+        )
+        keys = std_keys
     elif strategy_category in ("assessment", "quiz"):
         s_obj = {"name": "Section Check & Quiz", "short_name": "Section Assessment", "description": "Reading check and critical viewing questions"}
         std_code = "CCSS RH.6-8.1"
@@ -1673,14 +1902,18 @@ def build_standalone_strategy_handout(
         keys = []
 
     strategy_name = s_obj.get("short_name", s_obj.get("name", "Strategy"))
-    clean_strat_focus = (
-        s_obj.get("name", strategy_name)
-        .replace("Optional TWR: ", "")
-        .replace("Optional TWR:", "")
-        .replace("TWR: ", "")
-        .strip()
-    )
-    localized_strat_focus = get_localized_strategy_name(clean_strat_focus, lang=lang)
+    if strategy_category in ("critical_thinking", "crit"):
+        clean_strat_focus = t("crit_menu_focus", lang=lang) if strategy_code == "crit_02_read_and_infer_menu" else t("crit_focus_focus", lang=lang)
+        localized_strat_focus = clean_strat_focus
+    else:
+        clean_strat_focus = (
+            s_obj.get("name", strategy_name)
+            .replace("Optional TWR: ", "")
+            .replace("Optional TWR:", "")
+            .replace("TWR: ", "")
+            .strip()
+        )
+        localized_strat_focus = get_localized_strategy_name(clean_strat_focus, lang=lang)
     localized_strat_name = get_localized_strategy_name(strategy_name, lang=lang)
 
     # Standard Handout (standards excluded from student materials)
