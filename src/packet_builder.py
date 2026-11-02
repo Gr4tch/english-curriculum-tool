@@ -1171,11 +1171,11 @@ def _render_critical_thinking_component(
         lines.append(f"{dir_prefix} {t('crit_dok_directions', lang=lang, pages=pp)}")
         lines.append("")
 
-        # Step 1: DOK Level 1 (Recall & Identify)
+        # Step 1: Recall & Identify Explicit Facts
         if is_es:
-            lines.append("**Paso 1 — Nivel DOK 1 (Recordar e identificar hechos explícitos):**")
+            lines.append("**Paso 1: Recordar e identificar hechos explícitos:**")
         else:
-            lines.append("**Step 1 — DOK Level 1 (Recall & Identify Explicit Facts):**")
+            lines.append("**Step 1: Recall & Identify Explicit Facts:**")
 
         if is_scaffolded and kb.get("word_bank"):
             lines.append(f"*{t('word_bank_label', lang=lang)}* **{', '.join(kb['word_bank'])}**")
@@ -1191,10 +1191,10 @@ def _render_critical_thinking_component(
 
         lines.append("")
 
-        # Step 2: DOK Level 2 (Skills & Concepts — Cause & Effect)
+        # Step 2: Skills & Concepts — Cause & Effect
         if is_es:
-            lines.append("**Paso 2 — Nivel DOK 2 (Habilidades y conceptos — Causa y efecto):**")
-            lines.append(f"> **Pregunta DOK 2:** {dok2_q}")
+            lines.append("**Paso 2: Habilidades y conceptos — Causa y efecto:**")
+            lines.append(f"> {dok2_q}")
             if is_scaffolded:
                 lines.append(f"*Los acontecimientos en {sh0_clean} influyeron en {sh1_clean} porque* ______________________________________________________")
                 lines.append(SOLID_LINE)
@@ -1202,8 +1202,8 @@ def _render_critical_thinking_component(
                 lines.append(SOLID_LINE)
                 lines.append(SOLID_LINE)
         else:
-            lines.append("**Step 2 — DOK Level 2 (Skills & Concepts — Cause & Effect):**")
-            lines.append(f"> **DOK 2 Prompt:** {dok2_q}")
+            lines.append("**Step 2: Skills & Concepts — Cause & Effect:**")
+            lines.append(f"> {dok2_q}")
             if is_scaffolded:
                 lines.append(f"*The developments in {sh0_clean} led to {sh1_clean} because* _________________________________________________________")
                 lines.append(SOLID_LINE)
@@ -1214,10 +1214,10 @@ def _render_critical_thinking_component(
         keys.append(f"DOK Level 2 (Skills & Concepts): {kb.get('skill_q2_a') or inf.get('exemplar_reasoning', '')}")
         lines.append("")
 
-        # Step 3: DOK Level 3 (Strategic Thinking — Claim & Text Evidence)
+        # Step 3: Strategic Thinking — Claim & Text Evidence
         if is_es:
-            lines.append("**Paso 3 — Nivel DOK 3 (Pensamiento estratégico — Afirmación y evidencia del texto):**")
-            lines.append(f"> **Pregunta DOK 3:** {dok3_q}")
+            lines.append("**Paso 3: Pensamiento estratégico — Afirmación y evidencia del texto:**")
+            lines.append(f"> {dok3_q}")
             if is_scaffolded:
                 lines.append(f"- **Afirmación histórica:** *Basándome en las páginas {pp}, el acontecimiento de mayor impacto fue* ____________________________________.")
                 lines.append("- **Evidencia del texto:** *Esto se demuestra cuando el texto explica que* _______________________________________________________.")
@@ -1226,8 +1226,8 @@ def _render_critical_thinking_component(
                 lines.append(SOLID_LINE)
                 lines.append(SOLID_LINE)
         else:
-            lines.append("**Step 3 — DOK Level 3 (Strategic Thinking — Claim & Text Evidence):**")
-            lines.append(f"> **DOK 3 Prompt:** {dok3_q}")
+            lines.append("**Step 3: Strategic Thinking — Claim & Text Evidence:**")
+            lines.append(f"> {dok3_q}")
             if is_scaffolded:
                 lines.append(f"- **Historical Claim:** *Based on pages {pp}, the development with the greatest lasting impact was* ____________________________________.")
                 lines.append("- **Text Evidence & Reasoning:** *This is proven in the reading, which states that* _________________________________________________.")

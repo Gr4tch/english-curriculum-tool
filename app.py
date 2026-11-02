@@ -26,7 +26,7 @@ import src.strategy_thumbnails
 import src.preview_renderer
 import src.packet_builder
 
-if not any(t.get("code") == "crit_04_dok_questions" for t in getattr(src.strategy_thumbnails, "ALL_STRATEGY_TILES", [])):
+if src.i18n.STRINGS.get("en", {}).get("crit_dok_focus") != "DOK 1–2–3 Question Ladder":
     importlib.reload(src.i18n)
     importlib.reload(src.strategy_bank)
     importlib.reload(src.strategy_thumbnails)

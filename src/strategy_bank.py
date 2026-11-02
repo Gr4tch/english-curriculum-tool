@@ -653,18 +653,18 @@ The post-war frontier was not equally secure for anyone involved [pp. 178–179]
         "short_name": "DOK Questions",
         "best_for": "Building cognitive rigor from basic comprehension (DOK 1) to cause-and-effect concepts (DOK 2) and strategic reasoning with text evidence (DOK 3).",
         "description": "Three-level Depth of Knowledge (DOK) progression where students answer explicit recall prompts (DOK 1), explain historical connections across subheadings (DOK 2), and justify an analytical claim with text evidence (DOK 3).",
-        "visual_preview_md": """**Step 1 — DOK Level 1 (Recall & Identify):**
+        "visual_preview_md": """**Step 1: Recall & Identify Explicit Facts:**
 - **1a. PROBLEMS ARISE (p. 178):** What key policy or historical action is described under this subheading?
 ........................................................................................................................................
 - **1b. SOLDIERS IN THE COLONIES (pp. 178–179):** What key law or reaction is described under this subheading?
 ........................................................................................................................................
 
-**Step 2 — DOK Level 2 (Skills & Concepts — Cause & Effect):**
-> *How did the events and decisions in 'PROBLEMS ARISE' directly influence or lead to what happened in 'SOLDIERS IN THE COLONIES'?*
+**Step 2: Skills & Concepts — Cause & Effect:**
+> *How did the historical developments described in 'PROBLEMS ARISE' connect to or lead to what happened in 'SOLDIERS IN THE COLONIES'?*
 _________________________________________________________________________________
 _________________________________________________________________________________
 
-**Step 3 — DOK Level 3 (Strategic Thinking — Claim & Text Evidence):**
+**Step 3: Strategic Thinking — Claim & Text Evidence:**
 > *Which development in this section had a greater lasting impact on colonial history, and what specific evidence from pp. 178–179 proves your claim?*
 _________________________________________________________________________________
 _________________________________________________________________________________""",
