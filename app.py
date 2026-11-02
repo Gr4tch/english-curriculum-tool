@@ -17,21 +17,7 @@ import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
-import importlib
 import streamlit as st
-
-import src.i18n
-import src.strategy_bank
-import src.strategy_thumbnails
-import src.preview_renderer
-import src.packet_builder
-
-if src.i18n.STRINGS.get("en", {}).get("crit_dok_focus") != "DOK 1–2–3 Question Ladder":
-    importlib.reload(src.i18n)
-    importlib.reload(src.strategy_bank)
-    importlib.reload(src.strategy_thumbnails)
-    importlib.reload(src.preview_renderer)
-    importlib.reload(src.packet_builder)
 
 from src.strategy_bank import (
     CENTRAL_IDEA_STRATEGIES,
