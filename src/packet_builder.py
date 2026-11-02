@@ -1108,6 +1108,137 @@ def _render_critical_thinking_component(
     keys = []
     lines = []
 
+    if strategy_code == "crit_03_problem_solution":
+        pp = section_meta.get("printed_pages", "")
+        dir_prefix = f"**{t('directions_label', lang=lang)}**"
+        lines = [
+            f"{dir_prefix} {t('crit_prob_sol_directions', lang=lang, pages=pp)}",
+            f"| {t('problem_header', lang=lang)} | {t('solution_header', lang=lang)} |",
+            "| :--- | :--- |",
+        ]
+        sol_lbl = "Solución" if is_es else "Solution"
+        prob_lbl = "Problema" if is_es else "Problem"
+        sol_starter = "Para resolver o enfrentar este problema," if is_es else "To solve or address this problem,"
+        prob_starter = "El problema que llevó a esta medida fue que" if is_es else "The problem that led to this action was that"
+
+        for idx, sh in enumerate(subs, start=1):
+            prob_text = sh.get("problem") or sh.get("cause", "")
+            sol_text = sh.get("solution") or sh.get("effect", "")
+            cite = sh.get("citation", "")
+            if idx % 2 == 1:
+                p_cell = f"**{idx}. {sh['name']}:** {prob_text}"
+                if is_scaffolded:
+                    s_cell = f"**{sol_lbl} {idx}:** *{sol_starter}* __________________________________________________<br>______________________________________________________."
+                else:
+                    s_cell = f"**{sol_lbl} {idx}:**<br>______________________________________________________<br>______________________________________________________"
+                keys.append(f"Row {idx} Solution ({sh['name']}): {sol_text} {cite}")
+            else:
+                if is_scaffolded:
+                    p_cell = f"**{idx}. {sh['name']}:** *{prob_starter}* __________________________________________________<br>______________________________________________________."
+                else:
+                    p_cell = f"**{idx}. {sh['name']}:**<br>______________________________________________________<br>______________________________________________________"
+                s_cell = f"**{sol_lbl} {idx}:** {sol_text}"
+                keys.append(f"Row {idx} Problem ({sh['name']}): {prob_text} {cite}")
+            lines.append(f"| {p_cell} | {s_cell} |")
+
+        return "\n".join(lines), keys
+
+    if strategy_code == "crit_04_dok_questions":
+        pp = section_meta.get("printed_pages", "")
+        dir_prefix = f"**{t('directions_label', lang=lang)}**"
+        sh0_clean = re.sub(r"\s*\([^)]*\)", "", sh0_name).strip()
+        sh1_clean = re.sub(r"\s*\([^)]*\)", "", sh1_name).strip()
+        dok2_q = (
+            f"¿Cómo se relacionan o de qué manera los acontecimientos descritos en '{sh0_clean}' llevaron a lo que ocurrió en '{sh1_clean}'?"
+            if is_es else
+            f"How did the historical developments described in '{sh0_clean}' connect to or lead to what happened in '{sh1_clean}'?"
+        )
+        focus_q = inf.get("focus_question", "")
+        menu_items = inf.get("menu_questions", [])
+        if focus_q and sh0_clean not in focus_q:
+            dok3_q = focus_q
+        elif len(menu_items) >= 2:
+            dok3_q = menu_items[1]["question"]
+        elif menu_items:
+            dok3_q = menu_items[0]["question"]
+        else:
+            dok3_q = (
+                f"¿Qué acontecimiento de las páginas {pp} tuvo el impacto histórico más duradero? Defiende tu postura con evidencia específica del texto."
+                if is_es else
+                f"Which development on pages {pp} had the greatest lasting historical impact? Defend your claim with specific evidence from the text."
+            )
+
+        lines.append(f"{dir_prefix} {t('crit_dok_directions', lang=lang, pages=pp)}")
+        lines.append("")
+
+        # Step 1: DOK Level 1 (Recall & Identify)
+        if is_es:
+            lines.append("**Paso 1 — Nivel DOK 1 (Recordar e identificar hechos explícitos):**")
+        else:
+            lines.append("**Step 1 — DOK Level 1 (Recall & Identify Explicit Facts):**")
+
+        if is_scaffolded and kb.get("word_bank"):
+            lines.append(f"*{t('word_bank_label', lang=lang)}* **{', '.join(kb['word_bank'])}**")
+
+        for idx, sh in enumerate(subs, start=1):
+            sub_letter = chr(96 + idx)
+            if is_scaffolded:
+                lines.append(f"- **1{sub_letter}. {sh['name']}:** {sh['cloze_stmt']}")
+            else:
+                lines.append(f"- **1{sub_letter}. {sh['name']}:** *{sh['say_something_q']}*")
+                lines.append(DOTTED_LINE)
+            keys.append(f"DOK Level 1 Recall (1{sub_letter} — {sh['name']}): {sh['gist']} {sh['citation']}")
+
+        lines.append("")
+
+        # Step 2: DOK Level 2 (Skills & Concepts — Cause & Effect)
+        if is_es:
+            lines.append("**Paso 2 — Nivel DOK 2 (Habilidades y conceptos — Causa y efecto):**")
+            lines.append(f"> **Pregunta DOK 2:** {dok2_q}")
+            if is_scaffolded:
+                lines.append(f"*Los acontecimientos en {sh0_clean} influyeron en {sh1_clean} porque* ______________________________________________________")
+                lines.append(SOLID_LINE)
+            else:
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
+        else:
+            lines.append("**Step 2 — DOK Level 2 (Skills & Concepts — Cause & Effect):**")
+            lines.append(f"> **DOK 2 Prompt:** {dok2_q}")
+            if is_scaffolded:
+                lines.append(f"*The developments in {sh0_clean} led to {sh1_clean} because* _________________________________________________________")
+                lines.append(SOLID_LINE)
+            else:
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
+
+        keys.append(f"DOK Level 2 (Skills & Concepts): {kb.get('skill_q2_a') or inf.get('exemplar_reasoning', '')}")
+        lines.append("")
+
+        # Step 3: DOK Level 3 (Strategic Thinking — Claim & Text Evidence)
+        if is_es:
+            lines.append("**Paso 3 — Nivel DOK 3 (Pensamiento estratégico — Afirmación y evidencia del texto):**")
+            lines.append(f"> **Pregunta DOK 3:** {dok3_q}")
+            if is_scaffolded:
+                lines.append(f"- **Afirmación histórica:** *Basándome en las páginas {pp}, el acontecimiento de mayor impacto fue* ____________________________________.")
+                lines.append("- **Evidencia del texto:** *Esto se demuestra cuando el texto explica que* _______________________________________________________.")
+            else:
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
+        else:
+            lines.append("**Step 3 — DOK Level 3 (Strategic Thinking — Claim & Text Evidence):**")
+            lines.append(f"> **DOK 3 Prompt:** {dok3_q}")
+            if is_scaffolded:
+                lines.append(f"- **Historical Claim:** *Based on pages {pp}, the development with the greatest lasting impact was* ____________________________________.")
+                lines.append("- **Text Evidence & Reasoning:** *This is proven in the reading, which states that* _________________________________________________.")
+            else:
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
+                lines.append(SOLID_LINE)
+
+        keys.append(f"DOK Level 3 (Strategic Claim & Text Evidence): {inf.get('exemplar_conclusion', kb.get('exemplar_central_idea', ''))}")
+        return "\n".join(lines), keys
+
     if strategy_code == "crit_02_read_and_infer_menu":
         # Strategy 2: Choice Menu
         lines.append(f"**{t('directions_label', lang=lang)}** {t('crit_menu_directions', lang=lang)}")
@@ -1956,7 +2087,14 @@ def build_standalone_strategy_handout(
 
     strategy_name = s_obj.get("short_name", s_obj.get("name", "Strategy"))
     if strategy_category in ("critical_thinking", "crit"):
-        clean_strat_focus = t("crit_menu_focus", lang=lang) if strategy_code == "crit_02_read_and_infer_menu" else t("crit_focus_focus", lang=lang)
+        if strategy_code == "crit_02_read_and_infer_menu":
+            clean_strat_focus = t("crit_menu_focus", lang=lang)
+        elif strategy_code == "crit_03_problem_solution":
+            clean_strat_focus = t("crit_prob_sol_focus", lang=lang)
+        elif strategy_code == "crit_04_dok_questions":
+            clean_strat_focus = t("crit_dok_focus", lang=lang)
+        else:
+            clean_strat_focus = t("crit_focus_focus", lang=lang)
         localized_strat_focus = clean_strat_focus
     else:
         clean_strat_focus = (

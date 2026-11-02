@@ -467,6 +467,54 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
         </div>
         """,
     },
+    {
+        "code": "crit_03_problem_solution",
+        "category": "Critical Thinking",
+        "category_badge": "ws-badge-purple",
+        "name": "Problem - Solution",
+        "subtitle": "Historical Problem & Solution Table",
+        "best_for": "Analyzing a historical problem from the section to identify its solution, or given a solution, identifying the problem.",
+        "thumbnail_svg": """
+        <div style="background:#faf5ff; border:1px solid #d8b4fe; border-radius:4px; padding:4px; height:74px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="display:flex; background:#f3e8ff; border-radius:2px; font-size:6.5px; font-weight:700; padding:2px; color:#5b21b6;">
+                <div style="width:50%;">PROBLEM</div>
+                <div style="width:50%;">SOLUTION</div>
+            </div>
+            <div style="display:flex; gap:4px; padding:2px 0;">
+                <div style="width:50%; font-size:5.8px; color:#475569;">War debt & frontier</div>
+                <div style="width:50%; border-bottom:1px solid #7c3aed; height:6px;"></div>
+            </div>
+            <div style="display:flex; gap:4px; padding:2px 0;">
+                <div style="width:50%; border-bottom:1px solid #7c3aed; height:6px;"></div>
+                <div style="width:50%; font-size:5.8px; color:#475569;">Quartering Act</div>
+            </div>
+        </div>
+        """,
+    },
+    {
+        "code": "crit_04_dok_questions",
+        "category": "Critical Thinking",
+        "category_badge": "ws-badge-purple",
+        "name": "DOK Questions",
+        "subtitle": "DOK 1-2-3 Cognitive Rigor Ladder",
+        "best_for": "Climbing from DOK 1 Recall to DOK 2 Cause/Effect Concepts and DOK 3 Text-Evidence Reasoning.",
+        "thumbnail_svg": """
+        <div style="background:#faf5ff; border:1px solid #d8b4fe; border-radius:4px; padding:4px; height:74px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:3px; font-size:5.8px; color:#475569;">
+                <span style="background:#f3e8ff; color:#6b21a8; font-weight:700; padding:1px 3px; border-radius:2px;">DOK 1</span>
+                <span>Recall & Identify Facts</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:3px; font-size:5.8px; color:#475569;">
+                <span style="background:#e9d5ff; color:#5b21b6; font-weight:700; padding:1px 3px; border-radius:2px;">DOK 2</span>
+                <span>How/Why Concept Link</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:3px; font-size:5.8px; color:#475569; border-top:1px dashed #d8b4fe; padding-top:2px;">
+                <span style="background:#7c3aed; color:#ffffff; font-weight:700; padding:1px 3px; border-radius:2px;">DOK 3</span>
+                <span>Claim + Text Evidence</span>
+            </div>
+        </div>
+        """,
+    },
 ]
 
 

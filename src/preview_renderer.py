@@ -18,6 +18,8 @@ def _detect_strategy_category(strategy_code: str) -> str:
         return "reading_organizer"
     elif strategy_code.startswith("twr_"):
         return "twr"
+    elif strategy_code.startswith("crit_"):
+        return "critical_thinking"
     return "central_idea"
 
 

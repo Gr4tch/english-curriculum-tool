@@ -17,12 +17,27 @@ import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
+import importlib
 import streamlit as st
+
+import src.i18n
+import src.strategy_bank
+import src.strategy_thumbnails
+import src.preview_renderer
+import src.packet_builder
+
+if not any(t.get("code") == "crit_04_dok_questions" for t in getattr(src.strategy_thumbnails, "ALL_STRATEGY_TILES", [])):
+    importlib.reload(src.i18n)
+    importlib.reload(src.strategy_bank)
+    importlib.reload(src.strategy_thumbnails)
+    importlib.reload(src.preview_renderer)
+    importlib.reload(src.packet_builder)
 
 from src.strategy_bank import (
     CENTRAL_IDEA_STRATEGIES,
     PRINTED_MAIN_IDEA_MODES,
     READING_ORGANIZERS,
+    CRITICAL_THINKING_STRATEGIES,
     VOCAB_MODES,
     READING_MODES,
     COVER_PAGE_MODES,
@@ -119,8 +134,66 @@ st.markdown(
     .block-container {
         padding-top: 1.0rem !important;
         padding-bottom: 2.5rem !important;
+        padding-left: clamp(1.25rem, 3vw, 3.0rem) !important;
+        padding-right: clamp(1.25rem, 3vw, 3.0rem) !important;
         max-width: 1400px !important;
         margin: 0 auto !important;
+    }
+
+    /* Compact Top Bar & Strategy Toolbar Alignment */
+    div[data-testid="stHorizontalBlock"]:has(div[class*="lang_toggle"]),
+    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-btn_clear_active_tile"]) {
+        gap: 0.45rem !important;
+        align-items: center !important;
+    }
+
+    /* Compact Top Bar Buttons & Language Radio Controls */
+    div[class*="st-key-top_logout_btn"] button,
+    div[class*="st-key-packet_logout_btn"] button,
+    div[class*="st-key-packet_export_logout_btn"] button,
+    div[class*="st-key-gal_logout_btn"] button,
+    div[class*="st-key-btn_back_packet"] button,
+    div[class*="st-key-btn_back_packet_export"] button,
+    div[class*="st-key-btn_back_gallery"] button,
+    div[class*="st-key-btn_clear_active_tile"] button {
+        padding-left: 0.50rem !important;
+        padding-right: 0.50rem !important;
+        white-space: nowrap !important;
+        min-height: 38px !important;
+        height: 38px !important;
+    }
+    div[class*="st-key-top_logout_btn"] button p,
+    div[class*="st-key-packet_logout_btn"] button p,
+    div[class*="st-key-packet_export_logout_btn"] button p,
+    div[class*="st-key-gal_logout_btn"] button p,
+    div[class*="st-key-btn_back_packet"] button p,
+    div[class*="st-key-btn_back_packet_export"] button p,
+    div[class*="st-key-btn_back_gallery"] button p,
+    div[class*="st-key-btn_clear_active_tile"] button p {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        font-size: 0.84rem !important;
+    }
+    div[class*="st-key-gal_scaf_toggle"] label p,
+    div[class*="st-key-gal_half_sheet_toggle"] label p {
+        white-space: nowrap !important;
+        font-size: 0.84rem !important;
+    }
+    div[class*="lang_toggle"] div[data-testid="stRadio"] div[role="radiogroup"],
+    div[class*="lang_radio"] div[data-testid="stRadio"] div[role="radiogroup"] {
+        flex-wrap: nowrap !important;
+        gap: 0.45rem !important;
+    }
+    div[class*="lang_toggle"] div[data-testid="stRadio"] label[data-baseweb="radio"],
+    div[class*="lang_radio"] div[data-testid="stRadio"] label[data-baseweb="radio"] {
+        margin-right: 0 !important;
+        white-space: nowrap !important;
+    }
+    div[class*="lang_toggle"] div[data-testid="stRadio"] p,
+    div[class*="lang_radio"] div[data-testid="stRadio"] p {
+        white-space: nowrap !important;
+        font-size: 0.84rem !important;
     }
 
     /* Top Banner Styling */
@@ -291,11 +364,18 @@ st.markdown(
         border: 2px solid #1e3a8a !important;
         border-radius: 8px !important;
         font-weight: 700 !important;
-        font-size: 0.90rem !important;
-        padding: 0.6rem 1rem !important;
+        font-size: 0.85rem !important;
+        padding: 0.55rem 0.65rem !important;
+        white-space: nowrap !important;
         box-shadow: 0 2px 4px rgba(30, 58, 138, 0.08) !important;
         transition: all 0.15s ease-in-out !important;
         cursor: pointer !important;
+    }
+    div.stDownloadButton > button p {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        font-size: 0.85rem !important;
     }
     div.stDownloadButton > button:not([kind="primary"]):hover {
         background-color: #1e3a8a !important;
@@ -315,8 +395,9 @@ st.markdown(
         border: 2px solid #172554 !important;
         border-radius: 8px !important;
         font-weight: 700 !important;
-        font-size: 0.90rem !important;
-        padding: 0.65rem 1rem !important;
+        font-size: 0.85rem !important;
+        padding: 0.55rem 0.65rem !important;
+        white-space: nowrap !important;
         box-shadow: 0 2px 4px rgba(30, 58, 138, 0.2) !important;
         transition: all 0.15s ease-in-out !important;
         cursor: pointer !important;
@@ -432,14 +513,14 @@ st.markdown(
         background-color: #ffffff !important;
         color: #1e293b !important;
         font-weight: 600 !important;
-        font-size: 0.86rem !important;
+        font-size: 0.84rem !important;
         height: 38px !important;
         min-height: 38px !important;
         max-height: 38px !important;
         box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
         transition: all 0.15s ease-in-out !important;
         white-space: nowrap !important;
-        padding: 0 12px !important;
+        padding: 0 6px !important;
         overflow: hidden !important;
     }
     div[data-testid="stPopover"] > button:hover {
@@ -449,10 +530,11 @@ st.markdown(
     }
     div[data-testid="stPopover"] > button p {
         white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
         margin: 0 !important;
         font-weight: 600 !important;
+        font-size: 0.84rem !important;
     }
     div[data-testid="stPopoverBody"] {
         padding: 1rem !important;
@@ -1169,7 +1251,7 @@ eq_text = ch_std_info.get('essential_question', '')
 
 # Render full contextual banner & chapter selector on Home Gateway screen
 if st.session_state["nav_view"] == "home":
-    top_col1, top_col2 = st.columns([1.5, 1.2])
+    top_col1, tc_pill, tc_lang, tc_out = st.columns([2.20, 1.30, 1.50, 0.85])
 
     with top_col1:
         cur_ch = st.session_state["selected_ch_num"]
@@ -1188,38 +1270,36 @@ if st.session_state["nav_view"] == "home":
             label_visibility="collapsed",
         )
 
-    with top_col2:
-        tc_pill, tc_lang, tc_out = st.columns([1.6, 1.4, 0.7])
-        with tc_pill:
-            render_clean_html(
-                f"""
-                <div style="text-align: right; padding-top: 0.25rem; white-space: nowrap;">
-                    <span class="badge-pill" style="font-size: 0.88rem; padding: 0.35rem 0.85rem;">
-                        <b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections
-                    </span>
-                </div>
-                """
-            )
-        with tc_lang:
-            cur_lang_idx = 1 if st.session_state.get("handout_language") == "es" else 0
-            st.markdown("<div style='font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 2px;'>Language</div>", unsafe_allow_html=True)
-            sel_lang = st.radio(
-                "Handout Language",
-                options=["English", "Español"],
-                index=cur_lang_idx,
-                horizontal=True,
-                key="home_lang_toggle",
-                label_visibility="collapsed",
-            )
-            target_lang = "es" if sel_lang == "Español" else "en"
-            if target_lang != st.session_state.get("handout_language"):
-                st.session_state["handout_language"] = target_lang
-                st.session_state.pop("cached_modular_result", None)
-                st.rerun()
-        with tc_out:
-            if st.button("Log Out", key="top_logout_btn", use_container_width=True):
-                st.session_state["authenticated"] = False
-                st.rerun()
+    with tc_pill:
+        render_clean_html(
+            f"""
+            <div style="display: flex; align-items: center; justify-content: center; height: 38px; overflow: hidden;">
+                <span class="badge-pill" style="font-size: 0.85rem; padding: 0.32rem 0.75rem; margin-right: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; box-sizing: border-box;">
+                    <b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections
+                </span>
+            </div>
+            """
+        )
+    with tc_lang:
+        cur_lang_idx = 1 if st.session_state.get("handout_language") == "es" else 0
+        st.markdown("<div style='font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 2px;'>Language</div>", unsafe_allow_html=True)
+        sel_lang = st.radio(
+            "Handout Language",
+            options=["English", "Español"],
+            index=cur_lang_idx,
+            horizontal=True,
+            key="home_lang_toggle",
+            label_visibility="collapsed",
+        )
+        target_lang = "es" if sel_lang == "Español" else "en"
+        if target_lang != st.session_state.get("handout_language"):
+            st.session_state["handout_language"] = target_lang
+            st.session_state.pop("cached_modular_result", None)
+            st.rerun()
+    with tc_out:
+        if st.button("Log Out", key="top_logout_btn", use_container_width=True):
+            st.session_state["authenticated"] = False
+            st.rerun()
 
     banner_html = (
         '<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #1e3a8a; border-radius: 8px; padding: 0.85rem 1.15rem; margin-bottom: 1.0rem; display: grid; grid-template-columns: 1fr auto 2fr auto 1fr; align-items: center; gap: 1.25rem;">'
@@ -1305,7 +1385,7 @@ if st.session_state["nav_view"] == "home":
 elif st.session_state["nav_view"] == "packet":
 
     # Breadcrumb Header
-    b_col1, b_col2, b_col_lang, b_col3, b_col4 = st.columns([1.0, 1.9, 1.1, 0.6, 0.6])
+    b_col1, b_col2, b_col_lang, b_col3, b_col4 = st.columns([1.05, 2.00, 1.50, 0.90, 0.85])
     with b_col1:
         if st.button("<- Main Menu", use_container_width=True, key="btn_back_packet"):
             st.session_state["nav_view"] = "home"
@@ -1313,8 +1393,8 @@ elif st.session_state["nav_view"] == "packet":
     with b_col2:
         render_clean_html(
             f"""
-            <div style="padding-top: 0.2rem;">
-                <span class="badge-pill" style="font-size: 0.86rem; padding: 0.30rem 0.75rem;">
+            <div style="display: flex; align-items: center; min-height: 38px; overflow: hidden;">
+                <span class="badge-pill" style="font-size: 0.82rem; padding: 0.28rem 0.65rem; margin-right: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; box-sizing: border-box;">
                     <b>Pathway 1:</b> Modular Packet Builder &bull; Chapter {selected_ch_num:02d}
                 </span>
             </div>
@@ -1337,7 +1417,7 @@ elif st.session_state["nav_view"] == "packet":
             st.session_state.pop("cached_modular_result", None)
             st.rerun()
     with b_col3:
-        with st.popover("Context"):
+        with st.popover("Context", use_container_width=True):
             st.markdown(f"**Curriculum Unit:** {display_unit}")
             st.markdown(f"**Essential Question:** *\"{eq_text}\"*")
             st.markdown(f"**Google Drive Folder:** `{ROOT_FOLDER_NAME}`")
@@ -1526,6 +1606,7 @@ elif st.session_state["nav_view"] == "packet":
     CAT_OPTIONS = [
         ("Active Reading Graphic Organizer", "reading_organizer"),
         ("Central Idea Synthesis", "central_idea"),
+        ("Critical Thinking & Inference", "critical_thinking"),
         ("Anti-Copycat (Textbook Main Idea)", "anti_copycat"),
         ("Writing Extension (The Writing Revolution)", "twr"),
         ("Vocabulary Practice", "vocab"),
@@ -1541,6 +1622,8 @@ elif st.session_state["nav_view"] == "packet":
             return READING_ORGANIZERS[0]["code"]
         elif cat_code == "central_idea":
             return CENTRAL_IDEA_STRATEGIES[0]["code"]
+        elif cat_code == "critical_thinking":
+            return CRITICAL_THINKING_STRATEGIES[0]["code"]
         elif cat_code == "anti_copycat":
             return PRINTED_MAIN_IDEA_MODES[0]["code"]
         elif cat_code == "twr":
@@ -1844,6 +1927,9 @@ elif st.session_state["nav_view"] == "packet":
                 elif sel_cat == "central_idea":
                     strat_opts = [s["code"] for s in CENTRAL_IDEA_STRATEGIES]
                     strat_names = {s["code"]: s["name"] for s in CENTRAL_IDEA_STRATEGIES}
+                elif sel_cat == "critical_thinking":
+                    strat_opts = [c["code"] for c in CRITICAL_THINKING_STRATEGIES]
+                    strat_names = {c["code"]: c["name"] for c in CRITICAL_THINKING_STRATEGIES}
                 elif sel_cat == "anti_copycat":
                     strat_opts = [m["code"] for m in PRINTED_MAIN_IDEA_MODES]
                     strat_names = {m["code"]: m["name"] for m in PRINTED_MAIN_IDEA_MODES}
@@ -1945,7 +2031,7 @@ elif st.session_state["nav_view"] == "packet_export":
     tray_pages = st.session_state["tray_pages"]
 
     # Breadcrumb Header
-    b_col1, b_col2, b_col_lang, b_col3, b_col4 = st.columns([1.1, 1.9, 1.1, 0.6, 0.6])
+    b_col1, b_col2, b_col_lang, b_col3, b_col4 = st.columns([1.15, 2.1, 1.25, 0.72, 0.72])
     with b_col1:
         if st.button("← Back to Packet Editor", use_container_width=True, key="btn_back_packet_export"):
             st.session_state["nav_view"] = "packet"
@@ -1953,8 +2039,8 @@ elif st.session_state["nav_view"] == "packet_export":
     with b_col2:
         render_clean_html(
             f"""
-            <div style="padding-top: 0.2rem;">
-                <span class="badge-pill" style="font-size: 0.86rem; padding: 0.30rem 0.75rem;">
+            <div style="display: flex; align-items: center; min-height: 38px; overflow: hidden;">
+                <span class="badge-pill" style="font-size: 0.82rem; padding: 0.28rem 0.65rem; margin-right: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; box-sizing: border-box;">
                     <b>Final Step:</b> Review & Export Packet &bull; Chapter {selected_ch_num:02d} ({len(tray_pages)} Pages)
                 </span>
             </div>
@@ -2205,7 +2291,7 @@ elif st.session_state["nav_view"] == "packet_export":
 elif st.session_state["nav_view"] == "gallery":
 
     # ── Tier 1: Single-Row Universal Navigation & Scope Bar (~38px) ──
-    nav_c1, nav_c2, nav_c3, nav_lang, nav_c4, nav_c5 = st.columns([0.9, 1.6, 2.0, 1.1, 0.6, 0.6])
+    nav_c1, nav_c2, nav_c3, nav_lang, nav_c4, nav_c5 = st.columns([1.08, 1.05, 1.15, 1.55, 0.92, 0.85])
     with nav_c1:
         if st.button("<- Main Menu", use_container_width=True, key="btn_back_gallery"):
             st.session_state["nav_view"] = "home"
@@ -2367,7 +2453,7 @@ elif st.session_state["nav_view"] == "gallery":
             st.rerun()
 
     with nav_c4:
-        with st.popover("Context"):
+        with st.popover("Context", use_container_width=True):
             st.markdown(f"**Curriculum Unit:** {display_unit}")
             st.markdown(f"**Essential Question:** *\"{eq_text}\"*")
             st.markdown(f"**Google Drive Folder:** `{ROOT_FOLDER_NAME}`")
@@ -2390,11 +2476,11 @@ elif st.session_state["nav_view"] == "gallery":
         category_filter = st.radio(
             "Filter by Pedagogical Category:",
             options=[
-                "All Strategies (21)",
+                "All Strategies (23)",
                 "Central Idea (4)",
                 "Anti-Copycat (3)",
                 "Active Reading (6)",
-                "Critical Thinking (2)",
+                "Critical Thinking (4)",
                 "The Writing Revolution (4)",
                 "Vocabulary & Assessment (2)",
             ],
@@ -2442,45 +2528,40 @@ elif st.session_state["nav_view"] == "gallery":
         active_cat_key = cat_lookup.get(active_tile["category"], "central_idea")
 
         # ── Compact Action & Format Toolbar (~40px) ──
-        tb_col1, tb_col2 = st.columns([1.6, 2.2])
-        with tb_col1:
-            t_sub1, t_sub2 = st.columns([2.3, 1.2])
-            with t_sub1:
-                render_clean_html(
-                    f"""
-                    <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 0.30rem 0.60rem; display: flex; align-items: center; justify-content: space-between; height: 38px; box-sizing: border-box;">
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #166534; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            {active_tile['name']}
-                        </span>
-                        <span class="badge-pill" style="font-size: 0.68rem; padding: 0.10rem 0.35rem; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; margin-left: 0.35rem;">{active_tile['category']}</span>
-                    </div>
-                    """
-                )
-            with t_sub2:
-                if st.button("Change", key="btn_clear_active_tile", use_container_width=True, help="Switch to a different curriculum strategy layout"):
-                    st.session_state["gal_active_tile_code"] = None
-                    try:
-                        del st.query_params["strategy"]
-                    except Exception:
-                        pass
-                    st.rerun()
-
-        with tb_col2:
-            scaf_c, hs_c = st.columns(2)
-            with scaf_c:
-                is_scaf_ws = st.checkbox(
-                    "Scaffolded Edition",
-                    value=st.session_state.get("gal_scaf_toggle", False),
-                    key="gal_scaf_toggle",
-                    help="Adds sentence starters, word banks, and structured fill-in-the-blanks for differentiated support.",
-                )
-            with hs_c:
-                is_half_sheet = st.checkbox(
-                    "2-Up Half-Sheets (50% Paper)",
-                    value=st.session_state.get("gal_half_sheet_toggle", False),
-                    key="gal_half_sheet_toggle",
-                    help="Formats two identical compact worksheets onto a single 8.5x11 letter page separated by a dashed cut line to cut photocopy usage in half.",
-                )
+        t_sub1, t_sub2, scaf_c, hs_c = st.columns([2.25, 0.68, 1.15, 1.65])
+        with t_sub1:
+            render_clean_html(
+                f"""
+                <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 0.25rem 0.55rem; display: flex; align-items: center; justify-content: space-between; gap: 0.40rem; height: 38px; box-sizing: border-box; overflow: hidden;">
+                    <span style="font-size: 0.84rem; font-weight: 700; color: #166534; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1;">
+                        {active_tile['name']}
+                    </span>
+                    <span class="badge-pill" style="font-size: 0.68rem; padding: 0.12rem 0.42rem; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; margin: 0; white-space: nowrap; flex-shrink: 0;">{active_tile['category']}</span>
+                </div>
+                """
+            )
+        with t_sub2:
+            if st.button("Change", key="btn_clear_active_tile", use_container_width=True, help="Switch to a different curriculum strategy layout"):
+                st.session_state["gal_active_tile_code"] = None
+                try:
+                    del st.query_params["strategy"]
+                except Exception:
+                    pass
+                st.rerun()
+        with scaf_c:
+            is_scaf_ws = st.checkbox(
+                "Scaffolded Edition",
+                value=st.session_state.get("gal_scaf_toggle", False),
+                key="gal_scaf_toggle",
+                help="Adds sentence starters, word banks, and structured fill-in-the-blanks for differentiated support.",
+            )
+        with hs_c:
+            is_half_sheet = st.checkbox(
+                "2-Up Half-Sheets (50% Paper)",
+                value=st.session_state.get("gal_half_sheet_toggle", False),
+                key="gal_half_sheet_toggle",
+                help="Formats two identical compact worksheets onto a single 8.5x11 letter page separated by a dashed cut line to cut photocopy usage in half.",
+            )
 
         # Multi-Section Connection Flow Banner (Visual Sequence Card)
         if active_tile_code == "ro_02_multi_section_cause_effect":
@@ -2531,11 +2612,11 @@ elif st.session_state["nav_view"] == "gallery":
             min_cat_filter = st.radio(
                 "Filter by Pedagogical Category:",
                 options=[
-                    "All Strategies (21)",
+                    "All Strategies (23)",
                     "Central Idea (4)",
                     "Anti-Copycat (3)",
                     "Active Reading (6)",
-                    "Critical Thinking (2)",
+                    "Critical Thinking (4)",
                     "The Writing Revolution (4)",
                     "Vocabulary & Assessment (2)",
                 ],
@@ -2619,7 +2700,7 @@ elif st.session_state["nav_view"] == "gallery":
 
         # Download & Google Drive Action Bar
         if student_pdf_bytes and teacher_pdf_bytes and single_bundle_zip:
-            w_dl1, w_dl2, w_dl3, w_dl4 = st.columns([1.3, 1.3, 1.3, 1.6])
+            w_dl1, w_dl2, w_dl3, w_dl4 = st.columns([1.30, 1.45, 1.18, 1.55])
             with w_dl1:
                 st.download_button(
                     "Download Student PDF",

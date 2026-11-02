@@ -628,6 +628,55 @@ The post-war frontier was not equally secure for anyone involved [pp. 178–179]
 - **Step 2 Reasoning Starter:** *These facts show that* ___________________________________________________________
 - **Step 3 Inferred Claim Frame:** *Regarding [chosen question], the evidence indicates that* _____________________ *because* ____________________________________________________________________ [p. ___].""",
     },
+    {
+        "code": "crit_03_problem_solution",
+        "name": "Problem - Solution",
+        "short_name": "Problem - Solution",
+        "best_for": "Analyzing historical problems and the policies, actions, or solutions attempted in the section.",
+        "description": "Two-column critical thinking organizer where students examine a historical problem from the reading to identify the attempted solution, or analyze a historical solution/policy to identify the underlying problem.",
+        "visual_preview_md": """| HISTORICAL PROBLEM (Challenge / Conflict) | HISTORICAL SOLUTION (Policy / Action Taken) |
+| :--- | :--- |
+| **1. PROBLEMS ARISE (p. 178):** After the costly French and Indian War, King George III wanted to maintain control of the colonies and limit conflict with Native Americans. | **Solution 1:**<br>______________________________________________________<br>______________________________________________________ |
+| **2. SOLDIERS IN THE COLONIES (pp. 178–179):**<br>______________________________________________________<br>______________________________________________________ | **Solution 2:** Parliament passed the Quartering Act in 1765, requiring colonists to house British soldiers in inns, stables, and barns. |""",
+        "exemplar_md": """**Student Exemplar:**
+| HISTORICAL PROBLEM (Challenge / Conflict) | HISTORICAL SOLUTION (Policy / Action Taken) |
+| :--- | :--- |
+| **1. PROBLEMS ARISE (p. 178):** After the costly French and Indian War, King George III wanted to maintain control of the colonies and limit conflict with Native Americans. | **Solution 1:** The king issued the Proclamation of 1763, ordering colonists to stay east of the Appalachian Mountains. |
+| **2. SOLDIERS IN THE COLONIES (pp. 178–179):** Britain moved soldiers into port cities like New York and Boston to enforce royal laws and needed quarters for them. | **Solution 2:** Parliament passed the Quartering Act in 1765, requiring colonists to house British soldiers in inns, stables, and barns. |""",
+        "scaffolded_md": """*Scaffolded Support Elements:*
+- **Solution 1 Starter:** *To address this problem,* ____________________________________
+- **Problem 2 Starter:** *The problem that led to this action was that* _______________________________________""",
+    },
+    {
+        "code": "crit_04_dok_questions",
+        "name": "DOK Questions (Level 1–2–3 Ladder)",
+        "short_name": "DOK Questions",
+        "best_for": "Building cognitive rigor from basic comprehension (DOK 1) to cause-and-effect concepts (DOK 2) and strategic reasoning with text evidence (DOK 3).",
+        "description": "Three-level Depth of Knowledge (DOK) progression where students answer explicit recall prompts (DOK 1), explain historical connections across subheadings (DOK 2), and justify an analytical claim with text evidence (DOK 3).",
+        "visual_preview_md": """**Step 1 — DOK Level 1 (Recall & Identify):**
+- **1a. PROBLEMS ARISE (p. 178):** What key policy or historical action is described under this subheading?
+........................................................................................................................................
+- **1b. SOLDIERS IN THE COLONIES (pp. 178–179):** What key law or reaction is described under this subheading?
+........................................................................................................................................
+
+**Step 2 — DOK Level 2 (Skills & Concepts — Cause & Effect):**
+> *How did the events and decisions in 'PROBLEMS ARISE' directly influence or lead to what happened in 'SOLDIERS IN THE COLONIES'?*
+_________________________________________________________________________________
+_________________________________________________________________________________
+
+**Step 3 — DOK Level 3 (Strategic Thinking — Claim & Text Evidence):**
+> *Which development in this section had a greater lasting impact on colonial history, and what specific evidence from pp. 178–179 proves your claim?*
+_________________________________________________________________________________
+_________________________________________________________________________________""",
+        "exemplar_md": """**Student Exemplar:**
+- **DOK Level 1 (Recall):** (1a) King George III issued the Proclamation of 1763 banning settlement west of the Appalachians [p. 178]. (1b) Parliament passed the Quartering Act of 1765 forcing colonists to house and supply British troops [pp. 178–179].
+- **DOK Level 2 (Concept):** Because many colonists ignored the Proclamation of 1763, Britain stationed 10,000 soldiers in the colonies and passed the Quartering Act to enforce royal authority [pp. 178–179].
+- **DOK Level 3 (Strategic Claim & Evidence):** The Quartering Act had a greater impact on daily colonial resistance because placing armed British troops in port cities like New York and Boston turned a distant border dispute into a direct clash over colonial rights, as shown on page 179 when the New York assembly refused to enforce the law.""",
+        "scaffolded_md": """*Scaffolded Support Elements:*
+- **DOK 1 Support:** Includes section Word Bank and guided cloze fill-in statements for each subheading.
+- **DOK 2 Starter:** *The events in the first subheading led to the second subheading because* ____________________________________
+- **DOK 3 Claim & Evidence Frame:** *Based on pages ___, the most significant development was* _____________________ *because the text states that* ____________________________________.""",
+    },
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────

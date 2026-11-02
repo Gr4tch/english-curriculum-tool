@@ -80,6 +80,12 @@ STRINGS: Dict[str, Dict[str, str]] = {
         # Critical Thinking / Inference
         "crit_focus_focus": "Reading Between the Lines → Text-Based Inference",
         "crit_menu_focus": "Historical Perspectives & Inquiry → Student Choice Inference",
+        "crit_prob_sol_focus": "Critical Thinking: Historical Problem & Solution Analysis",
+        "crit_prob_sol_directions": "As we read each subheading on pages {pages}, analyze the historical **Problem** (challenge or conflict) and the **Solution** (policy, response, or action taken). Complete the missing problem or solution in each row below.",
+        "problem_header": "Historical Problem / Challenge<br>What obstacle, crisis, or conflict arose?",
+        "solution_header": "Historical Solution / Action Taken<br>How did leaders or colonists attempt to solve or respond to it?",
+        "crit_dok_focus": "Critical Thinking: Depth of Knowledge — DOK 1–2–3 Question Ladder",
+        "crit_dok_directions": "As you read pages {pages}, progress through all three Depth of Knowledge (DOK) levels below—moving from basic recall (DOK 1) to cause-and-effect concepts (DOK 2) and strategic reasoning with text evidence (DOK 3).",
         "crit_focus_directions": "Read the inferential question below. In history, an inference combines facts from the reading with logical reasoning. Complete Steps 1–3 to build your answer.",
         "crit_menu_directions": "Review the three inferential questions below. Check ONE question you want to investigate, then complete Steps 1–3 below using evidence from the text.",
         "crit_step1_label": "Step 1: Text Clues (What the book explicitly says)",
@@ -160,6 +166,12 @@ STRINGS: Dict[str, Dict[str, str]] = {
         # Critical Thinking / Inference
         "crit_focus_focus": "Lectura entre líneas → Inferencias basadas en el texto",
         "crit_menu_focus": "Perspectivas históricas e indagación → Inferencia con opción a elegir",
+        "crit_prob_sol_focus": "Pensamiento crítico: Análisis de problema y solución histórica",
+        "crit_prob_sol_directions": "A medida que leemos cada subtítulo en las páginas {pages}, analiza el **Problema** histórico (desafío o conflicto) y la **Solución** (medida, respuesta o acción tomada). Completa el problema o la solución que falta en cada fila a continuación.",
+        "problem_header": "Problema o desafío histórico<br>¿Qué obstáculo, crisis o conflicto surgió?",
+        "solution_header": "Solución o medida histórica<br>¿Cómo intentaron resolverlo o responder los líderes o colonos?",
+        "crit_dok_focus": "Pensamiento crítico: Escalera de preguntas DOK 1–2–3",
+        "crit_dok_directions": "A medida que lees las páginas {pages}, avanza por los tres niveles de Profundidad del Conocimiento (DOK) a continuación: desde recordar datos básicos (DOK 1) hasta explicar conceptos de causa y efecto (DOK 2) y argumentar con evidencia del texto (DOK 3).",
         "crit_focus_directions": "Lee la pregunta de inferencia a continuación. En historia, una inferencia combina hechos de la lectura con el razonamiento lógico. Completa los Pasos 1 al 3 para elaborar tu respuesta.",
         "crit_menu_directions": "Revisa las tres preguntas de inferencia a continuación. Marca UNA pregunta que desees investigar y luego completa los Pasos 1 al 3 usando evidencia del texto.",
         "crit_step1_label": "Paso 1: Pistas del texto (Lo que dice el libro)",
@@ -239,6 +251,9 @@ SPANISH_STRATEGY_NAMES: Dict[str, str] = {
     "Read & Infer: Target Question": "Leer e inferir: Pregunta clave",
     "Read and Infer: Choice Menu": "Leer e inferir: Menú de opciones",
     "Read & Infer: Choice Menu": "Leer e inferir: Menú de opciones",
+    "Problem - Solution": "Problema - Solución",
+    "DOK Questions (Level 1–2–3 Ladder)": "Preguntas DOK (Escalera de niveles 1–2–3)",
+    "DOK Questions": "Preguntas DOK",
 }
 
 
