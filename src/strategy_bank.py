@@ -554,7 +554,7 @@ In 1765, colonists in port cities like Boston and New York actively protested ag
 CRITICAL_THINKING_STRATEGIES: List[Dict[str, str]] = [
     {
         "code": "crit_01_read_and_infer_focus",
-        "name": "Read and Infer: Target Question",
+        "name": "Read & Infer: Target Question",
         "short_name": "Read & Infer (Target Question)",
         "best_for": "Deep-dive analytical thinking on one high-impact inferential question grounded in the section reading using a 3-step evidence scaffold.",
         "description": "Students answer a section-specific inferential question by citing 2 text clues, explaining what the clues suggest, and writing a 2–3 sentence inferred claim.",
@@ -591,7 +591,7 @@ While King George III viewed the Proclamation of 1763 as a practical way to prev
     },
     {
         "code": "crit_02_read_and_infer_menu",
-        "name": "Read and Infer: Choice Menu",
+        "name": "Read & Infer: Choice Menu",
         "short_name": "Read & Infer (Choice Menu)",
         "best_for": "Differentiated inquiry and student choice across 3 inferential lenses (Compare & Contrast, Take a Stand, Equity & Perspectives).",
         "description": "Presents a choice board of 3 inferential lenses. Students select one prompt to investigate, cite evidence from the section, explain their reasoning, and write a complete inferred claim.",
@@ -649,7 +649,7 @@ The post-war frontier was not equally secure for anyone involved [pp. 178–179]
     },
     {
         "code": "crit_04_dok_questions",
-        "name": "DOK Questions (Level 1–2–3 Ladder)",
+        "name": "DOK Questions (1–2–3 Question Ladder)",
         "short_name": "DOK Questions",
         "best_for": "Building cognitive rigor from basic comprehension (DOK 1) to cause-and-effect concepts (DOK 2) and strategic reasoning with text evidence (DOK 3).",
         "description": "Three-level Depth of Knowledge (DOK) progression where students answer explicit recall prompts (DOK 1), explain historical connections across subheadings (DOK 2), and justify an analytical claim with text evidence (DOK 3).",

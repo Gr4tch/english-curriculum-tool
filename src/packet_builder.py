@@ -1944,6 +1944,18 @@ def build_standalone_strategy_handout(
     sec_title = section_meta["title"]
     pp = section_meta["printed_pages"]
 
+    # Normalize category based on strategy code prefix to guarantee robust routing
+    if strategy_code.startswith("crit_"):
+        strategy_category = "critical_thinking"
+    elif strategy_code.startswith("ci_"):
+        strategy_category = "central_idea"
+    elif strategy_code.startswith("read_") or strategy_code.startswith("ro_"):
+        strategy_category = "reading_organizer"
+    elif strategy_code.startswith("pmi_") or strategy_code.startswith("mode_"):
+        strategy_category = "anti_copycat"
+    elif strategy_code.startswith("twr_"):
+        strategy_category = "twr"
+
     if strategy_category == "central_idea":
         s_obj = get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, strategy_code)
         std_code = "CCSS RH.6-8.2"

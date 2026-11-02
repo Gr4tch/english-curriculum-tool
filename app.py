@@ -1606,7 +1606,7 @@ elif st.session_state["nav_view"] == "packet":
     CAT_OPTIONS = [
         ("Active Reading Graphic Organizer", "reading_organizer"),
         ("Central Idea Synthesis", "central_idea"),
-        ("Critical Thinking & Inference", "critical_thinking"),
+        ("Critical Thinking", "critical_thinking"),
         ("Anti-Copycat (Textbook Main Idea)", "anti_copycat"),
         ("Writing Extension (The Writing Revolution)", "twr"),
         ("Vocabulary Practice", "vocab"),
@@ -1615,6 +1615,7 @@ elif st.session_state["nav_view"] == "packet":
     CAT_LABELS = [c[0] for c in CAT_OPTIONS]
     CAT_VALUES = [c[1] for c in CAT_OPTIONS]
     CAT_LABEL_TO_CODE = dict(CAT_OPTIONS)
+    CAT_LABEL_TO_CODE["Critical Thinking & Inference"] = "critical_thinking"
     CAT_CODE_TO_LABEL = {v: k for k, v in CAT_OPTIONS}
 
     def get_default_strategy_for_category(cat_code: str) -> str:
@@ -1929,7 +1930,10 @@ elif st.session_state["nav_view"] == "packet":
                     strat_names = {s["code"]: s["name"] for s in CENTRAL_IDEA_STRATEGIES}
                 elif sel_cat == "critical_thinking":
                     strat_opts = [c["code"] for c in CRITICAL_THINKING_STRATEGIES]
-                    strat_names = {c["code"]: c["name"] for c in CRITICAL_THINKING_STRATEGIES}
+                    strat_names = {
+                        c["code"]: (get_tile_by_code(c["code"]) or {}).get("name", c["name"])
+                        for c in CRITICAL_THINKING_STRATEGIES
+                    }
                 elif sel_cat == "anti_copycat":
                     strat_opts = [m["code"] for m in PRINTED_MAIN_IDEA_MODES]
                     strat_names = {m["code"]: m["name"] for m in PRINTED_MAIN_IDEA_MODES}
