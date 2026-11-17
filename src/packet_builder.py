@@ -1142,14 +1142,16 @@ def build_whole_section_cloze_content(
     markdown_text: str = "",
     lang: str = "en",
     selected_paragraphs: Optional[List[int]] = None,
+    cloze_density: str = "standard",
 ) -> Dict[str, Any]:
     """
-    Extracts the full section reading passage and generates a ~20-word CLOZE active reading activity
-    spread across a 2-page front/back worksheet layout (or adaptive 1-page layout for 1-3 paragraphs),
-    balanced so Page 2 accommodates 2 text-dependent comprehension questions without overflowing.
-    Hybrid design: key historical content words prioritized and paced systematically across every paragraph.
+    Extracts the full section reading passage and generates a CLOZE active reading activity:
+    - Standard density: ~20 blanks across a 2-page spread (~10 per page).
+    - Intensive density: ~40 blanks across a 2-page spread (~20 per page).
+    - Adaptive single-page layout for 1-3 paragraphs: ~10-12 blanks.
+    Balanced so Page 2 accommodates 2 text-dependent comprehension questions without overflowing.
     Standard Edition: clean blanks, no word bank (students read textbook to find words).
-    Scaffolded Edition: clean blanks with complete word bank at the top and paragraph locators.
+    Scaffolded Edition: clean blanks with split Part 1 / Part 2 word banks on their respective pages.
     """
     is_es = (lang == "es")
     stopwords = STOPWORDS_CLOZE_ES if is_es else STOPWORDS_CLOZE_EN
@@ -1278,13 +1280,15 @@ def build_whole_section_cloze_content(
                 all_paras_flat = filtered
 
     is_single_page = (len(all_paras_flat) <= 3)
+    is_intensive = (cloze_density.lower() == "intensive" and not is_single_page)
+
     if is_single_page:
         # 1-3 paragraphs: adaptive 1-page layout (~10-12 blanks)
         total_words = sum(len(p[3].split()) for p in all_paras_flat)
         target_blanks = min(12, max(6, round(total_words / 25)))
     else:
-        # 4+ paragraphs: standard 2-page spread (~20 blanks)
-        target_blanks = 20
+        # 4+ paragraphs: standard (20 blanks) or intensive (40 blanks)
+        target_blanks = 40 if is_intensive else 20
 
     if target_blanks < len(all_paras_flat):
         counts = [0] * len(all_paras_flat)
@@ -1292,7 +1296,8 @@ def build_whole_section_cloze_content(
         for i in range(min(target_blanks, len(all_paras_flat))):
             counts[ranked[i]] = 1
     else:
-        counts = [max(1, round(len(ptext.split()) / 35)) for _, _, _, ptext in all_paras_flat]
+        divisor = 18 if (not is_single_page and is_intensive) else 35
+        counts = [max(1, round(len(ptext.split()) / divisor)) for _, _, _, ptext in all_paras_flat]
         diff = target_blanks - sum(counts)
         max_iters = 1000
         idx = 0
@@ -1311,9 +1316,12 @@ def build_whole_section_cloze_content(
 
     used_words = set()
     answers_list = []  # [(word, sh_title, pnum)]
+    detailed_answers = []  # [(word, sh_title, pnum, sh_idx)]
     processed_paras = {}  # (sh_idx, pnum) -> (student_ptext, exemplar_ptext)
 
     token_regex = re.compile(r"\b([A-Za-záéíóúüñÁÉÍÓÚÜÑ0-9\'-]+)\b")
+    min_char_dist = 16 if is_intensive else 25
+    blank_line = "_______________" if is_intensive else "____________________"
 
     for (sh_idx, sh_title, pnum, ptext), n_blanks in zip(all_paras_flat, counts):
         tokens = list(token_regex.finditer(ptext))
@@ -1340,23 +1348,40 @@ def build_whole_section_cloze_content(
             sc, st, en, w = cand
             if w.lower() in used_words:
                 continue
-            if any(abs(st - c[0]) < 25 for c in chosen):
+            if any(abs(st - c[0]) < min_char_dist for c in chosen):
                 continue
             chosen.append((st, en, w))
             used_words.add(w.lower())
+
+        # Fallback if candidates ran short due to used_words constraint across the section
+        if len(chosen) < n_blanks:
+            for m in tokens:
+                if len(chosen) >= n_blanks:
+                    break
+                w = m.group(1)
+                wl = w.lower()
+                if wl in stopwords or len(w) < 4 or w.isdigit():
+                    continue
+                if any(w.lower() == c[2].lower() for c in chosen):
+                    continue
+                st, en = m.start(), m.end()
+                if any(abs(st - c[0]) < min_char_dist for c in chosen):
+                    continue
+                chosen.append((st, en, w))
 
         # Replace words from right to left to keep string indices intact
         chosen.sort(key=lambda x: x[0], reverse=True)
         stud_text = ptext
         exem_text = ptext
         for st, en, w in chosen:
-            stud_text = stud_text[:st] + "____________________" + stud_text[en:]
+            stud_text = stud_text[:st] + blank_line + stud_text[en:]
             exem_text = exem_text[:st] + f"**{w}**" + exem_text[en:]
 
         # Record answers in natural reading order (left to right)
         chosen_asc = sorted(chosen, key=lambda x: x[0])
         for _, _, w in chosen_asc:
             answers_list.append((w, sh_title, pnum))
+            detailed_answers.append((w, sh_title, pnum, sh_idx))
 
         processed_paras[(sh_idx, pnum)] = (stud_text, exem_text)
 
@@ -1389,8 +1414,8 @@ def build_whole_section_cloze_content(
             p2_c = all_paras_flat[c:]
             p1_test_md = render_passage_page(p1_c, is_exemplar=False, is_p2=False)
             p2_test_md = render_passage_page(p2_c, is_exemplar=False, is_p2=True, ref_p1_items=p1_c)
-            p1_sim = f"## Title — Part 1\n> Focus\nDirections\n\n{p1_test_md}"
-            p2_sim = f"## Title — Part 2\n\n{p2_test_md}\n\n### Questions\n1. Q1\n{SOLID_LINE}\n{SOLID_LINE}\n\n2. Q2\n{SOLID_LINE}\n{SOLID_LINE}"
+            p1_sim = f"## Title — Part 1\n> Focus\n> Word Bank Part 1\nDirections\n\n{p1_test_md}"
+            p2_sim = f"## Title — Part 2\n> Word Bank Part 2\n\n{p2_test_md}\n\n### Questions\n1. Q1\n{SOLID_LINE}\n{SOLID_LINE}\n\n2. Q2\n{SOLID_LINE}\n{SOLID_LINE}"
             _, b1_c = enforce_page_budget_guardrail(sanitize_aesthetics(p1_sim), target_pages=1)
             _, b2_c = enforce_page_budget_guardrail(sanitize_aesthetics(p2_sim), target_pages=1)
             m_val = max(b1_c["final_layout_units"], b2_c["final_layout_units"])
@@ -1409,6 +1434,14 @@ def build_whole_section_cloze_content(
     p1_exemplar_md = render_passage_page(p1_items, is_exemplar=True, is_p2=False)
     p2_exemplar_md = render_passage_page(p2_items, is_exemplar=True, is_p2=True, ref_p1_items=p1_items) if p2_items else ""
 
+    p1_paras_set = set((s_idx, str(pn)) for s_idx, _, pn, _ in p1_items)
+    p2_paras_set = set((s_idx, str(pn)) for s_idx, _, pn, _ in p2_items)
+
+    p1_answers = [w for w, _, pn, s_idx in detailed_answers if (s_idx, str(pn)) in p1_paras_set]
+    p2_answers = [w for w, _, pn, s_idx in detailed_answers if (s_idx, str(pn)) in p2_paras_set]
+
+    p1_word_bank = sorted(list(set(p1_answers)), key=lambda s: s.lower())
+    p2_word_bank = sorted(list(set(p2_answers)), key=lambda s: s.lower())
     sorted_word_bank = sorted(list(set(w for w, _, _ in answers_list)), key=lambda s: s.lower())
 
     keys = [
@@ -1420,12 +1453,17 @@ def build_whole_section_cloze_content(
 
     return {
         "is_single_page": is_single_page,
+        "cloze_density": cloze_density,
+        "target_blanks": target_blanks,
+        "total_blanks": len(answers_list),
         "selected_para_nums": [int(p[2]) for p in all_paras_flat],
         "p1_student_md": p1_student_md,
         "p2_student_md": p2_student_md,
         "p1_exemplar_md": p1_exemplar_md,
         "p2_exemplar_md": p2_exemplar_md,
         "word_bank": sorted_word_bank,
+        "p1_word_bank": p1_word_bank,
+        "p2_word_bank": p2_word_bank,
         "keys": keys,
         "answers_list": answers_list,
         "comp_qs": comp_qs,
@@ -2492,6 +2530,7 @@ def build_standalone_strategy_handout(
     is_scaffolded: bool = False,
     lang: str = "en",
     selected_paragraphs: Optional[List[int]] = None,
+    cloze_density: str = "standard",
 ) -> Dict[str, Any]:
     """
     Builds a focused, single-strategy standalone student worksheet and authentic student exemplar
@@ -2534,15 +2573,28 @@ def build_standalone_strategy_handout(
     if strategy_code == "read_06_whole_section_cloze":
         s_obj = get_strategy_by_code(READING_ORGANIZERS, strategy_code)
         std_code = "CCSS RH.6-8.1 / RH.6-8.2"
-        cloze_data = build_whole_section_cloze_content(section_meta, kb, markdown_text=markdown_text, lang=lang, selected_paragraphs=selected_paragraphs)
+        cloze_data = build_whole_section_cloze_content(
+            section_meta,
+            kb,
+            markdown_text=markdown_text,
+            lang=lang,
+            selected_paragraphs=selected_paragraphs,
+            cloze_density=cloze_density,
+        )
         keys = list(cloze_data["keys"])
         comp_qs = cloze_data.get("comp_qs") or get_section_comprehension_questions(section_meta, kb, lang=lang, selected_paragraphs=selected_paragraphs)
         q1 = comp_qs["q1"]
         q2 = comp_qs["q2"]
         is_single_page = cloze_data.get("is_single_page", False)
+        is_intensive = (cloze_density.lower() == "intensive" and not is_single_page)
 
-        clean_strat_focus = "Whole-Section CLOZE Reading (Full-Passage Active Reading)"
-        localized_strat_focus = get_localized_strategy_name(clean_strat_focus, lang=lang)
+        if is_intensive:
+            clean_strat_focus = "Whole-Section CLOZE Reading (Intensive — 40 Blanks)"
+            localized_strat_focus = "Lectura CLOZE de toda la sección (Intensiva — 40 espacios)" if is_es else clean_strat_focus
+        else:
+            clean_strat_focus = "Whole-Section CLOZE Reading (Standard — 20 Blanks)" if not is_single_page else "Whole-Section CLOZE Reading (Focused Passage)"
+            localized_strat_focus = "Lectura CLOZE de toda la sección (Estándar — 20 espacios)" if is_es else (clean_strat_focus if not is_single_page else get_localized_strategy_name(clean_strat_focus, lang=lang))
+
         localized_strat_name = get_localized_strategy_name(s_obj["name"], lang=lang)
 
         word_bank_str = ", ".join(cloze_data["word_bank"])
@@ -2658,6 +2710,11 @@ def build_standalone_strategy_handout(
             fitted_scaf, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in scaf_blocks if b.strip())), target_pages=1)
         else:
             # Standard Page 1 & 2 (Standard Edition has NO word bank per User Decision A3)
+            p1_wb_str = ", ".join(cloze_data["p1_word_bank"])
+            p2_wb_str = ", ".join(cloze_data["p2_word_bank"])
+            p1_wb_count = len(cloze_data["p1_word_bank"])
+            p2_wb_count = len(cloze_data["p2_word_bank"])
+
             if is_es:
                 std_p1_blocks = [
                     f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 1",
@@ -2679,7 +2736,7 @@ def build_standalone_strategy_handout(
                 scaf_p1_blocks = [
                     f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 1 *(Edición con apoyo didáctico)*",
                     f"> **Enfoque de la estrategia:** {localized_strat_focus}",
-                    f"> **Banco de palabras {wb_count_str}:** {word_bank_str}",
+                    f"> **Banco de palabras (Parte 1 — {p1_wb_count} términos):** {p1_wb_str}",
                     "",
                     f"**Instrucciones:** {p1_dir_scaf}",
                     "",
@@ -2687,6 +2744,7 @@ def build_standalone_strategy_handout(
                 ]
                 scaf_p2_blocks = [
                     f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 2: Continuación de la lectura *(Edición con apoyo didáctico)*",
+                    f"> **Banco de palabras (Parte 2 — {p2_wb_count} términos):** {p2_wb_str}",
                     "",
                     cloze_data["p2_student_md"],
                     "",
@@ -2715,7 +2773,7 @@ def build_standalone_strategy_handout(
                 scaf_p1_blocks = [
                     f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) — Part 1 *(Scaffolded Support)*",
                     f"> **Strategy Focus:** {clean_strat_focus}",
-                    f"> **Word Bank {wb_count_str}:** {word_bank_str}",
+                    f"> **Word Bank (Part 1 — {p1_wb_count} Terms):** {p1_wb_str}",
                     "",
                     f"**Directions:** {p1_dir_scaf}",
                     "",
@@ -2723,6 +2781,7 @@ def build_standalone_strategy_handout(
                 ]
                 scaf_p2_blocks = [
                     f"## Section {sec_code}: {sec_title} (pp. {pp}) — Part 2: Reading Continuation *(Scaffolded Support)*",
+                    f"> **Word Bank (Part 2 — {p2_wb_count} Terms):** {p2_wb_str}",
                     "",
                     cloze_data["p2_student_md"],
                     "",
@@ -3699,6 +3758,8 @@ def build_custom_modular_packet(
             markdown_text=raw_md,
             is_scaffolded=is_scaf,
             lang=lang,
+            selected_paragraphs=p_cfg.get("selected_paragraphs"),
+            cloze_density=p_cfg.get("cloze_density", "standard"),
         )
 
         std_md = handout["student_scaffolded_md" if is_scaf else "student_standard_md"]

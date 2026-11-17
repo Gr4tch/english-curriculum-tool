@@ -1119,6 +1119,7 @@ def show_page_preview_modal(p_cfg: Dict[str, Any], page_num: int):
         is_scaffolded=is_scaf,
         lang=st.session_state.get("handout_language", "en"),
         selected_paragraphs=active_page.get("selected_paragraphs"),
+        cloze_density=active_page.get("cloze_density", "standard"),
     )
 
     std_md = handout["student_scaffolded_md" if is_scaf else "student_standard_md"]
@@ -2037,6 +2038,22 @@ elif st.session_state["nav_view"] == "packet":
                 )
                 active_p["selected_paragraphs"] = sorted(doi_ed_sel) if doi_ed_sel else [1, 2]
 
+            if sel_strat == "read_06_whole_section_cloze":
+                cur_density = active_p.get("cloze_density", "standard")
+                is_doi_ed_short = is_doi_ed and len(active_p.get("selected_paragraphs", [1, 2])) <= 3
+                if not is_doi_ed_short:
+                    ed_density_opts = ["Standard (20 Blanks)", "Intensive (40 Blanks)"]
+                    ed_sel_density = st.radio(
+                        "CLOZE Blank Density:",
+                        options=ed_density_opts,
+                        index=0 if cur_density == "standard" else 1,
+                        horizontal=True,
+                        key=f"ed_page_cloze_density_{active_idx}",
+                    )
+                    active_p["cloze_density"] = "intensive" if "Intensive" in ed_sel_density else "standard"
+                else:
+                    active_p["cloze_density"] = "standard"
+
             st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
             scaf_checked = st.checkbox(
                 "Scaffolded Support Edition for this page (sentence starters, word banks, paragraph frames)",
@@ -2832,13 +2849,72 @@ elif st.session_state["nav_view"] == "gallery":
                 else:
                     selected_doi_paras = [1, 2]
 
+                gal_cloze_density = st.session_state.get("gal_cloze_density", "standard")
                 num_p = len(selected_doi_paras)
                 if num_p <= 3:
+                    gal_cloze_density = "standard"
                     budget_badge = f"<span class='badge-pill badge-green' style='font-size: 0.82rem;'>📄 1-Page Layout ({num_p} paragraphs • ~10–12 target blanks + 2 comprehension questions)</span>"
+                    st.markdown(f"<div style='margin-top: 0.40rem;'>{budget_badge}</div>", unsafe_allow_html=True)
                 else:
-                    budget_badge = f"<span class='badge-pill badge-blue' style='font-size: 0.82rem;'>📑 2-Page Front/Back Spread ({num_p} paragraphs • ~20 target blanks + 2 comprehension questions)</span>"
+                    c_den_lbl, c_den_rad = st.columns([1.2, 2.8])
+                    with c_den_lbl:
+                        st.markdown(
+                            f"<div style='font-weight: 700; font-size: 0.88rem; color: #1e3a8a; margin-top: 4px;'>{'Densidad de espacios en blanco:' if is_es_ui else 'CLOZE Blank Density:'}</div>",
+                            unsafe_allow_html=True,
+                        )
+                    with c_den_rad:
+                        d_opts = ["Standard (20 Blanks)", "Intensive (40 Blanks)"] if not is_es_ui else ["Estándar (20 espacios)", "Intensivo (40 espacios)"]
+                        sel_d = st.radio(
+                            "DOI CLOZE Blank Density",
+                            options=d_opts,
+                            index=0 if gal_cloze_density == "standard" else 1,
+                            horizontal=True,
+                            key="gal_cloze_density_doi",
+                            label_visibility="collapsed",
+                        )
+                        gal_cloze_density = "intensive" if ("Intensive" in sel_d or "Intensivo" in sel_d) else "standard"
+                        st.session_state["gal_cloze_density"] = gal_cloze_density
 
-                st.markdown(f"<div style='margin-top: 0.40rem;'>{budget_badge}</div>", unsafe_allow_html=True)
+                    target_b_lbl = "40 target blanks" if gal_cloze_density == "intensive" else "20 target blanks"
+                    budget_badge = f"<span class='badge-pill badge-blue' style='font-size: 0.82rem;'>📑 2-Page Front/Back Spread ({num_p} paragraphs • ~{target_b_lbl} + 2 comprehension questions)</span>"
+                    st.markdown(f"<div style='margin-top: 0.40rem;'>{budget_badge}</div>", unsafe_allow_html=True)
+
+        gal_cloze_density = st.session_state.get("gal_cloze_density", "standard")
+        if not is_doi_mode and active_tile_code == "read_06_whole_section_cloze":
+            is_es_ui = (st.session_state.get("handout_language") == "es")
+            with st.container(border=True):
+                c_den_lbl, c_den_rad = st.columns([1.2, 2.8])
+                with c_den_lbl:
+                    st.markdown(
+                        f"<div style='font-weight: 700; font-size: 0.90rem; color: #1e3a8a; margin-top: 4px;'>{'Densidad de espacios en blanco:' if is_es_ui else 'CLOZE Blank Density:'}</div>",
+                        unsafe_allow_html=True,
+                    )
+                with c_den_rad:
+                    d_opts = ["Standard (20 Blanks)", "Intensive (40 Blanks)"] if not is_es_ui else ["Estándar (20 espacios)", "Intensivo (40 espacios)"]
+                    sel_d = st.radio(
+                        "CLOZE Blank Density",
+                        options=d_opts,
+                        index=0 if gal_cloze_density == "standard" else 1,
+                        horizontal=True,
+                        key="gal_cloze_density_regular",
+                        label_visibility="collapsed",
+                    )
+                    gal_cloze_density = "intensive" if ("Intensive" in sel_d or "Intensivo" in sel_d) else "standard"
+                    st.session_state["gal_cloze_density"] = gal_cloze_density
+
+                if gal_cloze_density == "intensive":
+                    info_msg = (
+                        "⚡ **Modo intensivo activo (40 espacios):** Duplica la participación de lectura activa (~20 espacios por página). La edición con apoyo didáctico incluye un banco de palabras de 20 términos en la Pág. 1 y un banco de 20 términos en la Pág. 2."
+                        if is_es_ui else
+                        "⚡ **Intensive Mode Active (40 Blanks):** Maximizes active reading engagement (~20 blanks per page). Scaffolded Edition includes a dedicated 20-word bank on Page 1 and a 20-word bank on Page 2."
+                    )
+                else:
+                    info_msg = (
+                        "📘 **Modo estándar activo (20 espacios):** Ritmo equilibrado (~10 espacios por página) con 2 preguntas de comprensión al final de la página 2."
+                        if is_es_ui else
+                        "📘 **Standard Mode Active (20 Blanks):** Balanced pacing (~10 blanks per page) with 2 text-dependent comprehension questions on Page 2."
+                    )
+                st.caption(info_msg)
 
         # Build focused handout
         if active_tile_code == "ro_02_multi_section_cause_effect":
@@ -2860,6 +2936,7 @@ elif st.session_state["nav_view"] == "gallery":
                 is_scaffolded=is_scaf_ws,
                 lang=st.session_state.get("handout_language", "en"),
                 selected_paragraphs=selected_doi_paras,
+                cloze_density=gal_cloze_density,
             )
             gal_sec_code = str(gal_selected_sec["section_code"])
 
@@ -2876,8 +2953,9 @@ elif st.session_state["nav_view"] == "gallery":
             teacher_html = format_half_sheet_2up(teacher_html)
 
         hs_suffix = "_2Up_HalfSheet" if is_half_sheet else ""
-        student_filename = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Student{hs_suffix}.pdf"
-        teacher_filename = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Exemplar{hs_suffix}.pdf"
+        density_suffix = "_Intensive40" if (active_tile_code == "read_06_whole_section_cloze" and gal_cloze_density == "intensive") else ""
+        student_filename = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}{density_suffix}_Student{hs_suffix}.pdf"
+        teacher_filename = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}{density_suffix}_Exemplar{hs_suffix}.pdf"
         bundle_filename = f"Chp{gal_ch_num:02d}_Sec{gal_sec_code}_{active_tile_code}_Bundle{hs_suffix}.zip"
 
         try:
