@@ -1143,6 +1143,7 @@ def build_whole_section_cloze_content(
     lang: str = "en",
     selected_paragraphs: Optional[List[int]] = None,
     cloze_density: str = "standard",
+    **kwargs: Any,
 ) -> Dict[str, Any]:
     """
     Extracts the full section reading passage and generates a CLOZE active reading activity:
@@ -2531,6 +2532,7 @@ def build_standalone_strategy_handout(
     lang: str = "en",
     selected_paragraphs: Optional[List[int]] = None,
     cloze_density: str = "standard",
+    **kwargs: Any,
 ) -> Dict[str, Any]:
     """
     Builds a focused, single-strategy standalone student worksheet and authentic student exemplar

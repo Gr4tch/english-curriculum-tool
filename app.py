@@ -12,12 +12,25 @@ Exports directly to 100% Vector Print-Ready PDFs (Letter size) and synchronized 
 
 import json
 import logging
+import importlib
 import os
 import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
 import streamlit as st
+
+import src.strategy_bank
+import src.packet_builder
+import src.preview_renderer
+
+# Auto-reload submodules so Streamlit Cloud workers never retain stale function signatures
+try:
+    importlib.reload(src.strategy_bank)
+    importlib.reload(src.packet_builder)
+    importlib.reload(src.preview_renderer)
+except Exception:
+    pass
 
 from src.strategy_bank import (
     CENTRAL_IDEA_STRATEGIES,
@@ -1114,16 +1127,29 @@ def show_page_preview_modal(p_cfg: Dict[str, Any], page_num: int):
             st.session_state.pop("cached_modular_result", None)
             st.rerun()
 
-    handout = build_standalone_strategy_handout(
-        section_meta=s_meta,
-        strategy_category=s_type,
-        strategy_code=s_strat,
-        markdown_text=raw_md,
-        is_scaffolded=is_scaf,
-        lang=st.session_state.get("handout_language", "en"),
-        selected_paragraphs=active_page.get("selected_paragraphs"),
-        cloze_density=active_page.get("cloze_density", "standard"),
-    )
+    try:
+        handout = build_standalone_strategy_handout(
+            section_meta=s_meta,
+            strategy_category=s_type,
+            strategy_code=s_strat,
+            markdown_text=raw_md,
+            is_scaffolded=is_scaf,
+            lang=st.session_state.get("handout_language", "en"),
+            selected_paragraphs=active_page.get("selected_paragraphs"),
+            cloze_density=active_page.get("cloze_density", "standard"),
+        )
+    except TypeError:
+        importlib.reload(src.packet_builder)
+        handout = src.packet_builder.build_standalone_strategy_handout(
+            section_meta=s_meta,
+            strategy_category=s_type,
+            strategy_code=s_strat,
+            markdown_text=raw_md,
+            is_scaffolded=is_scaf,
+            lang=st.session_state.get("handout_language", "en"),
+            selected_paragraphs=active_page.get("selected_paragraphs"),
+            cloze_density=active_page.get("cloze_density", "standard"),
+        )
 
     std_md = handout["student_scaffolded_md" if is_scaf else "student_standard_md"]
     ex_md = handout["exemplar_md"]
@@ -2947,16 +2973,29 @@ elif st.session_state["nav_view"] == "gallery":
             )
             gal_sec_code = handout_data["section_code"]
         else:
-            handout_data = build_standalone_strategy_handout(
-                section_meta=gal_selected_sec,
-                strategy_category=active_cat_key,
-                strategy_code=active_tile_code,
-                markdown_text=gal_raw_md,
-                is_scaffolded=is_scaf_ws,
-                lang=st.session_state.get("handout_language", "en"),
-                selected_paragraphs=selected_doi_paras,
-                cloze_density=gal_cloze_density,
-            )
+            try:
+                handout_data = build_standalone_strategy_handout(
+                    section_meta=gal_selected_sec,
+                    strategy_category=active_cat_key,
+                    strategy_code=active_tile_code,
+                    markdown_text=gal_raw_md,
+                    is_scaffolded=is_scaf_ws,
+                    lang=st.session_state.get("handout_language", "en"),
+                    selected_paragraphs=selected_doi_paras,
+                    cloze_density=gal_cloze_density,
+                )
+            except TypeError:
+                importlib.reload(src.packet_builder)
+                handout_data = src.packet_builder.build_standalone_strategy_handout(
+                    section_meta=gal_selected_sec,
+                    strategy_category=active_cat_key,
+                    strategy_code=active_tile_code,
+                    markdown_text=gal_raw_md,
+                    is_scaffolded=is_scaf_ws,
+                    lang=st.session_state.get("handout_language", "en"),
+                    selected_paragraphs=selected_doi_paras,
+                    cloze_density=gal_cloze_density,
+                )
             gal_sec_code = str(gal_selected_sec["section_code"])
 
         std_md = handout_data["student_standard_md"]
