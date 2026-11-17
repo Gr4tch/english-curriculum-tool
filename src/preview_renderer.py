@@ -123,6 +123,14 @@ COMMON_CSS = """
     height: 22px;
     margin: 4px 0 7px 0;
 }
+.ws-inline-blank {
+    display: inline-block;
+    border-bottom: 1.5px solid #0f172a;
+    min-width: 85px;
+    width: 100px;
+    margin: 0 4px;
+    vertical-align: baseline;
+}
 .ws-student-answer {
     color: #15803d;
     font-weight: 600;
@@ -531,6 +539,30 @@ def render_preview_handout(
         </div>
         """
 
+    elif strategy_code == "read_06_whole_section_cloze":
+        return f"""
+        {COMMON_CSS}
+        <div class="ws-container">
+            <div class="ws-title-badge ws-badge-green">Whole-Section CLOZE Reading • Part 1 (2-Page Spread)</div>
+
+            <div class="ws-callout" style="background: #f1f5f9; padding: 0.5rem 0.75rem; margin-bottom: 0.75rem;">
+                <b>Word Bank (20 Terms - Scaffolded Edition):</b> <i>Alliances, Appalachian, Assembly, Barracks, British, Business, Covenant, Debt, Freedoms, French, George, Housing, Indian, Laws, Militias, Native, Parliament, Proclamation, Prosperous, Quartering</i>
+            </div>
+
+            <div style="font-weight: 700; color: #1e3a8a; margin-bottom: 0.35rem;">1. PROBLEMS ARISE (p. 178)</div>
+            <div style="margin-bottom: 0.65rem; font-size: 0.88rem; line-height: 1.5;">
+                <b>[¶1]</b> At the end of the French and Indian War, the British colonists in North America had plenty of reasons to be optimistic. The colonies' <span class="ws-inline-blank">&nbsp;</span>, or groups of local men who organized to protect their town, had proven themselves to be able fighters.
+            </div>
+            <div style="margin-bottom: 0.65rem; font-size: 0.88rem; line-height: 1.5;">
+                <b>[¶2]</b> After decades of economic growth, the colonies were <span class="ws-inline-blank">&nbsp;</span>. Still, some felt dissatisfaction because freedom to govern was limited by King <span class="ws-inline-blank">&nbsp;</span> III and Parliament.
+            </div>
+            <div style="margin-bottom: 0.65rem; font-size: 0.88rem; line-height: 1.5;">
+                <b>[¶4]</b> The king issued a law requiring colonists to stay east of the <span class="ws-inline-blank">&nbsp;</span> Mountains, called the <span class="ws-inline-blank">&nbsp;</span> of 1763.
+            </div>
+            <div style="font-size: 0.75rem; color: #64748b; font-style: italic; margin-top: 0.5rem;">[Continues on Page 2 with Subheading 2: SOLDIERS IN THE COLONIES (pp. 178–179)...]</div>
+        </div>
+        """
+
     elif strategy_code == "twr_because_but_so":
         return f"""
         {COMMON_CSS}
@@ -891,6 +923,25 @@ def render_preview_exemplar(
             <div style="margin-bottom: 0.75rem;">
                 <b>2. A PROCLAMATION LINE (p. 179):</b><br>
                 To prevent further conflicts with Native Americans, King George issued the <span class="ws-student-answer">Proclamation of 1763</span>, forbidding settlers from moving west of the <span class="ws-student-answer">Appalachian</span> Mountains.
+            </div>
+        </div>
+        """
+
+    elif strategy_code == "read_06_whole_section_cloze":
+        return f"""
+        {COMMON_CSS}
+        <div class="ws-exemplar-container">
+            <div class="ws-title-badge ws-badge-green">8th-Grade Student Exemplar • Whole-Section CLOZE Reading</div>
+            <div style="margin-bottom: 0.75rem;">
+                <div style="font-weight: 700; color: #064e3b; font-size: 0.86rem; margin-bottom: 0.2rem;">Complete Answer Key (20 Blanks):</div>
+                <div class="ws-student-answer" style="display: block; line-height: 1.5; font-size: 0.82rem;">
+                    1. French (¶1) • 2. militias (¶1) • 3. prosperous (¶2) • 4. legislatures (¶2) • 5. George (¶3) • 6. Indian (¶3) • 7. Appalachian (¶4) • 8. Proclamation (¶4) • 9. debt (¶5) • 10. soldiers (¶5) • 11. laws (p. 2, ¶1) • 12. Quartering (p. 2, ¶1) • 13. business (p. 2, ¶2) • 14. freedoms (p. 2, ¶2) • 15. barracks (p. 2, ¶3) • 16. assembly (p. 2, ¶4) • 17. hostility (p. 2, ¶4) • 18. Americans (p. 2, ¶4) • 19. Covenant (p. 2, ¶5) • 20. Native (p. 2, ¶6)
+                </div>
+            </div>
+            <div style="font-weight: 700; color: #064e3b; margin-top: 0.5rem; margin-bottom: 0.25rem;">Completed Reading Passage (Exemplar Sample):</div>
+            <div style="font-size: 0.86rem; line-height: 1.5; color: #1e293b;">
+                <b>[¶1]</b> At the end of the <span class="ws-student-answer">French</span> and Indian War, the British colonists in North America had plenty of reasons to be optimistic. The colonies' <span class="ws-student-answer">militias</span> had proven themselves to be able fighters alongside British soldiers.
+                <br><b>[¶2]</b> After decades of economic growth, the colonies were <span class="ws-student-answer">prosperous</span>. Still, some felt dissatisfaction because freedom to govern was limited by King <span class="ws-student-answer">George</span> III and Parliament.
             </div>
         </div>
         """
@@ -1380,8 +1431,12 @@ def format_booklet_for_web(booklet_md: str) -> str:
             continue
 
         # 1. Convert handwriting lines: ASCII dots and underscores
-        page = re.sub(r"\.{10,}", '<div class="ws-dotted-line"></div>', page)
-        page = re.sub(r"_{8,}", '<div class="ws-solid-line"></div>', page)
+        # Standalone lines become full-width writing lines
+        page = re.sub(r"(?m)^\s*\.{10,}\s*$", '<div class="ws-dotted-line"></div>', page)
+        page = re.sub(r"(?m)^\s*_{8,}\s*$", '<div class="ws-solid-line"></div>', page)
+        # Inline dots / underscores within sentences become fill-in blanks
+        page = re.sub(r"\.{8,}", '<span class="ws-inline-dotted" style="display:inline-block; border-bottom: 1.5px dotted #94a3b8; width: 90px; margin: 0 3px;">&nbsp;</span>', page)
+        page = re.sub(r"_{6,}", '<span class="ws-inline-blank">&nbsp;</span>', page)
 
         # 2. Convert markdown tables
         page = _convert_md_table_to_html(page)
@@ -1521,10 +1576,12 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 badge_cls = "ws-badge-amber" if is_scaf else "ws-badge-blue"
                 pgs_formatted = f" <span style=\"font-size: 0.72rem; font-weight: 600; opacity: 0.9;\">{pgs_str}</span>" if pgs_str else ""
 
+                is_right_page = (page_idx % 2 == 1) or ("part 2" in full_rest.lower()) or ("parte 2" in full_rest.lower())
+
                 if is_es_page:
                     sec_name_clean = "Secciones" if "secc" in sec_lbl.lower() and "es" in sec_lbl.lower() else "Sección"
                     badge_markup = f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">Ficha de trabajo {sec_name_clean} {sec_id} • {clean_title}{pgs_formatted}</span></div>\n'
-                    meta_row = (
+                    meta_row = "" if is_right_page else (
                         f'<div class="ws-name-date-row" style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
                         f'<span><b>Nombre:</b> ___________________________</span><span><b>Fecha:</b> _____________</span><span><b>Clase:</b> ________</span>\n'
                         f'</div>\n'
@@ -1532,7 +1589,7 @@ def format_booklet_for_web(booklet_md: str) -> str:
                 else:
                     sec_name_clean = "Sections" if sec_lbl.lower().startswith("section") and sec_lbl.lower().endswith("s") else "Section"
                     badge_markup = f'<div class="ws-title-badge-wrapper" style="margin-bottom: 0.35rem;"><span class="ws-title-badge {badge_cls}">{sec_name_clean} {sec_id} Handout • {clean_title}{pgs_formatted}</span></div>\n'
-                    meta_row = (
+                    meta_row = "" if is_right_page else (
                         f'<div class="ws-name-date-row" style="display: flex; justify-content: space-between; font-size: 0.80rem; color: #64748b; margin-bottom: 0.65rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.30rem;">\n'
                         f'<span><b>Name:</b> ___________________________</span><span><b>Date:</b> _____________</span><span><b>Class:</b> ________</span>\n'
                         f'</div>\n'

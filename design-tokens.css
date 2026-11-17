@@ -809,6 +809,15 @@ body {
   margin: 4px 0 7px 0;
 }
 
+.ws-inline-blank {
+  display: inline-block;
+  border-bottom: 1.5px solid var(--border-line-solid);
+  min-width: 90px;
+  width: 100px;
+  margin: 0 4px;
+  vertical-align: baseline;
+}
+
 .ws-student-answer {
   color: var(--success-text-action);
   font-weight: var(--font-semibold);

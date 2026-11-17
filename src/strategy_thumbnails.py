@@ -319,6 +319,29 @@ ALL_STRATEGY_TILES: List[Dict[str, Any]] = [
         </div>
         """,
     },
+    {
+        "code": "read_06_whole_section_cloze",
+        "category": "Active Reading",
+        "category_badge": "ws-badge-green",
+        "name": "Whole-Section CLOZE",
+        "subtitle": "20-Word Full Passage Fill-in",
+        "best_for": "Active reading accountability across the entire section spread. 2-page front/back layout with ~20 blanked key terms.",
+        "thumbnail_svg": """
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:5px; height:74px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                <span style="font-size:6px; font-weight:800; background:#dcfce7; color:#166534; padding:1px 3px; border-radius:2px;">2-PAGE SPREAD</span>
+                <span style="font-size:6px; font-weight:700; color:#64748b;">~20 Blanks</span>
+            </div>
+            <div style="font-size:6.5px; color:#334155; line-height:1.25;">
+                In 1763, the British won the war... King George issued the <span style="border-bottom:1px solid #1e3a8a; font-weight:700; color:#1e3a8a;">______</span> forbidding settlement west of the <span style="border-bottom:1px solid #1e3a8a; font-weight:700; color:#1e3a8a;">______</span> Mountains...
+            </div>
+            <div style="background:#e2e8f0; border-radius:2px; font-size:5.5px; padding:1.5px 3px; color:#475569; display:flex; justify-content:space-between;">
+                <span>Word Bank: 20 terms (Scaffolded)</span>
+                <span>[pp. 1–2]</span>
+            </div>
+        </div>
+        """,
+    },
 
     # ── 4. THE WRITING REVOLUTION (TWR) ──
     {

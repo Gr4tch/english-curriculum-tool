@@ -2466,10 +2466,10 @@ elif st.session_state["nav_view"] == "gallery":
         category_filter = st.radio(
             "Filter by Pedagogical Category:",
             options=[
-                "All Strategies (23)",
+                "All Strategies (24)",
                 "Central Idea (4)",
                 "Anti-Copycat (3)",
-                "Active Reading (6)",
+                "Active Reading (7)",
                 "Critical Thinking (4)",
                 "The Writing Revolution (4)",
                 "Vocabulary & Assessment (2)",
@@ -2602,10 +2602,10 @@ elif st.session_state["nav_view"] == "gallery":
             min_cat_filter = st.radio(
                 "Filter by Pedagogical Category:",
                 options=[
-                    "All Strategies (23)",
+                    "All Strategies (24)",
                     "Central Idea (4)",
                     "Anti-Copycat (3)",
-                    "Active Reading (6)",
+                    "Active Reading (7)",
                     "Critical Thinking (4)",
                     "The Writing Revolution (4)",
                     "Vocabulary & Assessment (2)",

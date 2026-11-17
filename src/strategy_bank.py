@@ -317,6 +317,50 @@ To prevent further conflicts with Native Americans, King George issued the **Pro
 - **Colonist View Stem:** Colonists opposed the troops because they viewed them as... [Word Bank: threats, tyranny, unnecessary]
 - **British View Stem:** King George issued the Proclamation because Britain could not afford... [Word Bank: war, debt, Native conflicts]""",
     },
+    {
+        "code": "read_06_whole_section_cloze",
+        "name": "Whole-Section CLOZE Reading (Full-Passage Active Reading)",
+        "short_name": "Whole-Section CLOZE",
+        "requires_audit": "always_valid",
+        "best_for": "Active reading accountability across the entire section spread. Students follow along in the textbook across a 2-page spread to fill in ~20 key terms.",
+        "description": "Takes the complete section reading text across a 2-page spread and blanks out ~20 essential historical terms for students to fill in as they read along in the textbook.",
+        "visual_preview_md": """*Directions: As you read the section in your textbook, fill in each blank with the correct historical term to complete the reading passage:*
+
+**1. PROBLEMS ARISE (p. 178)**
+**[¶1]** At the end of the French and Indian War, the British colonists in North America had plenty of reasons to be optimistic about their future as British subjects. The colonies' ____________________, or groups of local men who organized to protect their town or colony, had proven themselves to be able fighters alongside British soldiers.
+
+**[¶2]** After decades of economic growth, the colonies were ____________________. Still, some of the colonists felt a growing dissatisfaction. The British colonies were the only European settlements in North America where ordinary people could vote for their local ____________________...
+
+--- [PAGE BREAK — PAGE 2 CONTINUATION] ---
+
+**2. SOLDIERS IN THE COLONIES (p. 178)**
+**[¶1]** Soon, colonists along the eastern coast also found themselves frustrated by ____________________ they found oppressive. After the war, many British soldiers were moved into port cities such as New York and Boston to help enforce laws. In 1765, the British Parliament passed the ____________________ Act...""",
+        "exemplar_md": """**Student Exemplar (20 Answers & Full Completed Passage):**
+- **1. militias** (1. PROBLEMS ARISE, ¶1)
+- **2. prosperous** (1. PROBLEMS ARISE, ¶2)
+- **3. legislatures** (1. PROBLEMS ARISE, ¶2)
+- **4. George** (1. PROBLEMS ARISE, ¶3)
+- **5. Appalachian** (1. PROBLEMS ARISE, ¶4)
+- **6. Proclamation** (1. PROBLEMS ARISE, ¶4)
+- **7. debt** (1. PROBLEMS ARISE, ¶5)
+- **8. soldiers** (1. PROBLEMS ARISE, ¶5)
+- **9. laws** (2. SOLDIERS IN THE COLONIES, ¶1)
+- **10. Quartering** (2. SOLDIERS IN THE COLONIES, ¶1)
+- **11. business** (2. SOLDIERS IN THE COLONIES, ¶2)
+- **12. freedoms** (2. SOLDIERS IN THE COLONIES, ¶2)
+- **13. barracks** (2. SOLDIERS IN THE COLONIES, ¶3)
+- **14. housing** (2. SOLDIERS IN THE COLONIES, ¶3)
+- **15. assembly** (2. SOLDIERS IN THE COLONIES, ¶4)
+- **16. hostility** (2. SOLDIERS IN THE COLONIES, ¶4)
+- **17. Americans** (2. SOLDIERS IN THE COLONIES, ¶4)
+- **18. Covenant** (2. SOLDIERS IN THE COLONIES, ¶5)
+- **19. alliances** (2. SOLDIERS IN THE COLONIES, ¶5)
+- **20. Native** (2. SOLDIERS IN THE COLONIES, ¶6)""",
+        "scaffolded_md": """*Scaffolded Support Elements:*
+- **Word Bank (20 Terms):** Complete alphabetized 20-word bank printed at the top of Page 1.
+- **Paragraph Locators:** Clear [¶1], [¶2] paragraph markers to help students track where each term appears in the textbook.
+- Clean unnumbered blanks to maintain natural reading flow while students consult the word bank.""",
+    },
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────

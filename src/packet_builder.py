@@ -873,6 +873,258 @@ def _render_vocab_component(
     return "\n".join(rows), key_list
 
 
+STOPWORDS_CLOZE_EN = {
+    'the', 'and', 'in', 'of', 'to', 'a', 'for', 'that', 'was', 'on', 'with', 'as', 'by', 'at', 'from',
+    'it', 'is', 'an', 'were', 'his', 'their', 'they', 'had', 'have', 'has', 'this', 'these', 'those',
+    'be', 'been', 'being', 'but', 'not', 'or', 'all', 'any', 'some', 'one', 'two', 'other', 'into',
+    'out', 'up', 'down', 'about', 'after', 'before', 'between', 'under', 'over', 'through', 'would',
+    'could', 'should', 'also', 'more', 'most', 'very', 'which', 'who', 'whom', 'whose', 'when', 'where',
+    'why', 'how', 'what', 'there', 'here', 'them', 'him', 'her', 'its', 'our', 'your', 'my', 'you',
+    'we', 'he', 'she', 'so', 'then', 'than', 'such', 'no', 'nor', 'too', 'can', 'will', 'just', 'did',
+    'does', 'do', 'made', 'make', 'many', 'much', 'even', 'still', 'began', 'found', 'called', 'well',
+    'back', 'while', 'along', 'around', 'near', 'way', 'part', 'long', 'new', 'only', 'own', 'both',
+    'soon', 'fact', 'read', 'tell', 'show', 'shows', 'shown', 'view', 'look', 'looks', 'take', 'took'
+}
+
+STOPWORDS_CLOZE_ES = {
+    'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'de', 'del', 'al', 'en', 'y', 'e', 'o', 'u',
+    'a', 'que', 'para', 'por', 'con', 'sin', 'sobre', 'entre', 'tras', 'hacia', 'hasta', 'desde',
+    'se', 'su', 'sus', 'como', 'no', 'si', 'ya', 'muy', 'mas', 'más', 'pero', 'sino', 'aunque',
+    'este', 'esta', 'estos', 'estas', 'ese', 'esa', 'esos', 'esas', 'aquel', 'aquella', 'aquellos',
+    'todo', 'toda', 'todos', 'todas', 'otro', 'otra', 'otros', 'otras', 'mismo', 'misma', 'mismos',
+    'cada', 'mucho', 'mucha', 'muchos', 'muchas', 'poco', 'poca', 'pocos', 'pocas', 'tanto', 'tanta',
+    'era', 'eran', 'fue', 'fueron', 'habia', 'había', 'habian', 'habían', 'es', 'son', 'ser', 'estar',
+    'sido', 'estado', 'tenia', 'tenía', 'tenian', 'tenían', 'tener', 'hacer', 'hecho', 'decir', 'dicho',
+    'cuando', 'donde', 'dónde', 'quien', 'quién', 'quienes', 'quiénes', 'cual', 'cuál', 'cuales',
+    'esto', 'eso', 'aquello', 'parte', 'forma', 'manera', 'tiempo', 'año', 'años', 'vez', 'veces',
+    'bien', 'tambien', 'también', 'ademas', 'además', 'segun', 'según'
+}
+
+
+def build_whole_section_cloze_content(
+    section_meta: Dict[str, Any],
+    kb: Dict[str, Any],
+    markdown_text: str = "",
+    lang: str = "en",
+) -> Dict[str, Any]:
+    """
+    Extracts the full section reading passage and generates a ~20-word CLOZE active reading activity
+    spread across a 2-page front/back worksheet layout.
+    Hybrid design: key historical content words prioritized and paced systematically across every paragraph.
+    Standard Edition: clean blanks, no word bank (students read textbook to find words).
+    Scaffolded Edition: clean blanks with complete 20-word bank at the top and paragraph locators.
+    """
+    is_es = (lang == "es")
+    stopwords = STOPWORDS_CLOZE_ES if is_es else STOPWORDS_CLOZE_EN
+
+    # If markdown_text is empty, attempt to read from md_file
+    if not markdown_text and section_meta.get("md_file"):
+        md_p = Path(section_meta["md_file"])
+        if md_p.exists():
+            markdown_text = md_p.read_text(encoding="utf-8")
+
+    # Extract official vocab and high priority tokens
+    vocab_words = set()
+    for v in section_meta.get("official_vocab", []):
+        w = v.get("word", "")
+        if w:
+            for subw in re.findall(r"\b[A-Za-záéíóúüñÁÉÍÓÚÜÑ0-9\'-]+\b", w):
+                if len(subw) >= 4 and subw.lower() not in stopwords:
+                    vocab_words.add(subw.lower())
+    for w in kb.get("word_bank", []):
+        for subw in re.findall(r"\b[A-Za-záéíóúüñÁÉÍÓÚÜÑ0-9\'-]+\b", w):
+            if len(subw) >= 4 and subw.lower() not in stopwords:
+                vocab_words.add(subw.lower())
+
+    # Extract reading passage section
+    passage_part = markdown_text or ""
+    if is_es:
+        if "### Lectura de la sección" in passage_part:
+            passage_part = passage_part.split("### Lectura de la sección", 1)[1]
+        elif "### Section Reading Passage" in passage_part:
+            passage_part = passage_part.split("### Section Reading Passage", 1)[1]
+        if "\n---" in passage_part:
+            passage_part = passage_part.split("\n---", 1)[0]
+        elif "### Preguntas" in passage_part:
+            passage_part = passage_part.split("### Preguntas", 1)[0]
+    else:
+        if "### Section Reading Passage" in passage_part:
+            passage_part = passage_part.split("### Section Reading Passage", 1)[1]
+        if "\n---" in passage_part:
+            passage_part = passage_part.split("\n---", 1)[0]
+        elif "### Built-In" in passage_part:
+            passage_part = passage_part.split("### Built-In", 1)[0]
+
+    sh_blocks = re.findall(
+        r"####\s+(\d+\.[\s\S]+?\([^\)]+\))\n(.*?)(?=(?:\n####\s+\d+\.|\n---|\Z))",
+        passage_part,
+        flags=re.DOTALL,
+    )
+
+    parsed_sections = []  # list of (sh_title, [(pnum, ptext), ...])
+    total_paras = 0
+
+    if sh_blocks:
+        for sh_title, sh_body in sh_blocks:
+            clean_sh = re.sub(r"\s+", " ", sh_title).strip()
+            paras = sh_body.strip().split("\n\n")
+            p_list = []
+            for p in paras:
+                p_str = p.strip()
+                m = re.match(r"^\*\*\[¶(\d+)\]\*\*\s*(.*)", p_str, flags=re.DOTALL)
+                if m:
+                    pnum = m.group(1)
+                    ptext = m.group(2).strip()
+                else:
+                    pnum = str(len(p_list) + 1)
+                    ptext = p_str
+                # Filter out map captions or artifact lines
+                ptext = re.sub(r"^(?:The Proclamation of 1763 This historical map|Territories and Colonies|La Proclamación de 1763|Territorios y colonias).*$", "", ptext, flags=re.MULTILINE).strip()
+                if ptext and len(ptext) > 10:
+                    p_list.append((pnum, ptext))
+                    total_paras += 1
+            if p_list:
+                parsed_sections.append((clean_sh, p_list))
+    else:
+        # Fallback to kb subheadings
+        for s in kb.get("subheadings", []):
+            s_name = s.get("name", "Reading Section")
+            p_text = f"{s.get('cause', '')} {s.get('effect', '')} {s.get('gist', '')}".strip()
+            if p_text:
+                parsed_sections.append((s_name, [("1", p_text)]))
+                total_paras += 1
+
+    if not parsed_sections:
+        title = section_meta.get("title", "Section Reading")
+        desc = kb.get("printed_main_idea", "Historical reading text.")
+        parsed_sections.append((title, [("1", desc)]))
+        total_paras = 1
+
+    # Target ~20 blanks across all paragraphs
+    target_blanks = 20
+    all_paras_flat = []
+    for sh_idx, (sh_title, p_list) in enumerate(parsed_sections):
+        for pnum, ptext in p_list:
+            all_paras_flat.append((sh_idx, sh_title, pnum, ptext))
+
+    counts = [max(1, round(len(ptext.split()) / 35)) for _, _, _, ptext in all_paras_flat]
+    diff = target_blanks - sum(counts)
+    idx = 0
+    while diff != 0 and len(counts) > 0:
+        if diff > 0:
+            counts[idx % len(counts)] += 1
+            diff -= 1
+        else:
+            if counts[idx % len(counts)] > 1:
+                counts[idx % len(counts)] -= 1
+                diff += 1
+        idx += 1
+
+    used_words = set()
+    answers_list = []  # [(word, sh_title, pnum)]
+    processed_paras = {}  # (sh_idx, pnum) -> (student_ptext, exemplar_ptext)
+
+    token_regex = re.compile(r"\b([A-Za-záéíóúüñÁÉÍÓÚÜÑ0-9\'-]+)\b")
+
+    for (sh_idx, sh_title, pnum, ptext), n_blanks in zip(all_paras_flat, counts):
+        tokens = list(token_regex.finditer(ptext))
+        scored = []
+        for m in tokens:
+            w = m.group(1)
+            wl = w.lower()
+            if wl in stopwords or len(w) < 4 or w.isdigit() or wl in used_words:
+                continue
+            score = 1
+            if any(wl == vw or wl.rstrip('s') == vw.rstrip('s') for vw in vocab_words):
+                score += 15
+            if w[0].isupper() and m.start() > 0:
+                score += 4
+            if len(w) >= 7:
+                score += 2
+            scored.append((score, m.start(), m.end(), w))
+
+        scored.sort(key=lambda x: -x[0])
+        chosen = []
+        for cand in scored:
+            if len(chosen) >= n_blanks:
+                break
+            sc, st, en, w = cand
+            if w.lower() in used_words:
+                continue
+            if any(abs(st - c[0]) < 25 for c in chosen):
+                continue
+            chosen.append((st, en, w))
+            used_words.add(w.lower())
+
+        # Replace words from right to left to keep string indices intact
+        chosen.sort(key=lambda x: x[0], reverse=True)
+        stud_text = ptext
+        exem_text = ptext
+        for st, en, w in chosen:
+            stud_text = stud_text[:st] + "____________________" + stud_text[en:]
+            exem_text = exem_text[:st] + f"**{w}**" + exem_text[en:]
+
+        # Record answers in natural reading order (left to right)
+        chosen_asc = sorted(chosen, key=lambda x: x[0])
+        for _, _, w in chosen_asc:
+            answers_list.append((w, sh_title, pnum))
+
+        processed_paras[(sh_idx, pnum)] = (stud_text, exem_text)
+
+    # Split into Page 1 and Page 2
+    num_sections = len(parsed_sections)
+    if num_sections >= 2:
+        best_split = 1
+        best_diff = 999
+        cum = 0
+        for s_i in range(num_sections - 1):
+            cum += len(parsed_sections[s_i][1])
+            d = abs(cum - (total_paras / 2.0))
+            if d < best_diff:
+                best_diff = d
+                best_split = s_i + 1
+        p1_secs = parsed_sections[:best_split]
+        p2_secs = parsed_sections[best_split:]
+    else:
+        s_title, p_list = parsed_sections[0]
+        mid = max(1, len(p_list) // 2)
+        p1_secs = [(s_title, p_list[:mid])]
+        p2_secs = [(f"{s_title} ({'Continuación' if is_es else 'Continued'})", p_list[mid:])]
+
+    def render_passage_page(secs, is_exemplar=False):
+        blocks = []
+        for s_title, p_list in secs:
+            blocks.append(f"### {s_title}")
+            for pnum, _ in p_list:
+                s_idx = next(i for i, (st, _) in enumerate(parsed_sections) if st.startswith(s_title.split(' (')[0]))
+                stud_p, exem_p = processed_paras[(s_idx, pnum)]
+                txt = exem_p if is_exemplar else stud_p
+                blocks.append(f"**[¶{pnum}]** {txt}")
+        return "\n\n".join(blocks)
+
+    p1_student_md = render_passage_page(p1_secs, is_exemplar=False)
+    p2_student_md = render_passage_page(p2_secs, is_exemplar=False)
+    p1_exemplar_md = render_passage_page(p1_secs, is_exemplar=True)
+    p2_exemplar_md = render_passage_page(p2_secs, is_exemplar=True)
+
+    sorted_word_bank = sorted(list(set(w for w, _, _ in answers_list)), key=lambda s: s.lower())
+
+    keys = [
+        f"{idx}. {w} ({re.sub(r'\\s*\\([^)]*\\)', '', sh).strip()}, ¶{pn})"
+        for idx, (w, sh, pn) in enumerate(answers_list, 1)
+    ]
+
+    return {
+        "p1_student_md": p1_student_md,
+        "p2_student_md": p2_student_md,
+        "p1_exemplar_md": p1_exemplar_md,
+        "p2_exemplar_md": p2_exemplar_md,
+        "word_bank": sorted_word_bank,
+        "keys": keys,
+        "answers_list": answers_list,
+    }
+
+
 def _render_reading_organizer_component(
     section_meta: Dict[str, Any],
     kb: Dict[str, Any],
@@ -972,6 +1224,21 @@ def _render_reading_organizer_component(
             lines.append(f"**{idx}. {sh['name']}:** {sh['cloze_stmt']}")
             keys.append(f"Cloze {idx} ({sh['name']}): {sh['gist']} {sh['citation']}")
         return "\n".join(lines), keys
+
+    elif read_code == "read_06_whole_section_cloze":
+        raw_md = kb.get("_raw_markdown", "")
+        if not raw_md and section_meta.get("md_file"):
+            md_p = Path(section_meta["md_file"])
+            if md_p.exists():
+                raw_md = md_p.read_text(encoding="utf-8")
+        cloze_data = build_whole_section_cloze_content(section_meta, kb, markdown_text=raw_md, lang=lang)
+        lines = [
+            f"{dir_prefix} {t('cloze_whole_section_directions_scaf' if is_scaffolded else 'cloze_whole_section_directions_std', lang=lang, prefix=prefix, pages=pp)}",
+        ]
+        if is_scaffolded and cloze_data.get("word_bank"):
+            lines.append(f"*{t('word_bank_label', lang=lang)}* **{', '.join(cloze_data['word_bank'])}**")
+        lines.append(cloze_data["p1_student_md"])
+        return "\n".join(lines), cloze_data["keys"]
 
     else:  # read_02_say_something (Default Stop & Jot by Subheading)
         lines = [
@@ -1955,6 +2222,141 @@ def build_standalone_strategy_handout(
         strategy_category = "anti_copycat"
     elif strategy_code.startswith("twr_"):
         strategy_category = "twr"
+
+    if strategy_code == "read_06_whole_section_cloze":
+        s_obj = get_strategy_by_code(READING_ORGANIZERS, strategy_code)
+        std_code = "CCSS RH.6-8.1 / RH.6-8.2"
+        cloze_data = build_whole_section_cloze_content(section_meta, kb, markdown_text=markdown_text, lang=lang)
+        keys = cloze_data["keys"]
+
+        clean_strat_focus = "Whole-Section CLOZE Reading (Full-Passage Active Reading)"
+        localized_strat_focus = get_localized_strategy_name(clean_strat_focus, lang=lang)
+        localized_strat_name = get_localized_strategy_name(s_obj["name"], lang=lang)
+
+        word_bank_str = ", ".join(cloze_data["word_bank"])
+        p1_dir_std = t("cloze_whole_section_directions_std", lang=lang, prefix="", pages=pp).strip()
+        p1_dir_scaf = t("cloze_whole_section_directions_scaf", lang=lang, prefix="", pages=pp).strip()
+
+        # Standard Page 1 & 2 (Standard Edition has NO word bank per User Decision A3)
+        if is_es:
+            std_p1_blocks = [
+                f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 1",
+                f"> **Enfoque de la estrategia:** {localized_strat_focus}",
+                "",
+                f"**Instrucciones:** {p1_dir_std}",
+                "",
+                cloze_data["p1_student_md"],
+            ]
+            std_p2_blocks = [
+                f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 2: Continuación de la lectura",
+                "",
+                cloze_data["p2_student_md"],
+                "",
+                f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+            ]
+            scaf_p1_blocks = [
+                f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 1 *(Edición con apoyo didáctico)*",
+                f"> **Enfoque de la estrategia:** {localized_strat_focus}",
+                f"> **Banco de palabras (20 términos):** {word_bank_str}",
+                "",
+                f"**Instrucciones:** {p1_dir_scaf}",
+                "",
+                cloze_data["p1_student_md"],
+            ]
+            scaf_p2_blocks = [
+                f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 2: Continuación de la lectura *(Edición con apoyo didáctico)*",
+                "",
+                cloze_data["p2_student_md"],
+                "",
+                f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+            ]
+        else:
+            std_p1_blocks = [
+                f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) — Part 1",
+                f"> **Strategy Focus:** {clean_strat_focus}",
+                "",
+                f"**Directions:** {p1_dir_std}",
+                "",
+                cloze_data["p1_student_md"],
+            ]
+            std_p2_blocks = [
+                f"## Section {sec_code}: {sec_title} (pp. {pp}) — Part 2: Reading Continuation",
+                "",
+                cloze_data["p2_student_md"],
+                "",
+                f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+            ]
+            scaf_p1_blocks = [
+                f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) — Part 1 *(Scaffolded Support)*",
+                f"> **Strategy Focus:** {clean_strat_focus}",
+                f"> **Word Bank (20 Terms):** {word_bank_str}",
+                "",
+                f"**Directions:** {p1_dir_scaf}",
+                "",
+                cloze_data["p1_student_md"],
+            ]
+            scaf_p2_blocks = [
+                f"## Section {sec_code}: {sec_title} (pp. {pp}) — Part 2: Reading Continuation *(Scaffolded Support)*",
+                "",
+                cloze_data["p2_student_md"],
+                "",
+                f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+            ]
+
+        std_p1_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in std_p1_blocks if b.strip())), target_pages=1)
+        std_p2_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in std_p2_blocks if b.strip())), target_pages=1)
+        fitted_std = f"{std_p1_fitted}\n\n[PAGE_BREAK]\n\n{std_p2_fitted}"
+
+        scaf_p1_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in scaf_p1_blocks if b.strip())), target_pages=1)
+        scaf_p2_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in scaf_p2_blocks if b.strip())), target_pages=1)
+        fitted_scaf = f"{scaf_p1_fitted}\n\n[PAGE_BREAK]\n\n{scaf_p2_fitted}"
+
+        if is_es:
+            exemplar_blocks = [
+                f"# Modelo y clave de respuestas para el docente: Sec. {sec_code} — {localized_strat_name}",
+                f"**Referencia del libro:** págs. {pp}  |  **Estándar:** {std_code}  |  **Puntuación:** 100/100",
+                "",
+                "### Clave de respuestas modelo (20 términos históricos):",
+                f"> *Términos correspondientes a los espacios en blanco de la Sección {sec_code}:*",
+                "",
+            ]
+        else:
+            exemplar_blocks = [
+                f"# Student Exemplar & Answer Key: Sec. {sec_code} — {s_obj['name']}",
+                f"**Textbook Reference:** pp. {pp}  |  **Target Standard:** {std_code}  |  **Score:** 100/100",
+                "",
+                "### Authentic 8th-Grade Student Model Response (20 Target Blanks):",
+                f"> *Complete Answer Key for Section {sec_code}:*",
+                "",
+            ]
+        for k_item in keys:
+            exemplar_blocks.append(f"- **{k_item}**")
+
+        completed_title = "### Texto completo de la sección (con respuestas en negrita):" if is_es else "### Complete Section Reading Passage (With Answer Key):"
+        exemplar_blocks.append("")
+        exemplar_blocks.append(completed_title)
+        exemplar_blocks.append(cloze_data["p1_exemplar_md"])
+        exemplar_blocks.append(cloze_data["p2_exemplar_md"])
+
+        if kb.get("printed_main_idea"):
+            ground_lbl = f"*Fundamentación en el libro de texto (pág. {section_meta.get('start_page', '')}):*" if is_es else f"*Textbook Source Grounding (p. {section_meta.get('start_page', '')}):*"
+            exemplar_blocks.append(f"\n{ground_lbl} \"{kb['printed_main_idea']}\"")
+
+        exemplar_md = "\n\n".join(exemplar_blocks)
+
+        return {
+            "student_standard_md": fitted_std,
+            "student_scaffolded_md": fitted_scaf,
+            "exemplar_md": exemplar_md,
+            "strategy_name": localized_strat_name,
+            "standard_code": std_code,
+            "section_code": sec_code,
+            "section_title": sec_title,
+            "printed_pages": pp,
+            "chapter_num": ch_num,
+            "keys": keys,
+            "lang": lang,
+        }
 
     if strategy_category == "central_idea":
         s_obj = get_strategy_by_code(CENTRAL_IDEA_STRATEGIES, strategy_code)
