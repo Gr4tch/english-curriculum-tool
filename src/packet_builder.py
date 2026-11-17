@@ -1280,15 +1280,15 @@ def build_whole_section_cloze_content(
             if filtered:
                 all_paras_flat = filtered
 
-    is_single_page = (len(all_paras_flat) <= 3)
-    is_intensive = (cloze_density.lower() == "intensive" and not is_single_page)
+    total_words = sum(len(p[3].split()) for p in all_paras_flat)
+    is_intensive = (cloze_density.lower() == "intensive")
+    is_single_page = (total_words <= 180 and len(all_paras_flat) <= 2 and not is_intensive)
 
     if is_single_page:
-        # 1-3 paragraphs: adaptive 1-page layout (~10-12 blanks)
-        total_words = sum(len(p[3].split()) for p in all_paras_flat)
-        target_blanks = min(12, max(6, round(total_words / 25)))
+        # 1-2 very short paragraphs: adaptive 1-page layout
+        target_blanks = min(20, max(6, round(total_words / 16)))
     else:
-        # 4+ paragraphs: standard (20 blanks) or intensive (40 blanks)
+        # Standard (20 blanks) or Intensive (40 blanks)
         target_blanks = 40 if is_intensive else 20
 
     if target_blanks < len(all_paras_flat):
@@ -1297,7 +1297,7 @@ def build_whole_section_cloze_content(
         for i in range(min(target_blanks, len(all_paras_flat))):
             counts[ranked[i]] = 1
     else:
-        divisor = 18 if (not is_single_page and is_intensive) else 35
+        divisor = 14 if (is_single_page and is_intensive) else (18 if is_intensive else 35)
         counts = [max(1, round(len(ptext.split()) / divisor)) for _, _, _, ptext in all_paras_flat]
         diff = target_blanks - sum(counts)
         max_iters = 1000
@@ -2588,14 +2588,14 @@ def build_standalone_strategy_handout(
         q1 = comp_qs["q1"]
         q2 = comp_qs["q2"]
         is_single_page = cloze_data.get("is_single_page", False)
-        is_intensive = (cloze_density.lower() == "intensive" and not is_single_page)
+        is_intensive = (cloze_density.lower() == "intensive")
 
         if is_intensive:
             clean_strat_focus = "Whole-Section CLOZE Reading (Intensive — 40 Blanks)"
             localized_strat_focus = "Lectura CLOZE de toda la sección (Intensiva — 40 espacios)" if is_es else clean_strat_focus
         else:
-            clean_strat_focus = "Whole-Section CLOZE Reading (Standard — 20 Blanks)" if not is_single_page else "Whole-Section CLOZE Reading (Focused Passage)"
-            localized_strat_focus = "Lectura CLOZE de toda la sección (Estándar — 20 espacios)" if is_es else (clean_strat_focus if not is_single_page else get_localized_strategy_name(clean_strat_focus, lang=lang))
+            clean_strat_focus = "Whole-Section CLOZE Reading (Standard — 20 Blanks)"
+            localized_strat_focus = "Lectura CLOZE de toda la sección (Estándar — 20 espacios)" if is_es else clean_strat_focus
 
         localized_strat_name = get_localized_strategy_name(s_obj["name"], lang=lang)
 

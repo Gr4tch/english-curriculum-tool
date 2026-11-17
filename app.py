@@ -1357,14 +1357,6 @@ if st.session_state["nav_view"] == "home":
             on_change=on_ch_change,
             label_visibility="collapsed",
         )
-        if selected_ch_num in [5, 6]:
-            if st.button("📜 Jump to Declaration of Independence", key="home_btn_jump_doi", help="Switch directly to Declaration of Independence (Primary Source)"):
-                st.session_state["selected_ch_num"] = 18
-                st.rerun()
-        elif selected_ch_num == 18:
-            if st.button("🔙 Back to Chapter 05: The Road to Revolution", key="home_btn_back_ch5", help="Switch back to Chapter 5"):
-                st.session_state["selected_ch_num"] = 5
-                st.rerun()
 
     with tc_pill:
         top_pill_label = "<b>Primary Source:</b> Declaration of Independence (32 ¶)" if "Primary Source" in ch_info['chapter_title'] else f"<b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections"
@@ -2453,14 +2445,6 @@ elif st.session_state["nav_view"] == "gallery":
             label_visibility="collapsed",
         )
         gal_ch_sections = chapters_map[gal_ch_num]["sections"]
-        if gal_ch_num in [5, 6]:
-            if st.button("📜 Jump to Declaration of Independence", key="gal_jump_doi_btn", use_container_width=True, help="Switch directly to Declaration of Independence (Primary Source)"):
-                st.session_state["selected_ch_num"] = 18
-                st.rerun()
-        elif gal_ch_num == 18:
-            if st.button("🔙 Back to Chp 05: Road to Revolution", key="gal_back_ch5_btn", use_container_width=True, help="Switch back to Chapter 5"):
-                st.session_state["selected_ch_num"] = 5
-                st.rerun()
 
     active_tile_code = st.session_state.get("gal_active_tile_code", None)
     st.query_params["nav"] = "gallery"
@@ -2814,19 +2798,17 @@ elif st.session_state["nav_view"] == "gallery":
         is_doi_mode = (gal_ch_num == 18 or str(gal_selected_sec.get("section_code", "")).upper() == "DOI")
         if is_doi_mode and active_tile_code == "read_06_whole_section_cloze":
             if "doi_selected_paras" not in st.session_state:
-                st.session_state["doi_selected_paras"] = [1, 2]
+                st.session_state["doi_selected_paras"] = list(range(1, 33))
 
             with st.container(border=True):
                 is_es_ui = (st.session_state.get("handout_language") == "es")
                 header_title = "📜 Selección de párrafos: La Declaración de Independencia" if is_es_ui else "📜 Declaration of Independence Paragraph Selector"
                 header_desc = (
-                    "Selecciona los párrafos específicos que deseas incluir en la actividad CLOZE. "
-                    "**1 a 3 párrafos** generan una hoja de trabajo enfocada de **1 página** (~10–12 espacios en blanco + 2 preguntas de comprensión). "
-                    "**4 o más párrafos** generan un pliego completo de **2 páginas (anverso y reverso)** (~20 espacios en blanco)."
+                    "Selecciona los párrafos específicos que deseas incluir en la actividad CLOZE, o usa los preajustes rápidos a continuación. "
+                    "Elige entre el modo estándar (20 espacios en blanco) o intensivo (40 espacios en blanco) en el selector de densidad."
                     if is_es_ui else
-                    "Select specific paragraphs to include in this Whole-Section CLOZE reading activity. "
-                    "**1 to 3 paragraphs** generate a focused **1-page worksheet** (~10–12 blanks + 2 comprehension questions). "
-                    "**4+ paragraphs** generate a comprehensive **2-page front/back spread** (~20 blanks)."
+                    "Select specific paragraphs to include in this Whole-Section CLOZE reading activity, or use the quick lesson presets below. "
+                    "Choose between Standard (20 Blanks) or Intensive (40 Blanks) in the density selector below."
                 )
 
                 st.markdown(
@@ -2847,31 +2829,31 @@ elif st.session_state["nav_view"] == "gallery":
                 p_c1, p_c2, p_c3, p_c4, p_c5 = st.columns(5)
                 with p_c1:
                     btn_txt = "Fundamentos (¶1–¶2)" if is_es_ui else "Foundations (¶1–¶2)"
-                    if st.button(btn_txt, key="btn_doi_p1", use_container_width=True, help="Preamble + Natural Rights (1 Page)"):
+                    if st.button(btn_txt, key="btn_doi_p1", use_container_width=True, help="Preamble + Natural Rights"):
                         st.session_state["doi_selected_paras"] = [1, 2]
                         st.rerun()
                 with p_c2:
                     btn_txt = "Impuestos y Tropas (¶15–¶19)" if is_es_ui else "Taxes & Troops (¶15–¶19)"
-                    if st.button(btn_txt, key="btn_doi_p2", use_container_width=True, help="Quartering, Trade, Taxes, Jury (2 Pages)"):
+                    if st.button(btn_txt, key="btn_doi_p2", use_container_width=True, help="Quartering, Trade, Taxes, Jury"):
                         st.session_state["doi_selected_paras"] = [15, 16, 17, 18, 19]
                         st.rerun()
                 with p_c3:
                     btn_txt = "Guerra y Mercenarios (¶24–¶27)" if is_es_ui else "War & Mercenaries (¶24–¶27)"
-                    if st.button(btn_txt, key="btn_doi_p3", use_container_width=True, help="Warfare, Burned Towns, Foreign Mercenaries (2 Pages)"):
+                    if st.button(btn_txt, key="btn_doi_p3", use_container_width=True, help="Warfare, Burned Towns, Foreign Mercenaries"):
                         st.session_state["doi_selected_paras"] = [24, 25, 26, 27]
                         st.rerun()
                 with p_c4:
                     btn_txt = "Resolución final (¶30–¶32)" if is_es_ui else "Resolution (¶30–¶32)"
-                    if st.button(btn_txt, key="btn_doi_p4", use_container_width=True, help="Redress, Separation, Pledge of Honor (1 Page)"):
+                    if st.button(btn_txt, key="btn_doi_p4", use_container_width=True, help="Redress, Separation, Pledge of Honor"):
                         st.session_state["doi_selected_paras"] = [30, 31, 32]
                         st.rerun()
                 with p_c5:
                     btn_txt = "Todo el texto (¶1–¶32)" if is_es_ui else "All 32 Paragraphs"
-                    if st.button(btn_txt, key="btn_doi_p5", use_container_width=True, help="Full Declaration Text (2 Pages)"):
+                    if st.button(btn_txt, key="btn_doi_p5", use_container_width=True, help="Full Declaration Text"):
                         st.session_state["doi_selected_paras"] = list(range(1, 33))
                         st.rerun()
 
-                cur_doi_sel = st.session_state.get("doi_selected_paras", [1, 2])
+                cur_doi_sel = st.session_state.get("doi_selected_paras", list(range(1, 33)))
                 opt_dict = {item[0]: item for item in (DOI_PARAGRAPH_OPTIONS_ES if is_es_ui else DOI_PARAGRAPH_OPTIONS)}
 
                 def format_doi_option(num: int) -> str:
@@ -2892,40 +2874,19 @@ elif st.session_state["nav_view"] == "gallery":
                     st.session_state["doi_selected_paras"] = new_sel
                     selected_doi_paras = sorted(new_sel)
                 else:
-                    selected_doi_paras = [1, 2]
+                    selected_doi_paras = list(range(1, 33))
 
                 gal_cloze_density = st.session_state.get("gal_cloze_density", "standard")
                 num_p = len(selected_doi_paras)
-                if num_p <= 3:
-                    gal_cloze_density = "standard"
-                    budget_badge = f"<span class='badge-pill badge-green' style='font-size: 0.82rem;'>📄 1-Page Layout ({num_p} paragraphs • ~10–12 target blanks + 2 comprehension questions)</span>"
-                    st.markdown(f"<div style='margin-top: 0.40rem;'>{budget_badge}</div>", unsafe_allow_html=True)
+                target_b_lbl = "40 espacios" if gal_cloze_density == "intensive" else "20 espacios" if is_es_ui else ("40 target blanks" if gal_cloze_density == "intensive" else "20 target blanks")
+                if num_p <= 2:
+                    budget_badge = f"<span class='badge-pill badge-green' style='font-size: 0.82rem;'>📄 {'Hoja de 1 página' if is_es_ui else '1-Page Layout'} ({num_p} {'párrafos' if is_es_ui else 'paragraphs'} • ~{target_b_lbl} + 2 {'preguntas de comprensión' if is_es_ui else 'comprehension questions'})</span>"
                 else:
-                    c_den_lbl, c_den_rad = st.columns([1.2, 2.8])
-                    with c_den_lbl:
-                        st.markdown(
-                            f"<div style='font-weight: 700; font-size: 0.88rem; color: #1e3a8a; margin-top: 4px;'>{'Densidad de espacios en blanco:' if is_es_ui else 'CLOZE Blank Density:'}</div>",
-                            unsafe_allow_html=True,
-                        )
-                    with c_den_rad:
-                        d_opts = ["Standard (20 Blanks)", "Intensive (40 Blanks)"] if not is_es_ui else ["Estándar (20 espacios)", "Intensivo (40 espacios)"]
-                        sel_d = st.radio(
-                            "DOI CLOZE Blank Density",
-                            options=d_opts,
-                            index=0 if gal_cloze_density == "standard" else 1,
-                            horizontal=True,
-                            key="gal_cloze_density_doi",
-                            label_visibility="collapsed",
-                        )
-                        gal_cloze_density = "intensive" if ("Intensive" in sel_d or "Intensivo" in sel_d) else "standard"
-                        st.session_state["gal_cloze_density"] = gal_cloze_density
-
-                    target_b_lbl = "40 target blanks" if gal_cloze_density == "intensive" else "20 target blanks"
-                    budget_badge = f"<span class='badge-pill badge-blue' style='font-size: 0.82rem;'>📑 2-Page Front/Back Spread ({num_p} paragraphs • ~{target_b_lbl} + 2 comprehension questions)</span>"
-                    st.markdown(f"<div style='margin-top: 0.40rem;'>{budget_badge}</div>", unsafe_allow_html=True)
+                    budget_badge = f"<span class='badge-pill badge-blue' style='font-size: 0.82rem;'>📑 {'Pliego de 2 páginas' if is_es_ui else '2-Page Front/Back Spread'} ({num_p} {'párrafos' if is_es_ui else 'paragraphs'} • ~{target_b_lbl} + 2 {'preguntas de comprensión' if is_es_ui else 'comprehension questions'})</span>"
+                st.markdown(f"<div style='margin-top: 0.40rem;'>{budget_badge}</div>", unsafe_allow_html=True)
 
         gal_cloze_density = st.session_state.get("gal_cloze_density", "standard")
-        if not is_doi_mode and active_tile_code == "read_06_whole_section_cloze":
+        if active_tile_code == "read_06_whole_section_cloze":
             is_es_ui = (st.session_state.get("handout_language") == "es")
             with st.container(border=True):
                 c_den_lbl, c_den_rad = st.columns([1.2, 2.8])
@@ -2941,7 +2902,7 @@ elif st.session_state["nav_view"] == "gallery":
                         options=d_opts,
                         index=0 if gal_cloze_density == "standard" else 1,
                         horizontal=True,
-                        key="gal_cloze_density_regular",
+                        key="gal_cloze_density_selector",
                         label_visibility="collapsed",
                     )
                     gal_cloze_density = "intensive" if ("Intensive" in sel_d or "Intensivo" in sel_d) else "standard"
