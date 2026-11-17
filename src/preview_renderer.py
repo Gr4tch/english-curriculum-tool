@@ -559,7 +559,16 @@ def render_preview_handout(
             <div style="margin-bottom: 0.65rem; font-size: 0.88rem; line-height: 1.5;">
                 <b>[¶4]</b> The king issued a law requiring colonists to stay east of the <span class="ws-inline-blank">&nbsp;</span> Mountains, called the <span class="ws-inline-blank">&nbsp;</span> of 1763.
             </div>
-            <div style="font-size: 0.75rem; color: #64748b; font-style: italic; margin-top: 0.5rem;">[Continues on Page 2 with Subheading 2: SOLDIERS IN THE COLONIES (pp. 178–179)...]</div>
+            <div style="font-size: 0.75rem; color: #64748b; font-style: italic; margin-top: 0.5rem; margin-bottom: 0.5rem;">[Continues on Page 2 with Subheading 2: SOLDIERS IN THE COLONIES (pp. 178–179)...]</div>
+            <div style="font-weight: 700; color: #1e3a8a; margin-top: 0.65rem; margin-bottom: 0.35rem; font-size: 0.88rem;">Section Comprehension Questions (End of Page 2):</div>
+            <div style="margin-bottom: 0.45rem; font-size: 0.84rem;">
+                <b>1. What was the most serious problem Great Britain faced after winning the French and Indian War?</b>
+                <div style="border-bottom: 1.5px solid #cbd5e1; height: 1.2rem; margin-top: 0.2rem;"></div>
+            </div>
+            <div style="margin-bottom: 0.45rem; font-size: 0.84rem;">
+                <b>2. Why did American colonists view the presence of British peacetime soldiers with suspicion?</b>
+                <div style="border-bottom: 1.5px solid #cbd5e1; height: 1.2rem; margin-top: 0.2rem;"></div>
+            </div>
         </div>
         """
 
@@ -939,9 +948,22 @@ def render_preview_exemplar(
                 </div>
             </div>
             <div style="font-weight: 700; color: #064e3b; margin-top: 0.5rem; margin-bottom: 0.25rem;">Completed Reading Passage (Exemplar Sample):</div>
-            <div style="font-size: 0.86rem; line-height: 1.5; color: #1e293b;">
+            <div style="font-size: 0.86rem; line-height: 1.5; color: #1e293b; margin-bottom: 0.75rem;">
                 <b>[¶1]</b> At the end of the <span class="ws-student-answer">French</span> and Indian War, the British colonists in North America had plenty of reasons to be optimistic. The colonies' <span class="ws-student-answer">militias</span> had proven themselves to be able fighters alongside British soldiers.
                 <br><b>[¶2]</b> After decades of economic growth, the colonies were <span class="ws-student-answer">prosperous</span>. Still, some felt dissatisfaction because freedom to govern was limited by King <span class="ws-student-answer">George</span> III and Parliament.
+            </div>
+            <div style="font-weight: 700; color: #064e3b; margin-top: 0.65rem; margin-bottom: 0.25rem; font-size: 0.86rem;">Comprehension Questions Student Exemplar:</div>
+            <div style="margin-bottom: 0.45rem; font-size: 0.82rem;">
+                <b>1. What was the most serious problem Great Britain faced after winning the French and Indian War?</b>
+                <div class="ws-student-answer" style="display: block; margin-top: 0.15rem; padding: 0.35rem 0.55rem; font-size: 0.82rem;">
+                    Great Britain faced massive war debt of over 130 million pounds and costly conflicts with Native Americans, leading King George III to issue the Proclamation of 1763 [p. 178, ¶5].
+                </div>
+            </div>
+            <div style="margin-bottom: 0.45rem; font-size: 0.82rem;">
+                <b>2. Why did American colonists view the presence of British peacetime soldiers with suspicion?</b>
+                <div class="ws-student-answer" style="display: block; margin-top: 0.15rem; padding: 0.35rem 0.55rem; font-size: 0.82rem;">
+                    Colonists feared peacetime soldiers were stationed in port cities to intimidate citizens and enforce oppressive royal taxes without colonial consent [p. 179, ¶2].
+                </div>
             </div>
         </div>
         """

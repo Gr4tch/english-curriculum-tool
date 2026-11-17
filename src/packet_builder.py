@@ -901,6 +901,134 @@ STOPWORDS_CLOZE_ES = {
 }
 
 
+def get_section_comprehension_questions(
+    section_meta: Dict[str, Any],
+    kb: Dict[str, Any],
+    lang: str = "en",
+) -> Dict[str, Any]:
+    """
+    Returns exactly two high-yield, standards-aligned comprehension questions for the section reading passage.
+    Curated cause-and-effect and synthesis questions targeting the core conflict (Subheading 1)
+    and the resolution/outcome (Subheading 2).
+    Includes authentic student sentence starters, paragraph locator hints, and exemplar answers in both EN and ES.
+    """
+    is_es = (lang == "es")
+    sec_code = str(section_meta.get("section_code", ""))
+    ch_num = section_meta.get("chapter_num")
+    subs = [s for s in kb.get("subheadings", []) if not NON_BLUE_SUBHEADINGS_REGEX.search(s.get("name", ""))][:2]
+
+    # Special curated handling for Ch 5 Sec 1.3: The Stamp Act
+    if ch_num == 5 and sec_code == "1.3":
+        if is_es:
+            return {
+                "q1": {
+                    "prompt": "¿Qué gravaba la Ley del Timbre de 1765 y por qué provocó tanta indignación entre los colonos?",
+                    "starter": "La Ley del Timbre gravaba productos de papel como... y los colonos protestaron porque...",
+                    "hint": "[pág. 182, ¶2–4]",
+                    "exemplar": "La Ley del Timbre exigía la compra de un sello fiscal obligatorio para todos los documentos de papel, incluidos periódicos y contratos legales [pág. 182, ¶2]. Los colonos se indignaron porque era un impuesto interno directo aprobado sin su consentimiento ni representación en el Parlamento [pág. 182, ¶4].",
+                },
+                "q2": {
+                    "prompt": "¿Por qué el Parlamento británico se sintió obligado a revocar la Ley del Timbre en 1766?",
+                    "starter": "El Parlamento se sintió obligado a revocar la ley porque los boicots coloniales provocaron...",
+                    "hint": "[págs. 182–183, ¶6–7]",
+                    "exemplar": "El Parlamento se vio obligado a revocar la Ley del Timbre porque los boicots comerciales organizados por los comerciantes y los Hijos de la Libertad causaron graves pérdidas a las empresas británicas [págs. 182–183, ¶6–7]. Ante la intensa presión de los propios comerciantes británicos arruinados, el Parlamento canceló la ley en 1766 [pág. 183, ¶7].",
+                }
+            }
+        else:
+            return {
+                "q1": {
+                    "prompt": "What did the Stamp Act of 1765 tax, and why did it spark widespread outrage across the colonies?",
+                    "starter": "The Stamp Act taxed paper goods like... and colonists protested because...",
+                    "hint": "[p. 182, ¶2–4]",
+                    "exemplar": "The Stamp Act required colonists to purchase an official stamp on all paper goods including newspapers, legal documents, and playing cards [p. 182, ¶2]. Colonists were outraged because it was a direct internal tax imposed without their consent by a Parliament where they had no representation [p. 182, ¶4].",
+                },
+                "q2": {
+                    "prompt": "Why did Parliament feel obligated to repeal the Stamp Act in 1766?",
+                    "starter": "Parliament felt obligated to repeal the Stamp Act because colonial boycotts caused...",
+                    "hint": "[pp. 182–183, ¶6–7]",
+                    "exemplar": "Parliament felt obligated to repeal the Stamp Act because widespread nonimportation boycotts organized by colonial merchants and protests by the Sons of Liberty caused British businesses to lose massive profits [pp. 182–183, ¶6–7]. Facing intense pressure from hurting British merchants, Parliament canceled the act in 1766 [p. 183, ¶7].",
+                }
+            }
+
+    # Curated / dynamic questions for sections with 2 subheadings
+    if len(subs) >= 2:
+        sh0 = subs[0]
+        sh1 = subs[-1]
+        cite0 = sh0.get("citation", f"[pp. {section_meta.get('printed_pages', '')}]")
+        cite1 = sh1.get("citation", f"[pp. {section_meta.get('printed_pages', '')}]")
+        if is_es:
+            q1_p = sh0.get("say_something_q") or f"¿Cuál fue el acontecimiento o desafío principal explicado en '{sh0.get('name', '')}'?"
+            q2_p = sh1.get("say_something_q") or f"¿Qué consecuencias o reacciones resultaron de lo descrito en '{sh1.get('name', '')}'?"
+            ex0 = f"{sh0.get('cause', '')} {sh0.get('effect', '')}".strip() or sh0.get("gist", "Acontecimiento clave de la sección.")
+            ex1 = f"{sh1.get('cause', '')} {sh1.get('effect', '')}".strip() or sh1.get("gist", "Consecuencia clave de la sección.")
+            return {
+                "q1": {
+                    "prompt": q1_p,
+                    "starter": f"{sh0.get('gist', 'El acontecimiento principal fue')} porque...",
+                    "hint": cite0,
+                    "exemplar": f"{ex0} {cite0}",
+                },
+                "q2": {
+                    "prompt": q2_p,
+                    "starter": f"{sh1.get('gist', 'Como resultado')} porque...",
+                    "hint": cite1,
+                    "exemplar": f"{ex1} {cite1}",
+                }
+            }
+        else:
+            q1_p = sh0.get("say_something_q") or f"What was the most important development explained under '{sh0.get('name', '')}'?"
+            q2_p = sh1.get("say_something_q") or f"What key consequences or reactions resulted from what occurred in '{sh1.get('name', '')}'?"
+            ex0 = f"{sh0.get('cause', '')} {sh0.get('effect', '')}".strip() or sh0.get("gist", "Key historical development.")
+            ex1 = f"{sh1.get('cause', '')} {sh1.get('effect', '')}".strip() or sh1.get("gist", "Key historical consequence.")
+            return {
+                "q1": {
+                    "prompt": q1_p,
+                    "starter": f"{sh0.get('gist', 'The main development occurred')} because...",
+                    "hint": cite0,
+                    "exemplar": f"{ex0} {cite0}",
+                },
+                "q2": {
+                    "prompt": q2_p,
+                    "starter": f"{sh1.get('gist', 'As a result')} because...",
+                    "hint": cite1,
+                    "exemplar": f"{ex1} {cite1}",
+                }
+            }
+    else:
+        # Fallback for 1-subheading sections
+        pp = section_meta.get("printed_pages", "")
+        if is_es:
+            return {
+                "q1": {
+                    "prompt": f"¿Cuál fue el acontecimiento histórico fundamental descrito en la Sección {sec_code}?",
+                    "starter": "El acontecimiento fundamental descrito fue...",
+                    "hint": f"[págs. {pp}]",
+                    "exemplar": kb.get("printed_main_idea", "Los acontecimientos marcaron el conflicto colonial.") + f" [págs. {pp}]",
+                },
+                "q2": {
+                    "prompt": "¿De qué manera estos hechos alteraron la relación entre las colonias y Gran Bretaña?",
+                    "starter": "Estos hechos alteraron la relación colonial porque...",
+                    "hint": f"[págs. {pp}]",
+                    "exemplar": kb.get("exemplar_central_idea", "Las tensiones aumentaron entre los colonos y las autoridades reales.") + f" [págs. {pp}]",
+                }
+            }
+        else:
+            return {
+                "q1": {
+                    "prompt": f"What was the primary historical development described in Section {sec_code}?",
+                    "starter": "The primary development described was...",
+                    "hint": f"[pp. {pp}]",
+                    "exemplar": kb.get("printed_main_idea", "Key historical developments shaped the colonial crisis.") + f" [pp. {pp}]",
+                },
+                "q2": {
+                    "prompt": "How did these developments impact the relationship between the American colonies and Great Britain?",
+                    "starter": "These developments impacted relations because...",
+                    "hint": f"[pp. {pp}]",
+                    "exemplar": kb.get("exemplar_central_idea", "Tensions escalated between colonists and royal authorities.") + f" [pp. {pp}]",
+                }
+            }
+
+
 def build_whole_section_cloze_content(
     section_meta: Dict[str, Any],
     kb: Dict[str, Any],
@@ -909,7 +1037,8 @@ def build_whole_section_cloze_content(
 ) -> Dict[str, Any]:
     """
     Extracts the full section reading passage and generates a ~20-word CLOZE active reading activity
-    spread across a 2-page front/back worksheet layout.
+    spread across a 2-page front/back worksheet layout, balanced so Page 2 accommodates 2 text-dependent
+    comprehension questions without overflowing.
     Hybrid design: key historical content words prioritized and paced systematically across every paragraph.
     Standard Edition: clean blanks, no word bank (students read textbook to find words).
     Scaffolded Edition: clean blanks with complete 20-word bank at the top and paragraph locators.
@@ -961,12 +1090,26 @@ def build_whole_section_cloze_content(
         flags=re.DOTALL,
     )
 
+    activity_sh_regex = re.compile(
+        r"\b(FORM AND SUPPORT OPINIONS|MAKE PREDICTIONS|ANALYZE VISUALS|ANALYZE LANGUAGE USE|"
+        r"MAKE CONNECTIONS|CURATING HISTORY|REVIEW|WRITE|THINK LIKE A GEOLOGIST|THINK LIKE A GEOGRAPHER)\b",
+        re.IGNORECASE,
+    )
+    sidebar_artifact_regex = re.compile(
+        r"^(?:The Proclamation of 1763|Territories and Colonies|La Proclamación de 1763|Territorios y colonias|"
+        r"Museum of Fine Arts|Paul Revere was a father|The Sons of Liberty Bowl|Sons of Liberty Bowl Commissioned|"
+        r"It is his only finished portrait|In the same year that Paul Revere|Printing Common Sense|Printing Press).*$",
+        re.MULTILINE,
+    )
+
     parsed_sections = []  # list of (sh_title, [(pnum, ptext), ...])
     total_paras = 0
 
     if sh_blocks:
         for sh_title, sh_body in sh_blocks:
             clean_sh = re.sub(r"\s+", " ", sh_title).strip()
+            if NON_BLUE_SUBHEADINGS_REGEX.search(clean_sh) or activity_sh_regex.search(clean_sh):
+                continue
             paras = sh_body.strip().split("\n\n")
             p_list = []
             for p in paras:
@@ -978,9 +1121,14 @@ def build_whole_section_cloze_content(
                 else:
                     pnum = str(len(p_list) + 1)
                     ptext = p_str
-                # Filter out map captions or artifact lines
-                ptext = re.sub(r"^(?:The Proclamation of 1763 This historical map|Territories and Colonies|La Proclamación de 1763|Territorios y colonias).*$", "", ptext, flags=re.MULTILINE).strip()
-                if ptext and len(ptext) > 10:
+                # Filter out map captions or sidebar artifact lines
+                ptext = sidebar_artifact_regex.sub("", ptext).strip()
+                if (
+                    len(ptext) > 25
+                    and not ptext.startswith("In 1767, they refused to retract")
+                    and not ptext.startswith("In the same year that Paul Revere")
+                    and not ptext.startswith("Copley's decision to represent")
+                ):
                     p_list.append((pnum, ptext))
                     total_paras += 1
             if p_list:
@@ -988,6 +1136,8 @@ def build_whole_section_cloze_content(
     else:
         # Fallback to kb subheadings
         for s in kb.get("subheadings", []):
+            if NON_BLUE_SUBHEADINGS_REGEX.search(s.get("name", "")) or activity_sh_regex.search(s.get("name", "")):
+                continue
             s_name = s.get("name", "Reading Section")
             p_text = f"{s.get('cause', '')} {s.get('effect', '')} {s.get('gist', '')}".strip()
             if p_text:
@@ -1071,41 +1221,51 @@ def build_whole_section_cloze_content(
 
         processed_paras[(sh_idx, pnum)] = (stud_text, exem_text)
 
-    # Split into Page 1 and Page 2
-    num_sections = len(parsed_sections)
-    if num_sections >= 2:
-        best_split = 1
-        best_diff = 999
-        cum = 0
-        for s_i in range(num_sections - 1):
-            cum += len(parsed_sections[s_i][1])
-            d = abs(cum - (total_paras / 2.0))
-            if d < best_diff:
-                best_diff = d
-                best_split = s_i + 1
-        p1_secs = parsed_sections[:best_split]
-        p2_secs = parsed_sections[best_split:]
-    else:
-        s_title, p_list = parsed_sections[0]
-        mid = max(1, len(p_list) // 2)
-        p1_secs = [(s_title, p_list[:mid])]
-        p2_secs = [(f"{s_title} ({'Continuación' if is_es else 'Continued'})", p_list[mid:])]
-
-    def render_passage_page(secs, is_exemplar=False):
+    def render_passage_page(items, is_exemplar=False, is_p2=False, ref_p1_items=None):
         blocks = []
-        for s_title, p_list in secs:
-            blocks.append(f"### {s_title}")
-            for pnum, _ in p_list:
-                s_idx = next(i for i, (st, _) in enumerate(parsed_sections) if st.startswith(s_title.split(' (')[0]))
-                stud_p, exem_p = processed_paras[(s_idx, pnum)]
-                txt = exem_p if is_exemplar else stud_p
-                blocks.append(f"**[¶{pnum}]** {txt}")
+        cur_sh = None
+        for s_idx, sh_title, pnum, _ in items:
+            if sh_title != cur_sh:
+                cur_sh = sh_title
+                label = f"### {cur_sh}"
+                if is_p2 and ref_p1_items and any(prev_sh == cur_sh for _, prev_sh, _, _ in ref_p1_items):
+                    label += " (Continuación)" if is_es else " (Continued)"
+                blocks.append(label)
+            stud_p, exem_p = processed_paras[(s_idx, pnum)]
+            txt = exem_p if is_exemplar else stud_p
+            blocks.append(f"**[¶{pnum}]** {txt}")
         return "\n\n".join(blocks)
 
-    p1_student_md = render_passage_page(p1_secs, is_exemplar=False)
-    p2_student_md = render_passage_page(p2_secs, is_exemplar=False)
-    p1_exemplar_md = render_passage_page(p1_secs, is_exemplar=True)
-    p2_exemplar_md = render_passage_page(p2_secs, is_exemplar=True)
+    # Dynamic split to balance vertical height: P1 gets slightly more content than P2 to reserve room on P2 for the 2 comprehension questions (~9.5 units)
+    if len(all_paras_flat) >= 4:
+        best_cand = max(1, min(len(all_paras_flat) - 1, round(len(all_paras_flat) * 0.50)))
+        best_max = 999.0
+        # Evaluate split candidates around 35% - 70% of paragraphs
+        cands = list(range(max(1, int(len(all_paras_flat) * 0.35)), min(len(all_paras_flat), int(len(all_paras_flat) * 0.70) + 1)))
+        for c in cands:
+            p1_c = all_paras_flat[:c]
+            p2_c = all_paras_flat[c:]
+            p1_test_md = render_passage_page(p1_c, is_exemplar=False, is_p2=False)
+            p2_test_md = render_passage_page(p2_c, is_exemplar=False, is_p2=True, ref_p1_items=p1_c)
+            p1_sim = f"## Title — Part 1\n> Focus\nDirections\n\n{p1_test_md}"
+            p2_sim = f"## Title — Part 2\n\n{p2_test_md}\n\n### Questions\n1. Q1\n{SOLID_LINE}\n{SOLID_LINE}\n\n2. Q2\n{SOLID_LINE}\n{SOLID_LINE}"
+            _, b1_c = enforce_page_budget_guardrail(sanitize_aesthetics(p1_sim), target_pages=1)
+            _, b2_c = enforce_page_budget_guardrail(sanitize_aesthetics(p2_sim), target_pages=1)
+            m_val = max(b1_c["final_layout_units"], b2_c["final_layout_units"])
+            if m_val < best_max:
+                best_max = m_val
+                best_cand = c
+        p1_items = all_paras_flat[:best_cand]
+        p2_items = all_paras_flat[best_cand:]
+    else:
+        mid = max(1, len(all_paras_flat) // 2)
+        p1_items = all_paras_flat[:mid]
+        p2_items = all_paras_flat[mid:]
+
+    p1_student_md = render_passage_page(p1_items, is_exemplar=False, is_p2=False)
+    p2_student_md = render_passage_page(p2_items, is_exemplar=False, is_p2=True, ref_p1_items=p1_items)
+    p1_exemplar_md = render_passage_page(p1_items, is_exemplar=True, is_p2=False)
+    p2_exemplar_md = render_passage_page(p2_items, is_exemplar=True, is_p2=True, ref_p1_items=p1_items)
 
     sorted_word_bank = sorted(list(set(w for w, _, _ in answers_list)), key=lambda s: s.lower())
 
@@ -1113,6 +1273,8 @@ def build_whole_section_cloze_content(
         f"{idx}. {w} ({re.sub(r'\\s*\\([^)]*\\)', '', sh).strip()}, ¶{pn})"
         for idx, (w, sh, pn) in enumerate(answers_list, 1)
     ]
+
+    comp_qs = get_section_comprehension_questions(section_meta, kb, lang=lang)
 
     return {
         "p1_student_md": p1_student_md,
@@ -1122,6 +1284,7 @@ def build_whole_section_cloze_content(
         "word_bank": sorted_word_bank,
         "keys": keys,
         "answers_list": answers_list,
+        "comp_qs": comp_qs,
     }
 
 
@@ -2227,7 +2390,10 @@ def build_standalone_strategy_handout(
         s_obj = get_strategy_by_code(READING_ORGANIZERS, strategy_code)
         std_code = "CCSS RH.6-8.1 / RH.6-8.2"
         cloze_data = build_whole_section_cloze_content(section_meta, kb, markdown_text=markdown_text, lang=lang)
-        keys = cloze_data["keys"]
+        keys = list(cloze_data["keys"])
+        comp_qs = cloze_data.get("comp_qs") or get_section_comprehension_questions(section_meta, kb, lang=lang)
+        q1 = comp_qs["q1"]
+        q2 = comp_qs["q2"]
 
         clean_strat_focus = "Whole-Section CLOZE Reading (Full-Passage Active Reading)"
         localized_strat_focus = get_localized_strategy_name(clean_strat_focus, lang=lang)
@@ -2236,6 +2402,54 @@ def build_standalone_strategy_handout(
         word_bank_str = ", ".join(cloze_data["word_bank"])
         p1_dir_std = t("cloze_whole_section_directions_std", lang=lang, prefix="", pages=pp).strip()
         p1_dir_scaf = t("cloze_whole_section_directions_scaf", lang=lang, prefix="", pages=pp).strip()
+
+        # Comprehension questions blocks for Page 2
+        if is_es:
+            std_q_blocks = [
+                "### Preguntas de comprensión de la sección",
+                "",
+                f"1. **{q1['prompt']}**",
+                SOLID_LINE,
+                SOLID_LINE,
+                "",
+                f"2. **{q2['prompt']}**",
+                SOLID_LINE,
+                SOLID_LINE,
+            ]
+            scaf_q_blocks = [
+                "### Preguntas de comprensión de la sección *(Edición con apoyo didáctico)*",
+                "",
+                f"1. **{q1['prompt']}** *{q1['hint']}*",
+                f"*{q1['starter']}* ________________________________________________",
+                SOLID_LINE,
+                "",
+                f"2. **{q2['prompt']}** *{q2['hint']}*",
+                f"*{q2['starter']}* ________________________________________________",
+                SOLID_LINE,
+            ]
+        else:
+            std_q_blocks = [
+                "### Section Comprehension Questions",
+                "",
+                f"1. **{q1['prompt']}**",
+                SOLID_LINE,
+                SOLID_LINE,
+                "",
+                f"2. **{q2['prompt']}**",
+                SOLID_LINE,
+                SOLID_LINE,
+            ]
+            scaf_q_blocks = [
+                "### Section Comprehension Questions *(Scaffolded Support)*",
+                "",
+                f"1. **{q1['prompt']}** *{q1['hint']}*",
+                f"*{q1['starter']}* ________________________________________________",
+                SOLID_LINE,
+                "",
+                f"2. **{q2['prompt']}** *{q2['hint']}*",
+                f"*{q2['starter']}* ________________________________________________",
+                SOLID_LINE,
+            ]
 
         # Standard Page 1 & 2 (Standard Edition has NO word bank per User Decision A3)
         if is_es:
@@ -2251,6 +2465,8 @@ def build_standalone_strategy_handout(
                 f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 2: Continuación de la lectura",
                 "",
                 cloze_data["p2_student_md"],
+                "",
+                "\n".join(std_q_blocks),
                 "",
                 f"[GRADE_BOX: Sec {sec_code}   _____/100]",
             ]
@@ -2268,6 +2484,8 @@ def build_standalone_strategy_handout(
                 "",
                 cloze_data["p2_student_md"],
                 "",
+                "\n".join(scaf_q_blocks),
+                "",
                 f"[GRADE_BOX: Sec {sec_code}   _____/100]",
             ]
         else:
@@ -2284,6 +2502,8 @@ def build_standalone_strategy_handout(
                 "",
                 cloze_data["p2_student_md"],
                 "",
+                "\n".join(std_q_blocks),
+                "",
                 f"[GRADE_BOX: Sec {sec_code}   _____/100]",
             ]
             scaf_p1_blocks = [
@@ -2299,6 +2519,8 @@ def build_standalone_strategy_handout(
                 f"## Section {sec_code}: {sec_title} (pp. {pp}) — Part 2: Reading Continuation *(Scaffolded Support)*",
                 "",
                 cloze_data["p2_student_md"],
+                "",
+                "\n".join(scaf_q_blocks),
                 "",
                 f"[GRADE_BOX: Sec {sec_code}   _____/100]",
             ]
@@ -2332,6 +2554,24 @@ def build_standalone_strategy_handout(
         for k_item in keys:
             exemplar_blocks.append(f"- **{k_item}**")
 
+        # Append authentic student responses for comprehension questions
+        if is_es:
+            exemplar_blocks.append("")
+            exemplar_blocks.append("### Respuestas modelo para las preguntas de comprensión:")
+            exemplar_blocks.append(f"1. **{q1['prompt']}**")
+            exemplar_blocks.append(f"> **Respuesta modelo del estudiante:** {q1['exemplar']}")
+            exemplar_blocks.append("")
+            exemplar_blocks.append(f"2. **{q2['prompt']}**")
+            exemplar_blocks.append(f"> **Respuesta modelo del estudiante:** {q2['exemplar']}")
+        else:
+            exemplar_blocks.append("")
+            exemplar_blocks.append("### Authentic 8th-Grade Student Responses for Comprehension Questions:")
+            exemplar_blocks.append(f"1. **{q1['prompt']}**")
+            exemplar_blocks.append(f"> **Model Student Response:** {q1['exemplar']}")
+            exemplar_blocks.append("")
+            exemplar_blocks.append(f"2. **{q2['prompt']}**")
+            exemplar_blocks.append(f"> **Model Student Response:** {q2['exemplar']}")
+
         completed_title = "### Texto completo de la sección (con respuestas en negrita):" if is_es else "### Complete Section Reading Passage (With Answer Key):"
         exemplar_blocks.append("")
         exemplar_blocks.append(completed_title)
@@ -2341,6 +2581,10 @@ def build_standalone_strategy_handout(
         if kb.get("printed_main_idea"):
             ground_lbl = f"*Fundamentación en el libro de texto (pág. {section_meta.get('start_page', '')}):*" if is_es else f"*Textbook Source Grounding (p. {section_meta.get('start_page', '')}):*"
             exemplar_blocks.append(f"\n{ground_lbl} \"{kb['printed_main_idea']}\"")
+
+        # Also append comprehension questions to keys list
+        keys.append(f"Comprehension Q1: {q1['exemplar']}")
+        keys.append(f"Comprehension Q2: {q2['exemplar']}")
 
         exemplar_md = "\n\n".join(exemplar_blocks)
 

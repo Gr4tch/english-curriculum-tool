@@ -322,8 +322,8 @@ To prevent further conflicts with Native Americans, King George issued the **Pro
         "name": "Whole-Section CLOZE Reading (Full-Passage Active Reading)",
         "short_name": "Whole-Section CLOZE",
         "requires_audit": "always_valid",
-        "best_for": "Active reading accountability across the entire section spread. Students follow along in the textbook across a 2-page spread to fill in ~20 key terms.",
-        "description": "Takes the complete section reading text across a 2-page spread and blanks out ~20 essential historical terms for students to fill in as they read along in the textbook.",
+        "best_for": "Active reading accountability across the entire section spread. Students follow along in the textbook across a 2-page spread to fill in ~20 key terms and answer 2 text-dependent comprehension questions.",
+        "description": "Takes the complete section reading text across a 2-page spread, blanks out ~20 essential historical terms, and concludes with 2 text-dependent comprehension questions.",
         "visual_preview_md": """*Directions: As you read the section in your textbook, fill in each blank with the correct historical term to complete the reading passage:*
 
 **1. PROBLEMS ARISE (p. 178)**
@@ -334,7 +334,16 @@ To prevent further conflicts with Native Americans, King George issued the **Pro
 --- [PAGE BREAK — PAGE 2 CONTINUATION] ---
 
 **2. SOLDIERS IN THE COLONIES (p. 178)**
-**[¶1]** Soon, colonists along the eastern coast also found themselves frustrated by ____________________ they found oppressive. After the war, many British soldiers were moved into port cities such as New York and Boston to help enforce laws. In 1765, the British Parliament passed the ____________________ Act...""",
+**[¶1]** Soon, colonists along the eastern coast also found themselves frustrated by ____________________ they found oppressive. After the war, many British soldiers were moved into port cities such as New York and Boston to help enforce laws. In 1765, the British Parliament passed the ____________________ Act...
+
+### Section Comprehension Questions
+1. **What was the most serious problem Great Britain faced after winning the French and Indian War?**
+_________________________________________________________________________________
+_________________________________________________________________________________
+
+2. **Why did American colonists view the presence of British peacetime soldiers with suspicion?**
+_________________________________________________________________________________
+_________________________________________________________________________________""",
         "exemplar_md": """**Student Exemplar (20 Answers & Full Completed Passage):**
 - **1. militias** (1. PROBLEMS ARISE, ¶1)
 - **2. prosperous** (1. PROBLEMS ARISE, ¶2)
@@ -355,10 +364,15 @@ To prevent further conflicts with Native Americans, King George issued the **Pro
 - **17. Americans** (2. SOLDIERS IN THE COLONIES, ¶4)
 - **18. Covenant** (2. SOLDIERS IN THE COLONIES, ¶5)
 - **19. alliances** (2. SOLDIERS IN THE COLONIES, ¶5)
-- **20. Native** (2. SOLDIERS IN THE COLONIES, ¶6)""",
+- **20. Native** (2. SOLDIERS IN THE COLONIES, ¶6)
+
+**Section Comprehension Questions Exemplar:**
+- **Q1 (Origins of Conflict):** Great Britain faced massive war debt of over 130 million pounds and costly conflicts with Native Americans, leading King George III to issue the Proclamation of 1763 [p. 178, ¶5].
+- **Q2 (Colonial Reactions):** Colonists feared peacetime soldiers were stationed in port cities to intimidate citizens and enforce oppressive royal taxes without colonial consent [p. 179, ¶2].""",
         "scaffolded_md": """*Scaffolded Support Elements:*
 - **Word Bank (20 Terms):** Complete alphabetized 20-word bank printed at the top of Page 1.
 - **Paragraph Locators:** Clear [¶1], [¶2] paragraph markers to help students track where each term appears in the textbook.
+- **Comprehension Question Scaffolding:** Targeted sentence starters and paragraph locator hints (`[¶2–4]`, `[¶6–7]`) for both comprehension questions.
 - Clean unnumbered blanks to maintain natural reading flow while students consult the word bank.""",
     },
 ]
