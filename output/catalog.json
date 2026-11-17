@@ -9930,5 +9930,135 @@
         "page": 582
       }
     ]
+  },
+  {
+    "id": "ch18_sec_doi",
+    "unit_num": 3,
+    "unit_title": "Unit 3 - The American Revolution (1754–1783)",
+    "chapter_num": 18,
+    "chapter_title": "Primary Source: Declaration of Independence",
+    "section_code": "DOI",
+    "title": "The Declaration of Independence",
+    "section_type": "Primary Source Document",
+    "is_special_feature": true,
+    "printed_pages": "R4–R7",
+    "start_page": 4,
+    "end_page": 7,
+    "pdf_file": "",
+    "hierarchy_pdf_file": "",
+    "md_file": "output/markdown/Primary_Source_Declaration_of_Independence.md",
+    "word_count": 1350,
+    "printed_main_idea": "The unanimous Declaration of the thirteen united States of America, adopted July 4, 1776, announcing the separation of the American colonies from Great Britain and setting forth the principles of natural rights, government by consent of the governed, and the right to alter or abolish oppressive rule.",
+    "subheadings": [
+      {
+        "title": "PREAMBLE: THE PURPOSE OF SEPARATION",
+        "page": "R4",
+        "paragraph_count": 1
+      },
+      {
+        "title": "DECLARATION OF NATURAL RIGHTS & THE SOCIAL CONTRACT",
+        "page": "R4–R5",
+        "paragraph_count": 1
+      },
+      {
+        "title": "GRIEVANCES: ABUSES OF REPRESENTATION AND LEGISLATION",
+        "page": "R5",
+        "paragraph_count": 7
+      },
+      {
+        "title": "GRIEVANCES: JUDICIAL CONTROL, SWARMS OF OFFICERS & STANDING ARMIES",
+        "page": "R5–R6",
+        "paragraph_count": 5
+      },
+      {
+        "title": "GRIEVANCES: UNFAIR TAXATION, TRADE, QUARTERING & MOCK TRIALS",
+        "page": "R6",
+        "paragraph_count": 9
+      },
+      {
+        "title": "GRIEVANCES: WARFARE, MERCENARIES & DESTRUCTION OF LIVES",
+        "page": "R6–R7",
+        "paragraph_count": 6
+      },
+      {
+        "title": "STATEMENT OF REDRESS & RESOLUTION OF INDEPENDENCE",
+        "page": "R7",
+        "paragraph_count": 3
+      }
+    ],
+    "historical_thinking": {
+      "q1_reading_check": "Analyze Primary Sources: What fundamental human rights does Thomas Jefferson assert all people possess by nature?",
+      "q2_historical_reasoning": "Evaluate Evidence: Why did the Founders include a specific, detailed list of 27 grievances against King George III rather than just declaring independence?",
+      "q3_evaluating": "Form and Support Opinions: In what ways did the Declaration of Independence lay the foundation for American democracy?"
+    },
+    "critical_viewing": [],
+    "official_vocab": [
+      {
+        "word": "unalienable right",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "a right that cannot be taken away by government (such as Life, Liberty, and the pursuit of Happiness)",
+        "page": "R4"
+      },
+      {
+        "word": "usurpation",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "the wrongful seizure of authority or exercise of power without right",
+        "page": "R4"
+      },
+      {
+        "word": "despotism",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "a system of government where the ruler possesses absolute, unchecked, and tyrannical power",
+        "page": "R4"
+      },
+      {
+        "word": "tyranny",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "cruel, unreasonable, or oppressive government or rule",
+        "page": "R4"
+      },
+      {
+        "word": "assent",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "formal official approval or agreement to a law",
+        "page": "R4"
+      },
+      {
+        "word": "quartering",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "providing housing, food, and accommodations for military troops",
+        "page": "R6"
+      },
+      {
+        "word": "abdicate",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "to formally renounce, give up, or surrender authority or power",
+        "page": "R6"
+      },
+      {
+        "word": "perfidy",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "deceitfulness, untrustworthiness, or deliberate betrayal of trust",
+        "page": "R6"
+      },
+      {
+        "word": "redress",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "remedy or compensation for a wrong, injustice, or grievance",
+        "page": "R7"
+      },
+      {
+        "word": "consanguinity",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "close blood relationship, shared ancestry, or common heritage",
+        "page": "R7"
+      },
+      {
+        "word": "rectitude",
+        "type": "Citizenship Handbook Vocabulary",
+        "definition": "morally correct behavior, integrity, or righteousness",
+        "page": "R7"
+      }
+    ]
   }
 ]

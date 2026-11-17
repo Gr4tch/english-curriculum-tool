@@ -852,6 +852,22 @@ for _cnum, (_ctitle, _ceq) in DEFAULT_LATER_CHAPTERS.items():
         ],
     }
 
+CHAPTER_STANDARDS_MAP["18"] = {
+    "chapter_num": 18,
+    "chapter_title": "Primary Source: Declaration of Independence",
+    "essential_question": "How did the Declaration of Independence express the philosophical foundations of American self-governance and justify breaking away from British rule?",
+    "ospi_standards": [
+        "C1.6-8.1: Explain the fundamental principles of American democracy and self-government.",
+        "C3.6-8.2: Analyze how the Declaration of Independence defined the relationship between government and the governed.",
+        "H2.6-8.1: Analyze multiple perspectives and grievances that led colonists to declare independence.",
+    ],
+    "ela_support_standards": [
+        "RH.6-8.1: Cite specific textual evidence to support analysis of primary sources.",
+        "RH.6-8.2: Determine the central ideas or information of a primary source; provide an accurate summary.",
+        "RH.6-8.6: Identify aspects of a text that reveal an author's point of view or purpose.",
+    ],
+}
+
 
 def get_strategy_by_code(collection: List[Dict[str, str]], code: str) -> Dict[str, str]:
     for item in collection:

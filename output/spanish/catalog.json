@@ -9672,5 +9672,135 @@
         "page": 572
       }
     ]
+  },
+  {
+    "id": "ch18_sec_doi",
+    "unit_num": 3,
+    "unit_title": "Unidad 3 - La Revolución estadounidense (1754–1783)",
+    "chapter_num": 18,
+    "chapter_title": "Fuente primaria: Declaración de Independencia",
+    "section_code": "DOI",
+    "title": "La Declaración de Independencia",
+    "section_type": "Primary Source Document",
+    "is_special_feature": true,
+    "printed_pages": "R3–R7",
+    "start_page": 3,
+    "end_page": 7,
+    "pdf_file": "",
+    "hierarchy_pdf_file": "",
+    "md_file": "output/spanish/markdown/Primary_Source_Declaration_of_Independence.md",
+    "word_count": 1380,
+    "printed_main_idea": "La Declaración unánime de los trece Estados unidos de América, adoptada el 4 de julio de 1776, anunciando la separación de las colonias americanas de Gran Bretaña y estableciendo los principios de los derechos naturales, el gobierno por consentimiento de los gobernados y el derecho a alterar o abolir un gobierno despótico.",
+    "subheadings": [
+      {
+        "title": "PREÁMBULO: EL PROPÓSITO DE LA SEPARACIÓN",
+        "page": "R3",
+        "paragraph_count": 1
+      },
+      {
+        "title": "DECLARACIÓN DE DERECHOS NATURALES Y EL PACTO SOCIAL",
+        "page": "R3–R4",
+        "paragraph_count": 1
+      },
+      {
+        "title": "AGRAVIOS: ABUSOS DE REPRESENTACIÓN Y LEGISLACIÓN",
+        "page": "R4",
+        "paragraph_count": 7
+      },
+      {
+        "title": "AGRAVIOS: CONTROL JUDICIAL, OFICIALES Y EJÉRCITOS PERMANENTES",
+        "page": "R4–R5",
+        "paragraph_count": 5
+      },
+      {
+        "title": "AGRAVIOS: IMPUESTOS INJUSTOS, COMERCIO Y ALOJAMIENTO DE TROPAS",
+        "page": "R5",
+        "paragraph_count": 9
+      },
+      {
+        "title": "AGRAVIOS: GUERRA, MERCENARIOS Y DESTRUCCIÓN DE VIDAS",
+        "page": "R5–R6",
+        "paragraph_count": 6
+      },
+      {
+        "title": "PETICIÓN DE JUSTICIA Y RESOLUCIÓN DE INDEPENDENCIA",
+        "page": "R6",
+        "paragraph_count": 3
+      }
+    ],
+    "historical_thinking": {
+      "q1_reading_check": "Analizar fuentes primarias: ¿Cuáles son los derechos humanos fundamentales que afirma Thomas Jefferson que toda persona posee por naturaleza?",
+      "q2_historical_reasoning": "Evaluar evidencia: ¿Por qué los Fundadores incluyeron una lista detallada de 27 agravios contra el rey Jorge III en lugar de limitarse a declarar la independencia?",
+      "q3_evaluating": "Formar y fundamentar opiniones: ¿De qué manera la Declaración de Independencia sentó las bases de la democracia estadounidense?"
+    },
+    "critical_viewing": [],
+    "official_vocab": [
+      {
+        "word": "derecho inalienable",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "un derecho natural que no puede ser arrebatado ni cedido (como la vida, la libertad y la búsqueda de la felicidad)",
+        "page": "R3"
+      },
+      {
+        "word": "usurpación",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "la apropiación injusta o ilegal de la autoridad o los derechos ajenos",
+        "page": "R4"
+      },
+      {
+        "word": "despotismo",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "gobierno absoluto y tiránico que no está limitado por leyes ni control constitucional",
+        "page": "R4"
+      },
+      {
+        "word": "tiranía",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "gobierno ejercido por un tirano caracterizado por la opresión cruel e injusta",
+        "page": "R4"
+      },
+      {
+        "word": "asentimiento",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "aprobación formal o conformidad oficial otorgada a una ley",
+        "page": "R4"
+      },
+      {
+        "word": "acantonamiento",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "alojamiento forzado de tropas militares en propiedades de los ciudadanos",
+        "page": "R5"
+      },
+      {
+        "word": "abdicar",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "renunciar o despojarse voluntariamente del poder o la responsabilidad de gobernar",
+        "page": "R5"
+      },
+      {
+        "word": "perfidia",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "deslealtad grave, traición o quebrantamiento de la fe debida",
+        "page": "R5"
+      },
+      {
+        "word": "reparación / desagravio",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "compensación o remedio solicitado por una injusticia cometida",
+        "page": "R6"
+      },
+      {
+        "word": "consanguinidad",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "parentesco de sangre o lazo de origen familiar compartido",
+        "page": "R6"
+      },
+      {
+        "word": "rectitud",
+        "type": "Vocabulario del Manual de ciudadanía",
+        "definition": "integridad, honradez y justicia moral en las intenciones y acciones",
+        "page": "R6"
+      }
+    ]
   }
 ]

@@ -905,6 +905,7 @@ def get_section_comprehension_questions(
     section_meta: Dict[str, Any],
     kb: Dict[str, Any],
     lang: str = "en",
+    selected_paragraphs: Optional[List[int]] = None,
 ) -> Dict[str, Any]:
     """
     Returns exactly two high-yield, standards-aligned comprehension questions for the section reading passage.
@@ -916,6 +917,112 @@ def get_section_comprehension_questions(
     sec_code = str(section_meta.get("section_code", ""))
     ch_num = section_meta.get("chapter_num")
     subs = [s for s in kb.get("subheadings", []) if not NON_BLUE_SUBHEADINGS_REGEX.search(s.get("name", ""))][:2]
+
+    # Special curated handling for Primary Source: Declaration of Independence
+    is_doi = (sec_code.upper() == "DOI" or ch_num == 18)
+    if is_doi:
+        sel_nums = selected_paragraphs or [1, 2]
+        has_natural_rights = any(p in [1, 2] for p in sel_nums)
+        has_grievances = any(3 <= p <= 29 for p in sel_nums)
+        has_resolution = any(p in [30, 31, 32] for p in sel_nums)
+
+        if is_es:
+            if has_natural_rights and (has_grievances or has_resolution):
+                q1 = {
+                    "prompt": "¿Según la Declaración, cuáles son los derechos inalienables y de dónde obtienen los gobiernos sus justos poderes?",
+                    "starter": "La Declaración explica que los derechos inalienables son... y los gobiernos obtienen sus justos poderes del...",
+                    "hint": "[Manual de ciudadanía, págs. R3–R4, ¶2]",
+                    "exemplar": "La Declaración afirma que entre los derechos inalienables están la Vida, la Libertad y la búsqueda de la Felicidad [págs. R3–R4, ¶2]. Los gobiernos derivan sus justos poderes del consentimiento de los gobernados, y el pueblo tiene el derecho de alterarlo o abolirlo si destruye estos fines [pág. R4, ¶2].",
+                }
+                if has_resolution:
+                    q2 = {
+                        "prompt": "¿Qué poderes específicos reclamaron los nuevos Estados Unidos como estados independientes y qué comprometieron los firmantes para apoyar la Declaración?",
+                        "starter": "Como estados libres e independientes, declararon pleno poder para... y comprometieron mutuamente sus...",
+                        "hint": "[Manual de ciudadanía, pág. R6, ¶32]",
+                        "exemplar": "Los Estados Unidos declararon tener plena autoridad para hacer la guerra, concertar la paz, concertar alianzas y establecer comercio [pág. R6, ¶32]. Con firme confianza en la divina Providencia, comprometieron mutuamente sus vidas, sus fortunas y su sagrado honor [pág. R6, ¶32].",
+                    }
+                else:
+                    q2 = {
+                        "prompt": "¿Qué abusos específicos de poder o actos de tiranía cometidos por el rey Jorge III justificaron que las colonias declararan su independencia?",
+                        "starter": "Los colonos justificaron su independencia señalando actos tiránicos como...",
+                        "hint": "[Manual de ciudadanía, págs. R4–R6, ¶3–29]",
+                        "exemplar": "Los colonos denunciaron graves abusos cometidos por el rey Jorge III, tales como imponer impuestos sin su consentimiento, acantonar tropas armadas en sus hogares, disolver legislaturas coloniales y hacer la guerra contra su propio pueblo [págs. R4–R6].",
+                    }
+            elif has_grievances:
+                q1 = {
+                    "prompt": "¿Qué agravios legislativos y judiciales llevaron a los colonos a declarar que el rey ejercía una tiranía absoluta?",
+                    "starter": "Los colonos señalaron que el rey controlaba la ley y los tribunales al...",
+                    "hint": "[Manual de ciudadanía, págs. R4–R5, ¶3–14]",
+                    "exemplar": "Los colonos argumentaron que el rey bloqueaba leyes necesarias, hacía que los jueces dependieran únicamente de su voluntad y enviaba multitudes de oficiales para oprimir al pueblo [págs. R4–R5].",
+                }
+                q2 = {
+                    "prompt": "¿De qué manera actos como el acantonamiento forzado de tropas y los impuestos sin consentimiento violaron los derechos coloniales?",
+                    "starter": "El acantonamiento y los impuestos violaron los derechos coloniales porque...",
+                    "hint": "[Manual de ciudadanía, pág. R5, ¶15–20]",
+                    "exemplar": "Obligar a los ciudadanos a alojar soldados armados y pagar impuestos sin representación parlamentaria violaba directamente el consentimiento del pueblo y las garantías tradicionales del derecho constitucional inglés [pág. R5, ¶16–19].",
+                }
+            else:
+                q1 = {
+                    "prompt": "¿Según la Declaración, cuáles son los derechos inalienables y de dónde obtienen los gobiernos sus justos poderes?",
+                    "starter": "La Declaración explica que los derechos inalienables son... y los gobiernos obtienen sus justos poderes del...",
+                    "hint": "[Manual de ciudadanía, págs. R3–R4, ¶2]",
+                    "exemplar": "La Declaración afirma que entre los derechos inalienables están la Vida, la Libertad y la búsqueda de la Felicidad [págs. R3–R4, ¶2]. Los gobiernos obtienen sus justos poderes del consentimiento de los gobernados [pág. R4, ¶2].",
+                }
+                q2 = {
+                    "prompt": "¿Qué derecho tiene el pueblo siempre que cualquier forma de gobierno se vuelva destructiva para sus derechos?",
+                    "starter": "Siempre que un gobierno se vuelve destructivo, el pueblo tiene el derecho y el deber de...",
+                    "hint": "[Manual de ciudadanía, pág. R4, ¶2]",
+                    "exemplar": "El pueblo tiene el derecho y el deber de alterar o abolir ese gobierno destructivo y de instituir un nuevo gobierno con salvaguardas para su futura seguridad y felicidad [pág. R4, ¶2].",
+                }
+        else:
+            if has_natural_rights and (has_grievances or has_resolution):
+                q1 = {
+                    "prompt": "According to the Declaration, what are unalienable rights, and from where do governments derive their just powers?",
+                    "starter": "The Declaration explains that unalienable rights are... and governments derive their just powers from...",
+                    "hint": "[Citizenship Handbook, p. R4, ¶2]",
+                    "exemplar": "The Declaration asserts that unalienable rights include Life, Liberty, and the pursuit of Happiness, endowed by the Creator [p. R4, ¶2]. Governments derive their just powers from the consent of the governed, and the people have the right to alter or abolish government whenever it becomes destructive of these ends [p. R4, ¶2].",
+                }
+                if has_resolution:
+                    q2 = {
+                        "prompt": "What specific powers did the new United States claim as free and independent states, and what did the signers pledge to support this Declaration?",
+                        "starter": "As free and independent states, they claimed full power to... and pledged to each other their...",
+                        "hint": "[Citizenship Handbook, p. R7, ¶32]",
+                        "exemplar": "The United States declared full authority to levy war, conclude peace, contract alliances, and establish commerce [p. R7, ¶32]. To uphold their independence with firm reliance on divine Providence, they mutually pledged their lives, fortunes, and sacred honor [p. R7, ¶32].",
+                    }
+                else:
+                    q2 = {
+                        "prompt": "What specific abuses of power or acts of tyranny by King George III justified the American colonies in declaring their independence?",
+                        "starter": "The colonists justified independence by pointing out tyrannical acts such as...",
+                        "hint": "[Citizenship Handbook, pp. R5–R6, ¶3–29]",
+                        "exemplar": "The colonists cited severe abuses by King George III, including imposing taxes without consent, quartering troops in colonial homes, dissolving representative legislatures, and waging war against his own people [pp. R5–R6].",
+                    }
+            elif has_grievances:
+                q1 = {
+                    "prompt": "What legislative and judicial abuses led the colonists to declare that King George III was establishing an absolute tyranny?",
+                    "starter": "The colonists pointed out that the king controlled lawmaking and courts by...",
+                    "hint": "[Citizenship Handbook, p. R5, ¶3–14]",
+                    "exemplar": "The colonists emphasized that King George III refused assent to necessary laws, made judges dependent solely upon his will, and dispatched swarms of royal officers to harass colonists [p. R5, ¶3–12].",
+                }
+                q2 = {
+                    "prompt": "How did acts such as quartering troops and imposing taxes without consent violate colonial rights?",
+                    "starter": "Quartering troops and taxing without consent violated colonial rights because...",
+                    "hint": "[Citizenship Handbook, p. R6, ¶15–20]",
+                    "exemplar": "Stationing standing armies in private homes during peacetime and taxing colonists without parliamentary representation directly violated their rights as free Englishmen under the British constitution [p. R6, ¶15–19].",
+                }
+            else:
+                q1 = {
+                    "prompt": "According to the Declaration, what are unalienable rights, and from where do governments derive their just powers?",
+                    "starter": "The Declaration explains that unalienable rights are... and governments derive their just powers from...",
+                    "hint": "[Citizenship Handbook, p. R4, ¶2]",
+                    "exemplar": "The Declaration asserts that unalienable rights include Life, Liberty, and the pursuit of Happiness, endowed by the Creator [p. R4, ¶2]. Governments derive their just powers from the consent of the governed [p. R4, ¶2].",
+                }
+                q2 = {
+                    "prompt": "What right and duty do the people have whenever any form of government becomes destructive of their safety and happiness?",
+                    "starter": "Whenever government becomes destructive, the people have the right and duty to...",
+                    "hint": "[Citizenship Handbook, p. R4, ¶2]",
+                    "exemplar": "Whenever any form of government becomes destructive of these ends, it is the right of the people to alter or abolish it and institute new government that provides guards for their future security [p. R4, ¶2].",
+                }
+        return {"q1": q1, "q2": q2}
 
     # Special curated handling for Ch 5 Sec 1.3: The Stamp Act
     if ch_num == 5 and sec_code == "1.3":
@@ -1034,14 +1141,15 @@ def build_whole_section_cloze_content(
     kb: Dict[str, Any],
     markdown_text: str = "",
     lang: str = "en",
+    selected_paragraphs: Optional[List[int]] = None,
 ) -> Dict[str, Any]:
     """
     Extracts the full section reading passage and generates a ~20-word CLOZE active reading activity
-    spread across a 2-page front/back worksheet layout, balanced so Page 2 accommodates 2 text-dependent
-    comprehension questions without overflowing.
+    spread across a 2-page front/back worksheet layout (or adaptive 1-page layout for 1-3 paragraphs),
+    balanced so Page 2 accommodates 2 text-dependent comprehension questions without overflowing.
     Hybrid design: key historical content words prioritized and paced systematically across every paragraph.
     Standard Edition: clean blanks, no word bank (students read textbook to find words).
-    Scaffolded Edition: clean blanks with complete 20-word bank at the top and paragraph locators.
+    Scaffolded Edition: clean blanks with complete word bank at the top and paragraph locators.
     """
     is_es = (lang == "es")
     stopwords = STOPWORDS_CLOZE_ES if is_es else STOPWORDS_CLOZE_EN
@@ -1150,25 +1258,56 @@ def build_whole_section_cloze_content(
         parsed_sections.append((title, [("1", desc)]))
         total_paras = 1
 
-    # Target ~20 blanks across all paragraphs
-    target_blanks = 20
     all_paras_flat = []
     for sh_idx, (sh_title, p_list) in enumerate(parsed_sections):
         for pnum, ptext in p_list:
             all_paras_flat.append((sh_idx, sh_title, pnum, ptext))
 
-    counts = [max(1, round(len(ptext.split()) / 35)) for _, _, _, ptext in all_paras_flat]
-    diff = target_blanks - sum(counts)
-    idx = 0
-    while diff != 0 and len(counts) > 0:
-        if diff > 0:
-            counts[idx % len(counts)] += 1
-            diff -= 1
+    # Declaration of Independence paragraph filtering & adaptive budgeting
+    is_doi = (str(section_meta.get("section_code", "")).upper() == "DOI" or section_meta.get("chapter_num") == 18)
+    if is_doi:
+        if selected_paragraphs:
+            sel_set = set(int(p) for p in selected_paragraphs)
+            filtered = [p for p in all_paras_flat if int(p[2]) in sel_set]
+            if filtered:
+                all_paras_flat = filtered
         else:
-            if counts[idx % len(counts)] > 1:
-                counts[idx % len(counts)] -= 1
-                diff += 1
-        idx += 1
+            # Default selection: ¶1 (Preamble) & ¶2 (Natural Rights) per User Decision A3
+            filtered = [p for p in all_paras_flat if int(p[2]) in [1, 2]]
+            if filtered:
+                all_paras_flat = filtered
+
+    is_single_page = (len(all_paras_flat) <= 3)
+    if is_single_page:
+        # 1-3 paragraphs: adaptive 1-page layout (~10-12 blanks)
+        total_words = sum(len(p[3].split()) for p in all_paras_flat)
+        target_blanks = min(12, max(6, round(total_words / 25)))
+    else:
+        # 4+ paragraphs: standard 2-page spread (~20 blanks)
+        target_blanks = 20
+
+    if target_blanks < len(all_paras_flat):
+        counts = [0] * len(all_paras_flat)
+        ranked = sorted(range(len(all_paras_flat)), key=lambda i: -len(all_paras_flat[i][3].split()))
+        for i in range(min(target_blanks, len(all_paras_flat))):
+            counts[ranked[i]] = 1
+    else:
+        counts = [max(1, round(len(ptext.split()) / 35)) for _, _, _, ptext in all_paras_flat]
+        diff = target_blanks - sum(counts)
+        max_iters = 1000
+        idx = 0
+        while diff != 0 and len(counts) > 0 and max_iters > 0:
+            max_iters -= 1
+            if diff > 0:
+                counts[idx % len(counts)] += 1
+                diff -= 1
+            else:
+                if counts[idx % len(counts)] > 1:
+                    counts[idx % len(counts)] -= 1
+                    diff += 1
+                elif all(c <= 0 for c in counts):
+                    break
+            idx += 1
 
     used_words = set()
     answers_list = []  # [(word, sh_title, pnum)]
@@ -1237,7 +1376,10 @@ def build_whole_section_cloze_content(
         return "\n\n".join(blocks)
 
     # Dynamic split to balance vertical height: P1 gets slightly more content than P2 to reserve room on P2 for the 2 comprehension questions (~9.5 units)
-    if len(all_paras_flat) >= 4:
+    if is_single_page:
+        p1_items = all_paras_flat
+        p2_items = []
+    elif len(all_paras_flat) >= 4:
         best_cand = max(1, min(len(all_paras_flat) - 1, round(len(all_paras_flat) * 0.50)))
         best_max = 999.0
         # Evaluate split candidates around 35% - 70% of paragraphs
@@ -1263,9 +1405,9 @@ def build_whole_section_cloze_content(
         p2_items = all_paras_flat[mid:]
 
     p1_student_md = render_passage_page(p1_items, is_exemplar=False, is_p2=False)
-    p2_student_md = render_passage_page(p2_items, is_exemplar=False, is_p2=True, ref_p1_items=p1_items)
+    p2_student_md = render_passage_page(p2_items, is_exemplar=False, is_p2=True, ref_p1_items=p1_items) if p2_items else ""
     p1_exemplar_md = render_passage_page(p1_items, is_exemplar=True, is_p2=False)
-    p2_exemplar_md = render_passage_page(p2_items, is_exemplar=True, is_p2=True, ref_p1_items=p1_items)
+    p2_exemplar_md = render_passage_page(p2_items, is_exemplar=True, is_p2=True, ref_p1_items=p1_items) if p2_items else ""
 
     sorted_word_bank = sorted(list(set(w for w, _, _ in answers_list)), key=lambda s: s.lower())
 
@@ -1274,9 +1416,11 @@ def build_whole_section_cloze_content(
         for idx, (w, sh, pn) in enumerate(answers_list, 1)
     ]
 
-    comp_qs = get_section_comprehension_questions(section_meta, kb, lang=lang)
+    comp_qs = get_section_comprehension_questions(section_meta, kb, lang=lang, selected_paragraphs=selected_paragraphs)
 
     return {
+        "is_single_page": is_single_page,
+        "selected_para_nums": [int(p[2]) for p in all_paras_flat],
         "p1_student_md": p1_student_md,
         "p2_student_md": p2_student_md,
         "p1_exemplar_md": p1_exemplar_md,
@@ -2347,6 +2491,7 @@ def build_standalone_strategy_handout(
     markdown_text: str = "",
     is_scaffolded: bool = False,
     lang: str = "en",
+    selected_paragraphs: Optional[List[int]] = None,
 ) -> Dict[str, Any]:
     """
     Builds a focused, single-strategy standalone student worksheet and authentic student exemplar
@@ -2389,11 +2534,12 @@ def build_standalone_strategy_handout(
     if strategy_code == "read_06_whole_section_cloze":
         s_obj = get_strategy_by_code(READING_ORGANIZERS, strategy_code)
         std_code = "CCSS RH.6-8.1 / RH.6-8.2"
-        cloze_data = build_whole_section_cloze_content(section_meta, kb, markdown_text=markdown_text, lang=lang)
+        cloze_data = build_whole_section_cloze_content(section_meta, kb, markdown_text=markdown_text, lang=lang, selected_paragraphs=selected_paragraphs)
         keys = list(cloze_data["keys"])
-        comp_qs = cloze_data.get("comp_qs") or get_section_comprehension_questions(section_meta, kb, lang=lang)
+        comp_qs = cloze_data.get("comp_qs") or get_section_comprehension_questions(section_meta, kb, lang=lang, selected_paragraphs=selected_paragraphs)
         q1 = comp_qs["q1"]
         q2 = comp_qs["q2"]
+        is_single_page = cloze_data.get("is_single_page", False)
 
         clean_strat_focus = "Whole-Section CLOZE Reading (Full-Passage Active Reading)"
         localized_strat_focus = get_localized_strategy_name(clean_strat_focus, lang=lang)
@@ -2451,94 +2597,154 @@ def build_standalone_strategy_handout(
                 SOLID_LINE,
             ]
 
-        # Standard Page 1 & 2 (Standard Edition has NO word bank per User Decision A3)
-        if is_es:
-            std_p1_blocks = [
-                f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 1",
-                f"> **Enfoque de la estrategia:** {localized_strat_focus}",
-                "",
-                f"**Instrucciones:** {p1_dir_std}",
-                "",
-                cloze_data["p1_student_md"],
-            ]
-            std_p2_blocks = [
-                f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 2: Continuación de la lectura",
-                "",
-                cloze_data["p2_student_md"],
-                "",
-                "\n".join(std_q_blocks),
-                "",
-                f"[GRADE_BOX: Sec {sec_code}   _____/100]",
-            ]
-            scaf_p1_blocks = [
-                f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 1 *(Edición con apoyo didáctico)*",
-                f"> **Enfoque de la estrategia:** {localized_strat_focus}",
-                f"> **Banco de palabras (20 términos):** {word_bank_str}",
-                "",
-                f"**Instrucciones:** {p1_dir_scaf}",
-                "",
-                cloze_data["p1_student_md"],
-            ]
-            scaf_p2_blocks = [
-                f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 2: Continuación de la lectura *(Edición con apoyo didáctico)*",
-                "",
-                cloze_data["p2_student_md"],
-                "",
-                "\n".join(scaf_q_blocks),
-                "",
-                f"[GRADE_BOX: Sec {sec_code}   _____/100]",
-            ]
+        wb_count_str = f"({len(cloze_data['word_bank'])} términos)" if is_es else f"({len(cloze_data['word_bank'])} Terms)"
+
+        # Adaptive single-page vs 2-page spread layout
+        if is_single_page:
+            if is_es:
+                std_blocks = [
+                    f"## Sección {sec_code}: {sec_title} (págs. {pp})",
+                    f"> **Enfoque de la estrategia:** {localized_strat_focus}",
+                    "",
+                    f"**Instrucciones:** {p1_dir_std}",
+                    "",
+                    cloze_data["p1_student_md"],
+                    "",
+                    "\n".join(std_q_blocks),
+                    "",
+                    f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+                ]
+                scaf_blocks = [
+                    f"## Sección {sec_code}: {sec_title} (págs. {pp}) *(Edición con apoyo didáctico)*",
+                    f"> **Enfoque de la estrategia:** {localized_strat_focus}",
+                    f"> **Banco de palabras {wb_count_str}:** {word_bank_str}",
+                    "",
+                    f"**Instrucciones:** {p1_dir_scaf}",
+                    "",
+                    cloze_data["p1_student_md"],
+                    "",
+                    "\n".join(scaf_q_blocks),
+                    "",
+                    f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+                ]
+            else:
+                std_blocks = [
+                    f"## Section {sec_code}: {sec_title} (Textbook pp. {pp})",
+                    f"> **Strategy Focus:** {clean_strat_focus}",
+                    "",
+                    f"**Directions:** {p1_dir_std}",
+                    "",
+                    cloze_data["p1_student_md"],
+                    "",
+                    "\n".join(std_q_blocks),
+                    "",
+                    f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+                ]
+                scaf_blocks = [
+                    f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) *(Scaffolded Support)*",
+                    f"> **Strategy Focus:** {clean_strat_focus}",
+                    f"> **Word Bank {wb_count_str}:** {word_bank_str}",
+                    "",
+                    f"**Directions:** {p1_dir_scaf}",
+                    "",
+                    cloze_data["p1_student_md"],
+                    "",
+                    "\n".join(scaf_q_blocks),
+                    "",
+                    f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+                ]
+
+            fitted_std, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in std_blocks if b.strip())), target_pages=1)
+            fitted_scaf, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in scaf_blocks if b.strip())), target_pages=1)
         else:
-            std_p1_blocks = [
-                f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) — Part 1",
-                f"> **Strategy Focus:** {clean_strat_focus}",
-                "",
-                f"**Directions:** {p1_dir_std}",
-                "",
-                cloze_data["p1_student_md"],
-            ]
-            std_p2_blocks = [
-                f"## Section {sec_code}: {sec_title} (pp. {pp}) — Part 2: Reading Continuation",
-                "",
-                cloze_data["p2_student_md"],
-                "",
-                "\n".join(std_q_blocks),
-                "",
-                f"[GRADE_BOX: Sec {sec_code}   _____/100]",
-            ]
-            scaf_p1_blocks = [
-                f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) — Part 1 *(Scaffolded Support)*",
-                f"> **Strategy Focus:** {clean_strat_focus}",
-                f"> **Word Bank (20 Terms):** {word_bank_str}",
-                "",
-                f"**Directions:** {p1_dir_scaf}",
-                "",
-                cloze_data["p1_student_md"],
-            ]
-            scaf_p2_blocks = [
-                f"## Section {sec_code}: {sec_title} (pp. {pp}) — Part 2: Reading Continuation *(Scaffolded Support)*",
-                "",
-                cloze_data["p2_student_md"],
-                "",
-                "\n".join(scaf_q_blocks),
-                "",
-                f"[GRADE_BOX: Sec {sec_code}   _____/100]",
-            ]
+            # Standard Page 1 & 2 (Standard Edition has NO word bank per User Decision A3)
+            if is_es:
+                std_p1_blocks = [
+                    f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 1",
+                    f"> **Enfoque de la estrategia:** {localized_strat_focus}",
+                    "",
+                    f"**Instrucciones:** {p1_dir_std}",
+                    "",
+                    cloze_data["p1_student_md"],
+                ]
+                std_p2_blocks = [
+                    f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 2: Continuación de la lectura",
+                    "",
+                    cloze_data["p2_student_md"],
+                    "",
+                    "\n".join(std_q_blocks),
+                    "",
+                    f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+                ]
+                scaf_p1_blocks = [
+                    f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 1 *(Edición con apoyo didáctico)*",
+                    f"> **Enfoque de la estrategia:** {localized_strat_focus}",
+                    f"> **Banco de palabras {wb_count_str}:** {word_bank_str}",
+                    "",
+                    f"**Instrucciones:** {p1_dir_scaf}",
+                    "",
+                    cloze_data["p1_student_md"],
+                ]
+                scaf_p2_blocks = [
+                    f"## Sección {sec_code}: {sec_title} (págs. {pp}) — Parte 2: Continuación de la lectura *(Edición con apoyo didáctico)*",
+                    "",
+                    cloze_data["p2_student_md"],
+                    "",
+                    "\n".join(scaf_q_blocks),
+                    "",
+                    f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+                ]
+            else:
+                std_p1_blocks = [
+                    f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) — Part 1",
+                    f"> **Strategy Focus:** {clean_strat_focus}",
+                    "",
+                    f"**Directions:** {p1_dir_std}",
+                    "",
+                    cloze_data["p1_student_md"],
+                ]
+                std_p2_blocks = [
+                    f"## Section {sec_code}: {sec_title} (pp. {pp}) — Part 2: Reading Continuation",
+                    "",
+                    cloze_data["p2_student_md"],
+                    "",
+                    "\n".join(std_q_blocks),
+                    "",
+                    f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+                ]
+                scaf_p1_blocks = [
+                    f"## Section {sec_code}: {sec_title} (Textbook pp. {pp}) — Part 1 *(Scaffolded Support)*",
+                    f"> **Strategy Focus:** {clean_strat_focus}",
+                    f"> **Word Bank {wb_count_str}:** {word_bank_str}",
+                    "",
+                    f"**Directions:** {p1_dir_scaf}",
+                    "",
+                    cloze_data["p1_student_md"],
+                ]
+                scaf_p2_blocks = [
+                    f"## Section {sec_code}: {sec_title} (pp. {pp}) — Part 2: Reading Continuation *(Scaffolded Support)*",
+                    "",
+                    cloze_data["p2_student_md"],
+                    "",
+                    "\n".join(scaf_q_blocks),
+                    "",
+                    f"[GRADE_BOX: Sec {sec_code}   _____/100]",
+                ]
 
-        std_p1_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in std_p1_blocks if b.strip())), target_pages=1)
-        std_p2_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in std_p2_blocks if b.strip())), target_pages=1)
-        fitted_std = f"{std_p1_fitted}\n\n[PAGE_BREAK]\n\n{std_p2_fitted}"
+            std_p1_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in std_p1_blocks if b.strip())), target_pages=1)
+            std_p2_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in std_p2_blocks if b.strip())), target_pages=1)
+            fitted_std = f"{std_p1_fitted}\n\n[PAGE_BREAK]\n\n{std_p2_fitted}"
 
-        scaf_p1_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in scaf_p1_blocks if b.strip())), target_pages=1)
-        scaf_p2_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in scaf_p2_blocks if b.strip())), target_pages=1)
-        fitted_scaf = f"{scaf_p1_fitted}\n\n[PAGE_BREAK]\n\n{scaf_p2_fitted}"
+            scaf_p1_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in scaf_p1_blocks if b.strip())), target_pages=1)
+            scaf_p2_fitted, _ = enforce_page_budget_guardrail(sanitize_aesthetics("\n\n".join(b for b in scaf_p2_blocks if b.strip())), target_pages=1)
+            fitted_scaf = f"{scaf_p1_fitted}\n\n[PAGE_BREAK]\n\n{scaf_p2_fitted}"
 
         if is_es:
             exemplar_blocks = [
                 f"# Modelo y clave de respuestas para el docente: Sec. {sec_code} — {localized_strat_name}",
                 f"**Referencia del libro:** págs. {pp}  |  **Estándar:** {std_code}  |  **Puntuación:** 100/100",
                 "",
-                "### Clave de respuestas modelo (20 términos históricos):",
+                f"### Clave de respuestas modelo ({len(keys)} términos históricos):",
                 f"> *Términos correspondientes a los espacios en blanco de la Sección {sec_code}:*",
                 "",
             ]
@@ -2547,7 +2753,7 @@ def build_standalone_strategy_handout(
                 f"# Student Exemplar & Answer Key: Sec. {sec_code} — {s_obj['name']}",
                 f"**Textbook Reference:** pp. {pp}  |  **Target Standard:** {std_code}  |  **Score:** 100/100",
                 "",
-                "### Authentic 8th-Grade Student Model Response (20 Target Blanks):",
+                f"### Authentic 8th-Grade Student Model Response ({len(keys)} Target Blanks):",
                 f"> *Complete Answer Key for Section {sec_code}:*",
                 "",
             ]
@@ -2576,7 +2782,8 @@ def build_standalone_strategy_handout(
         exemplar_blocks.append("")
         exemplar_blocks.append(completed_title)
         exemplar_blocks.append(cloze_data["p1_exemplar_md"])
-        exemplar_blocks.append(cloze_data["p2_exemplar_md"])
+        if cloze_data.get("p2_exemplar_md"):
+            exemplar_blocks.append(cloze_data["p2_exemplar_md"])
 
         if kb.get("printed_main_idea"):
             ground_lbl = f"*Fundamentación en el libro de texto (pág. {section_meta.get('start_page', '')}):*" if is_es else f"*Textbook Source Grounding (p. {section_meta.get('start_page', '')}):*"

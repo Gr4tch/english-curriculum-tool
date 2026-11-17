@@ -950,6 +950,77 @@ def render_clean_html(html_str: str) -> None:
     st.markdown(clean, unsafe_allow_html=True)
 
 
+DOI_PARAGRAPH_OPTIONS = [
+    (1, "¶1: Preamble", "When in the Course of human events, it becomes necessary for one people to dissolve..."),
+    (2, "¶2: Natural Rights & Social Contract", "We hold these truths to be self-evident, that all men are created equal..."),
+    (3, "¶3: Grievance 1 (Assent to Laws)", "He has refused his Assent to Laws, the most wholesome and necessary for the public good."),
+    (4, "¶4: Grievance 2 (Suspension of Laws)", "He has forbidden his Governors to pass Laws of immediate and pressing importance..."),
+    (5, "¶5: Grievance 3 (Relinquishing Representation)", "He has refused to pass other Laws for the accommodation of large districts of people..."),
+    (6, "¶6: Grievance 4 (Unusual Meeting Places)", "He has called together legislative bodies at places unusual, uncomfortable, and distant..."),
+    (7, "¶7: Grievance 5 (Dissolving Legislatures)", "He has dissolved Representative Houses repeatedly, for opposing with manly firmness..."),
+    (8, "¶8: Grievance 6 (Refusing Elections)", "He has refused for a long time, after such dissolutions, to cause others to be elected..."),
+    (9, "¶9: Grievance 7 (Obstructing Population & Lands)", "He has endeavored to prevent the population of these States; obstructing Naturalization..."),
+    (10, "¶10: Grievance 8 (Obstructing Judiciary)", "He has obstructed the Administration of Justice, by refusing Assent to Judiciary Laws..."),
+    (11, "¶11: Grievance 9 (Judges Dependent on King)", "He has made Judges dependent on his Will alone, for the tenure of their offices..."),
+    (12, "¶12: Grievance 10 (Swarms of Officers)", "He has erected a multitude of New Offices, and sent hither swarms of Officers to harrass..."),
+    (13, "¶13: Grievance 11 (Peacetime Standing Armies)", "He has kept among us, in times of peace, Standing Armies without the Consent of legislatures..."),
+    (14, "¶14: Grievance 12 (Military Superior to Civil)", "He has affected to render the Military independent of and superior to the Civil power..."),
+    (15, "¶15: Grievance 13 (Foreign Jurisdiction)", "He has combined with others to subject us to a jurisdiction foreign to our constitution..."),
+    (16, "¶16: Grievance 14 (Quartering Armed Troops)", "For Quartering large bodies of armed troops among us..."),
+    (17, "¶17: Grievance 15 (Mock Trials for Murder)", "For protecting them, by a mock Trial, from punishment for any Murders they commit..."),
+    (18, "¶18: Grievance 16 (Cutting Off Global Trade)", "For cutting off our Trade with all parts of the world..."),
+    (19, "¶19: Grievance 17 (Taxes Without Consent)", "For imposing Taxes on us without our Consent..."),
+    (20, "¶20: Grievance 18 (Depriving Trial by Jury)", "For depriving us in many cases, of the benefits of Trial by Jury..."),
+    (21, "¶21: Grievance 19 (Transporting Across Seas)", "For transporting us beyond Seas to be tried for pretended offences..."),
+    (22, "¶22: Grievance 20 (Abolishing English Laws)", "For abolishing the free System of English Laws in a neighboring Province..."),
+    (23, "¶23: Grievance 21 (Taking Away Charters)", "For taking away our Charters, abolishing our most valuable Laws, and altering Governments..."),
+    (24, "¶24: Grievance 22 (Suspending Legislatures)", "For suspending our own Legislatures, and declaring themselves invested with power..."),
+    (25, "¶25: Grievance 23 (Abdication & Waging War)", "He has abdicated Government here, by declaring us out of his Protection and waging War..."),
+    (26, "¶26: Grievance 24 (Plundering Seas & Towns)", "He has plundered our seas, ravaged our Coasts, burnt our towns, and destroyed lives..."),
+    (27, "¶27: Grievance 25 (Foreign Mercenaries)", "He is transporting large Armies of foreign Mercenaries to complete works of death & tyranny..."),
+    (28, "¶28: Grievance 26 (Captive Citizens at Sea)", "He has constrained our fellow Citizens taken Captive on high Seas to bear Arms against Country..."),
+    (29, "¶29: Grievance 27 (Domestic Insurrections)", "He has excited domestic insurrections amongst us, and endeavored to bring on frontier warfare..."),
+    (30, "¶30: Petitions for Redress", "In every stage of these Oppressions We have Petitioned for Redress in most humble terms..."),
+    (31, "¶31: Appeal to British Brethren", "Nor have We been wanting in attentions to our British brethren. We have warned them..."),
+    (32, "¶32: Resolution of Independence", "We, therefore, solemnly declare, That these United Colonies are Free and Independent States..."),
+]
+
+DOI_PARAGRAPH_OPTIONS_ES = [
+    (1, "¶1: Preámbulo", "Cuando en el curso de los acontecimientos humanos se hace necesario para un pueblo disolver..."),
+    (2, "¶2: Derechos naturales y pacto social", "Sostenemos como evidentes estas verdades: que todos los hombres son creados iguales..."),
+    (3, "¶3: Agravio 1 (Asentimiento a leyes)", "Ha rehusado asentir a las leyes más convenientes y necesarias al bien público."),
+    (4, "¶4: Agravio 2 (Suspensión de leyes)", "Ha prohibido a sus gobernadores aprobar aun aquellas leyes que eran de inmediata necesidad..."),
+    (5, "¶5: Agravio 3 (Renuncia a la representación)", "Ha desaprobado las leyes dictadas para el reparto de distritos exigiendo renunciar a la representación..."),
+    (6, "¶6: Agravio 4 (Lugares de reunión inusuales)", "Ha convocado a los cuerpos legislativos fuera de los lugares acostumbrados..."),
+    (7, "¶7: Agravio 5 (Disolución de asambleas)", "Ha disuelto repetidamente las salas de representantes por oponerse con firmeza..."),
+    (8, "¶8: Agravio 6 (Rechazo a nuevas elecciones)", "Ha rehusado después de tanto tiempo a que se eligiesen otros cuerpos legislativos..."),
+    (9, "¶9: Agravio 7 (Freno a la población)", "Se ha esforzado en estorbar los progresos de la población y la naturalización de extranjeros..."),
+    (10, "¶10: Agravio 8 (Bloqueo a la justicia)", "Ha bloqueado la administración de justicia oponiéndose a leyes de tribunales..."),
+    (11, "¶11: Agravio 9 (Jueces dependientes del rey)", "Ha nombrado jueces que dependen solamente de su voluntad para sus puestos y sueldos..."),
+    (12, "¶12: Agravio 10 (Multitud de oficiales)", "Ha mandado una multitud de oficiales para oprimir a nuestro pueblo y empobrecerlo..."),
+    (13, "¶13: Agravio 11 (Tropas en tiempos de paz)", "Ha mantenido en tiempo de paz entre nosotros tropas armadas sin consentimiento legislativo..."),
+    (14, "¶14: Agravio 12 (Poder militar superior al civil)", "Ha procurado hacer al militar independiente y superior al poder civil..."),
+    (15, "¶15: Agravio 13 (Jurisdicción extranjera)", "Ha combinado con nuestros vecinos para sujetarnos a una jurisdicción extraña a nuestras leyes..."),
+    (16, "¶16: Agravio 14 (Acantonamiento de tropas)", "Por instalar numerosas tropas armadas entre nosotros..."),
+    (17, "¶17: Agravio 15 (Juicios simulados)", "Por protegerles, con un juicio falso, del castigo por asesinatos cometidos contra los habitantes..."),
+    (18, "¶18: Agravio 16 (Bloqueo al comercio)", "Por cortar nuestro comercio con todas las partes del mundo..."),
+    (19, "¶19: Agravio 17 (Impuestos sin consentimiento)", "Por imponer impuestos sin nuestro consentimiento..."),
+    (20, "¶20: Agravio 18 (Privación de juicio por jurado)", "Por privarnos en muchos casos de los beneficios de un juicio por jurados..."),
+    (21, "¶21: Agravio 19 (Transporte a ultramar)", "Por transportarnos más allá de los mares para ser juzgados por delitos supuestos..."),
+    (22, "¶22: Agravio 20 (Abolición de leyes inglesas)", "Por abolir el libre sistema de la ley inglesa en una provincia confinante..."),
+    (23, "¶23: Agravio 21 (Anulación de cartas y leyes)", "Por alterar fundamentalmente las formas de nuestros gobiernos y anular nuestras leyes..."),
+    (24, "¶24: Agravio 22 (Suspensión de legislaturas)", "Por suspender nuestra propia legislatura y declararse investido del poder de legislar..."),
+    (25, "¶25: Agravio 23 (Abdicación y guerra)", "Ha abdicado el derecho que tenía para gobernarnos declarándonos la guerra..."),
+    (26, "¶26: Agravio 24 (Saqueo y destrucción)", "Ha saqueado nuestros mares, asolado nuestras costas y quitado la vida a nuestros conciudadanos..."),
+    (27, "¶27: Agravio 25 (Mercenarios extranjeros)", "Ha transportado numerosos ejércitos de mercenarios extranjeros para completar obras de muerte..."),
+    (28, "¶28: Agravio 26 (Prisioneros obligados a luchar)", "Ha compelido a nuestros conciudadanos hechos prisioneros a llevar armas contra su patria..."),
+    (29, "¶29: Agravio 27 (Insurrecciones y ataques fronterizos)", "Ha promovido insurrecciones domésticas y procurado ataques en las fronteras..."),
+    (30, "¶30: Petición de desagravio", "En cada etapa de estas opresiones, hemos pedido justicia en los términos más humildes..."),
+    (31, "¶31: Apelación a hermanos británicos", "Tampoco hemos dejado de dirigirnos a nuestros hermanos británicos advirtiéndoles..."),
+    (32, "¶32: Resolución de Independencia", "Por lo tanto, declaramos que estas Colonias Unidas son Estados Libres e Independientes..."),
+]
+
+
 def _render_strategy_card_grid(
     tiles_list: List[Dict[str, Any]],
     active_code: Optional[str],
@@ -1047,6 +1118,7 @@ def show_page_preview_modal(p_cfg: Dict[str, Any], page_num: int):
         markdown_text=raw_md,
         is_scaffolded=is_scaf,
         lang=st.session_state.get("handout_language", "en"),
+        selected_paragraphs=active_page.get("selected_paragraphs"),
     )
 
     std_md = handout["student_scaffolded_md" if is_scaf else "student_standard_md"]
@@ -1250,18 +1322,19 @@ if st.session_state["nav_view"] == "home":
             "Current Textbook Chapter:",
             options=sorted_chapter_nums,
             index=cur_ch_idx,
-            format_func=lambda n: f"Chapter {n:02d}: {chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} spreads)",
+            format_func=lambda n: f"{chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} doc)" if "Primary Source" in chapters_map[n]['chapter_title'] else f"Chapter {n:02d}: {chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} spreads)",
             key="top_ch_select",
             on_change=on_ch_change,
             label_visibility="collapsed",
         )
 
     with tc_pill:
+        top_pill_label = "<b>Primary Source:</b> Declaration of Independence (32 ¶)" if "Primary Source" in ch_info['chapter_title'] else f"<b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections"
         render_clean_html(
             f"""
             <div style="display: flex; align-items: center; justify-content: center; height: 38px; overflow: hidden;">
                 <span class="badge-pill" style="font-size: 0.85rem; padding: 0.32rem 0.75rem; margin-right: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; box-sizing: border-box;">
-                    <b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections
+                    {top_pill_label}
                 </span>
             </div>
             """
@@ -1868,7 +1941,7 @@ elif st.session_state["nav_view"] == "packet":
                     "Chapter:",
                     options=sorted_chapter_nums,
                     index=sorted_chapter_nums.index(cur_page_ch) if cur_page_ch in sorted_chapter_nums else 0,
-                    format_func=lambda n: f"Chapter {n:02d}: {chapters_map[n]['chapter_title']}",
+                    format_func=lambda n: chapters_map[n]['chapter_title'] if "Primary Source" in chapters_map[n]['chapter_title'] else f"Chapter {n:02d}: {chapters_map[n]['chapter_title']}",
                     key=f"ed_page_ch_{active_idx}",
                     on_change=on_editor_ch_change,
                     args=(active_idx,),
@@ -1946,6 +2019,23 @@ elif st.session_state["nav_view"] == "packet":
                     args=(active_idx,),
                 )
                 active_p["strategy_code"] = sel_strat
+
+            is_doi_ed = (ch_choice == 18 or str(sec_choice.get("section_code", "")).upper() == "DOI")
+            if is_doi_ed and sel_strat == "read_06_whole_section_cloze":
+                cur_doi_ed = active_p.get("selected_paragraphs", [1, 2])
+                is_es_ed = (st.session_state.get("handout_language") == "es")
+                opt_dict_ed = {item[0]: item for item in (DOI_PARAGRAPH_OPTIONS_ES if is_es_ed else DOI_PARAGRAPH_OPTIONS)}
+                def format_doi_ed(num: int) -> str:
+                    item = opt_dict_ed.get(num)
+                    return f"{item[1]} — \"{item[2][:50]}...\"" if item else f"¶{num}"
+                doi_ed_sel = st.multiselect(
+                    "Selected Declaration Paragraphs to Include (1–3 = 1 page, 4+ = 2 pages):" if not is_es_ed else "Párrafos seleccionados de la Declaración (1–3 = 1 pág., 4+ = 2 págs.):",
+                    options=list(range(1, 33)),
+                    default=cur_doi_ed,
+                    format_func=format_doi_ed,
+                    key=f"ed_page_doi_paras_{active_idx}",
+                )
+                active_p["selected_paragraphs"] = sorted(doi_ed_sel) if doi_ed_sel else [1, 2]
 
             st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
             scaf_checked = st.checkbox(
@@ -2303,7 +2393,7 @@ elif st.session_state["nav_view"] == "gallery":
             "Textbook Chapter:",
             options=sorted_chapter_nums,
             index=cur_ch_idx,
-            format_func=lambda n: f"Chp {n:02d}: {chapters_map[n]['chapter_title']}",
+            format_func=lambda n: chapters_map[n]['chapter_title'] if "Primary Source" in chapters_map[n]['chapter_title'] else f"Chp {n:02d}: {chapters_map[n]['chapter_title']}",
             key="gal_select_ch",
             on_change=on_gal_ch_change,
             label_visibility="collapsed",
@@ -2416,6 +2506,27 @@ elif st.session_state["nav_view"] == "gallery":
                     st.caption("ℹ️ Maximum 3 sections selected to maintain a clean single-page handout layout.")
                 elif num_checked < 2:
                     st.warning("⚠️ Please check at least 2 sections for the multi-section cause & effect worksheet.")
+        elif gal_ch_num == 18 or str(gal_ch_sections[0].get("section_code", "")).upper() == "DOI":
+            gal_selected_sec = gal_ch_sections[0]
+            gal_selected_secs = [gal_selected_sec]
+            doi_sel_cur = st.session_state.get("doi_selected_paras", [1, 2])
+            doi_pop_label = f"¶ DOI ({len(doi_sel_cur)} paras)" if active_tile_code == "read_06_whole_section_cloze" else "Sec. DOI (Primary Source)"
+            with st.popover(doi_pop_label, use_container_width=True):
+                st.markdown(
+                    """
+                    <div style="font-weight: 700; font-size: 0.92rem; color: #0f172a; margin-bottom: 0.15rem;">
+                        📜 Declaration of Independence
+                    </div>
+                    <div style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.65rem;">
+                        Textbook pages R4–R7 (Citizenship Handbook) • 32 authentic paragraphs.
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                if active_tile_code == "read_06_whole_section_cloze":
+                    st.caption(f"Currently selected: {len(doi_sel_cur)} paragraphs ({'1-page layout' if len(doi_sel_cur) <= 3 else '2-page spread'}). Configure paragraphs using the interactive selector card below.")
+                else:
+                    st.caption("Primary Source Document: The Declaration of Independence.")
         else:
             gal_selected_sec = st.selectbox(
                 "Section Spread to Practice:",
@@ -2447,7 +2558,8 @@ elif st.session_state["nav_view"] == "gallery":
             st.markdown(f"**Curriculum Unit:** {display_unit}")
             st.markdown(f"**Essential Question:** *\"{eq_text}\"*")
             st.markdown(f"**Google Drive Folder:** `{ROOT_FOLDER_NAME}`")
-            st.caption(f"{len(gal_ch_sections)} section spreads in Chapter {gal_ch_num:02d}.")
+            caption_text = "Primary Source Document: The Declaration of Independence (32 Paragraphs)." if "Primary Source" in chapters_map[gal_ch_num]['chapter_title'] else f"{len(gal_ch_sections)} section spreads in Chapter {gal_ch_num:02d}."
+            st.caption(caption_text)
 
     with nav_c5:
         if st.button("Log Out", key="gal_logout_btn", use_container_width=True):
@@ -2635,6 +2747,99 @@ elif st.session_state["nav_view"] == "gallery":
                 key_prefix="min",
             )
 
+        # Check if Declaration of Independence CLOZE mode is active
+        selected_doi_paras = None
+        is_doi_mode = (gal_ch_num == 18 or str(gal_selected_sec.get("section_code", "")).upper() == "DOI")
+        if is_doi_mode and active_tile_code == "read_06_whole_section_cloze":
+            if "doi_selected_paras" not in st.session_state:
+                st.session_state["doi_selected_paras"] = [1, 2]
+
+            with st.container(border=True):
+                is_es_ui = (st.session_state.get("handout_language") == "es")
+                header_title = "📜 Selección de párrafos: La Declaración de Independencia" if is_es_ui else "📜 Declaration of Independence Paragraph Selector"
+                header_desc = (
+                    "Selecciona los párrafos específicos que deseas incluir en la actividad CLOZE. "
+                    "**1 a 3 párrafos** generan una hoja de trabajo enfocada de **1 página** (~10–12 espacios en blanco + 2 preguntas de comprensión). "
+                    "**4 o más párrafos** generan un pliego completo de **2 páginas (anverso y reverso)** (~20 espacios en blanco)."
+                    if is_es_ui else
+                    "Select specific paragraphs to include in this Whole-Section CLOZE reading activity. "
+                    "**1 to 3 paragraphs** generate a focused **1-page worksheet** (~10–12 blanks + 2 comprehension questions). "
+                    "**4+ paragraphs** generate a comprehensive **2-page front/back spread** (~20 blanks)."
+                )
+
+                st.markdown(
+                    f"""
+                    <div style="font-weight: 700; font-size: 1.0rem; color: #1e3a8a; margin-bottom: 0.25rem;">
+                        {header_title}
+                    </div>
+                    <div style="font-size: 0.82rem; color: #475569; margin-bottom: 0.75rem; line-height: 1.4;">
+                        {header_desc}
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+                # Quick presets
+                preset_lbl = "Preajustes rápidos de lección:" if is_es_ui else "Quick Lesson Presets:"
+                st.markdown(f"<div style='font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.35rem;'>{preset_lbl}</div>", unsafe_allow_html=True)
+                p_c1, p_c2, p_c3, p_c4, p_c5 = st.columns(5)
+                with p_c1:
+                    btn_txt = "Fundamentos (¶1–¶2)" if is_es_ui else "Foundations (¶1–¶2)"
+                    if st.button(btn_txt, key="btn_doi_p1", use_container_width=True, help="Preamble + Natural Rights (1 Page)"):
+                        st.session_state["doi_selected_paras"] = [1, 2]
+                        st.rerun()
+                with p_c2:
+                    btn_txt = "Impuestos y Tropas (¶15–¶19)" if is_es_ui else "Taxes & Troops (¶15–¶19)"
+                    if st.button(btn_txt, key="btn_doi_p2", use_container_width=True, help="Quartering, Trade, Taxes, Jury (2 Pages)"):
+                        st.session_state["doi_selected_paras"] = [15, 16, 17, 18, 19]
+                        st.rerun()
+                with p_c3:
+                    btn_txt = "Guerra y Mercenarios (¶24–¶27)" if is_es_ui else "War & Mercenaries (¶24–¶27)"
+                    if st.button(btn_txt, key="btn_doi_p3", use_container_width=True, help="Warfare, Burned Towns, Foreign Mercenaries (2 Pages)"):
+                        st.session_state["doi_selected_paras"] = [24, 25, 26, 27]
+                        st.rerun()
+                with p_c4:
+                    btn_txt = "Resolución final (¶30–¶32)" if is_es_ui else "Resolution (¶30–¶32)"
+                    if st.button(btn_txt, key="btn_doi_p4", use_container_width=True, help="Redress, Separation, Pledge of Honor (1 Page)"):
+                        st.session_state["doi_selected_paras"] = [30, 31, 32]
+                        st.rerun()
+                with p_c5:
+                    btn_txt = "Todo el texto (¶1–¶32)" if is_es_ui else "All 32 Paragraphs"
+                    if st.button(btn_txt, key="btn_doi_p5", use_container_width=True, help="Full Declaration Text (2 Pages)"):
+                        st.session_state["doi_selected_paras"] = list(range(1, 33))
+                        st.rerun()
+
+                cur_doi_sel = st.session_state.get("doi_selected_paras", [1, 2])
+                opt_dict = {item[0]: item for item in (DOI_PARAGRAPH_OPTIONS_ES if is_es_ui else DOI_PARAGRAPH_OPTIONS)}
+
+                def format_doi_option(num: int) -> str:
+                    item = opt_dict.get(num)
+                    if not item:
+                        return f"¶{num}"
+                    return f"{item[1]} — \"{item[2][:65]}...\""
+
+                ms_label = "Párrafos seleccionados para la hoja:" if is_es_ui else "Selected Paragraphs to Include:"
+                new_sel = st.multiselect(
+                    ms_label,
+                    options=list(range(1, 33)),
+                    default=cur_doi_sel,
+                    format_func=format_doi_option,
+                    key="doi_multiselect_paras",
+                )
+                if new_sel:
+                    st.session_state["doi_selected_paras"] = new_sel
+                    selected_doi_paras = sorted(new_sel)
+                else:
+                    selected_doi_paras = [1, 2]
+
+                num_p = len(selected_doi_paras)
+                if num_p <= 3:
+                    budget_badge = f"<span class='badge-pill badge-green' style='font-size: 0.82rem;'>📄 1-Page Layout ({num_p} paragraphs • ~10–12 target blanks + 2 comprehension questions)</span>"
+                else:
+                    budget_badge = f"<span class='badge-pill badge-blue' style='font-size: 0.82rem;'>📑 2-Page Front/Back Spread ({num_p} paragraphs • ~20 target blanks + 2 comprehension questions)</span>"
+
+                st.markdown(f"<div style='margin-top: 0.40rem;'>{budget_badge}</div>", unsafe_allow_html=True)
+
         # Build focused handout
         if active_tile_code == "ro_02_multi_section_cause_effect":
             secs_to_use = gal_selected_secs[:3] if len(gal_selected_secs) >= 2 else (gal_ch_sections[:2] if len(gal_ch_sections) >= 2 else gal_selected_secs)
@@ -2654,6 +2859,7 @@ elif st.session_state["nav_view"] == "gallery":
                 markdown_text=gal_raw_md,
                 is_scaffolded=is_scaf_ws,
                 lang=st.session_state.get("handout_language", "en"),
+                selected_paragraphs=selected_doi_paras,
             )
             gal_sec_code = str(gal_selected_sec["section_code"])
 
