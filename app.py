@@ -902,24 +902,27 @@ st.markdown(
 # DATA LOADERS & HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
 
-@st.cache_data
-def load_catalog(_mtime: float = 0.0) -> List[Dict[str, Any]]:
+try:
+    st.cache_data.clear()
+except Exception:
+    pass
+
+
+def load_catalog(mtime: float = 0.0) -> List[Dict[str, Any]]:
     cat_path = Path("output/catalog.json")
     if not cat_path.exists():
         return []
     return json.loads(cat_path.read_text(encoding="utf-8"))
 
 
-@st.cache_data
-def load_vocab_index(_mtime: float = 0.0) -> Dict[str, Any]:
+def load_vocab_index(mtime: float = 0.0) -> Dict[str, Any]:
     vp = Path("output/vocab_index.json")
     if not vp.exists():
         return {}
     return json.loads(vp.read_text(encoding="utf-8"))
 
 
-@st.cache_data
-def load_chapter_reviews(_mtime: float = 0.0) -> Dict[str, Any]:
+def load_chapter_reviews(mtime: float = 0.0) -> Dict[str, Any]:
     rp = Path("output/chapter_reviews.json")
     if not rp.exists():
         return {}
@@ -1323,11 +1326,19 @@ if st.session_state["nav_view"] == "home":
             "Current Textbook Chapter:",
             options=sorted_chapter_nums,
             index=cur_ch_idx,
-            format_func=lambda n: f"{chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} doc)" if "Primary Source" in chapters_map[n]['chapter_title'] else f"Chapter {n:02d}: {chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} spreads)",
+            format_func=lambda n: f"Chapter {n:02d}: Declaration of Independence (Primary Source Document)" if (n == 18 or "Declaration" in chapters_map[n]['chapter_title']) else f"Chapter {n:02d}: {chapters_map[n]['chapter_title']} ({len(chapters_map[n]['sections'])} spreads)",
             key="top_ch_select",
             on_change=on_ch_change,
             label_visibility="collapsed",
         )
+        if selected_ch_num in [5, 6]:
+            if st.button("📜 Jump to Declaration of Independence", key="home_btn_jump_doi", help="Switch directly to Declaration of Independence (Primary Source)"):
+                st.session_state["selected_ch_num"] = 18
+                st.rerun()
+        elif selected_ch_num == 18:
+            if st.button("🔙 Back to Chapter 05: The Road to Revolution", key="home_btn_back_ch5", help="Switch back to Chapter 5"):
+                st.session_state["selected_ch_num"] = 5
+                st.rerun()
 
     with tc_pill:
         top_pill_label = "<b>Primary Source:</b> Declaration of Independence (32 ¶)" if "Primary Source" in ch_info['chapter_title'] else f"<b>Chapter {selected_ch_num:02d}:</b> {len(ch_sections)} Sections"
@@ -1942,7 +1953,7 @@ elif st.session_state["nav_view"] == "packet":
                     "Chapter:",
                     options=sorted_chapter_nums,
                     index=sorted_chapter_nums.index(cur_page_ch) if cur_page_ch in sorted_chapter_nums else 0,
-                    format_func=lambda n: chapters_map[n]['chapter_title'] if "Primary Source" in chapters_map[n]['chapter_title'] else f"Chapter {n:02d}: {chapters_map[n]['chapter_title']}",
+                    format_func=lambda n: f"Chapter {n:02d}: Declaration of Independence (Primary Source)" if (n == 18 or "Declaration" in chapters_map[n]['chapter_title']) else f"Chapter {n:02d}: {chapters_map[n]['chapter_title']}",
                     key=f"ed_page_ch_{active_idx}",
                     on_change=on_editor_ch_change,
                     args=(active_idx,),
@@ -2410,12 +2421,20 @@ elif st.session_state["nav_view"] == "gallery":
             "Textbook Chapter:",
             options=sorted_chapter_nums,
             index=cur_ch_idx,
-            format_func=lambda n: chapters_map[n]['chapter_title'] if "Primary Source" in chapters_map[n]['chapter_title'] else f"Chp {n:02d}: {chapters_map[n]['chapter_title']}",
+            format_func=lambda n: f"Chp {n:02d}: Declaration of Independence (Primary Source)" if (n == 18 or "Declaration" in chapters_map[n]['chapter_title']) else f"Chp {n:02d}: {chapters_map[n]['chapter_title']}",
             key="gal_select_ch",
             on_change=on_gal_ch_change,
             label_visibility="collapsed",
         )
         gal_ch_sections = chapters_map[gal_ch_num]["sections"]
+        if gal_ch_num in [5, 6]:
+            if st.button("📜 Jump to Declaration of Independence", key="gal_jump_doi_btn", use_container_width=True, help="Switch directly to Declaration of Independence (Primary Source)"):
+                st.session_state["selected_ch_num"] = 18
+                st.rerun()
+        elif gal_ch_num == 18:
+            if st.button("🔙 Back to Chp 05: Road to Revolution", key="gal_back_ch5_btn", use_container_width=True, help="Switch back to Chapter 5"):
+                st.session_state["selected_ch_num"] = 5
+                st.rerun()
 
     active_tile_code = st.session_state.get("gal_active_tile_code", None)
     st.query_params["nav"] = "gallery"
